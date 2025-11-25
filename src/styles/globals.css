@@ -51,7 +51,7 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: #01503b;
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -119,4 +119,10 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@layer utilities {
+.bg-custom-gradient {
+background-image: linear-gradient(160deg, #023729 0%, #02ae80 100%);
+}
 }
