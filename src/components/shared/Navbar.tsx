@@ -1,7 +1,6 @@
 'use client';
 import Image from 'next/image';
-import React, { useState } from 'react'
-
+import React, { useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,172 +12,161 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Btn from '../reusable/button/Btn';
 import { ChevronDown, Menu } from 'lucide-react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTrigger } from '../ui/sheet';
 import { Button } from '../ui/button';
 
+const navItems = [
+  { label: 'Home', href: '#' },
+  { label: 'Specialists', hasDropdown: true },
+  { label: 'Question Bank', href: '#' },
+  { label: 'Legal', href: '#' },
+  { label: 'Contact', href: '#' },
+];
+
+const specialtyOptions = [
+  { value: 'cardiology', label: 'Cardiology' },
+  { value: 'neurology', label: 'Neurology' },
+  { value: 'orthopedics', label: 'Orthopedics' },
+];
+
 export default function Navbar() {
-  
   const [open, setOpen] = useState(false);
-   const [position, setPosition] = React.useState('bottom');
+  const [specialty, setSpecialty] = useState('');
+
+  const SpecialtyDropdown = ({ isMobile = false }) => (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="flex items-center gap-1 focus:outline-none hover:text-[#B79E6B] transition-colors">
+          Specialists
+          <ChevronDown className="w-4 h-4" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56 bg-white">
+        <DropdownMenuLabel>Select Specialty</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuRadioGroup value={specialty} onValueChange={setSpecialty}>
+          {specialtyOptions.map(option => (
+            <DropdownMenuRadioItem key={option.value} value={option.value}>
+              {option.label}
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+
   return (
-    <div className="bg-custom-gradient/50 md:px-[140px] md:py-[10px] py-2 flex items-center justify-evenly font-[manrope] sticky top-0 left-0 right-0 z-50 backdrop-blur-xs border-1 border-green-600/30">
-      {/* Mobile menu */}
-      <div className="md:hidden">
-        <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon-lg" aria-label="Open menu">
-              <Menu />
-            </Button>
-          </SheetTrigger>
-          <SheetContent className="bg-white/10 backdrop-blur-2xl border-0">
-            <SheetHeader>
-              {/* logo */}
-              <div>
-                <span className="flex items-center">
+    <nav className="fixed inset-x-0 top-0 left-0 right-0 z-50 bg-custom-gradient/ backdrop-blur-sm border-b border-green-600/30">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 lg:h-20">
+          {/* Logo */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <Image
+              src="/images/logo.png"
+              width={40}
+              height={40}
+              alt="TableRounds Logo"
+              className="w-8 h-8 sm:w-10 sm:h-10"
+            />
+            <h1 className="font-bold text-lg sm:text-xl lg:text-3xl text-white font-[manrope]">
+              TableRounds
+            </h1>
+          </div>
+
+          {/* Desktop Navigation */}
+          <ul className="hidden lg:flex items-center gap-6 xl:gap-8 text-white font-[manrope]">
+            {navItems.map(item => (
+              <li key={item.label}>
+                {item.hasDropdown ? (
+                  <SpecialtyDropdown />
+                ) : (
+                  <a
+                    href={item.href}
+                    className="cursor-pointer hover:text-[#B79E6B] transition-colors"
+                  >
+                    {item.label}
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
+
+          {/* Desktop Auth Buttons */}
+          <div className="hidden lg:flex items-center gap-3 xl:gap-4">
+            <Btn
+              text="Login"
+              className="bg-[#B79E6B] text-white px-6 py-2 h-10 hover:bg-[#a08c5f] transition-colors"
+            />
+            <Btn
+              text="Sign up"
+              className="bg-white text-[#B79E6B] px-6 py-2 h-10 hover:bg-gray-100 transition-colors"
+            />
+          </div>
+
+          {/* Mobile Menu Button */}
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild className="lg:hidden">
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Open menu"
+                className="text-white"
+              >
+                <Menu className="w-6 h-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent className="bg-white/10 backdrop-blur-2xl border-0 w-[280px] sm:w-[350px]">
+              <SheetHeader>
+                {/* Mobile Logo */}
+                <div className="flex items-center gap-2 mb-6">
                   <Image
                     src="/images/logo.png"
                     width={30}
                     height={30}
-                    alt="logo"
-                    className=""
+                    alt="TableRounds Logo"
                   />
-                </span>
-              </div>
+                  <span className="font-bold text-xl text-white font-[manrope]">
+                    TableRounds
+                  </span>
+                </div>
 
-              <div className="mt-2">
-                {/* <NavItems variant="mobile" /> */}
-                <ul className="flex flex-col justify-between gap-4 ">
-                  <li>Home</li>
-                  <li>
-                    <span className="flex items-start gap-1">
-                      Specialits
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <button className="cursor-pointer">
-                            {' '}
-                            <ChevronDown />
-                          </button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-56">
-                          <DropdownMenuLabel>Panel Position</DropdownMenuLabel>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuRadioGroup
-                            value={position}
-                            onValueChange={setPosition}
+                {/* Mobile Navigation */}
+                <nav className="mt-4">
+                  <ul className="flex flex-col gap-4 text-white font-[manrope]">
+                    {navItems.map(item => (
+                      <li key={item.label}>
+                        {item.hasDropdown ? (
+                          <SpecialtyDropdown isMobile />
+                        ) : (
+                          <a
+                            href={item.href}
+                            className="block cursor-pointer hover:text-[#B79E6B] transition-colors"
+                            onClick={() => setOpen(false)}
                           >
-                            <DropdownMenuRadioItem value="top">
-                              Top
-                            </DropdownMenuRadioItem>
-                            <DropdownMenuRadioItem value="bottom">
-                              Bottom
-                            </DropdownMenuRadioItem>
-                            <DropdownMenuRadioItem value="right">
-                              Right
-                            </DropdownMenuRadioItem>
-                          </DropdownMenuRadioGroup>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </span>
-                  </li>
-                  <li>Question Bank</li>
-                  <li>Legal</li>
-                  <li>Contact</li>
-                </ul>
-              </div>
+                            {item.label}
+                          </a>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
 
-              {/* Mobile CTA */}
-              <div className="mt-4 flex flex-col gap-4">
-                {/* Login Button */}
-                <Btn
-                  text="Login"
-                  // onClick={handleLogin}
-                  className="bg-[#B79E6B] text-white py-[4px] px-[32px] w-[111px] h-[40px]"
-                />
-
-                {/* Sign Up Button */}
-                <Btn
-                  text="Sign up"
-                  // onClick={handleSignUp}
-                  className="py-[4px] px-[32px] w-[105px] h-[40px] bg-white text-[#B79E6B]"
-                />
-              </div>
-            </SheetHeader>
-          </SheetContent>
-        </Sheet>
+                {/* Mobile Auth Buttons */}
+                <div className="mt-8 flex flex-col gap-3">
+                  <Btn
+                    text="Login"
+                    className="bg-[#B79E6B] text-white w-full h-10 hover:bg-[#a08c5f] transition-colors"
+                  />
+                  <Btn
+                    text="Sign up"
+                    className="bg-white text-[#B79E6B] w-full h-10 hover:bg-gray-100 transition-colors"
+                  />
+                </div>
+              </SheetHeader>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
-
-      {/* medium and large device*/}
-      {/* logo */}
-      <div>
-        <span className="flex items-center gap-2">
-          <Image
-            src="/images/logo.png"
-            width={40}
-            height={40}
-            alt="logo"
-            className="w-1/2 md:w-full "
-          />
-          <h1 className="font-bold  text-xl md:text-3xl text-white">
-            TableRounds
-          </h1>
-        </span>
-      </div>
-      {/* navitems */}
-      <div className="md:block hidden items-center text-white md:w-[541px] ">
-        <ul className="flex justify-between gap-[24px] ">
-          <li>Home</li>
-          <li>
-            <span className="flex items-start gap-1">
-              Specialits
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="cursor-pointer">
-                    {' '}
-                    <ChevronDown />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56">
-                  <DropdownMenuLabel>Panel Position</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuRadioGroup
-                    value={position}
-                    onValueChange={setPosition}
-                  >
-                    <DropdownMenuRadioItem value="top">
-                      Top
-                    </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="bottom">
-                      Bottom
-                    </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="right">
-                      Right
-                    </DropdownMenuRadioItem>
-                  </DropdownMenuRadioGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </span>
-          </li>
-          <li>Question Bank</li>
-          <li>Legal</li>
-          <li>Contact</li>
-        </ul>
-      </div>
-      {/* auth btn */}
-      <div className="md:flex hidden justify-evenly items-center-safe gap-4">
-        {/* Login Button */}
-        <Btn
-          text="Login"
-          // onClick={handleLogin}
-          className="bg-[#B79E6B] text-white py-[4px] px-[32px] w-[111px] h-[40px]"
-        />
-
-        {/* Sign Up Button */}
-        <Btn
-          text="Sign up"
-          // onClick={handleSignUp}
-          className="py-[4px] px-[32px] w-[105px] h-[40px] bg-white text-[#B79E6B]"
-        />
-      </div>
-    </div>
+    </nav>
   );
 }
