@@ -135,3 +135,7 @@ background-image: linear-gradient(160deg, #023729 0%, #02ae80 100%);
 .animate-float {
   animation: float 4s ease-in-out infinite;
 }
+
+.gradient-bg {
+  background: linear-gradient(to right, #023729 0%, #02AE80 100%);
+}
