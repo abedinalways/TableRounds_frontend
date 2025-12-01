@@ -1,87 +1,113 @@
-'use client'
-import Btn from '@/components/reusable/button/Btn';
+'use client';
 
 import Image from 'next/image';
-import lottie from '../../../../public/images/Heartbeat.json'
 import Lottie from 'lottie-react';
-import loading from '../../../../public/images/loading.json'
+import Btn from '@/components/reusable/button/Btn';
+
+import heartbeat from '../../../../public/images/Heartbeat.json';
+import loadingAnim from '../../../../public/images/loading.json';
 
 export default function Banner() {
- 
-  
   return (
-    <div className="font-[manrope]">
-      <div className="">
-        <Image
-          src="/images/banner.png"
-          fill
-          alt=""
-          className="relative top-0 left-0 right-0 object-cover w-fit md:w-full"
-        />
-      </div>
-      <div className="relative">
-        {/* DNA */}
-        <Image
-          src="/images/DNA_prime.png"
-          width={967}
-          height={1203}
-          alt="TableRounds Logo"
-          className="md:w-fit md:h-fit min-h-screen object-cover absolute md:-top-34  md:right-0 right-1 rotate-1 md:rotate-0 opacity-20 md:opacity-100"
-        />
-      </div>
+    <section className="relative w-full h-[750px] md:h-[900px] overflow-hidden font-[manrope]">
+      {/* Background Image */}
+      <Image
+        src="/images/banner.png"
+        alt="Banner background"
+        fill
+        className="object-cover brightness-95"
+        priority
+      />
 
-      {/* little DNA */}
-      <div className="  relative">
-        <Image
-          src="/images/Little_DNA.png"
-          width={80}
-          height={80}
-          alt="TableRounds Logo"
-          className="w-fit h-fit absolute md:top-150 md:right-30 animate-float"
-        />
-      </div>
-      {/* heartbit */}
-      <div className="">
-        <Lottie
-          animationData={lottie}
-          loop={true}
-          autoplay={true}
-          style={{ width: 700, height: 300 }}
-          className="absolute md:-left-27 top-30 md:top-44 opacity-10"
-        />
-      </div>
-      {/* elipses */}
-      <div className=" ">
-        <Lottie
-          animationData={loading}
-          loop={true}
-          autoplay={true}
-          style={{ width: 1000, height: 300 }}
-          className="absolute -left-130 bottom-0 opacity-5"
-        />
-      </div>
-      <div className="fixed md:top-74 top-30 right-65 md:left-78 space-y-6 text-white  px-2  md:px-0">
-        <h2 className="  font-bold text-2xl md:text-5xl space-y-6">
-          Where healthcare providers come <br /> to learn and collaborate, in
-          all
-          <br />
+      {/* === Decorative Elements === */}
+
+      {/* Main DNA */}
+      <Image
+        src="/images/DNA_prime.png"
+        alt="DNA"
+        width={967}
+        height={1203}
+        className="
+          absolute top-0 right-0
+          md:right-0 md:top-0
+          w-[967px] md:w-[750px] lg:w-[967px]
+          opacity-20 md:opacity-100
+          rotate-270 md:rotate-0
+        "
+      />
+
+      {/* Small DNA */}
+      <Image
+        src="/images/Little_DNA.png"
+        alt="Small DNA"
+        width={80}
+        height={80}
+        className="
+          absolute top-[590px] right-[30px]
+          md:top-[590px] md:right-[120px]
+          animate-float opacity-80
+        "
+      />
+
+      {/* Heartbeat Animation */}
+      <Lottie
+        animationData={heartbeat}
+        loop
+        autoplay
+        className="
+          absolute -left-[60px] md:top-[120px]
+          md:left-[-160px] top-[180px]
+          w-[200px] md:w-[600px]
+          opacity-20
+        "
+      />
+
+      {/* Ellipses / Loading Animation */}
+      <Lottie
+        animationData={loadingAnim}
+        loop
+        autoplay
+        className="
+          absolute -bottom-90 left-[-550px]
+          w-[900px] opacity-10 rotate-9
+        "
+      />
+
+      {/* === TEXT + BUTTONS === */}
+      <div
+        className="
+          relative z-20
+          max-w-3xl
+          mx-auto md:mx-0 md:ml-[160px]
+           md:text-left
+          pt-[100px] md:pt-[240px]
+          px-4
+          text-white
+        "
+      >
+        <h2 className="font-bold text-3xl md:text-5xl leading-tight">
+          Where healthcare providers come to learn and collaborate, in all
           fields of medicine and dentistry
         </h2>
-        <p className="text-sm md:text-md">
-          TableRounds brings board-style questions, structured learning <br />
-          tools, and a vetted professional community into one platform
+
+        <p className="mt-4 text-sm md:text-base text-white/90">
+          TableRounds brings board-style questions, structured learning{' '}
+          <br className="hidden md:block" />
+          tools, and a vetted professional community into one platform.
         </p>
-        <div className="md:flex gap-4 ">
+
+        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
           <Btn
             text="Create Your Free Account"
-            className="bg-[#B79E6B] width-[245px] height-[54px] px-[24px] py-[14px]"
+            className="bg-[#B79E6B] text-white w-[245px] h-[54px]"
           />
+
           <Btn
             text="Learn More"
-            className="bg-white text-[#B79E6B] width-[217px] height-[54px] px-[65px] py-[14px] mt-3 md:mt-0"
+            className="bg-white text-[#B79E6B] w-[217px] h-[54px]"
           />
         </div>
       </div>
-    </div>
+    </section>
   );
 }
