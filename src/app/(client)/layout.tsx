@@ -8,7 +8,7 @@ export default function ClientLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="">
+    <div className="overflow-hidden">
       <Navbar />
       <main className="">{children}</main>
       {/* <Footer className="mt-auto" /> */}

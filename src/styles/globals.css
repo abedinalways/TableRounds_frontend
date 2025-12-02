@@ -139,3 +139,13 @@ background-image: linear-gradient(160deg, #023729 0%, #02ae80 100%);
 .gradient-bg {
   background: linear-gradient(to right, #023729 0%, #02AE80 100%);
 }
+
+.custom-container{
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+.card-bg {
+ 
+  background-color: rgba(1, 80, 59, 0.04);
+}
