@@ -1,0 +1,68 @@
+'use client'
+import Btn from '@/components/reusable/button/Btn';
+import Threads from '@/components/Threads';
+import Lottie from 'lottie-react';
+import heartbeat from '../../../../public/images/Heartbeat.json';
+import Image from 'next/image';
+import React from 'react'
+
+export default function Elevate() {
+  return (
+    <div className="relative  flex flex-col items-center justify-center gap-6 max-w-[1920px] h-[492px]  text-white text-center bg-[url('/images/elevate/bg.png')] bg-cover bg-no-repeat backdrop-blur-xs">
+      <div
+        style={{ width: '1320px', height: '800px' }}
+        className="absolute -top-10 -left-7 rotate-180 opacity-10"
+      >
+        <Threads amplitude={1} distance={0} enableMouseInteraction={true} />
+        <div className="absolute top-100 left-160">
+          {/* Heartbeat Animation */}
+          <Lottie
+            animationData={heartbeat}
+            loop
+            autoplay
+            className="
+          
+          w-[200px] md:w-[600px]
+          opacity-40
+        "
+          />
+        </div>
+        {/* elipses */}
+        <div className="absolute bottom-90 -left-50 rotate-180">
+          <Image
+            src="/images/elevate/Ellipse05.png"
+            width={240}
+            height={240}
+            alt=""
+            className='backdrop-blur-xs'
+          />
+        </div>
+
+        {/* litte DNA */}
+        <div className="absolute bottom-90 -left-10 opacity-100 ">
+          <Image src="/images/Little_DNA.png" width={80} height={80} alt="" />
+        </div>
+        {/* animated medicine box */}
+        <div className="absolute bottom-20 right-110 opacity-100 ">
+          <Image
+            src="/images/elevate/img02.png"
+            width={80}
+            height={80}
+            alt=""
+          />
+        </div>
+      </div>
+      <h2 className="text-md sm:text-3xl px-4 md:px-0 font-bold">
+        Ready to Elevate Your Medical <br /> Practice and Master Your Specialty?
+      </h2>
+      <p className="text-xs sm:text-sm px-4 md:px-0">
+        Achieve unmatched clinical mastery and accelerate your professional
+        growth <br /> through our proven, integrated learning platform today.
+      </p>
+      <Btn
+        text="Sing Up"
+        className="bg-[#B79E6B] text-white w-fit h-10 hover:bg-[#a08c5f] transition-colors rounded-[8px] px-[32px] py-[14px] w-[150px] h-[54px]"
+      />
+    </div>
+  );
+}
