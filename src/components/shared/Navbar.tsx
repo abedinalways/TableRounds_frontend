@@ -34,9 +34,9 @@ export default function Navbar() {
   const [specialty, setSpecialty] = useState('');
 
   const SpecialtyDropdown = ({ isMobile = false }) => (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-1 focus:outline-none hover:text-[#B79E6B] transition-colors">
+        <button className="flex items-center  gap-1 focus:outline-none hover:text-[#B79E6B] transition-colors">
           Specialists
           <ChevronDown className="w-4 h-4" />
         </button>
@@ -56,8 +56,8 @@ export default function Navbar() {
   );
 
   return (
-    <nav className="fixed inset-x-0 top-0 left-0 right-0 z-50 bg-custom-gradient/ backdrop-blur-sm border-b border-green-600/30">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="fixed inset-x-0 top-0 left-0 right-0 z-50 bg-custom-gradient/10 backdrop-blur-xs border-b border-green-600/30 overflow-hidden">
+      <div className=" mx-auto px-4 sm:px-6 lg:px-8 custom-container">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <div className="flex items-center gap-2 flex-shrink-0">
@@ -112,7 +112,7 @@ export default function Navbar() {
                 aria-label="Open menu"
                 className="text-white"
               >
-                <Menu className="w-6 h-6" />
+                <Menu className="w-6 h-6 " />
               </Button>
             </SheetTrigger>
             <SheetContent className="bg-white/10 backdrop-blur-2xl border-0 w-[280px] sm:w-[350px]">

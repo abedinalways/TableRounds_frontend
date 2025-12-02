@@ -1,0 +1,28 @@
+import React from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import Image from 'next/image';
+
+const FeaturedCard = ({ icon, title, description }: { icon: string; title: string; description: string }) => {
+  return (
+    <Card className="group cursor-pointer transition-all duration-300 hover:bg-green-700 hover:shadow-xl hover:-translate-y-2 hover:scale-105 border-gray-200 bg-white">
+      <CardContent className="p-4">
+        <div className="mb-3">
+          <Image
+            src={icon}
+            width={48}
+            height={48}
+            alt={title}
+            className="w-12 h-12 transition-all duration-300 group-hover:brightness-0 group-hover:invert group-hover:scale-110"
+          />
+        </div>
+        <h3 className="text-md font-semibold mb-2 text-gray-900 group-hover:text-white transition-colors duration-300">
+          {title}
+        </h3>
+        <p className="text-xs text-gray-600 group-hover:text-white transition-colors duration-300">
+          {description}
+        </p>
+      </CardContent>
+    </Card>
+  );
+};
+export default FeaturedCard;
