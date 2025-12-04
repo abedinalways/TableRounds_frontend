@@ -1,0 +1,546 @@
+'use client'
+import React, { useState } from 'react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import {  CheckCircle2, CloudUpload } from 'lucide-react';
+import Image from 'next/image';
+
+interface SignUpFormData {
+  fullName: string;
+  credentials: string;
+  email: string;
+  createPassword: string;
+  confirmPassword: string;
+  yearInTraining: string;
+  location: string;
+  currentPractice: string;
+  instagramUrl: string;
+  linkedinUrl: string;
+  twitterUrl: string;
+  facebookUrl: string;
+  agreeToTerms: boolean;
+}
+
+interface SignUpFormProps {
+  onSubmit?: (data: SignUpFormData) => void;
+  onCancel?: () => void;
+}
+
+export default function SignUpForm({ onSubmit, onCancel }: SignUpFormProps) {
+  const [formData, setFormData] = useState<SignUpFormData>({
+    fullName: '',
+    credentials: '',
+    email: '',
+    createPassword: '',
+    confirmPassword: '',
+    yearInTraining: '',
+    location: '',
+    currentPractice: '',
+    instagramUrl: '',
+    linkedinUrl: '',
+    twitterUrl: '',
+    facebookUrl: '',
+    agreeToTerms: false,
+  });
+
+  const [profilePhoto, setProfilePhoto] = useState<File | null>(null);
+  const [verificationDoc, setVerificationDoc] = useState<File | null>(null);
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof SignUpFormData, string>>
+  >({});
+
+  const handleInputChange = (
+    field: keyof SignUpFormData,
+    value: string | boolean
+  ) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
+    }
+  };
+
+  const handleFileUpload = (type: 'photo' | 'document', file: File | null) => {
+    if (type === 'photo') {
+      setProfilePhoto(file);
+    } else {
+      setVerificationDoc(file);
+    }
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors: Partial<Record<keyof SignUpFormData, string>> = {};
+
+    if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
+      newErrors.email = 'Invalid email format';
+
+    if (!formData.createPassword)
+      newErrors.createPassword = 'Password is required';
+    else if (formData.createPassword.length < 8)
+      newErrors.createPassword = 'Password must be at least 8 characters';
+
+    if (formData.createPassword !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+
+    if (!formData.agreeToTerms) {
+      newErrors.agreeToTerms = 'You must agree to the terms';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = () => {
+    if (validateForm()) {
+      onSubmit?.(formData);
+    }
+  };
+
+  return (
+    <div className="z-40 p-4 md:p-8 font-[manrope]">
+      <div
+        className="max-w-6xl mx-auto gradient-bg rounded-md backdrop-blur  
+opacity-xl"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Left Column - Credentials */}
+          <div className="space-y-1  md:p-6 p-2 rounded-lg">
+            <div className="space-y-[20px]">
+              <div>
+                <Label
+                  htmlFor="fullName"
+                  className="text-white text-sm font-medium"
+                >
+                  Name <span className="text-red-600">*</span>
+                </Label>
+                <Input
+                  id="fullName"
+                  placeholder="Enter Your Full Name"
+                  value={formData.fullName}
+                  onChange={e => handleInputChange('fullName', e.target.value)}
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
+                />
+                {errors.fullName && (
+                  <p className="text-red-300 text-xs mt-1">{errors.fullName}</p>
+                )}
+              </div>
+              <div>
+                <Label
+                  htmlFor="credentials"
+                  className="text-white text-sm font-medium"
+                >
+                  Credentials <span className="text-red-600">*</span>
+                </Label>
+                <Input
+                  id="credentials"
+                  placeholder="i.e. DDS, DMD, MD, Student"
+                  value={formData.fullName}
+                  onChange={e =>
+                    handleInputChange('credentials', e.target.value)
+                  }
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
+                />
+                {errors.credentials && (
+                  <p className="text-red-300 text-xs mt-1">
+                    {errors.credentials}
+                  </p>
+                )}
+              </div>
+              <div>
+                <Label
+                  htmlFor="email"
+                  className="text-white text-sm font-medium"
+                >
+                  Email (Institutioal Preferred){' '}
+                  <span className="text-red-600">*</span>
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  value={formData.email}
+                  onChange={e => handleInputChange('email', e.target.value)}
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
+                />
+                {errors.email && (
+                  <p className="text-red-300 text-xs mt-1">{errors.email}</p>
+                )}
+              </div>
+
+              <div>
+                <Label
+                  htmlFor="createPassword"
+                  className="text-white text-sm font-medium"
+                >
+                  Create Password <span className="text-red-600">*</span>
+                </Label>
+                <Input
+                  id="createPassword"
+                  type="password"
+                  placeholder="Enter your password"
+                  value={formData.createPassword}
+                  onChange={e =>
+                    handleInputChange('createPassword', e.target.value)
+                  }
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
+                />
+                {errors.createPassword && (
+                  <p className="text-red-300 text-xs mt-1">
+                    {errors.createPassword}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <Label
+                  htmlFor="confirmPassword"
+                  className="text-white text-sm font-medium"
+                >
+                  Confirm Password <span className="text-red-600">*</span>
+                </Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="Re-enter your password"
+                  value={formData.confirmPassword}
+                  onChange={e =>
+                    handleInputChange('confirmPassword', e.target.value)
+                  }
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D]  h-9"
+                />
+                {errors.confirmPassword && (
+                  <p className="text-red-300 text-xs mt-1">
+                    {errors.confirmPassword}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <Label
+                  htmlFor="yearInTraining"
+                  className="text-white text-sm font-medium"
+                >
+                  Year in Training/Practice*
+                  <span className="text-red-600">*</span>
+                </Label>
+                <Input
+                  id="yearInTraining"
+                  placeholder="Enter training year/practice"
+                  value={formData.yearInTraining}
+                  onChange={e =>
+                    handleInputChange('yearInTraining', e.target.value)
+                  }
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
+                />
+              </div>
+
+              <div>
+                <Label
+                  htmlFor="location"
+                  className="text-white text-sm font-medium"
+                >
+                  Location <span className="text-red-600">*</span>
+                </Label>
+                <Input
+                  id="location"
+                  placeholder="Enter your city, state, and country"
+                  value={formData.location}
+                  onChange={e => handleInputChange('location', e.target.value)}
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
+                />
+              </div>
+
+              <div>
+                <Label
+                  htmlFor="currentPractice"
+                  className="text-white text-sm font-medium"
+                >
+                  Current Practice
+                </Label>
+                <Input
+                  id="currentPractice"
+                  placeholder="Describe your current hospital, or practice"
+                  value={formData.currentPractice}
+                  onChange={e =>
+                    handleInputChange('currentPractice', e.target.value)
+                  }
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
+                />
+              </div>
+
+              <div>
+                <Label
+                  htmlFor="instagram"
+                  className="text-white text-sm font-medium"
+                >
+                  Instagram
+                </Label>
+                <Input
+                  id="instagram"
+                  placeholder="@handle (Link)"
+                  value={formData.instagramUrl}
+                  onChange={e =>
+                    handleInputChange('instagramUrl', e.target.value)
+                  }
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
+                />
+              </div>
+
+              <div>
+                <Label
+                  htmlFor="linkedin"
+                  className="text-white text-sm font-medium"
+                >
+                  LinkedIn
+                </Label>
+                <Input
+                  id="linkedin"
+                  placeholder="@handle (Link)"
+                  value={formData.linkedinUrl}
+                  onChange={e =>
+                    handleInputChange('linkedinUrl', e.target.value)
+                  }
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
+                />
+              </div>
+
+              <div>
+                <Label
+                  htmlFor="twitter"
+                  className="text-white text-sm font-medium"
+                >
+                  Twitter/X
+                </Label>
+                <Input
+                  id="twitter"
+                  placeholder="@handle (Link)"
+                  value={formData.twitterUrl}
+                  onChange={e =>
+                    handleInputChange('twitterUrl', e.target.value)
+                  }
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
+                />
+              </div>
+
+              <div>
+                <Label
+                  htmlFor="facebook"
+                  className="text-white text-sm font-medium"
+                >
+                  Facebook
+                </Label>
+                <Input
+                  id="facebook"
+                  placeholder="@handle (Link)"
+                  value={formData.facebookUrl}
+                  onChange={e =>
+                    handleInputChange('facebookUrl', e.target.value)
+                  }
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column - Upload & Verification */}
+          <div className="space-y-6 md:space-x-6">
+            <Card className="bg-gradient border-none mt-2">
+              <CardHeader>
+                <CardTitle className="text-white">Profile Photo</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="border-2 border-dashed border-[#22BA92] bg-[#1C765E] rounded-lg md:p-8 py-4  px-2 text-center">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
+                      <CloudUpload className="w-8 h-8 text-teal-700" />
+                    </div>
+                    <div className="text-white">
+                      <p className="font-medium">
+                        Upload your profile image/headshot
+                      </p>
+                      <p className="text-sm text-teal-200">
+                        Support format: .docx/.doc/.txt.rtf.txt
+                      </p>
+                    </div>
+                    <label htmlFor="profilePhoto">
+                      <Button
+                        type="button"
+                        className="bg-[#B79E6B] text-white w-fit h-10 hover:bg-[#a08c5f] transition-colors rounded-[8px] px-[32px] py-[14px] w-[150px] h-[54px]"
+                        asChild
+                      >
+                        <span>Choose File</span>
+                      </Button>
+                      <input
+                        id="profilePhoto"
+                        type="file"
+                        className="hidden"
+                        accept="image/*"
+                        onChange={e =>
+                          handleFileUpload('photo', e.target.files?.[0] || null)
+                        }
+                      />
+                    </label>
+                    {profilePhoto && (
+                      <p className="text-teal-100 text-sm flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4" />
+                        {profilePhoto.name}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient border-none">
+              <CardHeader>
+                <CardTitle className="text-white">
+                  Profile Verification
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="border-2 border-dashed border-[#22BA92] bg-[#1C765E] rounded-lg p-8 text-center">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
+                      <CloudUpload className="w-8 h-8 text-teal-700" />
+                    </div>
+                    <div className="text-white">
+                      <p className="font-medium">
+                        Upload verification document
+                      </p>
+                      <p className="text-sm text-teal-200">
+                        Support format: .docx/.doc/.txt.rtf.txt
+                      </p>
+                    </div>
+                    <label htmlFor="verificationDoc">
+                      <Button
+                        type="button"
+                        className="bg-[#B79E6B] text-white w-fit h-10 hover:bg-[#a08c5f] transition-colors rounded-[8px] px-[32px] py-[14px] w-[150px] h-[54px]"
+                        asChild
+                      >
+                        <span>Choose File</span>
+                      </Button>
+                      <input
+                        id="verificationDoc"
+                        type="file"
+                        className="hidden"
+                        onChange={e =>
+                          handleFileUpload(
+                            'document',
+                            e.target.files?.[0] || null
+                          )
+                        }
+                      />
+                    </label>
+                    {verificationDoc && (
+                      <p className="text-teal-100 text-sm flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4" />
+                        {verificationDoc.name}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-[#F9F9F5] border-[#EFE8E8] md:mx-8 mx-4">
+              <CardHeader>
+                <CardTitle className="text-teal-900 font-bold">
+                  Verify your identity
+                </CardTitle>
+                <CardDescription>
+                  To keep TableRounds limited to real clinicians, please verify
+                  your identity with one of the following:
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-start gap-2">
+                  <Image
+                    src="/images/auth/stethoscope.png"
+                    width={20}
+                    height={20}
+                    alt=""
+                    className="w-[20px] h-[20px]"
+                  />
+                  <p className="text-sm">
+                    Sign up with your institutional email, or
+                  </p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Image
+                    src="/images/auth/stethoscope.png"
+                    width={20}
+                    height={20}
+                    alt=""
+                    className="w-[20px] h-[20px]"
+                  />
+                  <p className="text-sm">
+                    Upload a live photo of your government-issued ID, or
+                  </p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Image
+                    src="/images/auth/stethoscope.png"
+                    width={20}
+                    height={20}
+                    alt=""
+                    className="w-[20px] h-[20px]"
+                  />
+                  <p className="text-sm">
+                    Send a direct message to @totalresource.com on Instagram
+                    from your personal account
+                  </p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Image
+                    src="/images/auth/stethoscope.png"
+                    width={20}
+                    height={20}
+                    alt=""
+                    className="w-[20px] h-[20px]"
+                  />
+                  <p className="text-sm">
+                    Verification documents are encrypted and stored for identity
+                    verification of children. Each account is automatically
+                    approved by an admin.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+            {/* Terms and Submit */}
+            <div className="mt-6 flex  items-center justify-end  gap-4 mx-6 space-x-6">
+
+              <div className="md:flex gap-4 p-6 space-y-4 sm:space-y-0">
+                <Button
+                  onClick={handleSubmit}
+                  className="bg-[#B79E6B] text-white w-fit h-10 hover:bg-[#a08c5f] transition-colors rounded-[8px] px-[24px] py-[14px] w-[168px] h-[54px]"
+                >
+                  Create Account
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="bg-white text-green-700  w-fit h-10 hover:bg-white transition-colors rounded-[8px] px-[24px] py-[14px] w-[168px] h-[54px]"
+                  onClick={onCancel}
+                >
+                  Sign In
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

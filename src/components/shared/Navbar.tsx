@@ -15,6 +15,7 @@ import { ChevronDown, Menu } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from '../ui/sheet';
 import { Button } from '../ui/button';
 
+
 const navItems = [
   { label: 'Home', href: '#' },
   { label: 'Specialists', hasDropdown: true },
@@ -29,7 +30,7 @@ const specialtyOptions = [
   { value: 'orthopedics', label: 'Orthopedics' },
 ];
 
-export default function Navbar() {
+export default function Navbar({isOsm=false}) {
   const [open, setOpen] = useState(false);
   const [specialty, setSpecialty] = useState('');
 
@@ -56,7 +57,7 @@ export default function Navbar() {
   );
 
   return (
-    <nav className="fixed inset-x-0 top-0 left-0 right-0 z-50 bg-custom-gradient/10 backdrop-blur-xs border-b border-green-600/30 overflow-hidden">
+    <nav className="fixed inset-x-0 top-0 left-0 right-0 z-50 bg-custom-gradient backdrop-blur-md border-b border-green-600/30 overflow-hidden">
       <div className=" mx-auto px-4 sm:px-6 lg:px-8 custom-container">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
@@ -68,9 +69,16 @@ export default function Navbar() {
               alt="TableRounds Logo"
               className="w-8 h-8 sm:w-10 sm:h-10"
             />
-            <h1 className="font-bold text-lg sm:text-xl lg:text-3xl text-white font-[manrope]">
-              TableRounds
-            </h1>
+            {isOsm ? (
+              <h1 className="font-bold text-lg sm:text-xl lg:text-3xl text-white font-[manrope]">
+                Table <span className="text-xs bg-[#B79E6B] rounded-sm p-1 mb-2">OSM</span> <br />{' '}
+                Rounds
+              </h1>
+            ) : (
+              <h1 className="font-bold text-lg sm:text-xl lg:text-3xl text-white font-[manrope]">
+                TableRounds
+              </h1>
+            )}
           </div>
 
           {/* Desktop Navigation */}
@@ -95,10 +103,12 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-3 xl:gap-4">
             <Btn
               text="Login"
+              href="/login"
               className="bg-[#B79E6B] text-white px-6 py-2 h-10 hover:bg-[#a08c5f] transition-colors"
             />
             <Btn
               text="Sign up"
+              href="/register"
               className="bg-white text-[#B79E6B] px-6 py-2 h-10 hover:bg-gray-100 transition-colors"
             />
           </div>
@@ -155,9 +165,12 @@ export default function Navbar() {
                 <div className="mt-8 flex flex-col gap-3">
                   <Btn
                     text="Login"
+                    href="/login"
                     className="bg-[#B79E6B] text-white w-full h-10 hover:bg-[#a08c5f] transition-colors"
                   />
+
                   <Btn
+                    href="/register"
                     text="Sign up"
                     className="bg-white text-[#B79E6B] w-full h-10 hover:bg-gray-100 transition-colors"
                   />
