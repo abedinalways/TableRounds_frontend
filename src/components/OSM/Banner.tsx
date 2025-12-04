@@ -23,20 +23,20 @@ export default function Banner() {
 
       {/*Banner Image */}
       <Image
-        src="/images/OSM/banner.png"
+        src="/images/osm/banner.png"
         alt=""
         width={826}
         height={820}
         className="
     absolute 
     right-[-60px]
-    top-[120px]
+    top-[20px]
     w-[500px] 
     sm:w-[650px] 
     md:w-[750px] 
     md:right-[0px] 
     md:top-[10px]
-    z-10
+    z-10 opacity-15 md:opacity-100
   "
       />
 
