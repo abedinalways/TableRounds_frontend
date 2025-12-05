@@ -59,8 +59,8 @@ export default function Banner() {
         loop
         autoplay
         className="
-          absolute -bottom-90 left-[-550px]
-          w-[900px] opacity-10 rotate-9
+          absolute -bottom-70 left-[-350px]
+          w-[700px] opacity-10 rotate-9
         "
       />
 
