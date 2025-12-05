@@ -1,7 +1,7 @@
 'use client'
 import Footer from '@/components/shared/Footer';
 import Navbar from '@/components/shared/Navbar';
-import SmoothScroll from '@/components/SmoothScroll';
+
 import { usePathname } from 'next/navigation';
 import React from 'react';
 
@@ -11,12 +11,12 @@ export default function ClientLayout({children}: {children: React.ReactNode}){
 
   return (
     <div className="overflow-hidden">
-      <SmoothScroll>
+      
         <Navbar isOsm={isOsmHome} />
         <main className="">{children}</main>
         {/* <Footer className="mt-auto" /> */}
         <Footer />
-      </SmoothScroll>
+    
     </div>
   );
 }
