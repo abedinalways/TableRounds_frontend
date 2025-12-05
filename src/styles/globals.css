@@ -140,6 +140,10 @@ background-image: linear-gradient(160deg, #023729 0%, #02ae80 100%);
   background: linear-gradient(to right, #023729 0%, #02AE80 100%);
 }
 
+.background{
+  background: linear-gradient(156deg, #023729 0%, #02ae80 100%);
+}
+
 .custom-container{
   max-width: 1320px;
   margin: 0 auto;
