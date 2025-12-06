@@ -80,7 +80,7 @@ export default function LoginForm({ onLogin, onSignup, isLoading=false }: LoginF
             onClick={handleSubmit}
             disabled={isLoading}
             variant="outline"
-            className="bg-white text-green-700 hover:bg-white rounded-[8px] px-[32px] py-[12px]"
+            className="bg-white text-green-700 hover:bg-white rounded-[8px] px-[32px] py-[12px] cursor-pointer"
           >
             {isLoading ? (
               <>
