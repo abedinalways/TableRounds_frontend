@@ -5,29 +5,41 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation';
 
 import React, { useState } from 'react'
+import { toast } from 'sonner';
 
 export default function LoginPage() {
 
     const router = useRouter();
     const [error, setError] = useState('');
-
-    const handleLogin =  (data: { email: string; password: string }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const handleLogin = async (data: { email: string; password: string }) => {
       setError('');
+      setIsLoading(true);
       try {
-        const user =login(data.email, data.password);
+        const user = await login(data.email, data.password);
+        toast.success('Welcome back! Redirecting to dashboard...', {
+          description: `Login as ${user.name} || ${user.email}`,
+        });
         // redirect based on role
-        router.push('/dashboard');
+        setTimeout(() => {
+          router.push('/dashboard');
+          router.refresh();
+        }, 800);
       } catch (err: unknown) {
-    if (err instanceof Error) {
-      setError(err.message);
-    } else if (typeof err === 'string') {
-      setError(err);
-    } else {
-      setError('An unexpected error occurred. Please try again.');
-    }
+        const message =
+          err instanceof Error
+            ? err.message
+            : typeof err === 'string'
+            ? err
+            : 'Invalid email or password. Please try again.';
 
-    console.error('Login error:', err);
-  };
+        setError(message);
+        toast.error('Login failed', {
+          description: message,
+        });
+      } finally {
+        setIsLoading(false);
+      }
     };
   return (
     <div className="mt-20 overflow-hidden">

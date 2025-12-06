@@ -11,5 +11,5 @@ export default function UserDashboard() {
     if (getRole() !== 'user') router.push('/login');
   }, []);
 
-  return <div className="text-2xl font-bold">User Dashboard</div>;
+  return <div className="text-md  font-bold text-black bg-red-500">User Dashboard</div>;
 }
