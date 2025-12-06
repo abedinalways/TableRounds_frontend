@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { EB_Garamond, Inter, Manrope, Outfit, Plus_Jakarta_Sans, Roboto } from "next/font/google";
 import "../styles/globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
+import { Toaster } from "sonner";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -47,7 +48,17 @@ export default function RootLayout({
       <body
         className={`${manrope.variable} ${outfit.variable} ${inter.variable} ${outfit.variable} ${garamond.variable} ${roboto.variable} ${jakarta.variable} antialiased`}
       >
-        <SmoothScroll>{children}</SmoothScroll>
+        <SmoothScroll>
+          <Toaster
+            position="top-center"
+            richColors
+            closeButton
+            toastOptions={{
+              duration: 4000,
+            }}
+          />
+          {children}
+        </SmoothScroll>
       </body>
     </html>
   );
