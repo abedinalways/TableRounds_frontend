@@ -25,15 +25,15 @@ export default function Sidebar() {
     <>
       {/* Mobile Toggle Button */}
       <button
-        className="lg:hidden cursor-pointer fixed top-1 left-4 z-50 text-green-700 p-2 rounded-full "
+        className="lg:hidden cursor-pointer fixed top-2 left-4 z-50 text-green-700 p-2 rounded-full "
         onClick={() => setOpen(!open)}
         aria-label="Toggle menu"
       >
         {open ? (
-          <X/>
+          <X size="12px"/>
         ) : (
           <svg
-            className="w-6 h-6"
+            className="w-4 h-4"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -100,7 +100,7 @@ export default function Sidebar() {
 
                 <Link
                   href={item.href}
-                  onClick={() => setOpen(false)} 
+                  onClick={() => setOpen(false)}
                   className={`
                     flex items-center gap-3 px-3 py-2.5 rounded-md transition-all
                     ${
