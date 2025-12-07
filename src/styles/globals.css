@@ -149,6 +149,14 @@ background-image: linear-gradient(160deg, #023729 0%, #02ae80 100%);
   margin: 0 auto;
 }
 
+.test-container{
+  max-width: 1214px;
+  margin: 0 auto;
+}
+
+.custom-shadow {
+  box-shadow: 0 4px 33px 8px rgba(0, 0, 0, 0.04);
+}
 .card-bg {
  
   background-color: rgba(1, 80, 59, 0.04);
