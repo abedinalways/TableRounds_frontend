@@ -3,8 +3,10 @@ import React from 'react'
 
 export default function CreateTestPage() {
   return (
-    <div>
-     <CreateTestContent/>
+    <div className="grid grid-cols-12 font-[manrope] gap-4">
+      <div className="grid grid-cols-12">
+        <CreateTestContent />
+      </div>
     </div>
-  )
+  );
 }

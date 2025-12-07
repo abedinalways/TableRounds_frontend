@@ -39,7 +39,6 @@ export function CreateTestContent() {
   const [selectedStatus, setSelectedStatus] = useState<string[]>(['Used']);
   const [numQuestions, setNumQuestions] = useState<string>('');
 
-  // Handler for Checkbox Toggles
   const handleTopicToggle = (
     topicName: string,
     checked: boolean | 'indeterminate'
@@ -74,23 +73,25 @@ export function CreateTestContent() {
   };
 
   return (
-    <div className="flex-1 space-y-4 p-8 pt-2 test-container text-[#4b5563]">
-      <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Create Test</h2>
+    <div className="flex-1 max-w-5xl space-y-4 pt-2 test-container text-[#4b5563]">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-2">
+        <h2 className="md:text-3xl text-xl font-bold">Create Test</h2>
       </div>
-      <p className="text-muted-foreground">
+
+      <p className="text-sm text-[#01281e]">
         Configure your test parameters and get started
       </p>
 
-      <div className="space-y-4">
-        {/* --- 1. No. of Questions --- */}
-        <div className="space-y-4 bg-white p-4 rounded-[12px] border border-[#e9e9e9] custom-shadow">
+      <div className="space-y-4  w-[280px] md:w-[720px]  xl:w-[914px]">
+        {/* 1. No. of Questions */}
+        <div className="space-y-4 bg-white p-4 rounded-[12px] border border-[#e9e9e9] custom-shadow ">
           <h3 className="text-lg font-semibold">No. of Questions</h3>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-[#01281e]">
             Set the maximum questions allowed per block
           </p>
+
           <Select value={numQuestions} onValueChange={setNumQuestions}>
-            <SelectTrigger className="w-48 bg-[#f7f7f3]">
+            <SelectTrigger className="w-full sm:w-[180px] h-[61px] bg-[#f7f7f3] p-[16px] rounded-[8px]">
               <SelectValue placeholder="Select a number" />
             </SelectTrigger>
             <SelectContent>
@@ -103,15 +104,14 @@ export function CreateTestContent() {
           </Select>
         </div>
 
-        {/* --- 2. Test Mode (Updated with Switch) --- */}
+        {/* 2. Test Mode */}
         <div className="space-y-4 bg-white p-4 rounded-[12px] border border-[#e9e9e9] custom-shadow">
           <h3 className="text-lg font-semibold">Test Mode</h3>
-          <p className="text-md text-muted-foreground">
+          <p className="text-md text-[#01281e]">
             Choose how you want to take the test
           </p>
 
-          {/* Switch-controlled Test Mode */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center flex-wrap gap-4">
             <Label
               className={`cursor-pointer ${
                 testMode === 'Tutor' ? 'text-green-600 font-semibold' : ''
@@ -136,8 +136,8 @@ export function CreateTestContent() {
             </Label>
           </div>
 
-          {/* Status Checkboxes */}
-          <div className="flex space-x-4 pt-4">
+          {/* Status */}
+          <div className="flex flex-wrap gap-3 pt-4">
             {[
               'Used',
               'Unused',
@@ -146,7 +146,10 @@ export function CreateTestContent() {
               'Omitted',
               'Marked',
             ].map(status => (
-              <div key={status} className="flex items-center space-x-2">
+              <div
+                key={status}
+                className="flex items-center space-x-2 bg-[#f8f8f4]  md:px-[24px] md:py-[12px] px-[14px] py-[8px] rounded-[8px] text-xs md:text-sm"
+              >
                 <Checkbox
                   id={`status-${status}`}
                   checked={selectedStatus.includes(status)}
@@ -160,86 +163,67 @@ export function CreateTestContent() {
           </div>
         </div>
 
-        {/* --- 3. Difficulty --- */}
+        {/* 3. Difficulty */}
         <div className="space-y-4 bg-white p-4 rounded-[12px] border border-[#e9e9e9] custom-shadow">
           <h3 className="text-lg font-semibold">Difficulty</h3>
-          <p className="text-sm text-muted-foreground">
-            Select the difficulty level for your test
-          </p>
+          <p className="text-sm">Select the difficulty level for your test</p>
 
-          <div className="flex space-x-8">
-            <div className="flex items-center space-x-2">
-              <input
-                type="radio"
-                value="Intern"
-                id="d1"
-                checked={difficulty === 'Intern'}
-                onChange={() => setDifficulty('Intern')}
-              />
-              <Label htmlFor="d1">Intern</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <input
-                type="radio"
-                value="Senior"
-                id="d2"
-                checked={difficulty === 'Senior'}
-                onChange={() => setDifficulty('Senior')}
-              />
-              <Label htmlFor="d2">Senior</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <input
-                type="radio"
-                value="Boards"
-                id="d3"
-                checked={difficulty === 'Boards'}
-                onChange={() => setDifficulty('Boards')}
-              />
-              <Label htmlFor="d3">Boards</Label>
-            </div>
+          <div className="flex flex-wrap gap-4">
+            {['Intern', 'Senior', 'Boards'].map((level, idx) => (
+              <label
+                key={idx}
+                className="flex items-center space-x-2 bg-[#f8f8f4] md:px-[24px] md:py-[12px] px-[14px] py-[8px] rounded-[8px] text-xs md:text-sm cursor-pointer"
+              >
+                <input
+                  type="radio"
+                  value={level}
+                  checked={difficulty === level}
+                  onChange={() => setDifficulty(level as any)}
+                />
+                <span>{level}</span>
+              </label>
+            ))}
           </div>
         </div>
 
-        {/* --- 4. Topic Selection --- */}
+        {/* 4. Topic Selection */}
         <div className="space-y-4 bg-white p-4 rounded-[12px] border border-[#e9e9e9] custom-shadow">
           <h3 className="text-lg font-semibold">Topic</h3>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-[#01281e]">
             Choose the topics you want to focus on
           </p>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {TOPICS.map(topic => {
               const isSelected = selectedTopics.includes(topic);
               return (
                 <div
                   key={topic}
-                  className={`flex items-center justify-between p-3 rounded-md border cursor-pointer transition-colors 
+                  className={`flex items-center gap-2 p-3 rounded-md border cursor-pointer transition-colors 
                     ${
                       isSelected
-                        ? 'bg-green-100/50 border-green-500'
+                        ? 'bg-[#f7f7f3] border-gray-400'
                         : 'hover:bg-gray-50'
                     }`}
                   onClick={() => handleTopicToggle(topic, !isSelected)}
                 >
-                  <Label
-                    htmlFor={topic}
-                    className="font-medium text-sm cursor-pointer"
-                  >
+                  {isSelected && (
+                    <Check className="h-4 w-4 text-white bg-[#01281e] rounded-full" />
+                  )}
+                  <Label className="font-medium text-sm cursor-pointer">
                     {topic}
                   </Label>
-                  {isSelected && <Check className="h-4 w-4 text-green-600" />}
                 </div>
               );
             })}
           </div>
         </div>
 
-        {/* --- Start Test Button --- */}
+        {/* Start Button */}
         <div className="pt-4">
           <Button
             onClick={handleStartTest}
-            className="bg-green-600 hover:bg-green-700"
+            className="bg-[#01503b] text-white cursor-pointer w-full sm:w-auto"
           >
             Start Test
           </Button>
