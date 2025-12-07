@@ -153,3 +153,7 @@ background-image: linear-gradient(160deg, #023729 0%, #02ae80 100%);
  
   background-color: rgba(1, 80, 59, 0.04);
 }
+
+.icon-bg{
+  background: rgba(1, 80, 59, 0.1);
+}
