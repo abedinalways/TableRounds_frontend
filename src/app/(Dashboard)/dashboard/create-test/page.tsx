@@ -1,9 +1,10 @@
+import { CreateTestContent } from '@/components/create_test_components/CreateTestContent'
 import React from 'react'
 
 export default function CreateTestPage() {
   return (
     <div>
-      <h3>create tst</h3>
+     <CreateTestContent/>
     </div>
   )
 }
