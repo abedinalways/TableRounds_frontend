@@ -14,10 +14,10 @@ import Btn from '../reusable/button/Btn';
 import { ChevronDown, Menu } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from '../ui/sheet';
 import { Button } from '../ui/button';
-
+import Link from 'next/link';
 
 const navItems = [
-  { label: 'Home', href: '#' },
+  { label: 'Home', href: '/' },
   { label: 'Specialists', hasDropdown: true },
   { label: 'Question Bank', href: '#' },
   { label: 'Legal', href: '#' },
@@ -25,12 +25,12 @@ const navItems = [
 ];
 
 const specialtyOptions = [
-  { value: 'cardiology', label: 'Cardiology' },
+  { value: 'oms', label: 'OMS', href: '/oms' },
   { value: 'neurology', label: 'Neurology' },
   { value: 'orthopedics', label: 'Orthopedics' },
 ];
 
-export default function Navbar({isOsm=false}) {
+export default function Navbar({ isOms = false }) {
   const [open, setOpen] = useState(false);
   const [specialty, setSpecialty] = useState('');
 
@@ -47,9 +47,18 @@ export default function Navbar({isOsm=false}) {
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup value={specialty} onValueChange={setSpecialty}>
           {specialtyOptions.map(option => (
-            <DropdownMenuRadioItem key={option.value} value={option.value}>
-              {option.label}
-            </DropdownMenuRadioItem>
+            <Link
+              key={option.value}
+              href={option.href || '#'}
+              onClick={() => setOpen(false)}
+            >
+              <DropdownMenuRadioItem
+                value={option.value}
+                className="cursor-pointer"
+              >
+                {option.label}
+              </DropdownMenuRadioItem>
+            </Link>
           ))}
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
@@ -61,25 +70,30 @@ export default function Navbar({isOsm=false}) {
       <div className=" mx-auto px-4 sm:px-6 lg:px-8 custom-container">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <Image
-              src="/images/logo.png"
-              width={40}
-              height={40}
-              alt="TableRounds Logo"
-              className="w-8 h-8 sm:w-10 sm:h-10"
-            />
-            {isOsm ? (
-              <h1 className="font-bold text-lg sm:text-xl lg:text-3xl text-white font-[manrope]">
-                Table <span className="text-xs bg-[#B79E6B] rounded-sm p-1 mb-2">OSM</span> <br />{' '}
-                Rounds
-              </h1>
-            ) : (
-              <h1 className="font-bold text-lg sm:text-xl lg:text-3xl text-white font-[manrope]">
-                TableRounds
-              </h1>
-            )}
-          </div>
+          <Link href="/">
+            <div className="flex items-center gap-2 flex-shrink-0 cursor-pointer">
+              <Image
+                src="/images/logo.png"
+                width={40}
+                height={40}
+                alt="TableRounds Logo"
+                className="w-8 h-8 sm:w-10 sm:h-10"
+              />
+              {isOms ? (
+                <h1 className="font-bold text-lg sm:text-xl lg:text-3xl text-white font-[manrope]">
+                  Table{' '}
+                  <span className="text-xs bg-[#B79E6B] rounded-sm p-1 mb-2">
+                    OMS
+                  </span>{' '}
+                  <br /> Rounds
+                </h1>
+              ) : (
+                <h1 className="font-bold text-lg sm:text-xl lg:text-3xl text-white font-[manrope]">
+                  TableRounds
+                </h1>
+              )}
+            </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <ul className="hidden lg:flex items-center gap-6 xl:gap-8 text-white font-[manrope]">
