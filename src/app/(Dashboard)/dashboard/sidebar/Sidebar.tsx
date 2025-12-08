@@ -1,21 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { getRole} from '@/lib/auth';
+import { useState, useMemo } from 'react';
+import { getRole } from '@/lib/auth';
 import { adminMenu, userMenu, MenuItem } from './sidebarItems';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { X } from 'lucide-react';
 
 export default function Sidebar() {
-  const [role, setRole] = useState<'admin' | 'user' | null>(null);
+  const role = useMemo(() => getRole(), []);
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-
-  useEffect(() => {
-    setRole(getRole());
-  }, []);
 
   if (!role) return null;
 
@@ -48,7 +44,7 @@ export default function Sidebar() {
         )}
       </button>
 
-      {/* Overlay for mobile */}
+      {/* Overlay */}
       {open && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
@@ -58,16 +54,8 @@ export default function Sidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`
-          fixed lg:static
-          overflow-hidden
-          w-64 h-screen
-          background border-r
-          flex flex-col justify-between
-          text-white
-          transition-transform duration-300 ease-in-out
-          z-40
-          ${open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        className={`fixed lg:static w-64 h-screen background border-r flex flex-col justify-between text-white transition-transform duration-300 z-40
+        ${open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
       >
         <div className="p-4 lg:p-6 overflow-y-auto">
@@ -79,11 +67,10 @@ export default function Sidebar() {
                 width={40}
                 height={40}
                 alt="TableRounds Logo"
-                className="w-8 h-8 sm:w-10 sm:h-10"
               />
               <h1 className="font-bold text-lg sm:text-xl text-white font-[manrope]">
                 Table{' '}
-                <span className="text-xs bg-[#B79E6B] rounded-sm p-1">OSM</span>{' '}
+                <span className="text-xs bg-[#B79E6B] p-1 rounded-sm">OSM</span>
                 <br /> Rounds
               </h1>
             </div>
@@ -93,7 +80,6 @@ export default function Sidebar() {
           <nav className="flex flex-col gap-1">
             {menu.map(item => (
               <div key={item.href}>
-                {/* Section Title */}
                 {item.section && (
                   <p className="mt-4 mb-1 text-xs uppercase text-gray-300 font-semibold">
                     {item.section}
@@ -103,8 +89,7 @@ export default function Sidebar() {
                 <Link
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className={`
-                    flex items-center gap-3 px-3 py-2.5 rounded-md transition-all
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-all
                     ${
                       pathname === item.href
                         ? 'bg-[#B79E6B] text-white font-semibold'
@@ -112,14 +97,8 @@ export default function Sidebar() {
                     }
                   `}
                 >
-                  <Image
-                    src={item.icon}
-                    width={18}
-                    height={18}
-                    alt=""
-                    className="opacity-80 flex-shrink-0"
-                  />
-                  <span className="text-sm sm:text-base">{item.title}</span>
+                  <Image src={item.icon} width={18} height={18} alt="" />
+                  <span>{item.title}</span>
                 </Link>
               </div>
             ))}

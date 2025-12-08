@@ -11,10 +11,10 @@ export default function LoginPage() {
 
     const router = useRouter();
     const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    // const [isLoading, setIsLoading] = useState(false);
     const handleLogin = async (data: { email: string; password: string }) => {
       setError('');
-      setIsLoading(true);
+      // setIsLoading(true);
       try {
         const user = await login(data.email, data.password);
         toast.success('Welcome back! Redirecting to dashboard...', {
