@@ -30,7 +30,7 @@ export default function Sidebar() {
         aria-label="Toggle menu"
       >
         {open ? (
-          <X size="12px"/>
+          <X size="12px" />
         ) : (
           <svg
             className="w-4 h-4"
@@ -72,20 +72,22 @@ export default function Sidebar() {
       >
         <div className="p-4 lg:p-6 overflow-y-auto">
           {/* Logo */}
-          <div className="flex items-center gap-2 mb-6">
-            <Image
-              src="/images/logo.png"
-              width={40}
-              height={40}
-              alt="TableRounds Logo"
-              className="w-8 h-8 sm:w-10 sm:h-10"
-            />
-            <h1 className="font-bold text-lg sm:text-xl text-white font-[manrope]">
-              Table{' '}
-              <span className="text-xs bg-[#B79E6B] rounded-sm p-1">OSM</span>{' '}
-              <br /> Rounds
-            </h1>
-          </div>
+          <Link href="/">
+            <div className="flex items-center gap-2 mb-6">
+              <Image
+                src="/images/logo.png"
+                width={40}
+                height={40}
+                alt="TableRounds Logo"
+                className="w-8 h-8 sm:w-10 sm:h-10"
+              />
+              <h1 className="font-bold text-lg sm:text-xl text-white font-[manrope]">
+                Table{' '}
+                <span className="text-xs bg-[#B79E6B] rounded-sm p-1">OSM</span>{' '}
+                <br /> Rounds
+              </h1>
+            </div>
+          </Link>
 
           {/* Menu */}
           <nav className="flex flex-col gap-1">
@@ -105,7 +107,7 @@ export default function Sidebar() {
                     flex items-center gap-3 px-3 py-2.5 rounded-md transition-all
                     ${
                       pathname === item.href
-                        ? 'bg-[#B79E6B] text-black font-semibold'
+                        ? 'bg-[#B79E6B] text-white font-semibold'
                         : 'hover:bg-[#B79E6B] hover:text-white'
                     }
                   `}

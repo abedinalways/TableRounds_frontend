@@ -25,12 +25,12 @@ export default function Banner() {
       <Image
         src="/images/DNA_prime.png"
         alt="DNA"
-        width={967}
-        height={1203}
+        width={1056}
+        height={1782}
         className="
           absolute top-0 right-0
           md:right-0 md:top-0
-          w-[967px] md:w-[750px] lg:w-[967px]
+          w-[967px] md:w-[750px] lg:w-[1056px]
           opacity-20 md:opacity-100
           rotate-270 md:rotate-0
         "

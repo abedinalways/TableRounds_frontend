@@ -59,7 +59,7 @@ export default function Elevate() {
           />
         </div>
         {/* elipses */}
-        <div className="absolute bottom-90 -left-50 rotate-180">
+        {/* <div className="absolute bottom-90 -left-50 rotate-180">
           <Image
             src="/images/elevate/Ellipse05.png"
             width={240}
@@ -67,10 +67,10 @@ export default function Elevate() {
             alt=""
             className="backdrop-blur-xs"
           />
-        </div>
+        </div> */}
 
         {/* litte DNA */}
-        <div className="absolute bottom-90 -left-10 opacity-100 ">
+        <div className="absolute bottom-90 -left-68 opacity-100 ">
           <div ref={imageRef}>
             <Image
               src="/images/elevate/img03.png"
@@ -87,6 +87,7 @@ export default function Elevate() {
             width={80}
             height={80}
             alt=""
+            className="animate-float"
           />
         </div>
       </div>
@@ -102,11 +103,12 @@ export default function Elevate() {
       <div className="md:flex gap-4">
         <Btn
           text="Create Your Free Account"
-          className="bg-[#B79E6B] text-white w-fit h-10 hover:bg-[#B79E6B] transition-colors rounded-[8px] px-[32px] py-[14px] w-[150px] h-[54px] cursor-pointer z-30"
+          href="/register"
+          className="bg-[#B79E6B] text-white w-fit h-10 hover:bg-[#B79E6B] transition-colors rounded-[8px] px-[32px] py-[14px] w-[150px] h-[54px] cursor-pointer z-30 cursor-pointer"
         />
         <Btn
           text="Learn More About OMS Tools"
-          className="bg-white text-[#B79E6B] w-fit h-10  transition-colors rounded-[8px] px-[32px] py-[14px] w-[150px] h-[54px] cursor-pointer z-30"
+          className="bg-white text-[#B79E6B] w-fit h-10  transition-colors rounded-[8px] px-[32px] py-[14px] w-[150px] h-[54px] cursor-pointer z-30 cursor-pointer"
         />
       </div>
     </div>
