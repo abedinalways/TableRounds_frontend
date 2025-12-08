@@ -5,7 +5,7 @@ export interface AuthUser {
   name: string;
   email: string;
   role: UserRole;
-  err:string
+  err?:string
 }
 
 const STORAGE_KEY = 'authUser';
@@ -47,7 +47,7 @@ export function login(email: string, password: string): AuthUser {
   if (email === 'user@doctor.com' && password === 'user123') {
     const user = {
       id: '2',
-      name: 'Shahin',
+      name: 'Jhon',
       email,
       role: 'user',
     } as AuthUser;
