@@ -59,7 +59,7 @@ export default function Elevate() {
           />
         </div>
         {/* elipses */}
-        <div className="absolute bottom-90 -left-50 rotate-180">
+        {/* <div className="absolute bottom-90 -left-50 rotate-180">
           <Image
             src="/images/elevate/Ellipse05.png"
             width={240}
@@ -67,10 +67,10 @@ export default function Elevate() {
             alt=""
             className="backdrop-blur-xs"
           />
-        </div>
+        </div> */}
 
         {/* litte DNA */}
-        <div className="absolute bottom-90 -left-10 opacity-100 ">
+        <div className="absolute bottom-90 -left-68 opacity-100 ">
           <div ref={imageRef}>
             <Image
               src="/images/elevate/img03.png"
@@ -99,7 +99,8 @@ export default function Elevate() {
       </p>
       <Btn
         text="Sing Up"
-        className="bg-[#B79E6B] text-white w-fit h-10 hover:bg-[#a08c5f] transition-colors rounded-[8px] px-[32px] py-[14px] w-[150px] h-[54px]"
+        href="/register"
+        className="bg-[#B79E6B] text-white w-fit h-10 hover:bg-[#a08c5f] transition-colors rounded-[8px] px-[32px] py-[14px] w-[150px] h-[54px] z-20 cursor-pointer"
       />
     </div>
   );

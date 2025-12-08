@@ -23,14 +23,14 @@ export default function Banner() {
 
       {/* Main DNA */}
       <Image
-        src="/images/DNA_prime.png"
+        src="/images/DNA01.png"
         alt="DNA"
-        width={967}
-        height={1203}
+        width={1572}
+        height={2059}
         className="
           absolute top-0 right-0
-          md:right-0 md:top-0
-          w-[967px] md:w-[750px] lg:w-[967px]
+          md:-right-5 md:top-0
+          w-[967px] md:w-[730px]
           opacity-20 md:opacity-100
           rotate-270 md:rotate-0
         "

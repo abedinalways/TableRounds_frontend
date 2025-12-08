@@ -19,7 +19,7 @@ const Footer = () => {
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 rounded-full  flex items-center justify-center">
                 <Image
-                  src="/images/Logo.png"
+                  src="/images/footer_logo.png"
                   width={40}
                   height={40}
                   alt="TableRounds Logo"
@@ -132,7 +132,7 @@ const Footer = () => {
           />
         </div>
         {/* Copyright */}
-        <div className="mt-17 py-8 border border-gray-50 bg-[#F5F4F2]">
+        <div className="mt-17 py-8 border border-gray-50 bg-[#F5F4F2] mx-2">
           <p className="text-center text-sm text-gray-700">
             Copyright © 2025 TableRounds. All rights reserved.
           </p>
