@@ -1,0 +1,22 @@
+[
+  {
+    "title": "High-Yield OMS Question Bank",
+    "description": "Board-style scenarios with detailed explanations, imaging pearls, and references.",
+    "icon": "/images/osm/img01.png"
+  },
+  {
+    "title": "Verified Surgeon Network",
+    "description": "Connect with other OMS residents, fellows, and attendings using profile-verified accounts.",
+    "icon": "/images/osm/img02.png"
+  },
+  {
+    "title": "Leaderboard + Global Map",
+    "description": "See how you stack up against other surgeons and view our live, interactive map showing OMS users across the world.",
+    "icon": "/images/osm/img03.png"
+  },
+  {
+    "title": "Secure Messaging",
+    "description": "Direct message colleagues, share test results, and challenge others to take the same exam.",
+    "icon": "/images/osm/img04.png"
+  }
+]
