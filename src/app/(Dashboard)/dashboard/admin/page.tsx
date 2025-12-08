@@ -9,7 +9,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (getRole() !== 'admin') router.push('/dashboard/user');
-  }, []);
+  }, [router]);
 
   return <div className="text-2xl font-bold">Admin Dashboard</div>;
 }
