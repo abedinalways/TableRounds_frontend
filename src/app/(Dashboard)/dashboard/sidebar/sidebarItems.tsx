@@ -10,37 +10,37 @@ export const adminMenu: MenuItem[] = [
   {
     title: 'Dashboard',
     href: '/dashboard',
-    icon: '/icons/dashboard.svg',
+    icon: '/images/dashboard/img01.png',
   },
   {
     title: 'Create Test',
-    href: '/create-test',
-    icon: '/icons/create-test.svg',
+    href: '/dashboard/create-test',
+    icon: '/images/dashboard/img02.png',
   },
   {
     title: 'Previous Test',
-    href: '/previous-test',
-    icon: '/icons/previous-test.svg',
+    href: '/dashboard/previous-test',
+    icon: '/images/dashboard/img03.png',
   },
   {
     title: 'Statistics',
     href: '/statistics',
-    icon: '/icons/statistics.svg',
+    icon: '/images/dashboard/img04.png',
   },
   {
     title: 'Leaderboard',
     href: '/leaderboard',
-    icon: '/icons/leaderboard.svg',
+    icon: '/images/dashboard/img05.png',
   },
   {
     title: 'Reset Question Bank',
     href: '/reset-question-bank',
-    icon: '/icons/reset.svg',
+    icon: '/images/dashboard/img06.png',
   },
   {
     title: 'Messages',
     href: '/messages',
-    icon: '/icons/messages.svg',
+    icon: '/images/dashboard/img07.png',
   },
 
   // OTHER SECTION
@@ -48,17 +48,17 @@ export const adminMenu: MenuItem[] = [
     section: 'Other',
     title: 'Help & Support',
     href: '/support',
-    icon: '/icons/help.svg',
+    icon: '/images/dashboard/img08.png',
   },
   {
     title: 'Settings',
     href: '/settings',
-    icon: '/icons/settings.svg',
+    icon: '/images/dashboard/img09.png',
   },
   {
     title: 'Logout',
     href: '/logout',
-    icon: '/icons/logout.svg',
+    icon: '/images/dashboard/img10.png',
   },
 ];
 
