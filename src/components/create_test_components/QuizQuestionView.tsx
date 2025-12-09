@@ -1,16 +1,16 @@
-// src/components/QuizQuestionView.tsx
+
 
 'use client';
 
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+
 import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { QuizQuestionData, Option } from '@/types/quiz';
 
-import { CirclePause, Flag, MessageSquare, MessagesSquareIcon, ZoomIn, ZoomOut } from 'lucide-react';
+import { CirclePause, Flag,  MessagesSquareIcon, ZoomIn, ZoomOut } from 'lucide-react';
 import { TopbarCheckbox } from '../topbarCheckbox';
 import Btn from '../reusable/button/Btn';
 import { Checkbox } from '../ui/checkbox';
@@ -50,8 +50,8 @@ interface QuizQuestionViewProps {
 export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   data = mockData,
   onNext,
-  onPrev,
-  onSubmitAnswer,
+  // onPrev,
+  // onSubmitAnswer,
 }) => {
   const { testProgress, quizDetails } = data;
   const { currentQuestion, totalQuestions, questionID } = testProgress;
@@ -71,10 +71,9 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
 
   const handleSubmit = () => {
     if (selectedAnswer) {
-      // Functional call to submit the answer (to be implemented in parent component)
-      // Example: onSubmitAnswer(questionID, selectedAnswer);
+     
       console.log(`Submitting answer ${selectedAnswer} for QID ${questionID}`);
-      // Disable further changes or move to the next step
+      
     } else {
       console.log('Please select an answer before submitting.');
     }

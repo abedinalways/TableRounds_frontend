@@ -5,16 +5,23 @@ export interface AuthUser {
   name: string;
   email: string;
   role: UserRole;
-  err?:string
+  err?: string;
 }
 
 const STORAGE_KEY = 'authUser';
 
+// Helper to check if we're in the browser
+const isBrowser = typeof window !== 'undefined';
+
 export function saveUser(user: AuthUser) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+  if (isBrowser) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+  }
 }
 
 export function getUser(): AuthUser | null {
+  if (!isBrowser) return null;
+
   const data = localStorage.getItem(STORAGE_KEY);
   if (!data) return null;
   try {
@@ -29,11 +36,12 @@ export function getRole(): UserRole | null {
 }
 
 export function logout() {
-  localStorage.removeItem(STORAGE_KEY);
+  if (isBrowser) {
+    localStorage.removeItem(STORAGE_KEY);
+  }
 }
 
 export function login(email: string, password: string): AuthUser {
- 
   if (email === 'admin@doctor.com' && password === 'admin123') {
     const user = {
       id: '1',

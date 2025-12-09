@@ -1,16 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { getUser } from '@/lib/auth';
 import Image from 'next/image';
 
 export default function Topbar() {
-  const [userName, setUserName] = useState('');
-
-  useEffect(() => {
-    const user = getUser();
-    setUserName(user?.name ?? '');
-  }, []);
+  const user = getUser();
+  const [userName] = useState(user?.name ?? '');
 
   return (
     <header className="flex justify-end items-center border-b border-[#e9e9e9] gap-4 bg-white shadow px-6 py-4">

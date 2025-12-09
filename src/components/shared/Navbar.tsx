@@ -35,14 +35,20 @@ export default function Navbar({ isOms = false }) {
   const [specialty, setSpecialty] = useState('');
 
   const SpecialtyDropdown = ({ isMobile = false }) => (
-    <DropdownMenu modal={false}>
+    <DropdownMenu modal={!isMobile}>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center  gap-1 focus:outline-none hover:text-[#B79E6B] transition-colors">
+        <button
+          className={`flex items-center  gap-1 focus:outline-none hover:text-[#B79E6B] transition-colors ${
+            isMobile ? 'w-full justify-between' : ''
+          }`}
+        >
           Specialists
           <ChevronDown className="w-4 h-4" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 bg-white">
+      <DropdownMenuContent
+        className={`bg-white ${isMobile ? 'w-full' : 'w-56'}`}
+      >
         <DropdownMenuLabel>Select Specialty</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup value={specialty} onValueChange={setSpecialty}>
@@ -50,7 +56,9 @@ export default function Navbar({ isOms = false }) {
             <Link
               key={option.value}
               href={option.href || '#'}
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                if (isMobile) setOpen(false); 
+              }}
             >
               <DropdownMenuRadioItem
                 value={option.value}

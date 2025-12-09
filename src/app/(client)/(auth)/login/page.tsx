@@ -37,9 +37,7 @@ export default function LoginPage() {
         toast.error('Login failed', {
           description: message,
         });
-      } finally {
-        setIsLoading(false);
-      }
+      } 
     };
   return (
     <div className="mt-20 overflow-hidden">
