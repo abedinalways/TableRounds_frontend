@@ -77,7 +77,7 @@ const SpecialtyCard = () => {
   return (
     <div className="w-full px-4 py-12 font-[manrope]">
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+        <div className="flex items-center justify-center flex-wrap max-w-4xl mx-auto gap-4 md:gap-8">
           {specialtiesData.specialties.map(specialty => (
             <div
               key={specialty.id}

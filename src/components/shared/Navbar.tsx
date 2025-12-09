@@ -75,13 +75,13 @@ export default function Navbar({ isOms = false }) {
 
   return (
     <nav className="fixed inset-x-0 top-0 left-0 right-0 z-50 bg-custom-gradient backdrop-blur-md border-b border-green-600/30 overflow-hidden">
-      <div className=" mx-auto px-4 sm:px-6 lg:px-8 custom-container">
+      <div className=" mx-auto px-4 sm:px-0 lg:px-0 custom-container">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <Link href="/">
             <div className="flex items-center gap-2 flex-shrink-0 cursor-pointer">
               <Image
-                src="/images/logo.png"
+                src="/images/navbar-logo.png"
                 width={40}
                 height={40}
                 alt="TableRounds Logo"
@@ -144,7 +144,7 @@ export default function Navbar({ isOms = false }) {
                 aria-label="Open menu"
                 className="text-white"
               >
-                <Menu className="w-6 h-6 " />
+                <Menu className="w-8 h-8 " />
               </Button>
             </SheetTrigger>
             <SheetContent className="bg-white/10 backdrop-blur-2xl border-0 w-[280px] sm:w-[350px]">
@@ -152,7 +152,7 @@ export default function Navbar({ isOms = false }) {
                 {/* Mobile Logo */}
                 <div className="flex items-center gap-2 mb-6">
                   <Image
-                    src="/images/logo.png"
+                    src="/images/navbar-logo.png"
                     width={30}
                     height={30}
                     alt="TableRounds Logo"

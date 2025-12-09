@@ -23,16 +23,16 @@ export default function Banner() {
 
       {/* Main DNA */}
       <Image
-        src="/images/DNA01.png"
+        src="/images/DNA_PRIME.png"
         alt="DNA"
-        width={1572}
-        height={2059}
+        width={1024}
+        height={1536}
         className="
-          absolute top-0 right-0
-          md:-right-5 md:top-0
-          w-[967px] md:w-[730px]
-          opacity-20 md:opacity-100
-          rotate-270 md:rotate-0
+          absolute -top-3 right-18
+          md:right-5 md:-top-22
+          w-[1024px] md:w-[1024px]
+          opacity-100 md:opacity-100
+          rotate-9 md:rotate-0
         "
       />
 
@@ -43,7 +43,7 @@ export default function Banner() {
         width={80}
         height={80}
         className="
-          absolute top-[590px] right-[30px]
+          absolute top-[190px] right-[30px]
           md:top-[590px] md:right-[120px]
           animate-float opacity-80
         "
@@ -55,15 +55,15 @@ export default function Banner() {
         loop
         autoplay
         className="
-          absolute -left-[60px] md:top-[120px]
-          md:left-[-160px] top-[180px]
-          w-[200px] md:w-[600px]
+          absolute -left-[60px] top-[450px] md:top-[170px]
+          md:left-[-50px] 
+          w-[200px] md:w-[400px]
           opacity-20
         "
       />
 
       {/* Ellipses / Loading Animation */}
-      <Lottie
+      {/* <Lottie
         animationData={loadingAnim}
         loop
         autoplay
@@ -71,22 +71,26 @@ export default function Banner() {
           absolute -bottom-90 left-[-550px]
           w-[900px] opacity-10 rotate-9
         "
-      />
+      /> */}
 
       {/* === TEXT + BUTTONS === */}
       <div
         className="
           relative z-20
+          md:space-y-[64px]
           max-w-3xl
           mx-auto md:mx-0 md:ml-[160px]
            md:text-left
-          pt-[100px] md:pt-[240px]
-          px-4
+          pt-[280px] md:pt-[240px]
+          px-4 ms:px-0
           text-white
+          custom-container
         "
       >
-        <h2 className="font-bold text-3xl md:text-5xl leading-tight">
-          Where healthcare providers come to learn and collaborate, in all
+        <h2 className="font-bold text-3xl md:text-[60px] leading-[120%]">
+          Where healthcare providers come
+          <br />
+          to learn and collaborate, in all <br />
           fields of medicine and dentistry
         </h2>
 
@@ -99,12 +103,12 @@ export default function Banner() {
         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
           <Btn
             text="Create Your Free Account"
-            className="bg-[#B79E6B] text-white w-[245px] h-[54px]"
+            className="bg-[#B79E6B] text-white md:w-[245px] h-[54px]"
           />
 
           <Btn
             text="Learn More"
-            className="bg-white text-[#B79E6B] w-[217px] h-[54px]"
+            className="bg-white text-[#B79E6B] md:w-[217px] h-[54px]"
           />
         </div>
       </div>

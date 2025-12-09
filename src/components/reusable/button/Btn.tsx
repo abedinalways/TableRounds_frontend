@@ -26,7 +26,7 @@ const Btn: React.FC<ButtonProps> = ({
 }) => {
   // Base styles - minimal, everything customizable via className or style
   const baseStyles =
-    'inline-flex items-center justify-center font-medium transition-all duration-200 focus:outline-none whitespace-nowrap rounded-[8px]';
+    'inline-flex items-center justify-center font-medium transition-colors duration-200 focus:outline-none whitespace-nowrap rounded-[8px]';
 
   // Disabled style
   const disabledStyle = disabled

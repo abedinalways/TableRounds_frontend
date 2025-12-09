@@ -5,7 +5,7 @@ import Lottie from 'lottie-react';
 import Btn from '@/components/reusable/button/Btn';
 
 import heartbeat from '../../../public/images/Heartbeat.json';
-import loadingAnim from '../../../public/images/loading.json';
+// import loadingAnim from '../../../public/images/loading.json';
 
 export default function Banner() {
   return (
@@ -36,7 +36,7 @@ export default function Banner() {
     md:w-[750px] 
     md:right-[0px] 
     md:top-[10px]
-    z-10 opacity-15 md:opacity-100
+    z-10 opacity-35 md:opacity-100
   "
       />
 
@@ -46,15 +46,15 @@ export default function Banner() {
         loop
         autoplay
         className="
-          absolute -left-[60px] md:top-[120px]
-          md:left-[-160px] top-[180px]
-          w-[200px] md:w-[600px]
+          absolute -left-[30px] md:top-[220px]
+          md:left-[-80px] top-[290px]
+          w-[200px] md:w-[400px]
           opacity-20
         "
       />
 
       {/* Ellipses / Loading Animation */}
-      <Lottie
+      {/* <Lottie
         animationData={loadingAnim}
         loop
         autoplay
@@ -62,7 +62,7 @@ export default function Banner() {
           absolute -bottom-70 left-[-350px]
           w-[700px] opacity-10 rotate-9
         "
-      />
+      /> */}
 
       {/* === TEXT + BUTTONS === */}
       <div
@@ -73,7 +73,7 @@ export default function Banner() {
            md:text-left
           pt-[100px] md:pt-[240px]
           px-4
-          text-white
+          text-white custom-container
         "
       >
         <h2 className="font-bold text-3xl md:text-5xl leading-tight">
@@ -88,7 +88,7 @@ export default function Banner() {
         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
           <Btn
             text="Explore OSM Features"
-            className="bg-white text-green-700 w-[217px] h-[54px]"
+            className="bg-white text-green-700 md:w-[217px] w-full h-[54px]"
           />
         </div>
       </div>

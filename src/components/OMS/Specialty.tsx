@@ -5,7 +5,7 @@ import Lottie from 'lottie-react';
 import heartbeat from '../../../public/images/Heartbeat.json';
 export default function Specialty() {
   return (
-    <div className="background py-[120px]">
+    <div className="background py-[120px] font-[manrope]">
       {/* Heartbeat Animation */}
       <div className="relative">
         <Lottie
@@ -20,7 +20,7 @@ export default function Specialty() {
         "
         />
       </div>
-      <h1 className="text-xl sm:text-3xl custom-container md:px-30 px-4 font-bold text-white font-[roboto]">
+      <h1 className="text-xl sm:text-3xl custom-container text-start md:px-55 px-4 font-bold text-white font-[roboto]">
         Specialty Level Content
       </h1>
       <SpecialtyCard />

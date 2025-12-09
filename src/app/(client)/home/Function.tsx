@@ -28,9 +28,9 @@ const features = [
 ];
 export default function Function() {
   return (
-    <div className="card-bg">
+    <div className="card-bg font-[manrope]">
       <div className="custom-container px-4 md:px-0 py-10">
-        <div className="md:flex gap-8 items-center justify-around leading-[110%] py-6">
+        <div className="md:flex gap-8 items-center justify-between leading-[110%] py-6">
           <h2 className="text-xl sm:text-3xl  font-bold text-black">
             How It works
           </h2>
