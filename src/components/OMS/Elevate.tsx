@@ -39,7 +39,7 @@ export default function Elevate() {
   }, []);
 
   return (
-    <div className="relative  flex flex-col items-center justify-center gap-6 max-w-[1920px] h-[492px]  text-white text-center bg-[url('/images/elevate/bg.png')] bg-cover bg-no-repeat backdrop-blur-xs">
+    <div className="relative  flex flex-col items-center justify-center gap-6 max-w-[1920px] h-[492px]  text-white text-center bg-[url('/images/elevate/bg.png')] bg-cover bg-no-repeat backdrop-blur-xs px-4 md:px-0">
       <div
         style={{ width: '1320px', height: '800px' }}
         className="absolute -top-10 -left-7 rotate-180 opacity-10"
@@ -91,7 +91,7 @@ export default function Elevate() {
           />
         </div>
       </div>
-      <h2 className="text-xl  md:text-3xl lg:text-5xl px-4 md:px-0 font-bold">
+      <h2 className="text-[28px]  md:text-3xl lg:text-5xl px-4 md:px-0 font-bold">
         Ready to Elevate Your OMS <br />
         Training?
       </h2>
@@ -100,15 +100,15 @@ export default function Elevate() {
         <br />
         improving everyday practice.
       </p>
-      <div className="md:flex gap-4">
+      <div className="md:flex gap-4 space-y-6 md:space-y-0">
         <Btn
           text="Create Your Free Account"
           href="/register"
-          className="bg-[#B79E6B] text-white w-fit h-10 hover:bg-[#B79E6B] transition-colors rounded-[8px] px-[32px] py-[14px] w-[150px] h-[54px] cursor-pointer z-30 cursor-pointer"
+          className="bg-[#B79E6B] text-white md:w-fit w-full h-10 hover:bg-[#B79E6B] transition-colors rounded-[8px] px-[32px] py-[14px] w-[150px] h-[54px] cursor-pointer z-30 cursor-pointer"
         />
         <Btn
           text="Learn More About OMS Tools"
-          className="bg-white text-[#B79E6B] w-fit h-10  transition-colors rounded-[8px] px-[32px] py-[14px] w-[150px] h-[54px] cursor-pointer z-30 cursor-pointer"
+          className="bg-white text-[#B79E6B] md:w-fit w-full h-10  transition-colors rounded-[8px] px-[32px] py-[14px] w-[150px] h-[54px] cursor-pointer z-30 cursor-pointer"
         />
       </div>
     </div>
