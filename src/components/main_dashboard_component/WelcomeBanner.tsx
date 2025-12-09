@@ -1,19 +1,15 @@
 'use client';
 
-import { Card } from '@/components/ui/card';
+
 import { useEffect, useRef, useState } from 'react';
 import { getUser } from '@/lib/auth';
 import Image from 'next/image';
 import gsap from 'gsap';
 
 export const WelcomeBanner = () => {
-  const [userName, setUserName] = useState('');
+  const [userName] = useState(() => getUser()?.name ?? '');
   const textRef = useRef<HTMLHeadingElement | null>(null);
 
-  useEffect(() => {
-    const user = getUser();
-    setUserName(user?.name ?? '');
-  }, []);
 
   
   useEffect(() => {
