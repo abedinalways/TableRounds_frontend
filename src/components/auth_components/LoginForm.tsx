@@ -70,7 +70,7 @@ export default function LoginForm({ onLogin, onSignup, isLoading=false }: LoginF
         <div className="md:flex space-y-4 md:space-y-0 items-center justify-center gap-4 mt-4">
           <Button
             onClick={onSignup}
-            disabled={isLoading}
+            disabled={isDisabled}
             className="bg-[#B79E6B] text-white hover:bg-[#a08c5f] rounded-[8px] px-[32px] py-[12px]"
           >
             Create Account
@@ -78,7 +78,7 @@ export default function LoginForm({ onLogin, onSignup, isLoading=false }: LoginF
 
           <Button
             onClick={handleSubmit}
-            disabled={isLoading}
+            disabled={isDisabled}
             variant="outline"
             className="bg-white text-green-700 hover:bg-white rounded-[8px] px-[32px] py-[12px] cursor-pointer"
           >

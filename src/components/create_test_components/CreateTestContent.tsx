@@ -178,7 +178,9 @@ export function CreateTestContent() {
                   type="radio"
                   value={level}
                   checked={difficulty === level}
-                  onChange={() => setDifficulty(level as any)}
+                  onChange={() =>
+                  setDifficulty(level as 'Intern' | 'Senior' | 'Boards')
+                  }
                 />
                 <span>{level}</span>
               </label>

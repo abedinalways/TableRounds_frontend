@@ -10,8 +10,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+
 import {  CheckCircle2, CloudUpload } from 'lucide-react';
 import Image from 'next/image';
 

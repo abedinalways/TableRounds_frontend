@@ -176,17 +176,20 @@ const Threads: React.FC<ThreadsProps> = ({
     window.addEventListener('resize', resize);
     resize();
 
-    let currentMouse = [0.5, 0.5];
-    let targetMouse = [0.5, 0.5];
+    const currentMouse = [0.5, 0.5];
+    const targetMouse = [0.5, 0.5];
+
 
     function handleMouseMove(e: MouseEvent) {
       const rect = container.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
       const y = 1.0 - (e.clientY - rect.top) / rect.height;
-      targetMouse = [x, y];
+      targetMouse[0] = x;
+      targetMouse[1] = y;
     }
     function handleMouseLeave() {
-      targetMouse = [0.5, 0.5];
+      targetMouse[0] = 0.5;
+      targetMouse[1] = 0.5;
     }
     if (enableMouseInteraction) {
       container.addEventListener('mousemove', handleMouseMove);
