@@ -1,10 +1,51 @@
+'use client'
 import Image from 'next/image';
-import React from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useLayoutEffect, useRef } from 'react';
+import VideoModal from '@/components/VideoModal';
 
 export default function Welcome() {
+   const sectionRef = useRef<HTMLDivElement | null>(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // Heading + text animation
+      gsap.from('.trailer-heading, .trailer-text', {
+        y: 60,
+        opacity: 0,
+        duration: 1.2,
+        ease: 'power3.out',
+        stagger: 0.2,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 80%',
+          once: true, // ✅ Only animate once
+        },
+      });
+
+      // Poster animation
+      gsap.from('.trailer-video', {
+        scale: 0.9,
+        opacity: 0,
+        duration: 1.5,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 75%',
+          once: true,
+        },
+      });
+    }, sectionRef);
+    return () => {
+      ctx.revert();
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      gsap.killTweensOf('*');
+    };
+  }, []);
   return (
-    <div className="card-bg py-10 font-[manrope]">
-      <div className="md:flex gap-6 items-center justify-between md:px-[300px] px-4  py-6">
+    <div className="card-bg py-[100px] font-[manrope]">
+      <div className="md:flex gap-6 items-center justify-between md:px-[300px] px-4 pb-[48px]">
         <h2 className="text-[28px] leading-[110%] sm:text-[48px] text-center md:text-start  font-bold text-black">
           Welcome to TableRounds
         </h2>
@@ -15,15 +56,23 @@ export default function Welcome() {
         </p>
       </div>
       {/* intro video */}
-      <div className="px-4 md:px-0 mx-auto custom-container z-20">
-        <video
+      <div className="px-4 relative md:px-0 mx-auto  custom-container z-20 trailer-video ">
+        <Image
+          src="/images/welcome.png"
+          alt="trailer poster"
+          width={1320}
+          height={547}
+          className=""
+        />
+        <VideoModal/>
+        {/* <video
           loop
-          muted
+          controls
           playsInline
           className="w-full aspect-video object-cover rounded-md cursor-pointer"
         >
-          <source src="/video/tablerounds.mp4" type="video/mp4" />
-        </video>
+          <source src="/video/amrounds.mp4" type="video/mp4" />
+        </video> */}
       </div>
 
       <div className="relative -z-15">

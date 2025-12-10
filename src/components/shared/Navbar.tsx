@@ -38,7 +38,7 @@ export default function Navbar({ isOms = false }) {
     <DropdownMenu modal={!isMobile}>
       <DropdownMenuTrigger asChild>
         <button
-          className={`flex items-center  gap-1 focus:outline-none hover:text-[#B79E6B] transition-colors ${
+          className={`flex items-center cursor-pointer  gap-1 focus:outline-none hover:text-[#B79E6B] transition-colors ${
             isMobile ? 'w-full justify-between' : ''
           }`}
         >
@@ -57,7 +57,7 @@ export default function Navbar({ isOms = false }) {
               key={option.value}
               href={option.href || '#'}
               onClick={() => {
-                if (isMobile) setOpen(false); 
+                if (isMobile) setOpen(false);
               }}
             >
               <DropdownMenuRadioItem
@@ -74,8 +74,8 @@ export default function Navbar({ isOms = false }) {
   );
 
   return (
-    <nav className="fixed inset-x-0 top-0 left-0 right-0 z-50 bg-custom-gradient backdrop-blur-md border-b border-green-600/30 overflow-hidden">
-      <div className=" mx-auto px-4 sm:px-0 lg:px-0 custom-container">
+    <nav className="fixed inset-x-0 top-0 left-0 right-0 z-50 bg-custom-gradient backdrop-blur-md border-b border-green-600/30 overflow-hidden h-[92px] flex items-center justify-between">
+      <div className=" mx-auto w-full px-4 sm:px-0 lg:px-0 custom-container">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <Link href="/">
@@ -104,7 +104,7 @@ export default function Navbar({ isOms = false }) {
           </Link>
 
           {/* Desktop Navigation */}
-          <ul className="hidden lg:flex items-center gap-6 xl:gap-8 text-white font-[manrope]">
+          <ul className="hidden lg:flex items-center gap-6 xl:gap-8 text-white font-[manrope] cursor-pointer">
             {navItems.map(item => (
               <li key={item.label}>
                 {item.hasDropdown ? (
@@ -126,12 +126,12 @@ export default function Navbar({ isOms = false }) {
             <Btn
               text="Login"
               href="/login"
-              className="bg-[#B79E6B] text-white px-6 py-2 h-10 hover:bg-[#a08c5f] transition-colors"
+              className="bg-[#B79E6B] text-white w-[105px] h-[54px] hover:bg-[#a08c5f] transition-colors"
             />
             <Btn
               text="Sign up"
               href="/register"
-              className="bg-white text-[#B79E6B] px-6 py-2 h-10 hover:bg-gray-100 transition-colors"
+              className="bg-white text-[#B79E6B] w-[107px] h-[54px] hover:bg-gray-100 transition-colors"
             />
           </div>
 
@@ -188,13 +188,13 @@ export default function Navbar({ isOms = false }) {
                   <Btn
                     text="Login"
                     href="/login"
-                    className="bg-[#B79E6B] text-white w-full h-10 hover:bg-[#a08c5f] transition-colors"
+                    className="bg-[#B79E6B] text-white w-full h-[54px] hover:bg-[#a08c5f] transition-colors"
                   />
 
                   <Btn
                     href="/register"
                     text="Sign up"
-                    className="bg-white text-[#B79E6B] w-full h-10 hover:bg-gray-100 transition-colors"
+                    className="bg-white text-[#B79E6B] w-full h-[54px] hover:bg-gray-100 transition-colors"
                   />
                 </div>
               </SheetHeader>
