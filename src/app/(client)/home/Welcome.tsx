@@ -1,39 +1,87 @@
-
+'use client'
 import Image from 'next/image';
-import React from 'react'
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useLayoutEffect, useRef } from 'react';
+import VideoModal from '@/components/VideoModal';
 
 export default function Welcome() {
+   const sectionRef = useRef<HTMLDivElement | null>(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // Heading + text animation
+      gsap.from('.trailer-heading, .trailer-text', {
+        y: 60,
+        opacity: 0,
+        duration: 1.2,
+        ease: 'power3.out',
+        stagger: 0.2,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 80%',
+          once: true, // ✅ Only animate once
+        },
+      });
+
+      // Poster animation
+      gsap.from('.trailer-video', {
+        scale: 0.9,
+        opacity: 0,
+        duration: 1.5,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 75%',
+          once: true,
+        },
+      });
+    }, sectionRef);
+    return () => {
+      ctx.revert();
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      gsap.killTweensOf('*');
+    };
+  }, []);
   return (
-    <div className="card-bg py-10">
-      <div className="flex gap-6 items-center md:px-[300px] px-4 leading-[110%] py-6">
-        <h2 className="text-md sm:text-3xl  font-bold text-black">
+    <div className="card-bg py-[100px] font-[manrope]">
+      <div className="md:flex gap-6 items-center justify-between md:px-[300px] px-4 pb-[48px]">
+        <h2 className="text-[28px] leading-[110%] sm:text-[48px] text-center md:text-start  font-bold text-black">
           Welcome to TableRounds
         </h2>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-600 mt-6 md:mt-0 text-center md:text-start leading-[110%]">
           Watch the short overview video to see how it fits into your training
           and day-to- <br />
           day practice.
         </p>
       </div>
       {/* intro video */}
-      <div className="px-4 md:px-0 mx-auto custom-container">
-        <video
-          autoPlay
+      <div className="px-4 relative md:px-0 mx-auto  custom-container z-20 trailer-video ">
+        <Image
+          src="/images/welcome.png"
+          alt="trailer poster"
+          width={1320}
+          height={547}
+          className=""
+        />
+        <VideoModal/>
+        {/* <video
           loop
-          muted
+          controls
           playsInline
-          className="md:w-[1320px] md:max-w-[1320px]  md:h-[455px] h-[300px] w-fit  md:px-0 object-cover rounded-md "
+          className="w-full aspect-video object-cover rounded-md cursor-pointer"
         >
-          <source src="/video/tablerounds.mp4" type="video/mp4" />
-        </video>
+          <source src="/video/amrounds.mp4" type="video/mp4" />
+        </video> */}
       </div>
-      <div className="relative">
+
+      <div className="relative -z-15">
         <Image
           src="/images/TR.png"
           width={451}
           height={453}
           alt=""
-          className="absolute md:-top-112 -top-100 md:left-26  -left-10 opacity-60"
+          className="absolute md:-top-160 -top-78 md:left-26  left-14 md:opacity-70 opacity-50 md:w-fit w-1/2"
         />
       </div>
     </div>

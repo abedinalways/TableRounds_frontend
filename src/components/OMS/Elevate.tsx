@@ -39,27 +39,31 @@ export default function Elevate() {
   }, []);
 
   return (
-    <div className="relative  flex flex-col items-center justify-center gap-6 max-w-[1920px] h-[492px]  text-white text-center bg-[url('/images/elevate/bg.png')] bg-cover bg-no-repeat backdrop-blur-xs">
-      <div
-        style={{ width: '1320px', height: '800px' }}
-        className="absolute -top-10 -left-7 rotate-180 opacity-10"
-      >
-        <Threads amplitude={1} distance={0} enableMouseInteraction={true} />
-        <div className="absolute top-100 left-160">
-          {/* Heartbeat Animation */}
-          <Lottie
-            animationData={heartbeat}
-            loop
-            autoplay
-            className="
+    <div className="relative  flex flex-col items-center justify-center gap-6 max-w-[1920px] h-[492px]  text-white text-center bg-[url('/images/elevate/bg.png')] bg-cover bg-no-repeat backdrop-blur-xs px-4 md:px-0">
+      <div className="absolute top-10 left-0">
+        <Image
+          src="/images/elevate/background.png"
+          width={1920}
+          height={404}
+          alt=""
+        />
+      </div>
+      {/* <Threads amplitude={1} distance={0} enableMouseInteraction={true} /> */}
+      <div className="absolute md:top-22 top-40 -left-16">
+        {/* Heartbeat Animation */}
+        <Lottie
+          animationData={heartbeat}
+          loop
+          autoplay
+          className="
           
           w-[200px] md:w-[600px]
-          opacity-40
+          opacity-40 **:stroke-[8px]
         "
-          />
-        </div>
-        {/* elipses */}
-        {/* <div className="absolute bottom-90 -left-50 rotate-180">
+        />
+      </div>
+      {/* elipses */}
+      {/* <div className="absolute bottom-90 -left-50 rotate-180">
           <Image
             src="/images/elevate/Ellipse05.png"
             width={240}
@@ -69,29 +73,16 @@ export default function Elevate() {
           />
         </div> */}
 
-        {/* litte DNA */}
-        <div className="absolute bottom-90 -left-68 opacity-100 ">
-          <div ref={imageRef}>
-            <Image
-              src="/images/elevate/img03.png"
-              width={80}
-              height={80}
-              alt=""
-            />
-          </div>
-        </div>
-        {/* animated medicine box */}
-        <div className="absolute bottom-20 right-110 opacity-100 ">
-          <Image
-            src="/images/elevate/img04.png"
-            width={80}
-            height={80}
-            alt=""
-            className="animate-float"
-          />
-        </div>
+      {/* litte DNA */}
+      <div ref={imageRef} className="absolute top-62 right-72 opacity-60 ">
+        <Image src="/images/elevate/img03.png" width={80} height={80} alt="" />
       </div>
-      <h2 className="text-xl  md:text-3xl lg:text-5xl px-4 md:px-0 font-bold">
+      {/* animated medicine box */}
+      <div className="absolute md:top-12 md:left-90 top-2 left-18 opacity-60 animate-float ">
+        <Image src="/images/elevate/img04.png" width={80} height={80} alt="" />
+      </div>
+
+      <h2 className="text-[28px]  md:text-3xl lg:text-5xl px-4 md:px-0 font-bold">
         Ready to Elevate Your OMS <br />
         Training?
       </h2>
@@ -100,15 +91,15 @@ export default function Elevate() {
         <br />
         improving everyday practice.
       </p>
-      <div className="md:flex gap-4">
+      <div className="md:flex gap-4 space-y-6 md:space-y-0">
         <Btn
           text="Create Your Free Account"
           href="/register"
-          className="bg-[#B79E6B] text-white w-fit h-10 hover:bg-[#B79E6B] transition-colors rounded-[8px] px-[32px] py-[14px] w-[150px] h-[54px] cursor-pointer z-30 cursor-pointer"
+          className="bg-[#B79E6B] text-white  hover:bg-[#B79E6B] transition-colors rounded-[8px] w-full h-10 md:w-[261px] md:h-[54px] cursor-pointer z-30 "
         />
         <Btn
           text="Learn More About OMS Tools"
-          className="bg-white text-[#B79E6B] w-fit h-10  transition-colors rounded-[8px] px-[32px] py-[14px] w-[150px] h-[54px] cursor-pointer z-30 cursor-pointer"
+          className="bg-white text-[#B79E6B] w-full h-10  transition-colors rounded-[8px] md:w-[305px] md:h-[54px] cursor-pointer z-30 "
         />
       </div>
     </div>
