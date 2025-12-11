@@ -9,13 +9,13 @@ import heartbeat from '../../../public/images/Heartbeat.json';
 
 export default function Banner() {
   return (
-    <section className="relative font-[manrope] py-10">
+    <section className="relative font-[manrope] py-10 px-4 md:px-0">
       {/* Background Image */}
       <Image
         src="/images/banner.png"
         alt="Banner background"
         fill
-        className="object-cover brightness-95"
+        className="object-cover brightness-90"
         priority
       />
 
@@ -35,8 +35,8 @@ export default function Banner() {
     sm:w-[650px] 
     md:w-[750px] 
     md:right-[0px] 
-    md:top-[10px]
-    z-10 opacity-35 md:opacity-100
+    md:top-[24px]
+    z-10 opacity-50 md:opacity-100
   "
       />
 
@@ -46,8 +46,8 @@ export default function Banner() {
         loop
         autoplay
         className="
-          absolute -left-[30px] md:top-[220px]
-          md:left-[-80px] top-[290px]
+          absolute -left-[30px] md:top-[210px]
+          md:left-[-70px] top-[300px]
           w-[200px] md:w-[400px]
           opacity-20
         "
@@ -67,30 +67,31 @@ export default function Banner() {
       {/* === TEXT + BUTTONS === */}
       <div
         className="
-          relative z-20
-          max-w-3xl
+          relative z-20 md:bottom-18
+          max-w-3xl 
           mx-auto md:mx-0 md:ml-[160px]
            md:text-left
-          pt-[100px] md:pt-[240px]
-          px-4
+          pt-[100px] md:pt-[210px]
+          
           text-white custom-container
         "
       >
-        <h2 className="font-bold text-3xl md:text-5xl leading-tight">
-          Mastering Every Aspect of <br />
-          Oral and Maxillofacial Surgery
-        </h2>
+        
+          <h2 className="font-bold text-3xl md:text-[60px] leading-tight">
+            Mastering Every Aspect of <br />
+            Oral and Maxillofacial Surgery
+          </h2>
 
-        <p className="mt-4 text-sm md:text-base text-white/90">
-          Built by surgeons. <br /> Evidence-based. <br /> Specialty-driven.
-        </p>
+          <p className="mt-4 text-sm md:text-[24px] text-white/90">
+            Built by surgeons. <br /> Evidence-based. <br /> Specialty-driven.
+          </p>
 
-        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-          <Btn
-            text="Explore OSM Features"
-            className="bg-white text-green-700 md:w-[217px] w-full h-[54px]"
-          />
-        </div>
+          <div className="mt-[64px] flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+            <Btn
+              text="Explore OSM Features"
+              className="bg-white text-green-700 md:w-[217px] w-full h-[54px]"
+            />
+          </div>
       </div>
     </section>
   );

@@ -2,10 +2,11 @@
 import React from 'react'
 import heartbeat from '../../../../public/images/Heartbeat.json';
 import Lottie from 'lottie-react';
+import Image from 'next/image';
 export default function Details() {
   return (
-    <div className="gradient-bg flex flex-col items-center justify-center gap-6 max-w-[1920px] h-[492px]  text-white text-center ">
-      <h2 className="text-xl sm:text-[48px] px-4 md:px-0 font-bold leading-[110%] font-[manrope]">
+    <div className="relative gradient-bg flex flex-col items-center justify-center gap-6 max-w-[1920px] h-[492px]  text-white text-center ">
+      <h2 className="text-2xl sm:text-[48px] px-4 md:px-0 font-bold leading-[110%] font-[manrope]">
         TableRounds: Specialty-Level Learning and a <br /> Verified Professional
         Network
       </h2>
@@ -18,9 +19,25 @@ export default function Details() {
         and connect with colleagues who are <br />
         equally invested in maintaining a high standard of practice.
       </p>
-      <div className="relative">
-        {/* Heartbeat Animation */}
-        <Lottie
+      {/* <div className="relative"> */}
+      <div className="absolute top-10 left-0 opacity-80">
+        <Image
+          src="/images/details/heartbit.png"
+          width={681}
+          height={300}
+          alt=""
+        />
+      </div>
+      <div className="absolute md:top-40 top-70 right-0 opacity-80">
+        <Image
+          src="/images/details/heartbit02.png"
+          width={681}
+          height={300}
+          alt=""
+        />
+      </div>
+      {/* Heartbeat Animation */}
+      {/* <Lottie
           animationData={heartbeat}
           loop
           autoplay
@@ -30,10 +47,11 @@ export default function Details() {
           w-[200px] md:w-[450px]
           opacity-20
         "
-        />
-      </div>
-      <div className="relative">
-        <Lottie
+        /> */}
+      {/* </div> */}
+
+      {/* <div className="relative"> */}
+      {/* <Lottie
           animationData={heartbeat}
           loop
           autoplay
@@ -43,8 +61,8 @@ export default function Details() {
           w-[300px] md:w-[450px]
           opacity-20
         "
-        />
-      </div>
+        /> */}
+      {/* </div> */}
     </div>
   );
 }

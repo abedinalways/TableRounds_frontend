@@ -5,9 +5,9 @@ import Image from 'next/image';
 const Footer = () => {
   return (
     <footer
-      className="relative w-full bg-[#f5f1e8] py-12 "
+      className="relative w-full bg-[#f5f1e8] pt-30 font-[manrope]"
       style={{
-        backgroundImage: 'url(/images/bg-footer.png)',
+        backgroundImage: 'url(/images/footer-background.png)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
@@ -53,12 +53,12 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div className="flex flex-col space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Quick Links
             </h3>
             <a
               href="#"
-              className="text-sm text-gray-700 hover:text-[#1e5a4f] transition-colors"
+              className="text-sm text-[#4a4c5] hover:text-[#1e5a4f] transition-colors"
             >
               Question Bank
             </a>
@@ -78,7 +78,7 @@ const Footer = () => {
 
           {/* Legal */}
           <div className="flex flex-col space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">Legal</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Legal</h3>
             <a
               href="#"
               className="text-sm text-gray-700 hover:text-[#1e5a4f] transition-colors"
@@ -101,7 +101,7 @@ const Footer = () => {
 
           {/* Contact Us */}
           <div className="flex flex-col space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Contact Us
             </h3>
             <p className="text-sm text-gray-700">We are Here to Help</p>
@@ -132,7 +132,7 @@ const Footer = () => {
           />
         </div>
         {/* Copyright */}
-        <div className="mt-17 py-8 border border-gray-50 bg-[#F5F4F2] mx-2">
+        <div className="mt-17 py-6 border border-gray-50 bg-[#F5F4F2]">
           <p className="text-center text-sm text-gray-700">
             Copyright © 2025 TableRounds. All rights reserved.
           </p>
