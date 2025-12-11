@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import React, { CSSProperties } from 'react';
 
-interface ButtonProps {
-  text: string;
+interface ButtonProps extends React.PropsWithChildren {
+  text?: string;
   href?: string;
   onClick?: () => void;
   className?: string;
@@ -22,6 +22,7 @@ const Btn: React.FC<ButtonProps> = ({
   type = 'button',
   icon,
   iconPosition = 'left',
+  children,
   style = {},
 }) => {
   // Base styles - minimal, everything customizable via className or style
@@ -48,7 +49,7 @@ const Btn: React.FC<ButtonProps> = ({
       {icon && iconPosition === 'left' && (
         <span className="flex-shrink-0">{icon}</span>
       )}
-      <span>{text}</span>
+      <span>{children ? children : text}</span>
       {icon && iconPosition === 'right' && (
         <span className="flex-shrink-0">{icon}</span>
       )}
