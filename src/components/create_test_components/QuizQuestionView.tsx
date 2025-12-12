@@ -21,38 +21,8 @@ import ShareIcon from '../reusable/icons/ShareIcon';
 import PauseIcon from '../reusable/icons/PauseIcon';
 import { VerticalProgress } from '../verticalPorgress';
 
-// Mock data
-// Mock data with explanation
-const mockData: QuizQuestionData = {
-  testProgress: {
-    currentQuestion: 5,
-    totalQuestions: 30,
-    questionID: '214541',
-  },
-  quizDetails: {
-    title:
-      'A 32-year-old man undergoes extraction of multiple impacted third molars...',
-    question:
-      'Which of the following is the most characteristic early sign of lidocaine toxicity?',
-    options: [
-      { id: 'A', text: 'Bradycardia' },
-      { id: 'B', text: 'Perioral numbness' },
-      { id: 'C', text: 'Seizure' },
-      { id: 'D', text: 'Ventricular arrhythmia' },
-      { id: 'E', text: 'Urticaria' },
-    ],
-    userAnswerId: null,
-    correctAnswerId: 'B',
-    explanationTitle: 'Explanations:',
-    explanationBody:
-      'Dose-related lidocaine systemic toxicity typically begins with central nervous system symptoms, and perioral (circumoral) numbness or tingling is a classic early sign. Other early neurologic manifestations can include metallic taste, tinnitus, and lightheadedness as cortical excitation precedes depression. With rising plasma levels, the patient may progress to seizures, followed by CNS depression and eventually cardiovascular collapse. Cardiovascular signs such as bradycardia or ventricular arrhythmias tend to appear later and at higher toxic concentrations. Recognizing subtle early neurologic symptoms allows prompt cessation of further anesthetic administration and early initiation of treatment if needed.',
-    explanationImage: '/images/explanations/ex1.png',
-  },
-};
-
-
 interface QuizQuestionViewProps {
-  data?: QuizQuestionData;
+  data: QuizQuestionData; 
   onNext?: () => void;
   onPrev?: () => void;
   onJumpTo?: (index: number) => void;
@@ -60,7 +30,7 @@ interface QuizQuestionViewProps {
 }
 
 export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
-  data = mockData,
+  data,
   onNext,
   onJumpTo,
 }) => {
@@ -71,18 +41,12 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
     quizDetails.userAnswerId
   );
 
-  // Progress %
   const progressValue = (currentQuestion / totalQuestions) * 100;
 
-  const handleAnswerChange = (value: string) => {
-    setSelectedAnswer(value);
-  };
+  const handleAnswerChange = (value: string) => setSelectedAnswer(value);
 
   const handleSubmit = () => {
-    if (!selectedAnswer) {
-      console.log('Please select an answer before submitting.');
-      return;
-    }
+    if (!selectedAnswer) return;
     console.log(`Submitting answer ${selectedAnswer} for QID ${questionID}`);
   };
 
@@ -133,7 +97,7 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
           onClick={onNext}
           className="bg-[#b79e6b] text-white transition-colors w-[97px] h-[53px] mx-10"
         >
-          <span className='flex items-center'>
+          <span className="flex items-center">
             Next <ArrowRight />
           </span>
         </Btn>
