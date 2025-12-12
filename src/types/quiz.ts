@@ -5,6 +5,19 @@ export interface Option {
   text: string;
 }
 
+export interface ExplanationItem {
+  option: string;
+  text: string;
+}
+
+export interface Explanation {
+  image?: string;
+  main: string;
+  whyIncorrect: ExplanationItem[];
+  pinningPoint: string;
+  memoryTrick: string;
+  references: string[];
+}
 export interface QuizProgress {
   currentQuestion: number;
   totalQuestions: number;
@@ -17,7 +30,8 @@ export interface QuizQuestionData {
     title: string;
     question: string;
     options: Option[];
-    userAnswerId: string | null; 
+    userAnswerId: string | null;
     correctAnswerId: string;
+    explanation: Explanation;
   };
 }

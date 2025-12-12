@@ -23,7 +23,7 @@ export default function Banner() {
 
       {/* Main DNA */}
       <Image
-        src="/images/DNA_PRIME.png"
+        src="/images/DNA_prime.png"
         alt="DNA"
         width={1024}
         height={1536}
