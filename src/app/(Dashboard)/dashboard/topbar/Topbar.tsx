@@ -9,7 +9,7 @@ export default function Topbar() {
   const [userName] = useState(user?.name ?? '');
 
   return (
-    <header className="flex justify-end items-center border-b border-[#e9e9e9] gap-4 bg-white shadow px-6 py-4">
+    <header className="flex justify-end items-center sticky top-0 right-0 z-50 border-b border-[#e9e9e9] gap-4 bg-white shadow px-6 py-4">
       <div className="rounded-full shadow-md bg-[#fff] md:p-[8px] cursor-pointer hover:bg-green-100">
         <Image
           src="/images/dashboard/topbar/bell.png"

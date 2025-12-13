@@ -6,12 +6,11 @@ import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { QuizQuestionData, Option } from '@/types/quiz';
-
-import {ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { TopbarCheckbox } from '../topbarCheckbox';
 import Btn from '../reusable/button/Btn';
 import Image from 'next/image';
-
+import { CircularProgress } from '../progress-10';
 import { cn } from '@/lib/utils';
 import ChatBubble from '../reusable/icons/ChatBubble';
 import Flag from '../reusable/icons/Flag';
@@ -22,7 +21,7 @@ import PauseIcon from '../reusable/icons/PauseIcon';
 import { VerticalProgress } from '../verticalPorgress';
 
 interface QuizQuestionViewProps {
-  data: QuizQuestionData; 
+  data: QuizQuestionData;
   onNext?: () => void;
   onPrev?: () => void;
   onJumpTo?: (index: number) => void;
@@ -37,17 +36,24 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   const { testProgress, quizDetails } = data;
   const { currentQuestion, totalQuestions, questionID } = testProgress;
 
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(
+  const [selectedAnswerId, setSelectedAnswer] = useState<string | null>(
     quizDetails.userAnswerId
   );
 
+  const [showExplanation, setShowExplanation] = useState(false);
+  const [checkedAnswerId, setCheckedAnswerId] = useState('');
   const progressValue = (currentQuestion / totalQuestions) * 100;
+  const isUserCorrect = selectedAnswerId === quizDetails.correctAnswerId;
 
-  const handleAnswerChange = (value: string) => setSelectedAnswer(value);
+  const handleAnswerChange = (value: string) => {
+    setSelectedAnswer(value);
+  };
 
   const handleSubmit = () => {
-    if (!selectedAnswer) return;
-    console.log(`Submitting answer ${selectedAnswer} for QID ${questionID}`);
+    if (!selectedAnswerId) return;
+    setShowExplanation(true);
+
+    console.log(`Submitting answer ${selectedAnswerId} for QID ${questionID}`);
   };
 
   return (
@@ -107,7 +113,7 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
       <div className="background p-2 rounded-md grid grid-cols-12">
         {/* LEFT SIDEBAR - QUESTION LIST */}
         <div className="flex col-span-1 rounded-md mt-4 mb-4 background p-2 space-y-2  max-h-[700px] overflow-y-auto overflow-hidden custom-scroll">
-          <aside className="space-y-2 p-2 ">
+          <aside className="space-y-2 p-2 h-full">
             {Array.from({ length: totalQuestions }, (_, i) => {
               const qIndex = i + 1;
               const isCurrent = qIndex === currentQuestion;
@@ -144,68 +150,243 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
           </div>
         </div>
 
-        {/* RIGHT MAIN CONTENT */}
-        <div className="col-span-11">
-          <Card className="m-4 shadow-lg">
-            <CardHeader className="p-4">
-              <div className="flex items-start">
+        {/* RIGHT SIDE (QUESTION + EXPLANATION) */}
+        <div className="col-span-11 md:flex gap-4 transition-all ease-in-out duration-500">
+          {/* Question Card */}
+          <div className="w-full">
+            <Card className="m-4 shadow-lg">
+              <CardHeader className="p-4">
                 <p className="text-base text-gray-700 leading-relaxed font-normal">
                   {quizDetails.title}
                 </p>
-              </div>
-            </CardHeader>
+              </CardHeader>
 
-            <CardContent className="p-6 space-y-6">
-              {/* QUESTION TEXT */}
-              <div className="font-semibold text-lg text-gray-800 flex items-start">
-                <Image
-                  src="/images/dashboard/main_dashboard/qns.png"
-                  width={28}
-                  height={28}
-                  alt=""
-                  className="mr-3"
-                />
-                {quizDetails.question}
-              </div>
+              <CardContent className="p-6 space-y-6">
+                {/* Question */}
+                <div className="font-semibold text-lg text-gray-800 flex items-start">
+                  <Image
+                    src="/images/dashboard/main_dashboard/qns.png"
+                    width={28}
+                    height={28}
+                    alt=""
+                    className="mr-3"
+                  />
+                  {quizDetails.question}
+                </div>
 
-              {/* OPTIONS */}
-              <RadioGroup
-                onValueChange={handleAnswerChange}
-                value={selectedAnswer || undefined}
-                className="space-y-4"
-              >
-                {quizDetails.options.map((option: Option) => (
-                  <div
-                    key={option.id}
-                    className="flex items-center space-x-3 bg-gray-50 p-3 rounded-lg hover:bg-gray-100 transition-colors border"
-                  >
-                    <RadioGroupItem
-                      value={option.id}
-                      id={`option-${option.id}`}
-                      className="w-5 h-5 border-gray-500"
-                    />
-                    <Label
-                      htmlFor={`option-${option.id}`}
-                      className="flex items-center text-base font-normal cursor-pointer"
+                {/* OPTIONS */}
+                <RadioGroup
+                  onValueChange={handleAnswerChange}
+                  value={selectedAnswerId || undefined}
+                  className="space-y-4"
+                >
+                  {quizDetails.options.map((option: Option) => {
+                    const isUserCorrect =
+                      selectedAnswerId === quizDetails.correctAnswerId;
+
+                    const isCorrectOption =
+                      option.id === quizDetails.correctAnswerId;
+
+                    const isUserWrongOption =
+                      option.id === selectedAnswerId && !isCorrectOption;
+
+                    const isOtherOption =
+                      showExplanation &&
+                      option.id !== selectedAnswerId &&
+                      !isCorrectOption;
+
+                    // const shouldShowAsChecked =
+                    //   (showExplanation && isCorrectOption) ||
+                    //   (showExplanation && isUserWrongOption);
+
+                    return (
+                      <div
+                        key={option.id}
+                        className={cn(
+                          'relative flex items-center justify-between p-2 rounded-lg border transition-all',
+
+                          // Correct answer
+                          showExplanation &&
+                            isCorrectOption &&
+                            'bg-green-100 border-green-500',
+
+                          // User wrong answer
+                          showExplanation &&
+                            isUserWrongOption &&
+                            'bg-red-100 border-red-500',
+
+                          !showExplanation && 'bg-gray-50 hover:bg-gray-100'
+                        )}
+                      >
+                        <div className="flex items-center gap-3">
+                          {showExplanation ? (
+                            <RadioGroupItem
+                              value="foo"
+                              checked={
+                                selectedAnswerId === option.id ||
+                                isCorrectOption
+                              }
+                              varient={
+                                isCorrectOption ? 'default' : 'destructive'
+                              }
+                              disabled={showExplanation}
+                            />
+                          ) : (
+                            <RadioGroupItem
+                              varient="default"
+                              value={option.id}
+                              id={`option-${option.id}`}
+                              disabled={showExplanation}
+                            />
+                          )}
+
+                          <Label
+                            htmlFor={`option-${option.id}`}
+                            className={`${
+                              isUserCorrect &&
+                              isOtherOption &&
+                              'opacity-60 line-through'
+                            } cursor-pointer text-base`}
+                          >
+                            <span className="font-bold mr-2">{option.id}.</span>
+                            {option.text}
+                          </Label>
+                        </div>
+
+                        {/* Percentage */}
+                        {showExplanation && (
+                          <CircularProgress
+                            showLabel
+                            value={option?.percentage ?? 0}
+                            className="text-md font-semibold text-gray-600"
+                          ></CircularProgress>
+                        )}
+                      </div>
+                    );
+                  })}
+                  {showExplanation && (
+                    <div
+                      className={cn(
+                        'mt-6 border-l-[4px] border-[#20ac19] p-[16px] rounded-[12px] ',
+                        isUserCorrect
+                          ? 'border-green-500 bg-green-50'
+                          : 'border-red-500 bg-red-50'
+                      )}
                     >
-                      <span className="font-bold text-gray-600 w-6">
-                        {option.id}.
-                      </span>
-                      <span className="ml-2">{option.text}</span>
-                    </Label>
+                      <CardContent className=" flex items-center justify-between">
+                        <div>
+                          <div className="font-bold text-lg">
+                            {isUserCorrect ? (
+                              <h4>Correct ({quizDetails.correctAnswerId})</h4>
+                            ) : (
+                              '✖ Wrong Answer'
+                            )}
+                          </div>
+                        </div>
+                        {isUserCorrect ? (
+                          ''
+                        ) : (
+                          <div className="text-sm text-gray-600">
+                            <p>correct option: {quizDetails.correctAnswerId}</p>
+                          </div>
+                        )}
+
+                        <div className="text-right flex gap-2 items-start">
+                          <div className="flex items-center justify-center">
+                            <Image
+                              src="/images/dashboard/statistics.png"
+                              width={32}
+                              height={32}
+                              alt=""
+                              className=""
+                            />
+                          </div>
+                          <div className="flex flex-col">
+                            <h2>55%</h2>
+                            <p className="text-xs text-gray-600">
+                              Answered Correctly
+                            </p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </div>
+                  )}
+                </RadioGroup>
+
+                {/* Submit Button */}
+
+                <Btn
+                  text="Submit Answer"
+                  onClick={handleSubmit}
+                  disabled={!selectedAnswerId}
+                  className="bg-[#01281e] text-white px-8 py-3 text-md font-semibold"
+                />
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* EXPLANATION PANEL */}
+          {showExplanation && (
+            <div className="m-4 p-4 bg-white shadow-lg rounded-xl w-full  h-fit border">
+              <h2 className="text-lg font-bold text-[#01281e] mb-4">
+                📝 Explanations:
+              </h2>
+
+              <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
+                {quizDetails.explanation.main}
+              </p>
+
+              {quizDetails.explanation.image && (
+                <div className="my-4">
+                  <Image
+                    src={quizDetails.explanation.image}
+                    width={400}
+                    height={300}
+                    alt="Explanation Image"
+                    className="rounded-md"
+                  />
+                </div>
+              )}
+
+              <h3 className="text-md font-semibold text-[#01281e] mt-6 mb-2">
+                ❌ Why the Other Options Are Incorrect:
+              </h3>
+
+              <div className="space-y-3">
+                {quizDetails.explanation.whyIncorrect.map((item, idx) => (
+                  <div key={idx} className="text-sm text-gray-700">
+                    <span className="font-bold">{item.option}.</span>{' '}
+                    <span className="leading-relaxed whitespace-pre-line">
+                      {item.text}
+                    </span>
                   </div>
                 ))}
-              </RadioGroup>
+              </div>
 
-              {/* SUBMIT BUTTON */}
-              <Btn
-                text="Submit Answer"
-                onClick={handleSubmit}
-                disabled={!selectedAnswer}
-                className="bg-[#01281e] text-white px-8 py-3 text-md font-semibold"
-              />
-            </CardContent>
-          </Card>
+              <h3 className="text-md font-semibold text-[#01281e] mt-6 mb-1">
+                📌 Pinning Point:
+              </h3>
+              <p className="text-gray-700 text-sm whitespace-pre-line">
+                {quizDetails.explanation.pinningPoint}
+              </p>
+
+              <h3 className="text-md font-semibold text-[#01281e] mt-6 mb-1">
+                🧠 Memory Trick:
+              </h3>
+              <p className="text-gray-700 text-sm">
+                {quizDetails.explanation.memoryTrick}
+              </p>
+
+              <h3 className="text-md font-semibold text-[#01281e] mt-6 mb-1">
+                📚 References:
+              </h3>
+              <ul className="list-disc pl-6 text-gray-700 text-sm space-y-1">
+                {quizDetails.explanation.references.map((ref, index) => (
+                  <li key={index}>{ref}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </div>
