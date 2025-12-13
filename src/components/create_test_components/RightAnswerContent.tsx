@@ -20,6 +20,7 @@ import ZoomOutIcon from '../reusable/icons/ZoomOutIcon';
 import ShareIcon from '../reusable/icons/ShareIcon';
 import PauseIcon from '../reusable/icons/PauseIcon';
 import { VerticalProgress } from '../verticalPorgress';
+import { CircularProgress } from '../progress-10';
 
 interface QuizQuestionViewProps {
   data: QuizQuestionData;
@@ -36,20 +37,22 @@ export const RightAnswerContent: React.FC<QuizQuestionViewProps> = ({
   const { testProgress, quizDetails } = data;
   const { currentQuestion, totalQuestions, questionID } = testProgress;
 
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(
+  const [selectedAnswerId, setSelectedAnswer] = useState<string | null>(
     quizDetails.userAnswerId
   );
 
   const [showExplanation, setShowExplanation] = useState(false);
+  const [checkedAnswerId, setCheckedAnswerId] = useState('');
 
   const progressValue = (currentQuestion / totalQuestions) * 100;
+  const isUserCorrect = selectedAnswerId === quizDetails.correctAnswerId;
 
   const handleAnswerChange = (value: string) => {
     setSelectedAnswer(value);
   };
 
   const handleSubmit = () => {
-    if (!selectedAnswer) return;
+    if (!selectedAnswerId) return;
     setShowExplanation(true);
   };
 
@@ -108,8 +111,8 @@ export const RightAnswerContent: React.FC<QuizQuestionViewProps> = ({
       {/* MAIN CONTENT */}
       <div className="background p-2 rounded-md grid grid-cols-12">
         {/* LEFT QUESTIONS LIST */}
-        <div className="flex col-span-1 rounded-md mt-4 mb-4 background p-2 space-y-2 max-h-[700px] overflow-y-auto custom-scroll">
-          <aside className="space-y-2 p-2 ">
+        <div className="flex col-span-1 rounded-md mt-4 mb-4 p-2 space-y-2 h-full overflow-y-auto custom-scroll">
+          <aside className="space-y-2 p-2 h-full">
             {Array.from({ length: totalQuestions }, (_, i) => {
               const qIndex = i + 1;
               const isCurrent = qIndex === currentQuestion;
@@ -150,7 +153,7 @@ export const RightAnswerContent: React.FC<QuizQuestionViewProps> = ({
         {/* RIGHT SIDE (QUESTION + EXPLANATION) */}
         <div className="col-span-11 md:flex gap-4">
           {/* Question Card */}
-          <div className='w-full'>
+          <div className="w-full">
             <Card className="m-4 shadow-lg">
               <CardHeader className="p-4">
                 <p className="text-base text-gray-700 leading-relaxed font-normal">
@@ -174,60 +177,150 @@ export const RightAnswerContent: React.FC<QuizQuestionViewProps> = ({
                 {/* OPTIONS */}
                 <RadioGroup
                   onValueChange={handleAnswerChange}
-                  value={selectedAnswer || undefined}
+                  value={selectedAnswerId || undefined}
                   className="space-y-4"
                 >
                   {quizDetails.options.map((option: Option) => {
-                    const isCorrect =
-                      showExplanation &&
+                    const isUserCorrect =
+                      selectedAnswerId === quizDetails.correctAnswerId;
+
+                    const isCorrectOption =
                       option.id === quizDetails.correctAnswerId;
 
-                    const isWrong =
+                    const isUserWrongOption =
+                      option.id === selectedAnswerId && !isCorrectOption;
+
+                    const isOtherOption =
                       showExplanation &&
-                      selectedAnswer === option.id &&
-                      option.id !== quizDetails.correctAnswerId;
+                      option.id !== selectedAnswerId &&
+                      !isCorrectOption;
+
+                    // const shouldShowAsChecked =
+                    //   (showExplanation && isCorrectOption) ||
+                    //   (showExplanation && isUserWrongOption);
 
                     return (
                       <div
                         key={option.id}
                         className={cn(
-                          'flex items-center space-x-3 p-3 rounded-lg border transition-colors',
-                          isCorrect && 'bg-green-100 border-green-500',
-                          isWrong && 'bg-red-100 border-red-500',
-                          !isCorrect &&
-                            !isWrong &&
-                            'bg-gray-50 hover:bg-gray-100'
+                          'relative flex items-center justify-between p-2 rounded-lg border transition-all',
+
+                          // Correct answer
+                          showExplanation &&
+                            isCorrectOption &&
+                            'bg-green-100 border-green-500',
+
+                          // User wrong answer
+                          showExplanation &&
+                            isUserWrongOption &&
+                            'bg-red-100 border-red-500',
+
+                          !showExplanation && 'bg-gray-50 hover:bg-gray-100'
                         )}
                       >
-                        <RadioGroupItem
-                          value={option.id}
-                          id={`option-${option.id}`}
-                          className="w-5 h-5 border-gray-500"
-                          disabled={showExplanation}
-                        />
-                        <Label
-                          htmlFor={`option-${option.id}`}
-                          className="flex items-center text-base font-normal cursor-pointer"
-                        >
-                          <span className="font-bold text-gray-600 w-6">
-                            {option.id}.
-                          </span>
-                          <span className="ml-2">{option.text}</span>
-                        </Label>
+                        <div className="flex items-center gap-3">
+                          {showExplanation ? (
+                            <RadioGroupItem
+                              value="foo"
+                              checked={
+                                selectedAnswerId === option.id ||
+                                isCorrectOption
+                              }
+                              varient={
+                                isCorrectOption ? 'default' : 'destructive'
+                              }
+                              disabled={showExplanation}
+                            />
+                          ) : (
+                            <RadioGroupItem
+                              varient="default"
+                              value={option.id}
+                              id={`option-${option.id}`}
+                              disabled={showExplanation}
+                            />
+                          )}
+
+                          <Label
+                            htmlFor={`option-${option.id}`}
+                            className={`${
+                              isUserCorrect &&
+                              isOtherOption &&
+                              'opacity-60 line-through'
+                            } cursor-pointer text-base`}
+                          >
+                            <span className="font-bold mr-2">{option.id}.</span>
+                            {option.text}
+                          </Label>
+                        </div>
+
+                        {/* Percentage */}
+                        {showExplanation && (
+                          <CircularProgress
+                            showLabel
+                            value={option?.percentage ?? 0}
+                            className="text-md font-semibold text-gray-600"
+                          ></CircularProgress>
+                        )}
                       </div>
                     );
                   })}
+                  {showExplanation && (
+                    <div
+                      className={cn(
+                        'mt-6 border-l-[4px] border-[#20ac19] p-[16px] rounded-[12px] ',
+                        isUserCorrect
+                          ? 'border-green-500 bg-green-50'
+                          : 'border-red-500 bg-red-50'
+                      )}
+                    >
+                      <CardContent className=" flex items-center justify-between">
+                        <div>
+                          <div className="font-bold text-lg">
+                            {isUserCorrect ? (
+                              <h4>Correct ({quizDetails.correctAnswerId})</h4>
+                            ) : (
+                              '✖ Wrong Answer'
+                            )}
+                          </div>
+                        </div>
+                        {isUserCorrect ? (
+                          ''
+                        ) : (
+                          <div className="text-sm text-gray-600">
+                            <p>correct option: {quizDetails.correctAnswerId}</p>
+                          </div>
+                        )}
+
+                        <div className="text-right flex gap-2 items-start">
+                          <div className="flex items-center justify-center">
+                            <Image
+                              src="/images/dashboard/statistics.png"
+                              width={32}
+                              height={32}
+                              alt=""
+                              className=""
+                            />
+                          </div>
+                          <div className="flex flex-col">
+                            <h2>55%</h2>
+                            <p className="text-xs text-gray-600">
+                              Answered Correctly
+                            </p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </div>
+                  )}
                 </RadioGroup>
 
                 {/* Submit Button */}
-                {!showExplanation && (
-                  <Btn
-                    text="Submit Answer"
-                    onClick={handleSubmit}
-                    disabled={!selectedAnswer}
-                    className="bg-[#01281e] text-white px-8 py-3 text-md font-semibold"
-                  />
-                )}
+
+                <Btn
+                  text="Submit Answer"
+                  onClick={handleSubmit}
+                  disabled={!selectedAnswerId}
+                  className="bg-[#01281e] text-white px-8 py-3 text-md font-semibold"
+                />
               </CardContent>
             </Card>
           </div>

@@ -17,11 +17,11 @@ const mockData: QuizQuestionData = {
     question:
       'Which of the following is the most characteristic early sign of lidocaine toxicity?',
     options: [
-      { id: 'A', text: 'Bradycardia' },
-      { id: 'B', text: 'Perioral numbness' },
-      { id: 'C', text: 'Seizure' },
-      { id: 'D', text: 'Ventricular arrhythmia' },
-      { id: 'E', text: 'Urticaria' },
+      { id: 'A', text: 'Bradycardia', percentage: 4.5 },
+      { id: 'B', text: 'Perioral numbness', percentage: 68 },
+      { id: 'C', text: 'Seizure', percentage: 26 },
+      { id: 'D', text: 'Ventricular arrhythmia', percentage: 20 },
+      { id: 'E', text: 'Urticaria', percentage: 17.9 },
     ],
     userAnswerId: null,
     correctAnswerId: 'B',
