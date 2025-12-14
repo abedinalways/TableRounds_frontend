@@ -29,38 +29,31 @@ const mockData: QuizQuestionData = {
       image: '/images/dashboard/main_dashboard/answer.png',
 
       main: `
-Dose-related lidocaine systemic toxicity typically begins with centralized 
-nervous system symptoms, and perioral (around mouth) numbness or tingling 
-is the classic early sign. Other early neuro-manifestations can include 
-metallic taste, tinnitus, and lightheadedness as local anesthetic levels rise. 
-As toxicity progresses, symptoms may include visual disturbances, dizziness,
-and altered mental status. Seizures occur at higher concentrations.
+Dose-related lidocaine systemic toxicity typically begins with central nervous system symptoms, and perioral (circumoral) numbness or tingling is a classic early sign. Other early neurologic manifestations can include metallic taste, tinnitus, and lightheadedness as cortical excitation precedes depression. With rising plasma levels, the patient may progress to seizures, followed by CNS depression and eventually cardiovascular collapse. Cardiovascular signs such as bradycardia or ventricular arrhythmias tend to appear later and at higher toxic concentrations. Recognizing subtle early neurologic symptoms allows prompt cessation of further anesthetic administration and early initiation of treatment if needed.
       `,
 
       whyIncorrect: [
         {
-          option: 'A',
-          text: `
-Bradycardia is a later cardiovascular toxicity manifestation. Early toxicity 
-is dominated by CNS symptoms, not cardiac.
+          option: 'Bradycardia',
+          text: `A later cardiovascular manifestation; early toxicity is dominated by CNS symptoms such as perioral numbness.
           `,
         },
         {
-          option: 'C',
+          option: 'Seizure',
           text: `
 Seizures are advanced manifestations of toxicity, not the earliest. Perioral 
 numbness precedes seizure activity.
           `,
         },
         {
-          option: 'D',
+          option: 'Ventricular arrhythmia',
           text: `
 Ventricular arrhythmia is a severe late-stage toxicity finding. Early signs 
 are neurologic, not cardiac.
           `,
         },
         {
-          option: 'E',
+          option: 'Urticaria',
           text: `
 Urticaria suggests an allergic reaction, not dose-related lidocaine toxicity.
           `,
@@ -68,14 +61,16 @@ Urticaria suggests an allergic reaction, not dose-related lidocaine toxicity.
       ],
 
       pinningPoint: `
-The hallmark of **early** systemic toxicity is **perioral numbness & metallic taste**.
+The earliest hallmark of local anesthetic systemic toxicity is
+usually CNS excitation, especially perioral numbness and tinnitus, not immediate cardiovascular collapse.
       `,
 
       memoryTrick: `“Numb lips before numb heart”`,
 
       references: [
         'Malamed et al. – Handbook of Local Anesthesia',
-        'Moore et al. – Ten Years of Mandibular Anesthesia Study',
+        'Maxifwfacial Surgery, Sid ed. 8c. Desver, 2012',
+        'Ellis E. Moos KF et Aftar A. Ton years of mandibula',
       ],
     },
   },

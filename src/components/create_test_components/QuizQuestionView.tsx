@@ -19,6 +19,11 @@ import ZoomOutIcon from '../reusable/icons/ZoomOutIcon';
 import ShareIcon from '../reusable/icons/ShareIcon';
 import PauseIcon from '../reusable/icons/PauseIcon';
 import { VerticalProgress } from '../verticalPorgress';
+import CorrectIcon from '../reusable/icons/CorrectIcon';
+import WrongIcon from '../reusable/icons/WrongIcon';
+import ExplainIcon from '../reusable/icons/ExpalinIcon';
+import OptionIcon from '../reusable/icons/OpotionIcon';
+import BookIcon from '../reusable/icons/BookIcon';
 
 interface QuizQuestionViewProps {
   data: QuizQuestionData;
@@ -41,7 +46,7 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   );
 
   const [showExplanation, setShowExplanation] = useState(false);
-  const [checkedAnswerId, setCheckedAnswerId] = useState('');
+  // const [checkedAnswerId, setCheckedAnswerId] = useState('');
   const progressValue = (currentQuestion / totalQuestions) * 100;
   const isUserCorrect = selectedAnswerId === quizDetails.correctAnswerId;
 
@@ -112,7 +117,7 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
       {/* MAIN CONTENT */}
       <div className="background p-2 rounded-md grid grid-cols-12">
         {/* LEFT SIDEBAR - QUESTION LIST */}
-        <div className="flex col-span-1 rounded-md mt-4 mb-4 background p-2 space-y-2  max-h-[700px] overflow-y-auto overflow-hidden custom-scroll">
+        <div className="flex col-span-1 rounded-md mt-4 mb-4 background p-2 space-y-2  max-h-[700px] overflow-y-auto custom-scroll ">
           <aside className="space-y-2 p-2 h-full">
             {Array.from({ length: totalQuestions }, (_, i) => {
               const qIndex = i + 1;
@@ -151,19 +156,19 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
         </div>
 
         {/* RIGHT SIDE (QUESTION + EXPLANATION) */}
-        <div className="col-span-11 md:flex gap-4 transition-all ease-in-out duration-500">
+        <div className="col-span-11 md:flex gap-[24px] transition-all ease-in-out duration-500 ">
           {/* Question Card */}
-          <div className="w-full">
-            <Card className="m-4 shadow-lg">
+          <div className="w-full bg-[#f9f9f5] md:m-[32px] md:p-[32px] rounded-[16px] shadow-lg">
+            <div className="">
               <CardHeader className="p-4">
-                <p className="text-base text-gray-700 leading-relaxed font-normal">
+                <p className="text-[20px] text-gray-700 leading-relaxed font-normal">
                   {quizDetails.title}
                 </p>
               </CardHeader>
 
               <CardContent className="p-6 space-y-6">
                 {/* Question */}
-                <div className="font-semibold text-lg text-gray-800 flex items-start">
+                <div className="font-semibold text-[20px] text-[#01281e] flex items-center ">
                   <Image
                     src="/images/dashboard/main_dashboard/qns.png"
                     width={28}
@@ -203,7 +208,7 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
                       <div
                         key={option.id}
                         className={cn(
-                          'relative flex items-center justify-between p-2 rounded-lg border transition-all',
+                          'relative flex items-center justify-between p-2 rounded-[8px] border border-[#00000026] transition-all',
 
                           // Correct answer
                           showExplanation &&
@@ -267,7 +272,7 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
                   {showExplanation && (
                     <div
                       className={cn(
-                        'mt-6 border-l-[4px] border-[#20ac19] p-[16px] rounded-[12px] ',
+                        'mt-6 border-l-[4px] border-[#20ac19] p-[16px] rounded-[12px]',
                         isUserCorrect
                           ? 'border-green-500 bg-green-50'
                           : 'border-red-500 bg-red-50'
@@ -277,9 +282,15 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
                         <div>
                           <div className="font-bold text-lg">
                             {isUserCorrect ? (
-                              <h4>Correct ({quizDetails.correctAnswerId})</h4>
+                              <h4 className="text-[#20AC19] flex items-center gap-2">
+                                <CorrectIcon /> Correct (
+                                {quizDetails.correctAnswerId})
+                              </h4>
                             ) : (
-                              '✖ Wrong Answer'
+                              <h4 className="text-red-600 flex gap-2 items-center">
+                                {' '}
+                                <WrongIcon /> Wrong Answer
+                              </h4>
                             )}
                           </div>
                         </div>
@@ -287,7 +298,10 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
                           ''
                         ) : (
                           <div className="text-sm text-gray-600">
-                            <p>correct option: {quizDetails.correctAnswerId}</p>
+                            <p className="flex items-center gap-2 font-semibold text-[#20AC19]">
+                              <CorrectIcon /> Correct Answer:{' '}
+                              {quizDetails.correctAnswerId}
+                            </p>
                           </div>
                         )}
 
@@ -301,12 +315,22 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
                               className=""
                             />
                           </div>
-                          <div className="flex flex-col">
-                            <h2>55%</h2>
-                            <p className="text-xs text-gray-600">
-                              Answered Correctly
-                            </p>
-                          </div>
+
+                          {isUserCorrect ? (
+                            <div className="flex flex-col">
+                              <h2>68%</h2>
+                              <p className="text-xs text-gray-600">
+                                Answered Correctly
+                              </p>
+                            </div>
+                          ) : (
+                            <div className="flex flex-col">
+                              <h2>6%</h2>
+                              <p className="text-xs text-gray-600 font-semibold">
+                                Answered {selectedAnswerId}
+                              </p>
+                            </div>
+                          )}
                         </div>
                       </CardContent>
                     </div>
@@ -319,20 +343,20 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
                   text="Submit Answer"
                   onClick={handleSubmit}
                   disabled={!selectedAnswerId}
-                  className="bg-[#01281e] text-white px-8 py-3 text-md font-semibold"
+                  className="bg-[#01281e] text-white px-8 py-3 text-md font-semibold cursor-auto"
                 />
               </CardContent>
-            </Card>
+            </div>
           </div>
 
           {/* EXPLANATION PANEL */}
           {showExplanation && (
-            <div className="m-4 p-4 bg-white shadow-lg rounded-xl w-full  h-fit border">
-              <h2 className="text-lg font-bold text-[#01281e] mb-4">
-                📝 Explanations:
+            <div className="m-[32px] p-[24px]  bg-[#f9f9f5] shadow-lg rounded-[16px] w-full   border font-[manrope] max-h-[1521px] overflow-x-hidden custom-scrollbar ">
+              <h2 className="text-lg font-bold text-[#01281e] mb-2 flex items-center gap-2">
+                <ExplainIcon /> Explanations:
               </h2>
 
-              <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
+              <p className="text-gray-700 md:text-[18px] leading-relaxed whitespace-pre-line max-w-[544px]">
                 {quizDetails.explanation.main}
               </p>
 
@@ -340,22 +364,24 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
                 <div className="my-4">
                   <Image
                     src={quizDetails.explanation.image}
-                    width={400}
-                    height={300}
+                    width={556}
+                    height={318}
                     alt="Explanation Image"
                     className="rounded-md"
                   />
                 </div>
               )}
 
-              <h3 className="text-md font-semibold text-[#01281e] mt-6 mb-2">
-                ❌ Why the Other Options Are Incorrect:
+              <h3 className="text-[20px] font-semibold text-[#01281e] mt-6 mb-2 flex items-center gap-2">
+                <OptionIcon /> Why the Other Options Are Incorrect:
               </h3>
 
-              <div className="space-y-3">
+              <div className="space-y-3 max-w-[544px]">
                 {quizDetails.explanation.whyIncorrect.map((item, idx) => (
-                  <div key={idx} className="text-sm text-gray-700">
-                    <span className="font-bold">{item.option}.</span>{' '}
+                  <div key={idx} className="text-[18px] text-gray-700">
+                    <span className="font-semibold text-[#01503b]">
+                      {item.option}:
+                    </span>{' '}
                     <span className="leading-relaxed whitespace-pre-line">
                       {item.text}
                     </span>
@@ -363,26 +389,28 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
                 ))}
               </div>
 
-              <h3 className="text-md font-semibold text-[#01281e] mt-6 mb-1">
-                📌 Pinning Point:
+              <h3 className="text-md font-semibold text-[#01281e] mt-6 mb-1 flex items-center gap-2 text-[18px]">
+                <OptionIcon /> Pimping Point:
               </h3>
-              <p className="text-gray-700 text-sm whitespace-pre-line">
+              <p className="text-[#01503b] text-[18px] whitespace-pre-line">
                 {quizDetails.explanation.pinningPoint}
               </p>
 
-              <h3 className="text-md font-semibold text-[#01281e] mt-6 mb-1">
-                🧠 Memory Trick:
+              <h3 className="text-md font-semibold text-[#01281e] mt-6 mb-1 flex items-center gap-2 text-[18px]">
+                <OptionIcon /> Memory trick:
               </h3>
-              <p className="text-gray-700 text-sm">
+              <p className="text-[#01281e] font-semibold leading-[150%] text-[18px]">
                 {quizDetails.explanation.memoryTrick}
               </p>
 
-              <h3 className="text-md font-semibold text-[#01281e] mt-6 mb-1">
-                📚 References:
+              <h3 className="text-md font-semibold text-[#01281e] mt-6 mb-1 flex items-center gap-2 text-[18px]">
+                <BookIcon /> References:
               </h3>
-              <ul className="list-disc pl-6 text-gray-700 text-sm space-y-1">
+              <ul className="list-none pl-6 text-[#01281e] text-[18px] font-semibold space-y-1">
                 {quizDetails.explanation.references.map((ref, index) => (
-                  <li key={index}>{ref}</li>
+                  <li key={index} className="">
+                    {ref}
+                  </li>
                 ))}
               </ul>
             </div>

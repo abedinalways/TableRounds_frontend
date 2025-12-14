@@ -24,22 +24,22 @@ export const adminMenu: MenuItem[] = [
   },
   {
     title: 'Statistics',
-    href: '/statistics',
+    href: '/dashboard/statistics',
     icon: '/images/dashboard/img04.png',
   },
   {
     title: 'Leaderboard',
-    href: '/leaderboard',
+    href: '/dashboard/leaderboard',
     icon: '/images/dashboard/img05.png',
   },
   {
     title: 'Reset Question Bank',
-    href: '/reset-question-bank',
+    href: '/dashboard/reset-question-bank',
     icon: '/images/dashboard/img06.png',
   },
   {
     title: 'Messages',
-    href: '/messages',
+    href: '/dashboard/messages',
     icon: '/images/dashboard/img07.png',
   },
 
@@ -47,17 +47,17 @@ export const adminMenu: MenuItem[] = [
   {
     section: 'Other',
     title: 'Help & Support',
-    href: '/support',
+    href: '/dashboard/support',
     icon: '/images/dashboard/img08.png',
   },
   {
     title: 'Settings',
-    href: '/settings',
+    href: '/dashboard/settings',
     icon: '/images/dashboard/img09.png',
   },
   {
     title: 'Logout',
-    href: '/logout',
+    href: '/dashboard/logout',
     icon: '/images/dashboard/img10.png',
   },
 ];
@@ -80,22 +80,22 @@ export const userMenu: MenuItem[] = [
   },
   {
     title: 'Statistics',
-    href: '/statistics',
+    href: '/dashboard/statistics',
     icon: '/images/dashboard/img04.png',
   },
   {
     title: 'Leaderboard',
-    href: '/leaderboard',
+    href: '/dashboard/leaderboard',
     icon: '/images/dashboard/img05.png',
   },
   {
     title: 'Reset Question Bank',
-    href: '/reset-question-bank',
+    href: '/dashboard/reset-question-bank',
     icon: '/images/dashboard/img06.png',
   },
   {
     title: 'Messages',
-    href: '/messages',
+    href: '/dashboard/messages',
     icon: '/images/dashboard/img07.png',
   },
 
@@ -103,17 +103,17 @@ export const userMenu: MenuItem[] = [
   {
     section: 'Other',
     title: 'Help & Support',
-    href: '/support',
+    href: '/dashboard/support',
     icon: '/images/dashboard/img08.png',
   },
   {
     title: 'Settings',
-    href: '/settings',
+    href: '/dashboard/settings',
     icon: '/images/dashboard/img09.png',
   },
   {
     title: 'Logout',
-    href: '/logout',
+    href: '/dashboard/logout',
     icon: '/images/dashboard/img10.png',
   },
 ];
