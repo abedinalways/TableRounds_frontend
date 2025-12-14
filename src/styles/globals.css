@@ -183,6 +183,31 @@
   background: rgba(2, 86, 64, 0.3);
 }
 
+.custom-scrollbar {
+  overflow-y: auto;
+  scrollbar-width: 12px;
+  scrollbar-color: #023729 #e5e7eb;
+}
+
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #e5e7eb;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 12px;
+ 
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(160deg, #023729 0%, #02ae80 100%);
+  border-radius: 10px;
+  border: 2px solid #e5e7eb;
+}
+.custom-scrollbar::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+  display: none;
+}
 .custom-scroll {
   /* scrollbar-width: thin; */
   scrollbar-color:#b79e6b transparent;
