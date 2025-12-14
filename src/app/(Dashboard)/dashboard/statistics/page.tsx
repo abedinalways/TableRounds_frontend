@@ -1,10 +1,12 @@
+import { StatsHeader } from '@/components/statistics/StatsHeader';
+import statisticsData from '../../../../../public/data/statistics.json';
 import React from 'react'
 
 export default function StatisticsPage() {
   return (
-    <div className="">
-      <h2>Statistics</h2>
-      <p>Track your progress and performance</p>
+    <div className="flke flex-col ">
+      
+      <StatsHeader categories={statisticsData.categories} />
     </div>
   );
 }
