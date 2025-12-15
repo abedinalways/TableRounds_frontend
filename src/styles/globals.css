@@ -246,3 +246,7 @@
     -ms-overflow-style: none; /* Hides scrollbar in IE */
   }
 }
+
+.card-bg01{
+background: rgba(183, 158, 107, 0.14)
+}
