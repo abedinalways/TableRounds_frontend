@@ -3,8 +3,8 @@ import { Badge } from "../ui/badge";
 
 export function StatsHeader({ categories }: { categories: string[] }) {
   return (
-    <div>
-      <h2 className="text-xl font-semibold">Statistics</h2>
+    <div className="font-[manrope]">
+      <h2 className="text-[48px] font-semibold">Statistics</h2>
       <p className="text-sm text-muted-foreground">
         Track your progress and performance
       </p>
