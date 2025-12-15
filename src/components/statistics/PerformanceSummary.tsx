@@ -72,16 +72,16 @@ export default function PerformanceSummary({
           </CardHeader>
           <CardContent className="flex items-center gap-6">
             <AnimatedProgressCircle value={qb.usedPercent} color="brown" />
-            <div className="space-y-2 text-sm flex-1">
-              <div className="flex items-center justify-between">
+            <div className="space-y-[12px] text-[20px] flex-1 items-center">
+              <div className="flex items-center justify-between card-bg01 px-[24px] py-[24px] rounded-[8px]">
                 <span className="text-gray-600">Used Questions</span>
                 <span className="font-semibold text-amber-700">{qb.used}</span>
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between card-bg px-[24px] py-[24px] rounded-[8px]">
                 <span className="text-gray-600">Unused Questions</span>
                 <span className="font-semibold text-gray-700">{qb.unused}</span>
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between bg-[#ecfdf5] px-[24px] py-[24px] rounded-[8px]">
                 <span className="text-gray-600">Total Questions</span>
                 <span className="font-semibold text-gray-900">{qb.total}</span>
               </div>

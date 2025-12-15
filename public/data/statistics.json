@@ -24,16 +24,36 @@
     "unused": 490,
     "total": 500
   },
-  "tests": {
-    "created": 1,
-    "completed": 1,
-    "suspended": 0
-  },
-  "breakdown": [
-    { "title": "Trauma", "correct": 60, "rank": 4, "progress": 10 },
-    { "title": "Orthognathic", "correct": 60, "rank": 4, "progress": 10 },
-    { "title": "Pathology", "correct": 60, "rank": 4, "progress": 10 },
-    { "title": "Dentoalveolar", "correct": 60, "rank": 4, "progress": 10 },
-    { "title": "TMJ", "correct": 60, "rank": 4, "progress": 10 }
-  ]
+  "statistics": {
+    "statCards": [
+      {
+        "title": "Tests Created",
+        "value": 1,
+        "subtitle": "+1 this week",
+        "bgColor": "bg-blue-50",
+        "textColor": "text-blue-600"
+      },
+      {
+        "title": "Tests Completed",
+        "value": 1,
+        "subtitle": "100% completion",
+        "bgColor": "bg-teal-50",
+        "textColor": "text-teal-600"
+      },
+      {
+        "title": "Suspended Tests",
+        "value": 0,
+        "subtitle": "No pending tests",
+        "bgColor": "bg-amber-50",
+        "textColor": "text-amber-600"
+      }
+    ],
+    "breakdown": [
+      { "title": "Trauma", "correct": 60, "rank": 4, "progress": 10 },
+      { "title": "Orthognathics", "correct": 60, "rank": 4, "progress": 10 },
+      { "title": "Pathology", "correct": 60, "rank": 4, "progress": 10 },
+      { "title": "Dentoalveolar", "correct": 60, "rank": 4, "progress": 10 },
+      { "title": "TMJ", "correct": 60, "rank": 4, "progress": 10 }
+    ]
+  }
 }

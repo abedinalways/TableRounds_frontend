@@ -208,7 +208,7 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
                       <div
                         key={option.id}
                         className={cn(
-                          'relative flex items-center justify-between p-2 rounded-[8px] border border-[#00000026] transition-all',
+                          'relative flex items-center justify-between p-2 rounded-xl border border-[#00000026] transition-all',
 
                           // Correct answer
                           showExplanation &&
