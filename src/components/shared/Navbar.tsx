@@ -155,7 +155,7 @@ export default function Navbar({ isOms = false }) {
                     src="/images/navbar-logo.png"
                     width={30}
                     height={30}
-                    alt="TableRounds Logo"
+                    alt="T"
                   />
                   <span className="font-bold text-xl text-white font-[manrope]">
                     TableRounds

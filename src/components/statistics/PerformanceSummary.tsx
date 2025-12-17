@@ -37,8 +37,8 @@ export default function PerformanceSummary({
           </CardHeader>
           <CardContent className="flex gap-6">
             <AnimatedProgressCircle value={p.correctPercent} color="green" />
-            <div className="space-y-[12px] text-[20px] flex-1 items-center">
-              <div className="flex items-center justify-between bg-[#ecfdf5] px-[24px] py-[24px] rounded-[8px]">
+            <div className="space-y-3 text-[20px] flex-1 items-center">
+              <div className="flex items-center justify-between bg-[#ecfdf5] p-6 rounded-[8px]">
                 <span className="text-gray-600">Total Correct</span>
                 <span className="font-semibold text-green-700">
                   {p.totalCorrect}

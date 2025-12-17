@@ -64,7 +64,7 @@ export default function Sidebar() {
             <Link href="/">
               <div className="flex items-center gap-2 mb-6">
                 <Image
-                  src="/images/logo.png"
+                  src="/images/navbar-logo.png"
                   width={40}
                   height={40}
                   alt="TableRounds Logo"
