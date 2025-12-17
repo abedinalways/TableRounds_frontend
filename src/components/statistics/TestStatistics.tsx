@@ -149,23 +149,27 @@ const TestStatistics: React.FC = () => {
 
               {/* Stats */}
               <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-700">Total Correct</span>
-                  <span className="text-sm font-semibold text-gray-900">
+                <div className="flex justify-between items-center bg-[#ecfdf5] py-[12px] px-[24px] rounded-[8px]">
+                  <span className="text-[18px] text-gray-700">
+                    Total Correct
+                  </span>
+                  <span className="text-[20px] font-semibold text-gray-900">
                     {item.correct}%
                   </span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-700">Percentile Rank</span>
-                  <span className="text-sm font-semibold text-red-500">
+                <div className="flex justify-between items-center bg-[#fef2f2] px-[24px] py-[12px] rounded-[8px]">
+                  <span className="text-[18px] text-gray-700">
+                    Percentile Rank
+                  </span>
+                  <span className="text-[20px] font-semibold text-red-500">
                     {item.rank}
                   </span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-700">
+                <div className="flex justify-between items-center card-bg px-[24px] py-[12px] rounded-[8px]">
+                  <span className="text-[18px] text-gray-700">
                     Question Bank progress
                   </span>
-                  <span className="text-sm font-semibold text-gray-900">
+                  <span className="text-[20px] font-semibold text-gray-900">
                     {item.progress}%
                   </span>
                 </div>

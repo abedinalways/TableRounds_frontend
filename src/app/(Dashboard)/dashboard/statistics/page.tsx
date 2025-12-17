@@ -6,7 +6,7 @@ import TestStatistics from '@/components/statistics/TestStatistics';
 
 export default function StatisticsPage() {
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col overflow-hidden">
       <StatsHeader categories={statisticsData.categories} />
       <PerformanceSummary data={statisticsData} />
       <TestStatistics/>
