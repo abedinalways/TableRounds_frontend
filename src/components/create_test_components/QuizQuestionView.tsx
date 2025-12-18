@@ -150,13 +150,13 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
               );
             })}
           </aside>
-          <div className="">
+          {/* <div className="">
             <VerticalProgress value={progressValue} />
-          </div>
+          </div> */}
         </div>
 
         {/* RIGHT SIDE (QUESTION + EXPLANATION) */}
-        <div className="col-span-11 md:flex gap-[24px] transition-all ease-in-out duration-500 ">
+        <div className="col-span-11 md:flex gap-[5px] transition-all ease-in-out duration-500 ">
           {/* Question Card */}
           <div className="w-full bg-[#f9f9f5] md:m-[32px] md:p-[32px] rounded-[16px] shadow-lg">
             <div className="">
