@@ -1,0 +1,63 @@
+'use client';
+
+import { useState } from 'react';
+import { Switch } from '@/components/ui/switch';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import dynamic from 'next/dynamic';
+
+const Mapview = dynamic(() => import('./Mapview'), {
+  ssr: false,
+});
+
+function MapView() {
+  return (
+    <div className="h-full w-full rounded-xl border  flex items-center justify-center">
+     <Mapview/>
+     
+    </div>
+  );
+}
+
+function LeaderboardView() {
+  return (
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>Leaderboard</CardTitle>
+      </CardHeader>
+     
+    </Card>
+  );
+}
+
+export default function LeaderboardMapToggle() {
+  const [isMap, setIsMap] = useState(true);
+
+  return (
+    <div className="w-full bg-none font-[manrope]">
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div>
+          <CardTitle className="text-[48px] text-[#01281e]">
+            {isMap ? 'Map' : 'Leaderboard'}
+          </CardTitle>
+          <p className="text-[18px] text-muted-foreground">
+            {isMap
+              ? 'Explore where TableRounds surgeons are worldwide'
+              : 'Compare your performance with surgeons around the world'}
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <span className={`text-lg ${!isMap ? 'font-semibold' : ''}`}>
+            Leaderboard
+          </span>
+          <Switch checked={isMap} onCheckedChange={setIsMap} />
+          <span className={`text-lg ${isMap ? 'font-semibold' : ''}`}>Map</span>
+        </div>
+      </CardHeader>
+
+      <CardContent className="mt-4 text-[#01281e]">
+        {isMap ? <MapView /> : <LeaderboardView />}
+      </CardContent>
+    </div>
+  );
+}

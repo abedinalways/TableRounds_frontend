@@ -18,7 +18,7 @@ export default function LoginPage() {
       try {
         const user = await login(data.email, data.password);
         toast.success('Welcome back! Redirecting to dashboard...', {
-          description: `Login as ${user.name} || ${user.email}`,
+          description: `Login as ${user.name}`,
         });
         // redirect based on role
         setTimeout(() => {
@@ -40,7 +40,7 @@ export default function LoginPage() {
       } 
     };
   return (
-    <div className="mt-20 overflow-hidden">
+    <div className="mt-20 overflow-hidden font-[manrope] py-6">
       <div className="relative">
         <Image
           src="/images/auth/logo.png"
@@ -50,7 +50,7 @@ export default function LoginPage() {
           className="absolute -top-14 left-10"
         />
       </div>
-      <div className="text-center py-6 text-black font-[roboto]">
+      <div className="text-center py-6 text-black">
         <h3 className="text-xl md:text-3xl lg:text-5xl font-bold">
           Login your TableRounds profile
         </h3>

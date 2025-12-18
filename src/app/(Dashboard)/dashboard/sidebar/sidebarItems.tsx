@@ -90,7 +90,7 @@ export const userMenu: MenuItem[] = [
   },
   {
     title: 'Reset Question Bank',
-    href: '/dashboard/reset-question-bank',
+    href: '/dashboard/reset-qns-bank',
     icon: '/images/dashboard/img06.png',
   },
   {
@@ -113,7 +113,7 @@ export const userMenu: MenuItem[] = [
   },
   {
     title: 'Logout',
-    href: '/dashboard/logout',
+    href: '/login',
     icon: '/images/dashboard/img10.png',
   },
 ];

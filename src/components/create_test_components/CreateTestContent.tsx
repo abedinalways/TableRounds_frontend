@@ -14,6 +14,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
 import { Switch } from '../ui/switch';
+import { useRouter } from 'next/navigation';
 
 // --- Mock Data ---
 const TOPICS: string[] = [
@@ -38,7 +39,7 @@ export function CreateTestContent() {
   );
   const [selectedStatus, setSelectedStatus] = useState<string[]>(['Used']);
   const [numQuestions, setNumQuestions] = useState<string>('');
-
+  const router = useRouter();
   const handleTopicToggle = (
     topicName: string,
     checked: boolean | 'indeterminate'
@@ -62,14 +63,9 @@ export function CreateTestContent() {
   };
 
   const handleStartTest = () => {
-    console.log('Test configuration:', {
-      testMode,
-      difficulty,
-      selectedTopics,
-      selectedStatus,
-      numQuestions,
-    });
-    alert('Starting Test!');
+     router.push('create-test/1');
+   
+    
   };
 
   return (
@@ -190,7 +186,7 @@ export function CreateTestContent() {
 
         {/* 4. Topic Selection */}
         <div className="space-y-4 bg-white p-4 rounded-[12px] border border-[#e9e9e9] custom-shadow">
-          <h3 className="text-lg font-semibold">Topic</h3>
+          <h3 className="text-lg font-semibold"><Checkbox/> Topic</h3>
           <p className="text-sm text-[#01281e]">
             Choose the topics you want to focus on
           </p>
