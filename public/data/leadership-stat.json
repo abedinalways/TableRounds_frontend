@@ -6,7 +6,7 @@
       "title": "Current Rank",
       "value": "#1",
       "subtitle": "Top Performer",
-      "icon": "/images/dashboard/leaderboard/Frame.png"
+      "icon": "/images/dashboard/leaderboard/Group01.png"
     },
     {
       "id": "tests",
@@ -20,14 +20,14 @@
       "title": "Accuracy",
       "value": "72%",
       "subtitle": "Correct answers",
-      "icon": "/images/dashboard/leaderboard/Frame.png"
+      "icon": "/images/dashboard/leaderboard/Frame02.png"
     },
     {
       "id": "streak",
       "title": "Current Streak",
       "value": "15",
       "subtitle": "Days active",
-      "icon": "/images/dashboard/leaderboard/Frame.png"
+      "icon": "/images/dashboard/leaderboard/Frame03.png"
     }
   ],
   "leaderboard": [
@@ -36,8 +36,9 @@
       "name": "John Smith, MD",
       "institution": "Institution 1",
       "tests": 78,
-      "accuracy": 72,
-      "avgScore": 98
+      "accuracy": 52,
+      "avgScore": 98,
+      "trend": [45, 48, 52, 49, 55, 52]
     },
     {
       "rank": 2,
@@ -45,15 +46,62 @@
       "institution": "Institution 1",
       "tests": 78,
       "accuracy": 72,
-      "avgScore": 98
+      "avgScore": 98,
+      "trend": [85, 48, 52, 69, 55, 82]
     },
     {
       "rank": 3,
+      "name": "Redin J. Kolin, MD",
+      "institution": "Institution 1",
+      "tests": 78,
+      "accuracy": 62,
+      "avgScore": 98,
+      "trend": [45, 48, 82, 49, 55, 72]
+    },
+    {
+      "rank": 4,
+      "name": "Denish B. Kohm, MD",
+      "institution": "Institution 1",
+      "tests": 78,
+      "accuracy": 92,
+      "avgScore": 98,
+      "trend": [45, 68, 52, 49, 55, 52]
+    },
+    {
+      "rank": 5,
+      "name": "John Smith, MD",
+      "institution": "Institution 1",
+      "tests": 78,
+      "accuracy": 52,
+      "avgScore": 98,
+      "trend": [45, 48, 52, 49, 55, 52]
+    },
+    {
+      "rank": 6,
       "name": "John Smith, MD",
       "institution": "Institution 1",
       "tests": 78,
       "accuracy": 72,
-      "avgScore": 98
+      "avgScore": 98,
+      "trend": [85, 48, 52, 69, 55, 82]
+    },
+    {
+      "rank": 7,
+      "name": "Smith, MD",
+      "institution": "Institution 1",
+      "tests": 78,
+      "accuracy": 62,
+      "avgScore": 98,
+      "trend": [45, 48, 82, 49, 55, 72]
+    },
+    {
+      "rank": 8,
+      "name": "yohn Smith, MD",
+      "institution": "Institution 1",
+      "tests": 78,
+      "accuracy": 92,
+      "avgScore": 98,
+      "trend": [45, 68, 52, 49, 55, 52]
     }
   ]
 }
