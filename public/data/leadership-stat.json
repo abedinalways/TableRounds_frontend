@@ -1,0 +1,60 @@
+
+{
+  "stats": [
+    {
+      "id": "rank",
+      "title": "Current Rank",
+      "value": "#1",
+      "subtitle": "Top Performer",
+      "icon": "/images/dashboard/leaderboard/Frame.png"
+    },
+    {
+      "id": "tests",
+      "title": "Tests Completed",
+      "value": "78",
+      "subtitle": "Total attempts",
+      "icon": "/images/dashboard/leaderboard/Frame.png"
+    },
+    {
+      "id": "accuracy",
+      "title": "Accuracy",
+      "value": "72%",
+      "subtitle": "Correct answers",
+      "icon": "/images/dashboard/leaderboard/Frame.png"
+    },
+    {
+      "id": "streak",
+      "title": "Current Streak",
+      "value": "15",
+      "subtitle": "Days active",
+      "icon": "/images/dashboard/leaderboard/Frame.png"
+    }
+  ],
+  "leaderboard": [
+    {
+      "rank": 1,
+      "name": "John Smith, MD",
+      "institution": "Institution 1",
+      "tests": 78,
+      "accuracy": 72,
+      "avgScore": 98
+    },
+    {
+      "rank": 2,
+      "name": "John Smith, MD",
+      "institution": "Institution 1",
+      "tests": 78,
+      "accuracy": 72,
+      "avgScore": 98
+    },
+    {
+      "rank": 3,
+      "name": "John Smith, MD",
+      "institution": "Institution 1",
+      "tests": 78,
+      "accuracy": 72,
+      "avgScore": 98
+    }
+  ]
+}
+
