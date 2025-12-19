@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic';
 import StatCards from './StatCards';
 import leaderboardData from '../../../public/data/leadership-stat.json';
 import type { LeaderboardData } from '@/types/type';
+import { LeaderboardTable } from './LeaderboardTable';
 
 const data = leaderboardData as LeaderboardData;
 
@@ -26,8 +27,11 @@ function MapView() {
 
 function LeaderboardView() {
   return (
-    
-        <StatCards stats={data.stats} />
+    <div className='min-h-screen'>
+
+      <StatCards stats={data.stats} />
+      <LeaderboardTable data={leaderboardData.leaderboard}/>
+    </div>
      
   );
 }

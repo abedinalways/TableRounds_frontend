@@ -13,7 +13,9 @@ export interface LeaderboardItem {
   tests: number;
   accuracy: number;
   avgScore: number;
+  trend?: number[];
 }
+
 
 export interface LeaderboardData {
   stats: Stat[];
