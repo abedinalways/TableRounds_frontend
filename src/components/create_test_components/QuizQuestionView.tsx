@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import {  CardContent, CardHeader } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -18,7 +18,7 @@ import ZoomInIcon from '../reusable/icons/ZoomInIcon';
 import ZoomOutIcon from '../reusable/icons/ZoomOutIcon';
 import ShareIcon from '../reusable/icons/ShareIcon';
 import PauseIcon from '../reusable/icons/PauseIcon';
-import { VerticalProgress } from '../verticalPorgress';
+
 import CorrectIcon from '../reusable/icons/CorrectIcon';
 import WrongIcon from '../reusable/icons/WrongIcon';
 import ExplainIcon from '../reusable/icons/ExpalinIcon';
@@ -158,7 +158,7 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
         {/* RIGHT SIDE (QUESTION + EXPLANATION) */}
         <div className="col-span-11 md:flex gap-[5px] transition-all ease-in-out duration-500 ">
           {/* Question Card */}
-          <div className="w-full bg-[#f9f9f5] md:m-[32px] md:p-[32px] rounded-[16px] shadow-lg">
+          <div className="w-full bg-[#f9f9f5] md:my-8 md:mx-[24px]  md:p-[32px] rounded-[16px] shadow-lg">
             <div className="">
               <CardHeader className="p-4">
                 <p className="text-[20px] text-gray-700 leading-relaxed font-normal">
@@ -351,7 +351,7 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
 
           {/* EXPLANATION PANEL */}
           {showExplanation && (
-            <div className="m-[32px] p-[24px]  bg-[#f9f9f5] shadow-lg rounded-[16px] w-full   border font-[manrope] max-h-[1521px] overflow-x-hidden custom-scrollbar ">
+            <div className="p-[24px] md:my-[32px] md:mr-[32px] bg-[#f9f9f5] shadow-lg rounded-[16px] w-full   border font-[manrope] max-h-[1521px] overflow-x-hidden custom-scrollbar ">
               <h2 className="text-lg font-bold text-[#01281e] mb-2 flex items-center gap-2">
                 <ExplainIcon /> Explanations:
               </h2>

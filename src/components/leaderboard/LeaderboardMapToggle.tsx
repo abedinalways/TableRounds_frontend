@@ -4,6 +4,12 @@ import { useState } from 'react';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import dynamic from 'next/dynamic';
+import StatCards from './StatCards';
+import leaderboardData from '../../../public/data/leadership-stat.json';
+import type { LeaderboardData } from '@/types/type';
+
+const data = leaderboardData as LeaderboardData;
+
 
 const Mapview = dynamic(() => import('./Mapview'), {
   ssr: false,
@@ -20,12 +26,9 @@ function MapView() {
 
 function LeaderboardView() {
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Leaderboard</CardTitle>
-      </CardHeader>
+    
+        <StatCards stats={data.stats} />
      
-    </Card>
   );
 }
 

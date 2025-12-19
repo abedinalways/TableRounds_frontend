@@ -266,3 +266,7 @@ background: rgba(183, 158, 107, 0.14)
 .leaflet-tile {
   filter: hue-rotate(85deg) saturate(1.2) brightness(1.05);
 }
+
+.bg-icon{
+  background: rgba(255, 255, 255, 0.2);
+}
