@@ -1,0 +1,101 @@
+{
+  "sidebar": [
+    { "id": "privacy", "label": "Privacy Policy" },
+    { "id": "disclaimer", "label": "Disclaimer" },
+    { "id": "terms", "label": "Terms & Conditions" }
+  ],
+  "sections": {
+    "privacy": {
+      "title": "Privacy Policy",
+      "intro01": "Welcome to our Medical Dental Education Platform (\"Platform\", \"we\", \"us\", or \"our\"). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our educational testing and quiz application. We are committed to protecting your privacy and ensuring the security of your personal information. This policy applies to all users of our Platform, including medical and dental students, residents, practitioners, and educators.",
+      
+      "blocks": [
+        {
+          "heading": "Personal Information",
+          "items": [
+            "Name, email address, and phone number",
+            "Educational institution and program information",
+            "Professional credentials and certifications",
+            "Profile picture and bio (optional)"
+          ]
+        },
+        {
+          "heading": "Usage Data",
+          "items": [
+            "Test scores, quiz results, and performance analytics",
+            "Study patterns, time spent on questions, and progress tracking",
+            "Device information, IP address, and browser type",
+            "Login times and activity logs"
+          ]
+        },
+        {
+          "heading": "Communication Data",
+          "items": [
+            "Direct messages with other users (instructors, peers)",
+            "Forum posts, comments, and discussions",
+            "Customer support inquiries and feedback"
+          ]
+        },
+        {
+          "heading": "Your Privacy Rights",
+          "items": [
+            "Access: Request access to your personal data and obtain a copy",
+            "Correction: Request correction of inaccurate or incomplete information",
+            "Deletion: Request deletion of your personal data, subject to legal requirements",
+            "Data Portability: Request a copy of your data in a structured, machine-readable format",
+            "Opt-Out: Opt out of marketing communications at any time"
+          ]
+        },
+        {
+          "heading": "Third-Party Services",
+          "items": [
+            "Our Platform may contain links to third-party websites or integrate with third-party services.",
+            "We are not responsible for the privacy practices of these external services."
+          ]
+        }
+      ]
+    },
+    "disclaimer": {
+      "title": "Disclaimer",
+      "intro": "The information provided on this platform is for educational purposes only and should not be considered professional medical or dental advice.",
+      "blocks": [
+        {
+          "heading": "No Professional Advice",
+          "items": [
+            "Content is intended for educational and exam preparation purposes only",
+            "Not a substitute for professional medical or dental consultation"
+          ]
+        },
+        {
+          "heading": "Accuracy of Information",
+          "items": [
+            "We strive to keep content accurate and up to date",
+            "We do not guarantee completeness or accuracy at all times"
+          ]
+        }
+      ]
+    },
+    "terms": {
+      "title": "Terms & Conditions",
+      "intro": "By accessing or using our Platform, you agree to be bound by these Terms & Conditions.",
+      "blocks": [
+        {
+          "heading": "User Responsibilities",
+          "items": [
+            "Provide accurate and complete registration information",
+            "Maintain the confidentiality of your account credentials",
+            "Use the platform in compliance with applicable laws"
+          ]
+        },
+        {
+          "heading": "Prohibited Activities",
+          "items": [
+            "Unauthorized access to systems or data",
+            "Copying or redistributing content without permission",
+            "Engaging in harmful or abusive behavior"
+          ]
+        }
+      ]
+    }
+  }
+}
