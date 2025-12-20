@@ -12,8 +12,8 @@ export default function Brand() {
                 alt=""
               />
             </div>
-      <div className="custom-container px-4 md:px-0 py-10 md:py-0 z-20">
-        <Image src="/images/osm/osm.png" width={678} height={190} alt="" />
+      <div className="custom-container px-4 md:px-20 py-10 md:py-0 z-20">
+        <Image src="/images/osm/osm.png" width={578} height={190} alt="" />
       </div>
       <div className="custom-container px-4 md:px-0 z-20">
         <Image src="/images/osm/elevate.png" width={926} height={466} alt="" />

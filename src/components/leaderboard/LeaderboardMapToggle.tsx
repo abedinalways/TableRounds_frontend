@@ -57,7 +57,7 @@ export default function LeaderboardMapToggle() {
           <span className={`text-lg ${!isMap ? 'font-semibold' : ''}`}>
             Leaderboard
           </span>
-          <Switch checked={isMap} onCheckedChange={setIsMap} />
+          <Switch checked={isMap} onCheckedChange={setIsMap} className='cursor-pointer'/>
           <span className={`text-lg ${isMap ? 'font-semibold' : ''}`}>Map</span>
         </div>
       </CardHeader>

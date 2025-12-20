@@ -7,6 +7,7 @@ import { adminMenu, userMenu, MenuItem } from './sidebarItems';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { X } from 'lucide-react';
+import OmsLogo from '@/components/reusable/icons/OmsLogo';
 
 interface SidebarProps {
   open?: boolean;
@@ -52,10 +53,14 @@ export default function Sidebar({
                 height={40}
                 alt="TableRounds Logo"
               />
-              <h1 className="font-bold text-lg sm:text-xl text-white font-[manrope]">
-                Table{' '}
-                <span className="text-xs bg-[#B79E6B] p-1 rounded-sm">OSM</span>
-                <br /> Rounds
+              <h1 className="relative font-bold text-lg sm:text-xl lg:text-3xl text-white font-[manrope] mb-4">
+                <div className="flex  items-center justify-center gap-1">
+                  Table
+                  <span className="">
+                    <OmsLogo />
+                  </span>
+                </div>
+                <span className="absolute top-6">Rounds</span>
               </h1>
             </div>
           </Link>
@@ -130,12 +135,14 @@ export default function Sidebar({
                   height={40}
                   alt="TableRounds Logo"
                 />
-                <h1 className="font-bold text-lg text-white font-[manrope]">
-                  Table{' '}
-                  <span className="text-xs bg-[#B79E6B] p-1 rounded-sm">
-                    OSM
-                  </span>
-                  <br /> Rounds
+                <h1 className="relative font-bold text-lg sm:text-xl lg:text-3xl text-white font-[manrope] mb-4">
+                  <div className="flex  items-center justify-center gap-1">
+                    Table
+                    <span className="">
+                      <OmsLogo />
+                    </span>
+                  </div>
+                  <span className="absolute top-6">Rounds</span>
                 </h1>
               </div>
             </Link>

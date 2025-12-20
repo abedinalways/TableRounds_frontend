@@ -79,11 +79,11 @@ interface CircularProgressProps {
       {showLabel && (
         <div
           className={cn(
-            "absolute inset-0 flex items-center justify-center text-md",
+            "absolute inset-0 flex items-center justify-center text-sm",
             labelClassName
           )}
         >
-          {renderLabel ? renderLabel(value) : value}
+          {renderLabel ? renderLabel(value) : value}%
         </div>
       )}
     </div>

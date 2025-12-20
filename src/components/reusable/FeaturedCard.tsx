@@ -23,10 +23,10 @@ const FeaturedCard = ({
             className="w-12 h-12 transition-all duration-300 group-hover:brightness-0 group-hover:invert group-hover:scale-110"
           />
         </div>
-        <h3 className="text-md font-semibold mb-2 text-gray-900 group-hover:text-white transition-colors duration-300">
+        <h3 className="text-[24px] font-semibold mb-2 text-[#01281e] group-hover:text-white transition-colors duration-300">
           {title}
         </h3>
-        <p className="text-xs text-gray-600 group-hover:text-white transition-colors duration-300">
+        <p className="text-[16px] text-[#01281e] group-hover:text-white transition-colors duration-300">
           {description}
         </p>
       </CardContent>
