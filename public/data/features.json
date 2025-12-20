@@ -12,11 +12,11 @@
   {
     "title": "Leaderboard + Global Map",
     "description": "See how you stack up against other surgeons and view our live, interactive map showing OMS users across the world.",
-    "icon": "/images/osm/img03.png"
+    "icon": "/images/osm/img04.png"
   },
   {
     "title": "Secure Messaging",
     "description": "Direct message colleagues, share test results, and challenge others to take the same exam.",
-    "icon": "/images/osm/img04.png"
+    "icon": "/images/osm/img03.png"
   }
 ]

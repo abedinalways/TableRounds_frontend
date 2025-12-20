@@ -7,13 +7,13 @@ const specialtiesData = {
     {
       id: 1,
       name: 'Anesthesia/Medicine',
-      icon: '/images/specialty/img01.png',
+      icon: '/images/specialty/img02.png',
       label: 'Anesthesia/\nMedicine',
     },
     {
       id: 2,
       name: 'Cancer',
-      icon: '/images/specialty/img02.png',
+      icon: '/images/specialty/img01.png',
       label: 'Cancer',
     },
     {

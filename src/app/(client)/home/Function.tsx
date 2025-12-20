@@ -3,7 +3,7 @@ import Image from 'next/image';
 import React from 'react';
 const features = [
   {
-    icon: '/images/function/img01.png',
+    icon: '/images/function/img02.png',
     title: 'Create a verified professional profile',
     description:
       'Submit proof-of-self to join a vetted network of clinicians and trainees.',
@@ -14,14 +14,14 @@ const features = [
     description: 'Access specialty-tagged question banks',
   },
   {
-    icon: '/images/function/img01.png',
-    title: 'Track Your Progress with Advanced Analytics',
+    icon: '/images/function/img04.png',
+    title: 'Track Your progress with advanced analytics',
     description:
       'Monitor your scores, spot weak areas, and climb specialty leaderboards.',
   },
   {
-    icon: '/images/function/img01.png',
-    title: 'Connect with verified professionals',
+    icon: '/images/function/img03.png',
+    title: 'Connect with healthcare professionals across the globe',
     description:
       'Join our leaderboard and build a professional network beyond your own institution.',
   },

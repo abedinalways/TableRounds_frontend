@@ -36,7 +36,7 @@ export const WelcomeBanner = () => {
   return (
     <div className="px-4 pt-2 d:pt-0 background text-white rounded-lg shadow-lg relative overflow-hidden font-[manrope]">
       <div className="flex  items-start justify-between relative z-10">
-        <div className="flex flex-col justify-between gap-18 p-8">
+        <div className="flex flex-col justify-between gap-18 md:p-8">
           <div>
             <p className="text-[16px] font-medium">{formattedDate}</p>
           </div>
@@ -79,21 +79,21 @@ export const WelcomeBanner = () => {
             width={138}
             height={138}
             alt="doctor"
-            className="absolute md:top-14 top-8 md:left-30 right-20 md:opacity-80 opacity-40"
+            className="absolute md:top-14 top-4 md:left-30 right-10 opacity-80 "
           />
           <Image
             src="/images/dashboard/main_dashboard/img01.png"
             width={257}
             height={213}
             alt=""
-            className="absolute md:top-10 top-5 md:right-45 right-3 "
+            className="absolute md:top-10 top-30 md:right-45 right-3 "
           />
           <Image
             src="/images/dashboard/main_dashboard/doc.png"
             width={176}
             height={245}
             alt="doctor"
-            className="md:mr-32 mr-32 mt-10 md:mt-0 z-30"
+            className="md:mr-22 mr-32 mt-34 md:mt-0 z-30 md:w-full"
           />
         </div>
       </div>

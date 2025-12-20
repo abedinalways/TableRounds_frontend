@@ -1,6 +1,7 @@
 import React from 'react';
 import { Instagram, Mail, Phone } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const Footer = () => {
   return (
@@ -104,14 +105,13 @@ const Footer = () => {
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Contact Us
             </h3>
-            <p className="text-sm text-gray-700">We are Here to Help</p>
-            <a
-              href="tel:012-5456-7899"
+            <p className="text-sm text-gray-700">We&apos;re Here to Help</p>
+            <Link
+              href="https://contact@tablerounds.ai"
               className="flex items-center space-x-2 text-sm text-gray-700 hover:text-[#1e5a4f] transition-colors"
             >
-              <Phone className="w-4 h-4" />
-              <span>012-5456-7899</span>
-            </a>
+              <span className=" cursor-pointer">contact@tablerounds.ai</span>
+            </Link>
             <a
               href="mailto:tableround@gmail.com"
               className="flex items-center space-x-2 text-sm text-gray-700 hover:text-[#1e5a4f] transition-colors"

@@ -62,51 +62,53 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   };
 
   return (
-    <div className="flex flex-col space-y-4 font-[manrope]">
+    <div className="flex flex-col space-y-4 font-[manrope] ">
       {/* TOP BAR */}
-      <div className="flex items-center gap-4 rounded-[12px] text-[18px] border question-bg p-[24px]">
-        <div className=" px-2">
-          <Progress value={progressValue} className="md:h-[20px] bg-white/60" />
-        </div>
-
-        <div className="space-x-2 flex flex-col gap-4 items-start">
-          <div className="text-sm md:text-[20px] font-medium text-white font-bold">
-            {String(currentQuestion).padStart(2, '0')} / {totalQuestions}
+      <div className="md:flex items-center md:justify-between gap-4 rounded-[12px] xl:text-[18px] md:text-sm text-xs border question-bg py-4">
+        <div className="md:flex  items-center space-y-2">
+          <div className="md:px-2 px-1">
+            <Progress value={progressValue} className="md:h-5 h-2 bg-white/60" />
           </div>
-          <div className="text-[18px] text-white">
-            Question ID: {questionID}
-          </div>
-        </div>
 
-        <div className="flex items-center space-x-2 gap-8 text-[18px]">
-          <button className="text-white cursor-pointer p-2  gap-2 flex flex-col">
-            <span className="flex items-center gap-2">
-              <TopbarCheckbox className="size-[24px]" />{' '}
-              <Flag className="size-[32px]" />{' '}
-            </span>{' '}
-            Mark
-          </button>
-          <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center ">
-            <ChatBubble className="size-[32px]" /> Feedback
-          </button>
-          <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center">
-            <ZoomInIcon className="size-[32px]" />
-            Zoom In
-          </button>
-          <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center">
-            <ZoomOutIcon className="size-[32px]" /> Zoom Out
-          </button>
-          <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center">
-            <ShareIcon className="size-[32px]" /> Share
-          </button>
-          <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center">
-            <PauseIcon className="size-[32px]" /> Pause Test
-          </button>
+          <div className="space-x-2 flex flex-col gap-4 md:items-start ">
+            <div className="text-sm md:text-[20px]  text-white font-bold">
+              {String(currentQuestion).padStart(2, '0')} / {totalQuestions}
+            </div>
+            <div className="text-[18px] text-white">
+              Question ID: {questionID}
+            </div>
+          </div>
+
+          <div className="md:flex items-center md:gap-6 xl:gap-10 md:text-[18px] text-sm">
+            <button className="text-white cursor-pointer p-2  gap-2 flex flex-col">
+              <span className="flex items-center gap-2">
+                <TopbarCheckbox className="size-6" />{' '}
+                <Flag className="size-8" />{' '}
+              </span>{' '}
+              Mark
+            </button>
+            <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center ">
+              <ChatBubble className="size-[32px]" /> Feedback
+            </button>
+            <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center">
+              <ZoomInIcon className="size-[32px]" />
+              Zoom In
+            </button>
+            <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center">
+              <ZoomOutIcon className="size-[32px]" /> Zoom Out
+            </button>
+            <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center">
+              <ShareIcon className="size-[32px]" /> Share
+            </button>
+            <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center">
+              <PauseIcon className="size-[32px]" /> Pause Test
+            </button>
+          </div>
         </div>
 
         <Btn
           onClick={onNext}
-          className="bg-[#b79e6b] text-white transition-colors w-[97px] h-[53px] mx-10"
+          className="bg-[#b79e6b] text-white transition-colors md:w-[97px] h-[53px] mx-10"
         >
           <span className="flex items-center">
             Next <ArrowRight />

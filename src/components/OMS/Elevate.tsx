@@ -1,12 +1,13 @@
 'use client';
 import Btn from '@/components/reusable/button/Btn';
-import Threads from '@/components/Threads';
+// import Threads from '@/components/Threads';
 import Lottie from 'lottie-react';
 import heartbeat from '../../../public/images/Heartbeat.json';
 import Image from 'next/image';
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import MotionPathPlugin from 'gsap/MotionPathPlugin';
+
 
 gsap.registerPlugin(MotionPathPlugin);
 export default function Elevate() {
@@ -95,12 +96,15 @@ export default function Elevate() {
         <Btn
           text="Create Your Free Account"
           href="/register"
-          className="bg-[#B79E6B] text-white  hover:bg-[#B79E6B] transition-colors rounded-[8px] w-full h-10 md:w-[261px] md:h-[54px] cursor-pointer z-30 "
+          className="bg-[#B79E6B] text-white  hover:bg-[#B79E6B] transition-colors rounded-xl w-full h-10 md:w-[261px] md:h-[54px] cursor-pointer z-30 "
         />
-        <Btn
-          text="Learn More About OMS Tools"
-          className="bg-white text-[#B79E6B] w-full h-10  transition-colors rounded-[8px] md:w-[305px] md:h-[54px] cursor-pointer z-30 "
-        />
+        
+          <Btn
+          text="Learn More About Tablerounds"
+          href="/"
+            className="bg-white text-[#B79E6B] w-full h-10  transition-colors rounded-xl md:w-[305px] md:h-[54px] cursor-pointer z-30 "
+          />
+        
       </div>
     </div>
   );

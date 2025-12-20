@@ -30,12 +30,12 @@ export default function Banner() {
         className="
     absolute 
     right-[-60px]
-    top-[20px]
+    top-5
     w-[500px] 
     sm:w-[650px] 
     md:w-[750px] 
-    md:right-[0px] 
-    md:top-[24px]
+    md:right-0 
+    md:top-6
     z-10 opacity-50 md:opacity-100
   "
       />
@@ -69,7 +69,7 @@ export default function Banner() {
         className="
           relative z-20 md:bottom-18
           max-w-3xl 
-          mx-auto md:mx-0 md:ml-[160px]
+          mx-auto md:mx-0 md:ml-40
            md:text-left
           pt-[100px] md:pt-[210px]
           
@@ -77,9 +77,9 @@ export default function Banner() {
         "
       >
         
-          <h2 className="font-bold text-3xl md:text-[60px] leading-tight">
-            Mastering Every Aspect of <br />
-            Oral and Maxillofacial Surgery
+          <h2 className="font-bold text-3xl md:text-[48px] xl:text-[60px]  leading-tight">
+            Mastering Every Aspect of<br />
+            Oral and Maxillofacial<br />Surgery
           </h2>
 
           <p className="mt-4 text-sm md:text-[24px] text-white/90">

@@ -11,7 +11,7 @@ function Progress({
   ...props
 }: React.ComponentProps<typeof ProgressPrimitive.Root>) {
   return (
-    <div className="relative w-[100px] md:w-[200px] xl:w-[397px]  ">
+    <div className="relative w-[200px] xl:w-[397px]  ">
       <ProgressPrimitive.Root
         data-slot="progress"
         className={cn(
@@ -32,7 +32,7 @@ function Progress({
         style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
       >
         <div
-          className="absolute -right-4 top-1/2 w-9 h-9 p-0.5 rounded-full shadow-lg 
+          className="absolute -right-4 md:top-1/2 top-2 w-6 h-6 md:w-9 md:h-9 p-0.5 rounded-full shadow-lg 
           -translate-y-1/2"
           style={{
             background: 'linear-gradient(90deg, #826F4A 0%, #E3C587 100%)',
