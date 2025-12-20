@@ -67,60 +67,75 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
       <div className="md:flex items-center md:justify-between gap-4 rounded-[12px] xl:text-[18px] md:text-sm text-xs border question-bg py-4">
         <div className="md:flex  items-center space-y-2">
           <div className="md:px-2 px-1">
-            <Progress value={progressValue} className="md:h-5 h-2 bg-white/60" />
+            <Progress
+              value={progressValue}
+              className="md:h-5 h-2 bg-white/60"
+            />
           </div>
 
-          <div className="space-x-2 flex flex-col gap-4 md:items-start ">
+          <div className="space-x-2 flex flex-col gap-4 md:items-start mx-4 md:mx-0">
             <div className="text-sm md:text-[20px]  text-white font-bold">
               {String(currentQuestion).padStart(2, '0')} / {totalQuestions}
             </div>
-            <div className="text-[18px] text-white">
+            <div className="md:text-[18px] text-sm text-white">
               Question ID: {questionID}
             </div>
           </div>
 
-          <div className="md:flex items-center md:gap-6 xl:gap-10 md:text-[18px] text-sm">
-            <button className="text-white cursor-pointer p-2  gap-2 flex flex-col">
+          <div className="flex flex-wrap md:flex-nowrap items-center gap-3 md:gap-6 xl:gap-10 md:text-[18px] text-xs">
+            <button className="text-white cursor-pointer p-2  gap-2 flex flex-col ">
               <span className="flex items-center gap-2">
-                <TopbarCheckbox className="size-6" />{' '}
-                <Flag className="size-8" />{' '}
+                <TopbarCheckbox className="md:size-6 size-4" />{' '}
+                <Flag className="size-4 md:size-8 " />{' '}
               </span>{' '}
               Mark
             </button>
             <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center ">
-              <ChatBubble className="size-[32px]" /> Feedback
+              <ChatBubble className="md:size-8 size-4" /> Feedback
             </button>
             <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center">
-              <ZoomInIcon className="size-[32px]" />
+              <ZoomInIcon className="md:size-8 size-4" />
               Zoom In
             </button>
             <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center">
-              <ZoomOutIcon className="size-[32px]" /> Zoom Out
+              <ZoomOutIcon className="md:size-8 size-4" /> Zoom Out
             </button>
             <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center">
-              <ShareIcon className="size-[32px]" /> Share
+              <ShareIcon className="md:size-8 size-4" /> Share
             </button>
             <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center">
-              <PauseIcon className="size-[32px]" /> Pause Test
+              <PauseIcon className="md:size-8 size-4" /> Pause Test
             </button>
           </div>
         </div>
 
         <Btn
           onClick={onNext}
-          className="bg-[#b79e6b] text-white transition-colors md:w-[97px] h-[53px] mx-10"
+          className="bg-[#b79e6b] text-white transition-colors md:w-[97px] w-[67px] h-[53px] md:mx-10 mx-4"
         >
           <span className="flex items-center">
-            Next <ArrowRight />
+            Next <ArrowRight size="18px" />
           </span>
         </Btn>
       </div>
 
       {/* MAIN CONTENT */}
-      <div className="background p-2 rounded-md grid grid-cols-12">
+      <div className="background p-2 rounded-md grid grid-cols-1 md:grid-cols-12">
         {/* LEFT SIDEBAR - QUESTION LIST */}
-        <div className="flex col-span-1 rounded-md mt-4 mb-4 background p-2 space-y-2  max-h-[700px] overflow-y-auto custom-scroll ">
-          <aside className="space-y-2 p-2 h-full">
+        <div
+          className="lex md:col-span-1
+  md:flex-col
+  flex-row
+  gap-2
+  rounded-md
+  mt-2 md:mt-4
+  mb-2 md:mb-4
+  background p-2
+  md:max-h-[700px]
+  overflow-x-auto md:overflow-y-auto
+  custom-scroll"
+        >
+          <aside className="flex md:flex-col gap-2 p-2 h-full">
             {Array.from({ length: totalQuestions }, (_, i) => {
               const qIndex = i + 1;
               const isCurrent = qIndex === currentQuestion;
@@ -158,19 +173,24 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
         </div>
 
         {/* RIGHT SIDE (QUESTION + EXPLANATION) */}
-        <div className="col-span-11 md:flex gap-[5px] transition-all ease-in-out duration-500 ">
+        <div
+          className=" col-span-11
+  flex flex-col
+  md:flex-row
+  gap-3 md:gap-[5px]"
+        >
           {/* Question Card */}
-          <div className="w-full bg-[#f9f9f5] md:my-8 md:mx-[24px]  md:p-[32px] rounded-[16px] shadow-lg">
+          <div className="w-full bg-[#f9f9f5] md:my-8 md:mx-[24px] md:p-[32px] rounded-[16px]">
             <div className="">
               <CardHeader className="p-4">
-                <p className="text-[20px] text-gray-700 leading-relaxed font-normal">
+                <p className="text-sm md:text-[20px] text-gray-700 leading-relaxed font-normal">
                   {quizDetails.title}
                 </p>
               </CardHeader>
 
-              <CardContent className="p-6 space-y-6">
+              <CardContent className="md:p-6 space-y-6">
                 {/* Question */}
-                <div className="font-semibold text-[20px] text-[#01281e] flex items-center ">
+                <div className="font-semibold text-sm md:text-[20px] text-[#01281e] flex items-center ">
                   <Image
                     src="/images/dashboard/main_dashboard/qns.png"
                     width={28}
@@ -202,15 +222,11 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
                       option.id !== selectedAnswerId &&
                       !isCorrectOption;
 
-                    // const shouldShowAsChecked =
-                    //   (showExplanation && isCorrectOption) ||
-                    //   (showExplanation && isUserWrongOption);
-
                     return (
                       <div
                         key={option.id}
                         className={cn(
-                          'relative flex items-center justify-between p-2 rounded-xl border border-[#00000026] transition-all',
+                          'relative flex items-center justify-between p-2 rounded-xl border border-[#00000026] transition-all ',
 
                           // Correct answer
                           showExplanation &&
@@ -253,7 +269,7 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
                               isUserCorrect &&
                               isOtherOption &&
                               'opacity-60 line-through'
-                            } cursor-pointer text-base`}
+                            } cursor-pointer text-xs md:text-base`}
                           >
                             <span className="font-bold mr-2">{option.id}.</span>
                             {option.text}
@@ -265,7 +281,7 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
                           <CircularProgress
                             showLabel
                             value={option?.percentage ?? 0}
-                            className="text-md font-semibold text-gray-600"
+                            className=" text-sm md:text-md font-semibold text-gray-600"
                           ></CircularProgress>
                         )}
                       </div>
@@ -284,12 +300,12 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
                         <div>
                           <div className="font-bold text-lg">
                             {isUserCorrect ? (
-                              <h4 className="text-[#20AC19] flex items-center gap-2">
+                              <h4 className="text-[#20AC19] flex items-center gap-2 text-xs md:text-sm">
                                 <CorrectIcon /> Correct (
                                 {quizDetails.correctAnswerId})
                               </h4>
                             ) : (
-                              <h4 className="text-red-600 flex gap-2 items-center">
+                              <h4 className="text-red-600 flex gap-2 items-center text-xs md:text-sm">
                                 {' '}
                                 <WrongIcon /> Wrong Answer
                               </h4>
@@ -299,7 +315,7 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
                         {isUserCorrect ? (
                           ''
                         ) : (
-                          <div className="text-sm text-gray-600">
+                          <div className=" text-xs md:text-sm text-gray-600">
                             <p className="flex items-center gap-2 font-semibold text-[#20AC19]">
                               <CorrectIcon /> Correct Answer:{' '}
                               {quizDetails.correctAnswerId}
