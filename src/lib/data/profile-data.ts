@@ -1,8 +1,11 @@
-export const profileData = {
+import { ProfileData } from '@/types/profile';
+
+export const profileData: ProfileData = {
   user: {
     name: 'Jordan Nguyen, DMD, MD',
     title: 'Oral and Maxillofacial Surgeon, PDR Resident',
-    avatar: '/doctor.png',
+    avatar: '/images/dashboard/profile/img01.png',
+    details:"Board-certified Oral and Maxillofacial Surgeon with extensive experience in reconstructive surgery, TMJ disorders, and complex facial trauma. Dedicated to advancing surgical techniques through research and education.",
     followers: 523,
     following: 234,
   },
