@@ -158,6 +158,10 @@
   margin: 0 auto;
 }
 
+.profile-container {
+  max-width: 1309px;
+  margin: 0 auto;
+}
 .test-container {
   max-width: 1214px;
   margin: 0 auto;
