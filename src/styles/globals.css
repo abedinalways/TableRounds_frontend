@@ -270,3 +270,13 @@ background: rgba(183, 158, 107, 0.14)
 .bg-icon{
   background: rgba(255, 255, 255, 0.2);
 }
+
+.background-clr{
+  background: rgba(183, 158, 107, 0.2);
+}
+.background-color{
+  background: rgba(1, 80, 59, 0.1);
+}
+.bg-color{
+ background: rgba(255, 0, 0, 0.1);
+}
