@@ -13,7 +13,7 @@ export function VerticalProgress({
   return (
     <div
       className={cn(
-        'relative h-full w-[12px] bg-white/60 overflow-hidden rounded-full ',
+        'relative h-full w-3 bg-white/60 overflow-hidden rounded-full ',
         className
       )}
     >

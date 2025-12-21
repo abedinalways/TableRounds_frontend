@@ -45,14 +45,13 @@ export default function Welcome() {
   }, []);
   return (
     <div className="card-bg py-[100px] font-[manrope]">
-      <div className="md:flex gap-6 items-center justify-between md:px-[300px] px-4 pb-[48px]">
-        <h2 className="text-[28px] leading-[110%] sm:text-[48px] text-center md:text-start  font-bold text-black">
+      <div className="md:flex items-center justify-between custom-container md:px-0 px-4 pb-12">
+        <h2 className="text-[28px] md:text-[36px] leading-[110%] xl:text-[48px] text-center md:text-start  font-bold text-[#01281e]">
           Welcome to TableRounds
         </h2>
-        <p className="text-sm text-gray-600 mt-6 md:mt-0 text-center md:text-start leading-[110%]">
+        <p className="md:text-[18px] text-xs text-gray-600 mt-6 md:mt-0 text-center md:text-start leading-[110%]">
           Watch the short overview video to see how it fits into your training
-          and day-to- <br />
-          day practice.
+          and day-today practice.
         </p>
       </div>
       {/* intro video */}
@@ -64,7 +63,7 @@ export default function Welcome() {
           height={547}
           className=""
         />
-        <VideoModal/>
+        <VideoModal />
         {/* <video
           loop
           controls

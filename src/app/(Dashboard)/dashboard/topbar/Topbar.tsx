@@ -1,43 +1,56 @@
 'use client';
 
-import { useState } from 'react';
-import { getUser } from '@/lib/auth';
 import Image from 'next/image';
+import { Menu } from 'lucide-react';
+import { getUser } from '@/lib/auth';
 
-export default function Topbar() {
+interface TopbarProps {
+  onMenuClick?: () => void;
+}
+
+export default function Topbar({ onMenuClick }: TopbarProps = {}) {
   const user = getUser();
-  const [userName] = useState(user?.name ?? '');
 
   return (
-    <header className="flex justify-end items-center border-b border-[#e9e9e9] gap-4 bg-white shadow px-6 py-4">
-      <div className="rounded-full shadow-md bg-[#fff] md:p-[8px] cursor-pointer hover:bg-green-100">
+    <header className="sticky top-0 z-30 bg-white border-b flex items-center justify-between gap-3 px-4 sm:px-6 py-3">
+      {/* Mobile Menu Button */}
+      {onMenuClick && (
+        <button
+          onClick={onMenuClick}
+          className="lg:hidden p-2 hover:bg-gray-100 rounded-md transition-colors"
+          aria-label="Open menu"
+        >
+          <Menu className="w-5 h-5 text-gray-700" />
+        </button>
+      )}
+
+      {/* Right side items */}
+      <div className="flex items-center gap-3 ml-auto">
         <Image
           src="/images/dashboard/topbar/bell.png"
-          width={24}
-          height={24}
+          width={20}
+          height={20}
           alt=""
-          className="w-[12px] h-[12px] md:w-[24px] md:h-[24px] "
+          className="cursor-pointer"
         />
-      </div>
-      <div className="rounded-full  shadow-md bg-[#fff] md:-[8px] cursor-pointer hover:bg-green-100">
         <Image
           src="/images/dashboard/topbar/message.png"
-          width={24}
-          height={24}
+          width={20}
+          height={20}
           alt=""
-          className="w-[12px] h-[12px] md:w-[24px] md:h-[24px] "
+          className="cursor-pointer"
         />
-      </div>
-      <div className="rounded-full shadow-md cursor-pointer hover:bg-green-100">
         <Image
           src="/images/dashboard/topbar/doctor.png"
-          width={56}
-          height={56}
+          width={36}
+          height={36}
           alt=""
-          className="w-[26px] h-[26px] md:w-[56px] md:h-[56px] "
+          className="rounded-full"
         />
+        <span className="hidden sm:block font-semibold text-gray-700">
+          Dr. {user?.name}
+        </span>
       </div>
-      <span className="text-gray-700 font-semibold"> Dr. {userName}</span>
     </header>
   );
 }

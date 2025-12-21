@@ -15,10 +15,11 @@ import { ChevronDown, Menu } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from '../ui/sheet';
 import { Button } from '../ui/button';
 import Link from 'next/link';
+import OmsLogo from '../reusable/icons/OmsLogo';
 
 const navItems = [
   { label: 'Home', href: '/' },
-  { label: 'Specialists', hasDropdown: true },
+  { label: 'Specialties', hasDropdown: true },
   { label: 'Question Bank', href: '#' },
   { label: 'Legal', href: '#' },
   { label: 'Contact', href: '#' },
@@ -26,8 +27,8 @@ const navItems = [
 
 const specialtyOptions = [
   { value: 'oms', label: 'OMS', href: '/oms' },
-  { value: 'neurology', label: 'Neurology' },
-  { value: 'orthopedics', label: 'Orthopedics' },
+  // { value: 'neurology', label: 'Neurology' },
+  // { value: 'orthopedics', label: 'Orthopedics' },
 ];
 
 export default function Navbar({ isOms = false }) {
@@ -42,7 +43,7 @@ export default function Navbar({ isOms = false }) {
             isMobile ? 'w-full justify-between' : ''
           }`}
         >
-          Specialists
+          Specialties
           <ChevronDown className="w-4 h-4" />
         </button>
       </DropdownMenuTrigger>
@@ -79,7 +80,7 @@ export default function Navbar({ isOms = false }) {
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <Link href="/">
-            <div className="flex items-center gap-2 flex-shrink-0 cursor-pointer">
+            <div className="flex items-center gap-2 shrink-0 cursor-pointer">
               <Image
                 src="/images/navbar-logo.png"
                 width={40}
@@ -88,12 +89,14 @@ export default function Navbar({ isOms = false }) {
                 className="w-8 h-8 sm:w-10 sm:h-10"
               />
               {isOms ? (
-                <h1 className="font-bold text-lg sm:text-xl lg:text-3xl text-white font-[manrope]">
-                  Table{' '}
-                  <span className="text-xs bg-[#B79E6B] rounded-sm p-1 mb-2">
-                    OMS
-                  </span>{' '}
-                  <br /> Rounds
+                <h1 className="relative font-bold text-lg sm:text-xl lg:text-3xl text-white font-[manrope] mb-4">
+                  <div className="flex  items-center justify-center gap-1">
+                    Table
+                    <span className="">
+                      <OmsLogo/>
+                    </span>
+                  </div>
+                  <span className='absolute top-6'>Rounds</span>
                 </h1>
               ) : (
                 <h1 className="font-bold text-lg sm:text-xl lg:text-3xl text-white font-[manrope]">
@@ -155,7 +158,7 @@ export default function Navbar({ isOms = false }) {
                     src="/images/navbar-logo.png"
                     width={30}
                     height={30}
-                    alt="TableRounds Logo"
+                    alt="T"
                   />
                   <span className="font-bold text-xl text-white font-[manrope]">
                     TableRounds
@@ -193,7 +196,7 @@ export default function Navbar({ isOms = false }) {
 
                   <Btn
                     href="/register"
-                    text="Sign up"
+                    text="Sign Up"
                     className="bg-white text-[#B79E6B] w-full h-[54px] hover:bg-gray-100 transition-colors"
                   />
                 </div>

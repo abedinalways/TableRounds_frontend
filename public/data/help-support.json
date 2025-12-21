@@ -1,0 +1,206 @@
+{
+  "sidebar": [
+    { "id": "privacy", "label": "Privacy Policy" },
+    { "id": "disclaimer", "label": "Disclaimer" },
+    { "id": "terms", "label": "Terms & Conditions" }
+  ],
+  "sections": {
+    "privacy": {
+      "title": "Privacy Policy",
+      "intro": "Welcome to our Medical Dental Education Platform (\"Platform\", \"we\", \"us\", or \"our\"). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our educational testing and quiz application. We are committed to protecting your privacy and ensuring the security of your personal information. This policy applies to all users of our Platform, including medical and dental students, residents, practitioners, and educators.",
+      "blocks": [
+        {
+          "heading": "Personal Information",
+          "items": [
+            "Name, email address, and phone number",
+            "Educational institution and program information",
+            "Professional credentials and certifications",
+            "Profile picture and bio (optional)"
+          ]
+        },
+        {
+          "heading": "Usage Data",
+          "items": [
+            "Test scores, quiz results, and performance analytics",
+            "Study patterns, time spent on questions, and progress tracking",
+            "Device information, IP address, and browser type",
+            "Login times and activity logs"
+          ]
+        },
+        {
+          "heading": "Communication Data",
+          "items": [
+            "Direct messages with other users (instructors, peers)",
+            "Forum posts, comments, and discussions",
+            "Customer support inquiries and feedback"
+          ]
+        },
+        {
+          "heading": "Your Privacy Rights",
+          "items": [
+            "Access: Request access to your personal data and obtain a copy",
+            "Correction: Request correction of inaccurate or incomplete information",
+            "Deletion: Request deletion of your personal data, subject to legal requirements",
+            "Data Portability: Request a copy of your data in a structured, machine-readable format",
+            "Opt-Out: Opt out of marketing communications at any time"
+          ]
+        },
+        {
+          "heading": "Third-Party Services",
+          "items": [
+            "Our Platform may contain links to third-party websites or integrate with third-party services",
+            "We are not responsible for the privacy practices of these external services",
+            "Please review the privacy policies of any third-party services before sharing your information"
+          ]
+        }
+      ]
+    },
+    "disclaimer": {
+      "title": "Disclaimer",
+      "intro": "The information provided on this Medical Dental Education Platform is for educational purposes only and should not be considered professional medical or dental advice, diagnosis, or treatment. Please read this disclaimer carefully before using our services.",
+      "blocks": [
+        {
+          "heading": "Important Notice",
+          "description": "This platform is designed to support medical and dental education through practice tests, quizzes, and study materials. It is not intended to replace formal education, clinical training, or professional judgment."
+        },
+        {
+          "heading": "No Professional Advice",
+          "items": [
+            "Content is intended for educational and exam preparation purposes only",
+            "Not a substitute for professional medical or dental consultation, diagnosis, or treatment",
+            "Always seek the advice of qualified healthcare professionals for medical conditions",
+            "Never disregard professional medical advice or delay seeking it based on information from this platform"
+          ]
+        },
+        {
+          "heading": "Educational Content",
+          "items": [
+            "Questions, answers, and explanations are created for learning purposes",
+            "Content should be used as a study aid alongside official textbooks and coursework",
+            "Information reflects general medical and dental knowledge and may not cover all scenarios",
+            "Clinical practice standards and guidelines may vary by region and institution"
+          ]
+        },
+        {
+          "heading": "Accuracy of Information",
+          "items": [
+            "We strive to keep content accurate, current, and up to date",
+            "We do not guarantee completeness, accuracy, or timeliness at all times",
+            "Medical and dental knowledge evolves constantly; guidelines and best practices may change",
+            "Users should verify information with current clinical guidelines and peer-reviewed sources"
+          ]
+        },
+        {
+          "heading": "Limitation of Liability",
+          "items": [
+            "We are not liable for any damages arising from use of this platform",
+            "This includes direct, indirect, incidental, or consequential damages",
+            "Use of this platform is at your own risk",
+            "We make no warranties about the reliability or availability of the service"
+          ]
+        },
+        {
+          "heading": "Third-Party Content",
+          "items": [
+            "Links to external websites are provided for convenience only",
+            "We do not endorse or assume responsibility for third-party content",
+            "External sites have their own terms and privacy policies"
+          ]
+        }
+      ]
+    },
+    "terms": {
+      "title": "Terms & Conditions",
+      "intro": "By accessing or using our Medical Dental Education Platform, you agree to be bound by these Terms & Conditions. Please read them carefully. If you do not agree with any part of these terms, you must not use our Platform.",
+      "blocks": [
+        {
+          "heading": "Agreement to Terms",
+          "items": [
+            "By creating an account or using our services, you accept these terms in full",
+            "We reserve the right to modify these terms at any time",
+            "Continued use after changes constitutes acceptance of modified terms",
+            "You are responsible for reviewing terms regularly"
+          ]
+        },
+        {
+          "heading": "User Accounts",
+          "items": [
+            "You must be at least 18 years old to create an account",
+            "Provide accurate and complete registration information",
+            "Maintain the confidentiality of your account credentials",
+            "You are responsible for all activities under your account",
+            "Notify us immediately of any unauthorized access"
+          ]
+        },
+        {
+          "heading": "User Responsibilities",
+          "items": [
+            "Use the platform in compliance with all applicable laws and regulations",
+            "Respect intellectual property rights of all content",
+            "Maintain professional and ethical conduct in all interactions",
+            "Do not share account credentials with others",
+            "Keep your contact information current and accurate"
+          ]
+        },
+        {
+          "heading": "Acceptable Use Policy",
+          "description": "You agree to use the platform only for lawful educational purposes. The following activities are strictly prohibited:"
+        },
+        {
+          "heading": "Prohibited Activities",
+          "items": [
+            "Unauthorized access to systems, networks, or data",
+            "Copying, redistributing, or selling platform content without permission",
+            "Engaging in harmful, abusive, harassing, or discriminatory behavior",
+            "Submitting false or misleading information",
+            "Attempting to circumvent security measures or access restrictions",
+            "Using automated tools to scrape or download content in bulk",
+            "Sharing exam questions or answers to compromise test integrity",
+            "Impersonating other users or entities"
+          ]
+        },
+        {
+          "heading": "Intellectual Property",
+          "items": [
+            "All content on the platform is protected by copyright and intellectual property laws",
+            "Platform content includes questions, explanations, images, videos, and software",
+            "You may not reproduce, distribute, or create derivative works without written permission",
+            "You retain ownership of content you create, but grant us a license to use it"
+          ]
+        },
+        {
+          "heading": "Subscription and Payment",
+          "items": [
+            "Some features require a paid subscription",
+            "Subscription fees are billed according to your selected plan",
+            "You authorize us to charge your payment method automatically",
+            "Refunds are subject to our refund policy",
+            "We reserve the right to change pricing with advance notice"
+          ]
+        },
+        {
+          "heading": "Termination",
+          "items": [
+            "We may suspend or terminate your account for violation of these terms",
+            "You may cancel your account at any time through account settings",
+            "Upon termination, your right to access the platform ceases immediately",
+            "Certain provisions survive termination, including intellectual property rights"
+          ]
+        },
+        {
+          "heading": "Governing Law",
+          "description": "These Terms & Conditions are governed by and construed in accordance with applicable laws. Any disputes arising from these terms will be resolved through binding arbitration or in courts of competent jurisdiction."
+        },
+        {
+          "heading": "Changes to Terms",
+          "items": [
+            "We reserve the right to modify these terms at any time",
+            "Changes will be posted on this page with an updated revision date",
+            "Material changes will be notified via email or platform notification",
+            "Continued use after changes constitutes acceptance"
+          ]
+        }
+      ]
+    }
+  }
+}
