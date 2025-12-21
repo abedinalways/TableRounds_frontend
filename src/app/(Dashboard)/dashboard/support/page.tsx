@@ -1,60 +1,60 @@
 'use client';
-import { HelpContent } from '@/components/help-support/HelpContent';
-import { Sidebar } from '@/components/help-support/Sidebar';
-import { useState, useEffect } from 'react';
-import type { HelpSupportData, SectionId } from '@/types/help-support';
 
-export default function HelpSupportPage() {
-  const [active, setActive] = useState<SectionId>('privacy');
-  const [data, setData] = useState<HelpSupportData | null>(null);
-  const [loading, setLoading] = useState(true);
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import PrivacyPolicyContent from '@/components/help-support/PrivacyPolicyContent';
+import DisclaimerContent from '@/components/help-support/DisclaimerContent';
+import TermsContent from '@/components/help-support/TermsContent';
+import Image from 'next/image';
 
-  useEffect(() => {
-    fetch('/data/help-support.json')
-      .then(res => {
-        if (!res.ok) throw new Error('Failed to load help data');
-        return res.json();
-      })
-      .then((json: HelpSupportData) => {
-        setData(json);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error(err);
-        setLoading(false);
-      });
-  }, []);
 
-  if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-6">Loading help content...</div>
-    );
-  }
-
-  if (!data) {
-    return (
-      <div className="container mx-auto px-4 py-6">
-        Failed to load help content.
-      </div>
-    );
-  }
-
-  const section = data.sections[active];
+export default function HelpPage() {
+  const [activeTab, setActiveTab] = useState<
+    'privacy' | 'disclaimer' | 'terms'
+  >('privacy');
 
   return (
-    <div className="container mx-auto px-4 py-6 font-[manrope]">
-      <h2 className="text-[#01281e] text-[32px] md:text-[48px] font-semibold mb-2">Help & Support</h2>
-      <div className="grid grid-cols-1 md:grid-cols-[260px_1fr] gap-4 md:gap-6">
-        <Sidebar
-          items={data.sidebar}
-          active={active}
-          onChange={id => setActive(id as SectionId)}
-        />
-        <HelpContent
-          title={section.title}
-          intro={section.intro}
-          blocks={section.blocks}
-        />
+    <div className="font-[manrope] text-[#01281E]">
+      <h1 className="text-5xl font-bold  mb-8">Help & Support</h1>
+      <div className='relative z-10'>
+        <Image src='/images/TR.png' width={309} height={309} alt='' className='opacity-40 absolute top-200 right-4'/>
+      </div>
+      <div className="min-h-screen md:flex">
+        {/* Sidebar */}
+        <aside className="h-[216px] md:w-[266px] bg-white rounded-lg ">
+          <nav className="">
+            <Button
+              variant={activeTab === 'privacy' ? 'default' : 'ghost'}
+              className="w-full mx-auto  text-lg py-6 text-center rounded-t-2xl rounded-b-none!"
+              onClick={() => setActiveTab('privacy')}
+            >
+              Privacy Policy
+            </Button>
+            <Button
+              variant={activeTab === 'disclaimer' ? 'default' : 'ghost'}
+              className="w-full mx-auto  text-lg py-6 text-center rounded-t-2xl rounded-b-none!"
+              onClick={() => setActiveTab('disclaimer')}
+            >
+              Disclaimer
+            </Button>
+            <Button
+              variant={activeTab === 'terms' ? 'default' : 'ghost'}
+              className="w-full mx-auto  text-lg py-6 text-center rounded-t-2xl rounded-b-none!"
+              onClick={() => setActiveTab('terms')}
+            >
+              Terms & Conditions
+            </Button>
+          </nav>
+        </aside>
+
+        {/* Main Content Area */}
+        <main className="flex-1  overflow-y-auto mt-16 md:mt-0">
+          <div className="max-w-5xl mx-auto">
+            {activeTab === 'privacy' && <PrivacyPolicyContent />}
+            {activeTab === 'disclaimer' && <DisclaimerContent />}
+            {activeTab === 'terms' && <TermsContent />}
+          </div>
+        </main>
       </div>
     </div>
   );

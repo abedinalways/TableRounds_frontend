@@ -1,5 +1,5 @@
 'use client';
-import { Button } from '@/components/ui/button';
+
 
 type SidebarItem = { id: string; label: string };
 
@@ -14,18 +14,18 @@ export function Sidebar({ items, active, onChange }: Props) {
     <div>
       <aside className="h-[216px] md:w-[266px] card-bg rounded-lg space-y-2">
         {items.map(item => (
-          <Button
+          <button
             key={item.id}
-            variant={active === item.id ? 'secondary' : 'ghost'}
+           
             onClick={() => onChange(item.id)}
-            className={` rounded-t-lg w-full justify-start text-left ${
+            className={` rounded-t-[16px] w-full text-center p-4 justify-start  ${
               active === item.id
                 ? 'background text-white'
                 : 'text-[#01281e] hover:bg-white/10'
             }`}
           >
             {item.label}
-          </Button>
+          </button>
         ))}
       </aside>
     </div>
