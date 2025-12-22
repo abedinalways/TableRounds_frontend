@@ -1,6 +1,4 @@
 'use client';
-
-
 import { useEffect, useRef, useState } from 'react';
 import { getUser } from '@/lib/auth';
 import Image from 'next/image';
