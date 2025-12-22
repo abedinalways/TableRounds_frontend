@@ -43,7 +43,7 @@ function TabsTrigger({
       data-slot="tabs-trigger"
       className={cn(
         // base
-        'inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-2 rounded-md border border-transparent px-3 py-2 text-[16px] font-medium whitespace-nowrap transition-all cursor-pointer',
+        'inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1 rounded-md border border-transparent md:px-5 md:py-4 px-3 py-2 text-sm md:text-[20px] font-medium whitespace-nowrap transition-all cursor-pointer',
 
         // inactive (default)
         'text-black [&_svg]:text-black',
