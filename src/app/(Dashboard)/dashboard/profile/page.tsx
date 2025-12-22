@@ -10,11 +10,12 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<ProfileTab>('overview');
 
   return (
-    <div className="relative ">
+    <div className="">
       <div className=" w-full rounded-2xl  background h-[383px]"></div>
-      <div className="profile-container ">
-        <div className="absolute top-10 max-w-full mx-auto ">
+      <div className="profile-container">
+        <div className="-mt-60">
           <ProfileHeader user={profileData.user} />
+          
         </div>
 
         <ProfileTabs
