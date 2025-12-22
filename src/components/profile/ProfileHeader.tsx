@@ -74,18 +74,18 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
       </div>
       <hr />
       {/* social media */}
-      <div className="flex items-center gap-4 md:gap-[24px]  text-[#01281e] mt-[24px]">
-        <h2 className="font-bold text-[12px] md:text-[20px]">Contact</h2>
-        <button className="bg-[#f1f5f9] py-[11px] px-[12px] rounded-[8px] text-center  cursor-pointer">
+      <div className="flex flex-wrap items-center gap-4 md:gap-[24px]  text-[#01281e] mt-[24px]">
+        <h2 className="font-bold text-[16px] md:text-[20px]">Contact</h2>
+        <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center  cursor-pointer">
           <Linkedin size="24" />
         </button>
-        <button className="bg-[#f1f5f9] py-[11px] px-[12px] rounded-[8px] text-center cursor-pointer ">
+        <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer ">
           <Instagram size="24" />
         </button>
-        <button className="bg-[#f1f5f9] py-[11px] px-[12px] rounded-[8px] text-center cursor-pointer ">
+        <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer ">
           <Facebook size="24" />
         </button>
-        <button className="bg-[#f1f5f9] py-[11px] px-[12px] rounded-[8px] text-center cursor-pointer ">
+        <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer ">
           <FaXTwitter size="24" />
         </button>
       </div>
