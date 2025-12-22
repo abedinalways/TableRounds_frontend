@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { Menu } from 'lucide-react';
 import { getUser } from '@/lib/auth';
+import Link from 'next/link';
 
 interface TopbarProps {
   onMenuClick?: () => void;
@@ -40,13 +41,15 @@ export default function Topbar({ onMenuClick }: TopbarProps = {}) {
           alt=""
           className="cursor-pointer"
         />
-        <Image
-          src="/images/dashboard/topbar/doctor.png"
-          width={36}
-          height={36}
-          alt=""
-          className="rounded-full"
-        />
+        <Link href='/dashboard/profile'>
+          <Image
+            src="/images/dashboard/topbar/doctor.png"
+            width={36}
+            height={36}
+            alt=""
+            className="rounded-full cursor-pointer"
+          />
+        </Link>
         <span className="hidden sm:block font-semibold text-gray-700">
           Dr. {user?.name}
         </span>

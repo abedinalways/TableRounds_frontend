@@ -5,6 +5,7 @@ import { CircleMarker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
+
 type LeafletIconPrototype = {
   _getIconUrl?: () => string;
 };

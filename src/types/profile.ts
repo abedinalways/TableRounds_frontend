@@ -1,27 +1,36 @@
+
 export interface UserProfile {
   name: string;
   details: string;
   title: string;
   avatar: string;
+  location: string;
+  jobArea: string;
+  joiningDate: string;
   followers: number;
   following: number;
+  
 }
 
 export interface EducationItem {
   title: string;
   institute: string;
+  degree: string;
   year: string;
 }
 
 export interface ExperienceItem {
   role: string;
   hospital: string;
+  location: string;
   period: string;
+  specialty: string;
 }
 
 export interface PublicationItem {
   title: string;
   year: string;
+  author: string;
 }
 
 export interface ProfileData {
@@ -32,4 +41,4 @@ export interface ProfileData {
   skills: string[];
 }
 
-export type ProfileTab = 'overview' | 'education' | 'experience' | 'activity';
+export type ProfileTab = 'overview' | 'education' | 'experience'| 'publications' | 'activity';
