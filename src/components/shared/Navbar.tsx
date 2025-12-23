@@ -22,7 +22,7 @@ const navItems = [
   { label: 'Specialties', hasDropdown: true },
   { label: 'Question Bank', href: '#' },
   { label: 'Legal', href: '#' },
-  { label: 'Contact', href: '#' },
+  { label: 'Contact', href: '/contact' },
 ];
 
 const specialtyOptions = [
