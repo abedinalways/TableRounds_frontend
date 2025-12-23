@@ -13,7 +13,7 @@ export default function Topbar({ onMenuClick }: TopbarProps = {}) {
   const user = getUser();
 
   return (
-    <header className="sticky top-0 z-30 bg-white border-b flex items-center justify-between gap-3 px-4 sm:px-6 py-3">
+    <header className="sticky top-0 z-30 bg-white border-b flex items-center justify-between gap-3 px-4 sm:px-6 h-15">
       {/* Mobile Menu Button */}
       {onMenuClick && (
         <button
@@ -41,7 +41,7 @@ export default function Topbar({ onMenuClick }: TopbarProps = {}) {
           alt=""
           className="cursor-pointer"
         />
-        <Link href='/dashboard/profile'>
+        <Link href="/dashboard/profile">
           <Image
             src="/images/dashboard/topbar/doctor.png"
             width={36}

@@ -1,11 +1,16 @@
-import ChatLayout from '@/components/message/ChatLayout'
-import React from 'react'
+import Header from '../../../../components/message/Header';
+import MessageSection from '../../../../components/message/MessageSection';
 
-export default function MessagesPage() {
+import MessageInput from '../../../../components/message/MessageInput';
+
+export default function ChatLayout() {
+  
+
   return (
-    <div className='h-screen'>
-      
-      <ChatLayout/>
-    </div>
-  )
+    <>
+      <Header />
+      <MessageSection />
+      <MessageInput />
+    </>
+  );
 }
