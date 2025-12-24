@@ -55,7 +55,7 @@ export default function RootLayout({
       <body
         className={`${manrope.variable} ${outfit.variable} ${inter.variable} ${outfit.variable} ${garamond.variable} ${roboto.variable} ${jakarta.variable} antialiased`}
       >
-        {/* <SmoothScroll>
+        
           <Toaster
             position="top-center"
             richColors
@@ -63,9 +63,9 @@ export default function RootLayout({
             toastOptions={{
               duration: 4000,
             }}
-          /> */}
+          />
         {children}
-        {/* </SmoothScroll> */}
+       
       </body>
     </html>
   );

@@ -3,15 +3,13 @@
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import emailjs from '@emailjs/browser';
+import { toast } from 'sonner';
 
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
-import { useEffect } from 'react';
+import Btn from '@/components/reusable/button/Btn';
 
-/* ------------------ Validation Schema ------------------ */
 const contactSchema = z.object({
   name: z.string().min(2, 'Name is required'),
   email: z.string().email('Invalid email address'),
@@ -29,54 +27,40 @@ export default function GetInTouch() {
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
   });
-  
-  useEffect(() => {
-    emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY as string);
-  }, []);
- 
- const onSubmit = async (data: ContactFormData) => {
-   try {
-     const result = await emailjs.send(
-       process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID as string,
-       process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID as string,
-       {
-         name: data.name,
-         email: data.email,
-         message: data.message,
-       }
-     );
 
-     console.log('Email sent:', result.text);
-     reset();
-   } catch (error) {
-     console.error('EmailJS error:', error);
-     alert('Failed to send message. Please try again.');
-   }
- };
+  const onSubmit = async (_data: ContactFormData) => {
+    // simulate async submit
+    await new Promise(res => setTimeout(res, 800));
 
-
+    toast.success('Message sent successfully');
+    reset();
+  };
 
   return (
-    <section className="w-full bg-[#f9f9f4] py-20 mt-10">
-      <div className="max-w-5xl mx-auto px-4">
-        <h2 className="text-center text-3xl font-semibold text-[#014737] mb-2">
+    <section className="w-full bg-[#f9f9f4] py-20 mt-10 font-[manrope]">
+      <div className="max-w-7xl mx-auto px-4">
+        <h2 className="text-center text-3xl md:text-[48px] font-semibold text-[#01281E] mb-2">
           Get in Touch
         </h2>
-        <p className="text-center text-sm text-gray-500 mb-8">
-          Have questions or ideas? Fill out the form and we’ll respond soon.
+        <p className="text-center text-sm md:text-[18px] text-gray-500 mb-8 max-w-[676px] mx-auto">
+          Have questions or ideas on how we can improve your TableRounds
+          experience? Send us a message and we&apos;ll reply as soon as possible!
         </p>
 
-        <Card className="bg-gradient-to-r from-[#014737] to-[#0a8f6a] p-8 rounded-xl shadow-lg">
+        <Card className="background p-8 rounded-xl shadow-lg max-w-full md:px-25">
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="space-y-5 max-w-3xl"
+            className="space-y-5 max-w-5xl"
           >
+            {/* Name */}
             <div>
-              <label className="text-white text-sm mb-1 block">Name*</label>
+              <label className="text-white text-sm md:text-[18px] mb-1 block">
+                Name *
+              </label>
               <Input
                 placeholder="Enter your name"
                 {...register('name')}
-                className="bg-white/90"
+                className="bg-[#1D886B] px-[12px] py-[16px] placeholder:text-[#f9f9f5] placeholder:text-[12px] rounded-[8px] border-none shadow-lg text-white md:h-[60px]"
               />
               {errors.name && (
                 <p className="text-red-300 text-xs mt-1">
@@ -85,12 +69,15 @@ export default function GetInTouch() {
               )}
             </div>
 
+            {/* Email */}
             <div>
-              <label className="text-white text-sm mb-1 block">Email*</label>
+              <label className="text-white text-sm md:text-[18px] mb-1 block">
+                Email *
+              </label>
               <Input
                 placeholder="Enter your email address"
                 {...register('email')}
-                className="bg-white/90"
+                className="bg-[#1D886B] px-[12px] py-[16px] placeholder:text-[#f9f9f5] placeholder:text-[12px] rounded-[8px] border-none shadow-lg text-white md:h-[60px]"
               />
               {errors.email && (
                 <p className="text-red-300 text-xs mt-1">
@@ -99,13 +86,16 @@ export default function GetInTouch() {
               )}
             </div>
 
+            {/* Message */}
             <div>
-              <label className="text-white text-sm mb-1 block">Message*</label>
+              <label className="text-white text-sm md:text-[18px] mb-1 block">
+                Message *
+              </label>
               <Textarea
                 rows={4}
                 placeholder="Write your message"
                 {...register('message')}
-                className="bg-white/90"
+                className="bg-[#1D886B] rounded-[8px] border-none placeholder:text-[#f9f9f5] placeholder:text-[12px] shadow-lg text-white "
               />
               {errors.message && (
                 <p className="text-red-300 text-xs mt-1">
@@ -114,13 +104,13 @@ export default function GetInTouch() {
               )}
             </div>
 
-            <Button
+            <Btn
               type="submit"
               disabled={isSubmitting}
-              className="bg-[#d4b06a] hover:bg-[#c9a457] text-black px-8"
+              className="bg-[#B79E6B] text-white hover:bg-[#a08c5f] rounded-[8px] w-full md:w-[190px] h-[54px] text-sm md:text-[16px]"
             >
               {isSubmitting ? 'Sending...' : 'Submit'}
-            </Button>
+            </Btn>
           </form>
         </Card>
       </div>

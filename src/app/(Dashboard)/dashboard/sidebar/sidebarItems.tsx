@@ -90,7 +90,7 @@ export const userMenu: MenuItem[] = [
   },
   {
     title: 'Reset Question Bank',
-    href: '/dashboard/reset-qns-bank',
+    href: '/dashboard/create-test/1',
     icon: '/images/dashboard/img06.png',
   },
   {

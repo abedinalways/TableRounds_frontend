@@ -19,11 +19,11 @@ export default function MessageInput() {
   const [attachments, setAttachments] = useState<File[]>([]);
   const fileRef = useRef<HTMLInputElement>(null);
   const [fileInputKey, setFileInputKey] = useState(0);
-  
+
   const [isRecording, setIsRecording] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
-  
+
   const toggleRecording = async () => {
     if (isRecording) {
       mediaRecorderRef.current?.stop();
@@ -61,16 +61,14 @@ export default function MessageInput() {
     setIsRecording(true);
   };
 
-  // 
+  //
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
 
     setAttachments(prev => [...prev, ...Array.from(files)]);
-    setFileInputKey(prev => prev + 1); 
+    setFileInputKey(prev => prev + 1);
   };
-
-
 
   const handleSend = () => {
     sendMessage(input, attachments);
@@ -79,10 +77,10 @@ export default function MessageInput() {
   };
 
   return (
-    <div>
+    <div className="relative">
       {/* Attachment preview */}
       {attachments.length > 0 && (
-        <div className="px-4 pb-2 flex gap-2 flex-wrap">
+        <div className="pb-2 flex gap-2 flex-wrap absolute top-0 -translate-y-full left-0">
           {attachments.map((file, i) => (
             <div
               key={i}

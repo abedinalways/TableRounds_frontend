@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useMemo } from 'react';
 import { Card } from '@/components/ui/card';
 import { LeaderboardItem } from '@/types/type';
@@ -20,12 +22,33 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import CalendarIcon from '../reusable/icons/CalendarIcon';
+import Image from 'next/image';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+
+const getRankWithBadge = (rank: number) => {
+  const isTopThree = rank <= 3;
+
+  return (
+    <div className="flex items-center gap-2">
+      <span className="card-style text-[#314158] px-5 py-3">{rank}</span>
+
+      {isTopThree && (
+        <Image
+          src={`/images/dashboard/leaderboard/rank-${rank}.png`}
+          alt={`Rank ${rank}`}
+          width={32}
+          height={32}
+          className="shrink-0"
+        />
+      )}
+    </div>
+  );
+};
 
 interface LeaderboardTableProps {
   data: LeaderboardItem[];
 }
 
-// Simple Trend Chart Component
 function TrendChart({ data }: { data: number[] }) {
   const chartData = data.map((value, index) => ({ index, value }));
 
@@ -51,11 +74,9 @@ export function LeaderboardTable({ data }: LeaderboardTableProps) {
     activeUsers: false,
   });
 
-  // Filter and search logic
   const filteredData = useMemo(() => {
     let filtered = [...data];
 
-    // Apply search filter
     if (searchQuery) {
       filtered = filtered.filter(
         item =>
@@ -64,28 +85,19 @@ export function LeaderboardTable({ data }: LeaderboardTableProps) {
       );
     }
 
-    // Apply checkbox filters
-    if (filters.highAccuracy) {
-      filtered = filtered.filter(item => item.accuracy >= 70);
-    }
-    if (filters.topPerformers) {
-      filtered = filtered.filter(item => item.rank <= 10);
-    }
-    if (filters.activeUsers) {
-      filtered = filtered.filter(item => item.tests >= 50);
-    }
-
-   
+    if (filters.highAccuracy) filtered = filtered.filter(i => i.accuracy >= 70);
+    if (filters.topPerformers) filtered = filtered.filter(i => i.rank <= 10);
+    if (filters.activeUsers) filtered = filtered.filter(i => i.tests >= 50);
 
     return filtered;
   }, [data, searchQuery, filters]);
 
   return (
     <Card className="mt-6 p-4">
-      {/* Search and Filter Section */}
-      <div className="flex items-center justify-between  mb-4 pb-4 border-b">
-        <div className="flex gap-6">
-          {/* Time Period Selector */}
+      {/* Search & Filter */}
+      <div className="md:flex items-center justify-between mb-4 pb-4 border-b">
+        <div className="flex gap-6 items-center">
+          {/* Time Period */}
           <Select value={timePeriod} onValueChange={setTimePeriod}>
             <SelectTrigger className="w-40 bg-[#f7f7f3]">
               <CalendarIcon />
@@ -100,24 +112,49 @@ export function LeaderboardTable({ data }: LeaderboardTableProps) {
             </SelectContent>
           </Select>
 
-          {/* Search Input */}
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+          {/* 🔍 MOBILE SEARCH (Dialog) */}
+          <div className="md:hidden">
+            <Dialog>
+              <DialogTrigger asChild>
+                <button className="w-10 h-10 rounded-md bg-[#f7f7f3] flex items-center justify-center">
+                  <Search className="w-4 h-4 text-gray-400" />
+                </button>
+              </DialogTrigger>
+
+              <DialogContent className="p-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Input
+                    autoFocus
+                    type="text"
+                    placeholder="Search by name, institution, or location"
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    className="pl-10 bg-[#f7f7f3]"
+                  />
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          {/* 🔍 DESKTOP SEARCH */}
+          <div className="relative hidden md:flex md:flex-1 md:max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <Input
               type="text"
               placeholder="Search by name, institution, or location"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="pl-10 bg-[#f7f7f3] w-[607px]!"
+              className="pl-10 bg-[#f7f7f3] md:w-[607px]"
             />
           </div>
         </div>
 
-        {/* Filter Dropdown */}
+        {/* Filters */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="gap-2 bg-[#f7f7f3]">
-              <Filter className="w-4 h-4 " />
+              <Filter className="w-4 h-4" />
               Filter
               {(filters.highAccuracy ||
                 filters.topPerformers ||
@@ -138,7 +175,7 @@ export function LeaderboardTable({ data }: LeaderboardTableProps) {
             <DropdownMenuCheckboxItem
               checked={filters.highAccuracy}
               onCheckedChange={checked =>
-                setFilters(prev => ({ ...prev, highAccuracy: checked }))
+                setFilters(p => ({ ...p, highAccuracy: checked }))
               }
             >
               High Accuracy (≥70%)
@@ -146,7 +183,7 @@ export function LeaderboardTable({ data }: LeaderboardTableProps) {
             <DropdownMenuCheckboxItem
               checked={filters.topPerformers}
               onCheckedChange={checked =>
-                setFilters(prev => ({ ...prev, topPerformers: checked }))
+                setFilters(p => ({ ...p, topPerformers: checked }))
               }
             >
               Top 10 Performers
@@ -154,7 +191,7 @@ export function LeaderboardTable({ data }: LeaderboardTableProps) {
             <DropdownMenuCheckboxItem
               checked={filters.activeUsers}
               onCheckedChange={checked =>
-                setFilters(prev => ({ ...prev, activeUsers: checked }))
+                setFilters(p => ({ ...p, activeUsers: checked }))
               }
             >
               Active Users (≥50 tests)
@@ -163,56 +200,57 @@ export function LeaderboardTable({ data }: LeaderboardTableProps) {
         </DropdownMenu>
       </div>
 
-      {/* Results count */}
-      {/* <div className="mb-3 text-sm text-muted-foreground">
-        Showing {filteredData.length} of {data.length} results
-      </div> */}
-
       {/* Table */}
-      <table className="w-full text-sm rounded-2xl border border-gray-100 rounded-t-xl">
-        <thead className="background text-white">
-          <tr className="">
-            <th className="p-3 text-left">Rank</th>
-            <th className="p-3 text-left">Name</th>
-            <th className="p-3">Tests</th>
-            <th className="p-3">Accuracy</th>
-            <th className="p-3">Avg Score</th>
-            <th className="p-3">Trend</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredData.length === 0 ? (
+      <div className="rounded-t-[4px] outline overflow-x-auto">
+        <table className="w-full text-sm min-w-[700px]">
+          <thead className="background text-white h-[89px]">
             <tr>
-              <td colSpan={6} className="p-8 text-center text-muted-foreground">
-                No results found. Try adjusting your search or filters.
-              </td>
+              <th className="p-3 text-left">Rank</th>
+              <th className="p-3 text-left">Name</th>
+              <th className="p-3">Tests</th>
+              <th className="p-3">Accuracy</th>
+              <th className="p-3">Avg Score</th>
+              <th className="p-3">Trend</th>
             </tr>
-          ) : (
-            filteredData.map(row => (
-              <tr key={row.rank} className="border-b hover:bg-gray-50">
-                <td className="p-3">{row.rank}</td>
-                <td className="p-3">
-                  <p className="font-medium">{row.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {row.institution}
-                  </p>
-                </td>
-                <td className="p-3 text-center">{row.tests}</td>
-                <td className="p-3 flex flex-col items-center">
-                  <div>
-                    <span className="text-xs">{row.accuracy}%</span>
-                    <LeaderboardProgress value={row.accuracy} />
-                  </div>
-                </td>
-                <td className="p-3 text-center">{row.avgScore}%</td>
-                <td className="p-3 flex items-center justify-center">
-                  {row.trend && <TrendChart data={row.trend} />}
+          </thead>
+          <tbody>
+            {filteredData.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={6}
+                  className="p-8 text-center text-muted-foreground"
+                >
+                  No results found.
                 </td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+            ) : (
+              filteredData.map(row => (
+                <tr
+                  key={row.rank}
+                  className="not-last:border-b hover:bg-gray-50"
+                >
+                  <td className="p-3">{getRankWithBadge(row.rank)}</td>
+                  <td className="p-3">
+                    <p className="font-medium">{row.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {row.institution}
+                    </p>
+                  </td>
+                  <td className="p-3 text-center">{row.tests}</td>
+                  <td className="p-3">
+                    <span className="text-xs">{row.accuracy}%</span>
+                    <LeaderboardProgress value={row.accuracy} />
+                  </td>
+                  <td className="p-3 text-center">{row.avgScore}%</td>
+                  <td className="p-3 flex justify-center">
+                    {row.trend && <TrendChart data={row.trend} />}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
     </Card>
   );
 }
