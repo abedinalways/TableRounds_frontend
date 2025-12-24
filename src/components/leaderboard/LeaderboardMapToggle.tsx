@@ -18,9 +18,8 @@ const Mapview = dynamic(() => import('./Mapview'), {
 
 function MapView() {
   return (
-    <div className="h-full w-full rounded-xl border  flex items-center justify-center">
-     <Mapview/>
-     
+    <div className="w-full px-3 sm:px-2 md:px-6">
+      <Mapview />
     </div>
   );
 }
@@ -40,10 +39,10 @@ export default function LeaderboardMapToggle() {
   const [isMap, setIsMap] = useState(true);
 
   return (
-    <div className="w-full bg-none font-[manrope]">
-      <CardHeader className="flex flex-row items-center justify-between">
+    <div className="w-full bg-none font-[manrope] ">
+      <CardHeader className="flex flex-wrap items-center justify-between">
         <div>
-          <CardTitle className="text-[48px] text-[#01281e]">
+          <CardTitle className="md:text-[48px] text-[32px] text-[#01281e]">
             {isMap ? 'Map' : 'Leaderboard'}
           </CardTitle>
           <p className="text-[18px] text-muted-foreground">
@@ -53,12 +52,22 @@ export default function LeaderboardMapToggle() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <span className={`text-lg ${!isMap ? 'font-semibold' : ''}`}>
+        <div className="flex  md:items-center gap-2 bg-white px-6 py-4 rounded-2xl">
+          <span
+            className={`md:text-lg text-md ${!isMap ? 'font-semibold' : ''}`}
+          >
             Leaderboard
           </span>
-          <Switch checked={isMap} onCheckedChange={setIsMap} className='cursor-pointer'/>
-          <span className={`text-lg ${isMap ? 'font-semibold' : ''}`}>Map</span>
+          <Switch
+            checked={isMap}
+            onCheckedChange={setIsMap}
+            className="cursor-pointer"
+          />
+          <span
+            className={`md:text-lg text-md  ${isMap ? 'font-semibold' : ''}`}
+          >
+            Map
+          </span>
         </div>
       </CardHeader>
 

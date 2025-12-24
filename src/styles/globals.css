@@ -81,6 +81,8 @@ body {
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --shadow-sm: 0 1px 2px -1px rgba(0, 0, 0, 0.1), 
+               0 1px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
 .dark {
@@ -325,4 +327,18 @@ background: rgba(183, 158, 107, 0.14)
 }
 .input-bg{
   background: rgba(9, 95, 72, 0.1)
+}
+
+.card-style {
+  background-color: #f1f5f9; 
+  box-shadow: var(--shadow-sm);
+  border-radius: 10px;      
+  
+  transition: box-shadow 0.2s ease;
+}
+
+/* Optional: Hover effect to make it interactive */
+.card-style:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+              0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
