@@ -16,6 +16,7 @@ import PeopleIcon from '../reusable/icons/PeopleIcon';
 import EduIcon from '../reusable/icons/EduIcon';
 import ExperienceIcon from '../reusable/icons/ExperienceIcon';
 import ActivityIcon from '../reusable/icons/ActivityIcon';
+import QuestionBankSolved from './ActivityCard';
 
 interface ProfileTabsProps {
   activeTab: ProfileTab;
@@ -84,6 +85,7 @@ export default function ProfileTabs({
           <div className="space-y-6">
             <EducationCard data={data.education} />
             <ExperienceCard data={data.experience} />
+            <QuestionBankSolved data={data.questionBank} />
           </div>
 
           <div className="space-y-6">
@@ -106,9 +108,10 @@ export default function ProfileTabs({
         </TabsContent>
 
         <TabsContent value="activity">
-          <p className="text-muted-foreground">
-            Recent activity coming soon...
-          </p>
+          {/* here questionbank card placed */}
+          <div className="max-w-xl">
+            <QuestionBankSolved data={data.questionBank} />
+          </div>
         </TabsContent>
       </div>
     </Tabs>

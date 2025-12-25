@@ -39,6 +39,12 @@ export interface ProfileData {
   experience: ExperienceItem[];
   publications: PublicationItem[];
   skills: string[];
+  questionBank: QuestionBankStats;
 }
-
+export interface QuestionBankStats {
+  completion: number; 
+  ranking: number;
+  correctRate: number;
+  bestTopic: string;
+};
 export type ProfileTab = 'overview' | 'education' | 'experience'| 'publications' | 'activity';
