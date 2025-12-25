@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
+
 import { UserProfile } from '@/types/profile';
 import LocationIcon from '../ui/LocationIcon';
 import BagIcon from '../reusable/icons/BagIcon';

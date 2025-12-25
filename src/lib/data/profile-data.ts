@@ -14,7 +14,12 @@ export const profileData: ProfileData = {
     followers: 523,
     following: 234,
   },
-
+  questionBank: {
+    completion: 80, 
+    ranking: 10, 
+    correctRate: 90, 
+    bestTopic: 'Trauma',
+  },
   education: [
     {
       title: 'DMD',

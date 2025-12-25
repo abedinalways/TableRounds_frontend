@@ -41,7 +41,7 @@ export default function Topbar({ onMenuClick }: TopbarProps = {}) {
           alt=""
           className="cursor-pointer"
         />
-        <Link href="/dashboard/profile">
+        <Link href="/dashboard/my-profile">
           <Image
             src="/images/dashboard/topbar/doctor.png"
             width={36}
