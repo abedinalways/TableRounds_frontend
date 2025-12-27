@@ -148,7 +148,11 @@ export default function SkillBadges({ skills }: SkillBadgesProps) {
           <form onSubmit={handleSave}>
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
-                <BagIcon /> Skill
+                {' '}
+                <span className="bg-[#d1fae5] p-2 rounded-[10px]">
+                  <BagIcon />
+                </span>
+                Skill
               </DialogTitle>
 
               <DialogDescription className="space-y-3">
@@ -159,7 +163,7 @@ export default function SkillBadges({ skills }: SkillBadgesProps) {
                       <Badge
                         key={skill}
                         onClick={() => handleEdit(index)}
-                        className={`cursor-pointer bg-[#d1fae5] text-[#01503b] ${
+                        className={`cursor-pointer p-3 rounded-full bg-[#d1fae5] text-[#01503b] ${
                           activeIndex === index ? 'ring-1 ring-[#b79e6b]' : ''
                         }`}
                       >
@@ -170,7 +174,7 @@ export default function SkillBadges({ skills }: SkillBadgesProps) {
                 )}
 
                 {/* Input */}
-                <div className="bg-[#f9f9f5] p-3 rounded-[10px] space-y-2">
+                <div className="bg-[#f9f9f5] p-3 rounded-[10px] space-y-2 mt-6 font-[manrope]">
                   <Label>Add Skill</Label>
                   <Input
                     value={skillValue}
@@ -179,9 +183,24 @@ export default function SkillBadges({ skills }: SkillBadgesProps) {
                   />
 
                   {isFullModal ? (
-                    <Btn className="bg-[#b79e6b] text-white">Save</Btn>
+                    <Btn type='submit' className="bg-[#b79e6b] text-white md:px-6 md:py-3">Save</Btn>
                   ) : (
-                    <Btn className="bg-[#f9f9f5] border w-full">Add New</Btn>
+                    <Btn
+                      type="submit"
+                      className="bg-[#f9f9f5] rounded-[12px] p-3 cursor-pointer w-full border border-[#00000012]"
+                    >
+                      <p className="flex justify-center items-center gap-2">
+                        <Image
+                          src="/images/dashboard/profile/plus.png"
+                          width={20}
+                          height={20}
+                          alt=""
+                        />
+                        <span className="text-[#01503b] font-semibold">
+                          Add New
+                        </span>
+                      </p>
+                    </Btn>
                   )}
                 </div>
               </DialogDescription>

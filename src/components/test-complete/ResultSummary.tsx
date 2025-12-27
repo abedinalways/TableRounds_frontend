@@ -1,0 +1,169 @@
+'use client';
+
+import { Card, CardContent } from '@/components/ui/card';
+import { CheckCircle } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import gsap from 'gsap';
+import CompleteIcon from '../reusable/icons/CompleteIcon';
+import { Button } from '../ui/button';
+import { ShareModal } from './ShareModal';
+import ShareIcon from '../reusable/icons/ShareIcon';
+import ShareIconBlack from '../reusable/icons/ShareIconBlack';
+import Link from 'next/link';
+
+interface ResultSummaryProps {
+  score: number;
+  total: number;
+  correct: number;
+  incorrect: number;
+  used: number;
+  unused: number;
+}
+interface Colleague {
+  id: number;
+  name: string;
+  title: string;
+  university: string;
+  avatar: string;
+}
+
+export function ResultSummary({
+  score,
+  total,
+  correct,
+  incorrect,
+  used,
+  unused,
+}: ResultSummaryProps) {
+  const scoreRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    gsap.fromTo(
+      scoreRef.current,
+      { innerText: 0 },
+      {
+        innerText: score,
+        duration: 1.2,
+        ease: 'power2.out',
+        snap: { innerText: 1 },
+      }
+    );
+  }, [score]);
+
+    const [open, setOpen] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [colleagues, setColleagues] = useState<Colleague[]>([]);
+     const handleShare = () => {
+       setOpen(true);
+       setLoading(true);
+
+       // simulate API call
+       setTimeout(() => {
+         setColleagues([
+           {
+             id: 1,
+             name: 'Alex Martinez, MD',
+             title: 'UCLA',
+             university: '',
+             avatar: '/images/dashboard/main_dashboard/doc01.png',
+           },
+           {
+             id: 2,
+             name: 'Olivia Smith, DMD',
+             title: 'NYU',
+             university: '',
+             avatar: '/images/dashboard/main_dashboard/doc02.png',
+           },
+           {
+             id: 3,
+             name: 'Tim Brown, DDS',
+             title: 'Parkland',
+             university: '',
+             avatar: '/images/dashboard/main_dashboard/doc03.png',
+           },
+           {
+             id: 4,
+             name: 'Alex Martinez, MD',
+             title: 'UCLA',
+             university: '',
+             avatar: '/images/dashboard/main_dashboard/doc01.png',
+           },
+           {
+             id: 5,
+             name: 'Olivia Smith, DMD',
+             title: 'NYU',
+             university: '',
+             avatar: '/images/dashboard/main_dashboard/doc02.png',
+           },
+           {
+             id: 6,
+             name: 'Tim Brown, DDS',
+             title: 'Parkland',
+             university: '',
+             avatar: '/images/dashboard/main_dashboard/doc03.png',
+           },
+         ]);
+         setLoading(false);
+       }, 1200);
+     };
+
+  return (
+    <>
+      <Card className="background text-white font-[manrope]">
+        <CardContent className="py-10 text-center space-y-4">
+          <div className="flex justify-end gap-3">
+            <Link href="/dashboard/create-test/1">
+              <button className="cursor-pointer bg-[#b79e6b] text-white md:px-[65px] px-6 py-2 md:py-3.5 rounded-xl flex items-center gap-2">
+                Try Again
+              </button>
+            </Link>
+            <button
+              onClick={handleShare}
+              className="cursor-pointer bg-white text-[#01281e] md:px-[65px] md:py-3.5 px-6 py-2 rounded-xl flex items-center gap-2"
+            >
+              Share{' '}
+              <span>
+                <ShareIconBlack />
+              </span>
+            </button>
+          </div>
+          <div className="flex justify-center items-center">
+            <CompleteIcon />
+          </div>
+          <h2 className="text-xl md:text-[36px] leading-[170%]  font-bold">
+            Complete Test!
+          </h2>
+          <div className="complete-card-bg w-fit py-4 px-8 rounded-[12px] mx-auto">
+            <span ref={scoreRef} className="text-4xl font-bold">
+              {correct}
+            </span>
+            <span className="text-4xl font-bold">/50</span>
+            <p className="text-sm opacity-90">Your Score</p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 text-sm md:text-[16px] max-w-[873px] mx-auto">
+            <Stat label="Correct" value={correct} />
+            <Stat label="Incorrect" value={incorrect} />
+            <Stat label="Used" value={used} />
+            <Stat label="Unused" value={unused} />
+          </div>
+        </CardContent>
+      </Card>
+      <ShareModal
+        open={open}
+        onClose={() => setOpen(false)}
+        loading={loading}
+        colleagues={colleagues}
+      />
+    </>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="complete-card-bg md:px-8 md:py-4 rounded-[12px]">
+      <p className="font-semibold">{value}</p>
+      <p className="text-xs opacity-80">{label}</p>
+    </div>
+  );
+}

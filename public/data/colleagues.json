@@ -2,70 +2,70 @@
   "colleagues": [
     {
       "id": 1,
-      "name": "Dr. Alex Martinez, MD",
+      "name": "Alex Martinez, MD",
       "institution": "UCLA",
       "avatar": "/images/dashboard/main_dashboard/doc01.png",
       "specialty": "Cardiology"
     },
     {
       "id": 2,
-      "name": "Dr. Olivia Smith, DMD",
+      "name": "Olivia Smith, DMD",
       "institution": "NYU",
       "avatar": "/images/dashboard/main_dashboard/doc02.png",
       "specialty": "Dentistry"
     },
     {
       "id": 3,
-      "name": "Dr. Tim Brown, DDS",
+      "name": "Tim Brown, DDS",
       "institution": "Parkland",
       "avatar": "/images/dashboard/main_dashboard/doc03.png",
       "specialty": "Oral Surgery"
     },
     {
       "id": 4,
-      "name": "Dr. Sarah Johnson, MD",
+      "name": "Sarah Johnson, MD",
       "institution": "UCLA",
       "avatar": "/images/dashboard/main_dashboard/doc04.png",
       "specialty": "Neurosurgery"
     },
     {
       "id": 5,
-      "name": "Dr. Michael Chen, MD",
+      "name": "Michael Chen, MD",
       "institution": "Stanford",
       "avatar": "/images/dashboard/main_dashboard/doc01.png",
       "specialty": "Orthopedics"
     },
     {
       "id": 6,
-      "name": "Dr. Emily Davis, MD",
+      "name": "Emily Davis, MD",
       "institution": "Mayo Clinic",
       "avatar": "/images/dashboard/main_dashboard/doc02.png",
       "specialty": "General Surgery"
     },
     {
       "id": 7,
-      "name": "Dr. Robert Wilson, MD",
+      "name": "Robert Wilson, MD",
       "institution": "Johns Hopkins",
       "avatar": "/images/dashboard/main_dashboard/doc02.png",
       "specialty": "Pediatric Surgery"
     },
     {
       "id": 8,
-      "name": "Dr. Jennifer Lee, MD",
+      "name": " Jennifer Lee, MD",
       "institution": "Cleveland Clinic",
       "avatar": "/images/dashboard/main_dashboard/doc04.png",
       "specialty": "Vascular Surgery"
     },
     {
       "id": 9,
-      "name": "Dr. David Garcia, MD",
+      "name": " David Garcia, MD",
       "institution": "Mass General",
       "avatar": "/images/dashboard/main_dashboard/doc01.png",
       "specialty": "Thoracic Surgery"
     },
     {
       "id": 10,
-      "name": "Dr. Amanda Taylor, MD",
+      "name": "Amanda Taylor, MD",
       "institution": "Duke",
       "avatar": "/images/dashboard/main_dashboard/doc02.png",
       "specialty": "Plastic Surgery"
