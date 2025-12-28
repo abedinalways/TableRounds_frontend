@@ -208,7 +208,7 @@ export function LeaderboardTable({ data }: LeaderboardTableProps) {
               <th className="p-3 text-left">Rank</th>
               <th className="p-3 text-left">Name</th>
               <th className="p-3">Tests</th>
-              <th className="p-3">Accuracy</th>
+              <th className="p-3 text-left">Accuracy</th>
               <th className="p-3">Avg Score</th>
               <th className="p-3">Trend</th>
             </tr>

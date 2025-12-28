@@ -350,3 +350,7 @@ background: rgba(183, 158, 107, 0.14)
 .percentage-bg{
   background: linear-gradient(160deg, #023729 0%, #02ae80 100%);
 }
+
+.stats-card-bg{
+ background: rgba(205, 235, 227, 0.72);
+}
