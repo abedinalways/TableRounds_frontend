@@ -20,7 +20,7 @@ export const adminMenu: MenuItem[] = [
   },
   {
     title: 'Create Questions',
-    href: '/dashboard/previous-test',
+    href: '/dashboard/create-questions',
     icon: '/images/dashboard/img03.png',
   },
   {

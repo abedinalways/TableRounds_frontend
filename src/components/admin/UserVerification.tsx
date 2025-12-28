@@ -15,58 +15,59 @@ export function UserVerification({ users, onAction }: Props) {
         User Verifications
       </div>
       <div className="rounded-t-[8px]  overflow-x-auto">
-
-      <table className="w-full text-sm min-w-[700px]">
-        <thead className=" bg-[#01503b] h-[89px] text-white ">
-          <tr className="text-left text-white  ">
-            <th className="p-3 text-left">Name</th>
-            <th className="p-3 text-left">Email</th>
-            <th className="p-3 text-left">Location</th>
-            <th className="p-3 text-left">Document</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-
-        <tbody >
-          {users.map(user => (
-            <tr key={user.id} className=" last:border-b">
-              <td className="p-3 font-medium flex gap-2 items-center ">
-                <Image
-                  src={user.image ?? '/images/doc.png'}
-                  alt={user.name}
-                  width={32}
-                  height={32}
-                  className="rounded-full"
-                />
-                {user.name}
-              </td>
-              <td>{user.email}</td>
-              <td className="truncate max-w-[200px]">{user.location}</td>
-              <td>
-                <Button variant="secondary" size="sm">
-                  View
-                </Button>
-              </td>
-              <td className="flex gap-2 py-2">
-                <Button
-                  size="sm"
-                  className="bg-emerald-700"
-                  onClick={() => onAction(user, 'approved')}
-                >
-                  Approve
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => onAction(user, 'rejected')}
-                >
-                  Reject
-                </Button>
-              </td>
+        <table className="w-full text-sm min-w-[700px]">
+          <thead className=" bg-[#01503b] h-[89px] text-white ">
+            <tr className="text-left text-white">
+              <th className="p-3 text-left">Name</th>
+              <th className="p-3 text-left">Email</th>
+              <th className="p-3 text-left">Location</th>
+              <th className="p-3 text-left">Document</th>
+              <th className="p-3 text-left">Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            {users.map(user => (
+              <tr key={user.id} className="mx-auto last:border-b">
+                <td className="p-4 font-medium flex gap-2 items-center ">
+                  <Image
+                    src={user.image ?? '/images/doc.png'}
+                    alt={user.name}
+                    width={32}
+                    height={32}
+                    className="rounded-full"
+                  />
+                  {user.name}
+                </td>
+                <td className='p-4 align-middle"'>{user.email}</td>
+                <td className="truncate max-w-[200px]">{user.location}</td>
+                <td className="p-4 align-middle">
+                  <Button variant="secondary" size="sm">
+                    View
+                  </Button>
+                </td>
+                <td className="p-4 align-middle">
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      className="bg-emerald-700"
+                      onClick={() => onAction(user, 'approved')}
+                    >
+                      Approve
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => onAction(user, 'rejected')}
+                    >
+                      Reject
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
