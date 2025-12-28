@@ -4,6 +4,7 @@ export interface MenuItem {
   href: string;
   icon: string;
   section?: string;
+  
 }
 
 export const adminMenu: MenuItem[] = [
@@ -13,30 +14,30 @@ export const adminMenu: MenuItem[] = [
     icon: '/images/dashboard/img01.png',
   },
   {
-    title: 'Create Test',
+    title: 'Users',
     href: '/dashboard/create-test',
     icon: '/images/dashboard/img02.png',
   },
   {
-    title: 'Previous Test',
+    title: 'Create Questions',
     href: '/dashboard/previous-test',
     icon: '/images/dashboard/img03.png',
   },
   {
-    title: 'Statistics',
+    title: 'Question Manager',
     href: '/dashboard/statistics',
     icon: '/images/dashboard/img04.png',
   },
-  {
-    title: 'Leaderboard',
-    href: '/dashboard/leaderboard',
-    icon: '/images/dashboard/img05.png',
-  },
-  {
-    title: 'Reset Question Bank',
-    href: '/dashboard/reset-question-bank',
-    icon: '/images/dashboard/img06.png',
-  },
+  // {
+  //   title: 'Leaderboard',
+  //   href: '/dashboard/leaderboard',
+  //   icon: '/images/dashboard/img05.png',
+  // },
+  // {
+  //   title: 'Reset Question Bank',
+  //   href: '/dashboard/reset-question-bank',
+  //   icon: '/images/dashboard/img06.png',
+  // },
   {
     title: 'Messages',
     href: '/dashboard/messages',
@@ -70,12 +71,12 @@ export const userMenu: MenuItem[] = [
   },
   {
     title: 'Create Test',
-    href: '/dashboard/create-test', 
+    href: '/dashboard/create-test',
     icon: '/images/dashboard/img02.png',
   },
   {
     title: 'Previous Test',
-    href: '/dashboard/previous-test', 
+    href: '/dashboard/previous-test',
     icon: '/images/dashboard/img03.png',
   },
   {
@@ -90,7 +91,7 @@ export const userMenu: MenuItem[] = [
   },
   {
     title: 'Reset Question Bank',
-    href: '/dashboard/create-test/1',
+    href: '/dashboard/reset-qns-bank',
     icon: '/images/dashboard/img06.png',
   },
   {

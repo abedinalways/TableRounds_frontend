@@ -39,6 +39,14 @@ export default function Sidebar({
 
   const menu: MenuItem[] = role === 'admin' ? adminMenu : userMenu;
 
+  const isActive = (href: string) => {
+    if (href === '/dashboard') {
+      return pathname === href;
+    }
+    return pathname.startsWith(href);
+  };
+
+
   // Desktop sidebar (always visible on lg+)
   if (!mobile) {
     return (
@@ -79,7 +87,7 @@ export default function Sidebar({
                   href={item.href}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-all
                     ${
-                      pathname === item.href
+                      isActive(item.href)
                         ? 'bg-[#B79E6B] text-white font-semibold'
                         : 'hover:bg-[#B79E6B] hover:text-white'
                     }
@@ -162,7 +170,7 @@ export default function Sidebar({
                     onClick={() => setOpen?.(false)}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-all
                       ${
-                        pathname === item.href
+                        isActive(item.href)
                           ? 'bg-[#B79E6B] text-white font-semibold'
                           : 'hover:bg-[#B79E6B] hover:text-white'
                       }

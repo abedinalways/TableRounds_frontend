@@ -1,9 +1,12 @@
+import { CreateTestContent } from '@/components/create_test_components/CreateTestContent'
 import React from 'react'
 
 export default function ResetQnsBankPage() {
   return (
-    <div className='h-screen'>
-      <h1>Question Bank</h1>
-    </div>
+    <div className="grid grid-cols-12 font-[manrope] gap-4">
+          <div className="grid grid-cols-12">
+            <CreateTestContent />
+          </div>
+        </div>
   )
 }
