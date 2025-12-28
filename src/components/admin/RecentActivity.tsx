@@ -12,7 +12,7 @@ export function RecentActivity({ activities }: Props) {
 
       <div className="p-4 space-y-3 text-sm">
         {activities.map(a => (
-          <div key={a.id} className="bg-gray-100 border-black border-l-[4px] rounded-[4px] p-3">
+          <div key={a.id} className="bg-gray-100 border-black border-l-[4px] rounded-[12px] p-3">
             <p className="font-medium">{a.message}</p>
             <span className="text-xs text-gray-500">{a.time}</span>
           </div>
