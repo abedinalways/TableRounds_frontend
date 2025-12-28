@@ -23,18 +23,23 @@ import ExplainIcon from '../reusable/icons/ExpalinIcon';
 import OptionIcon from '../reusable/icons/OpotionIcon';
 import BookIcon from '../reusable/icons/BookIcon';
 import { useRouter } from 'next/navigation';
+import { MarkedQuestion } from '@/types/markedQuestion';
 
 
 interface QuizQuestionViewProps {
   data: QuizQuestionData;
-  onNext?: () => void;
-  onPrev?: () => void;
+  markedQuestions: MarkedQuestion[];
+  onToggleMark: () => void;
+  onNext: () => void;
   onJumpTo?: (index: number) => void;
-  onSubmitAnswer?: (questionId: string, answerId: string) => void;
 }
+
+
 
 export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   data,
+  markedQuestions,
+  onToggleMark,
   onNext,
   onJumpTo,
 }) => {
@@ -49,32 +54,23 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   // const [checkedAnswerId, setCheckedAnswerId] = useState('');
   const progressValue = (currentQuestion / totalQuestions) * 100;
   const isUserCorrect = selectedAnswerId === quizDetails.correctAnswerId;
-
+ 
   const handleAnswerChange = (value: string) => {
     setSelectedAnswer(value);
   };
-  
+
   const handleSubmit = () => {
     if (!selectedAnswerId) return;
     setShowExplanation(true);
 
-    console.log(`Submitting answer ${selectedAnswerId} for QID ${questionID}`);
+    // console.log(`Submitting answer ${selectedAnswerId} for QID ${questionID}`);
   };
   
- const [markedQuestions, setMarkedQuestions] = useState<number[]>([]);
- const isMarked = markedQuestions.includes(currentQuestion);
+  
 
-  const toggleMark = () => {
-    setMarkedQuestions(prev =>
-      prev.includes(currentQuestion)
-        ? prev.filter(q => q !== currentQuestion)
-        : [...prev, currentQuestion]
-    );
-  };
-  
-  useEffect(() => {
-    localStorage.setItem('markedQuestions', JSON.stringify(markedQuestions));
-  }, [markedQuestions]);
+
+  const isMarked = markedQuestions.some(q => q.index === currentQuestion);
+
 
   return (
     <div className="flex flex-col space-y-4 font-[manrope] ">
@@ -101,7 +97,7 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
             <div>
               <span className="flex items-center gap-2">
                 <button
-                  onClick={toggleMark}
+                  onClick={onToggleMark}
                   className="text-white cursor-pointer p-2 gap-2 flex flex-col"
                 >
                   <TopbarCheckbox
@@ -161,7 +157,10 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
             {Array.from({ length: totalQuestions }, (_, i) => {
               const qIndex = i + 1;
               const isCurrent = qIndex === currentQuestion;
-              const isMarkedQuestion = markedQuestions.includes(qIndex);
+              const isMarkedQuestion = markedQuestions.some(
+                q => q.index === qIndex
+              );
+
 
               return (
                 <button
