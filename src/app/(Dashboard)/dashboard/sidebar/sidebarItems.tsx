@@ -15,7 +15,7 @@ export const adminMenu: MenuItem[] = [
   },
   {
     title: 'Users',
-    href: '/dashboard/create-test',
+    href: '/dashboard/show-users',
     icon: '/images/dashboard/img02.png',
   },
   {
@@ -53,7 +53,7 @@ export const adminMenu: MenuItem[] = [
   },
   {
     title: 'Settings',
-    href: '/dashboard/settings',
+    href: '/dashboard/admin-settings',
     icon: '/images/dashboard/img09.png',
   },
   {

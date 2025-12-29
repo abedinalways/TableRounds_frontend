@@ -1,7 +1,8 @@
-// components/admin/UserVerification.tsx
-import { Button } from '@/components/ui/button';
+
 import { VerificationUser } from '@/types/admin';
+
 import Image from 'next/image';
+import EyeIcon from '../reusable/icons/EyeIcon';
 
 type Props = {
   users: VerificationUser[];
@@ -42,26 +43,24 @@ export function UserVerification({ users, onAction }: Props) {
                 <td className='p-4 align-middle"'>{user.email}</td>
                 <td className="truncate max-w-[200px]">{user.location}</td>
                 <td className="p-4 align-middle">
-                  <Button variant="secondary" size="sm">
-                    View
-                  </Button>
+                  <button className="bg-[#cdebe3] text-[#01503b] rounded-[4px] cursor-pointer py-1 px-2 flex items-center gap-2">
+                    <EyeIcon /> View
+                  </button>
                 </td>
                 <td className="p-4 align-middle">
                   <div className="flex gap-2">
-                    <Button
-                      size="sm"
-                      className="bg-emerald-700"
+                    <button
+                      className="bg-[#01503b] rounded-[4px] py-1 px-2 text-white cursor-pointer"
                       onClick={() => onAction(user, 'approved')}
                     >
                       Approve
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
+                    </button>
+                    <button
+                      className="bg-white rounded-[4px] py-1 px-2 cursor-pointer text-[#01503b] border border-[#01503b]"
                       onClick={() => onAction(user, 'rejected')}
                     >
                       Reject
-                    </Button>
+                    </button>
                   </div>
                 </td>
               </tr>

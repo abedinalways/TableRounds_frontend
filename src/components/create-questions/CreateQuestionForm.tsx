@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { TagSelector } from './TagSelector';
-import { QuestionField } from './QuestionField';
+
 import { QuestionFormValues, Difficulty } from '@/types/question';
 import { RichTextEditor } from './RichTextEditor';
+import { toast } from 'sonner';
 
 const TOPICS = [
   'Anesthesia/Medicine',
@@ -25,7 +26,7 @@ const TOPICS = [
 const DIFFICULTIES: Difficulty[] = ['Intern', 'Boards', 'Senior'];
 
 export default function CreateQuestionForm() {
-  const { register, control, handleSubmit, watch, setValue } =
+  const { register, control, handleSubmit, watch, setValue, reset } =
     useForm<QuestionFormValues>({
       defaultValues: {
         difficulty: 'Intern',
@@ -38,10 +39,58 @@ export default function CreateQuestionForm() {
     });
 
   const { fields, append } = useFieldArray({ control, name: 'answers' });
+  const [editorKey, setEditorKey] = React.useState(0);
 
-  const onSubmit = (data: QuestionFormValues) => {
-    console.log('Form Data Submitted:', data);
+  const handleAddMoreQuestionSameScenario = () => {
+    const currentDifficulty = watch('difficulty');
+    const currentTopic = watch('topic');
+
+    reset({
+      difficulty: currentDifficulty,
+      topic: currentTopic,
+      questionStem: '',
+      questionTitle: '',
+      explanation: '',
+      keyPoints: '',
+      keepingPoint: '',
+      memoryTrick: '',
+      references: '',
+      answers: [
+        { id: '1', text: '', isCorrect: false },
+        { id: '2', text: '', isCorrect: true },
+      ],
+    });
+
+    setEditorKey(prev => prev + 1); 
+
+    toast.success('New question added for the same scenario');
   };
+
+
+ const onSubmit = (data: QuestionFormValues) => {
+   console.log('Form Data Submitted:', data);
+   toast.success('Question created successfully!');
+
+   reset({
+     difficulty: 'Intern',
+     topic: 'Anatomy & Medicine',
+     questionStem: '',
+     questionTitle: '',
+     explanation: '',
+     keyPoints: '',
+     keepingPoint: '',
+     memoryTrick: '',
+     references: '',
+     answers: [
+       { id: '1', text: '', isCorrect: false },
+       { id: '2', text: '', isCorrect: true },
+     ],
+   });
+
+   setEditorKey(prev => prev + 1); 
+ };
+
+
 
   return (
     <form
@@ -71,29 +120,32 @@ export default function CreateQuestionForm() {
         selected={watch('topic')}
         onChange={val => setValue('topic', val)}
       />
-
+      <div className="flex justify-between items-center">
+        <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
+          Write Questions
+        </h2>
+        <button className="bg-[#01503b] px-6 py-3 rounded-[8px] cursor-pointer font-bold text-white">
+          Create New
+        </button>
+      </div>
       <div className="bg-white p-6 rounded-lg border space-y-6">
-        <div className="flex justify-between items-center">
-          <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
-            Write Questions
-          </h2>
-          <button className="bg-[#01503b] px-6 py-3 rounded-[8px] cursor-pointer font-bold text-white">
-            Create New
-          </button>
-        </div>
+        <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
+          Question Stem
+        </h2>
 
-        
-          <RichTextEditor
-            value={watch('questionStem')}
-            onChange={val => setValue('questionStem', val)}
-          />
-        
+        <RichTextEditor
+          key={`questionStem-${editorKey}`}
+          value={watch('questionStem')}
+          onChange={val => setValue('questionStem', val)}
+        />
 
         <div className="space-y-2 ">
-          <label className="text-[16px] font-bold">Question Title</label>
+          <label className="text-[16px] md:text-[24px] text-[#444950] leading-[160%] font-bold">
+            Question Title
+          </label>
           <Input
             {...register('questionTitle')}
-            placeholder="Which document is used for legal identification?"
+            placeholder="Enter question title"
             className="h-12"
           />
         </div>
@@ -102,12 +154,20 @@ export default function CreateQuestionForm() {
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <label className="font-bold">Answer Choices</label>
-            <button
+            <Button
+              variant="outline"
+              className="border-none bg-white font-[manrope] text-[#01503b] hover:bg-white hover:border-none cursor-pointer"
               type="button"
-              className="text-emerald-600 text-sm font-bold underline"
+              onClick={() =>
+                append({
+                  id: Date.now().toString(),
+                  text: '',
+                  isCorrect: false,
+                })
+              }
             >
-              Edit Answer
-            </button>
+              Add Option
+            </Button>
           </div>
 
           {fields.map((field, index) => (
@@ -118,7 +178,6 @@ export default function CreateQuestionForm() {
               <Checkbox
                 checked={watch(`answers.${index}.isCorrect`)}
                 onCheckedChange={checked => {
-                  // Logic to ensure only one is correct if desired
                   setValue(`answers.${index}.isCorrect`, !!checked);
                 }}
               />
@@ -135,47 +194,70 @@ export default function CreateQuestionForm() {
         </div>
 
         {/* Dynamic Fields */}
-        <QuestionField
-          label="Explanation"
+        <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
+          Explanation
+        </h2>
+        <RichTextEditor
+          key={`explanation-${editorKey}`}
           value={watch('explanation')}
           onChange={v => setValue('explanation', v)}
         />
-        <QuestionField
-          label="Key Points"
+        {/* Why The Other Options Are Incorrect */}
+        <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
+          Why The Other Options Are Incorrect
+        </h2>
+        <RichTextEditor
+          key={`keyPoints-${editorKey}`}
           value={watch('keyPoints')}
           onChange={v => setValue('keyPoints', v)}
         />
-        <QuestionField
-          label="Keeping Point"
+        {/* Pimping Point */}
+        <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
+          Pimping Point
+        </h2>
+        <RichTextEditor
+          key={`keepingPoint-${editorKey}`}
           value={watch('keepingPoint')}
           onChange={v => setValue('keepingPoint', v)}
         />
-        <QuestionField
-          label="Memory Trick"
+        {/* Memory Trick */}
+        <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
+          Memory Trick
+        </h2>
+        <RichTextEditor
+          key={`memoryTrick-${editorKey}`}
           value={watch('memoryTrick')}
           onChange={v => setValue('memoryTrick', v)}
         />
-        <QuestionField
-          label="References"
+        {/* References */}
+        <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
+          References
+        </h2>
+        <RichTextEditor
+          key={`references-${editorKey}`}
           value={watch('references')}
           onChange={v => setValue('references', v)}
         />
 
-        <div className="flex flex-col items-center pt-6 gap-4">
+        {/* implement logic here addd more question in the same secnario */}
+        <div className="flex items-center justify-center">
           <Button
+            className="cursor-pointer"
             variant="outline"
             type="button"
-            onClick={() =>
-              append({ id: Date.now().toString(), text: '', isCorrect: false })
-            }
+            onClick={handleAddMoreQuestionSameScenario}
           >
-            Add New Question to the same board
-          </Button>
-          <Button type="submit" className="w-24 bg-[#01503b]">
-            Save
+            Add More Questions For The Same Scenario
           </Button>
         </div>
       </div>
+      {/* here  */}
+      <Button
+        type="submit"
+        className="cursor-pointer md:px-8 md:py-3 rounded-[8px] bg-[#01503b]"
+      >
+        Submit
+      </Button>
     </form>
   );
 }

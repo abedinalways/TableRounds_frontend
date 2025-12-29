@@ -29,6 +29,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import HeadingIcon from '../reusable/icons/HeadingIcon';
 
 interface ToolbarButtonProps {
   onClick: () => void;
@@ -66,6 +67,7 @@ export function RichTextEditor({ value = '', onChange }: RichTextEditorProps) {
   const [fontSize, setFontSize] = useState('16px');
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [fileInput, setFileInput] = useState<HTMLInputElement | null>(null);
+
 
   const editor = useEditor({
     extensions: [
@@ -114,9 +116,9 @@ export function RichTextEditor({ value = '', onChange }: RichTextEditorProps) {
   if (!editor) return null;
 
   return (
-    <div className="rounded-lg overflow-hidden border border-gray-200 shadow-sm">
+    <div className="rounded-xl overflow-hidden border border-gray-100 shadow-sm">
       {/* Toolbar */}
-      <div className="flex items-center gap-1 px-3 py-2 bg-[#018060] flex-wrap">
+      <div className="flex items-center gap-1 px-3 py-2 background flex-wrap">
         {/* Text Style Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -124,7 +126,9 @@ export function RichTextEditor({ value = '', onChange }: RichTextEditorProps) {
               type="button"
               className="h-8 px-3 flex items-center gap-1 hover:bg-white/10 rounded transition-colors text-white"
             >
-              <span className="text-lg font-bold">A</span>
+              <span className="text-lg font-bold">
+                <HeadingIcon />
+              </span>
               <ChevronDown className="w-4 h-4" />
             </button>
           </DropdownMenuTrigger>
@@ -482,7 +486,10 @@ export function RichTextEditor({ value = '', onChange }: RichTextEditorProps) {
             const input = document.createElement('input');
             input.type = 'file';
             input.accept = 'image/*';
-            input.onchange = e => handleFileUpload(e as unknown as React.ChangeEvent<HTMLInputElement>);
+            input.onchange = e =>
+              handleFileUpload(
+                e as unknown as React.ChangeEvent<HTMLInputElement>
+              );
             input.click();
           }}
           title="Attach File"
@@ -528,13 +535,15 @@ export function RichTextEditor({ value = '', onChange }: RichTextEditorProps) {
       </div>
 
       {/* Editor Content */}
-      <EditorContent
-        editor={editor}
-        className="min-h-[200px] p-4 prose prose-sm max-w-none focus:outline-none bg-white"
-        style={{
-          fontSize: fontSize,
-        }}
-      />
+      <div className="min-h-[200px] bg-[#f8f8f4] p-4">
+        <EditorContent
+          editor={editor}
+          className="focus:outline-none [&_.ProseMirror]:focus:outline-none [&_.ProseMirror]:outline-none"
+          style={{
+            fontSize: fontSize,
+          }}
+        />
+      </div>
 
       {/* Hidden file input */}
       <input
