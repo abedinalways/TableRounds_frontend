@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import Btn from '@/components/reusable/button/Btn';
+import Image from 'next/image';
 
 const contactSchema = z.object({
   name: z.string().min(2, 'Name is required'),
@@ -37,8 +38,8 @@ export default function GetInTouch() {
   };
 
   return (
-    <section className="w-full bg-[#f9f9f4] py-20 mt-10 font-[manrope]">
-      <div className="max-w-7xl mx-auto px-4">
+    <section className="w-full bg-[#f9f9f4] py-20 mt-10 font-[manrope] relative">
+      <div className="max-w-7xl mx-auto px-4 z-30 mt-10">
         <h2 className="text-center text-3xl md:text-[48px] font-semibold text-[#01281E] mb-2">
           Get in Touch
         </h2>
@@ -113,6 +114,9 @@ export default function GetInTouch() {
             </Btn>
           </form>
         </Card>
+      </div>
+      <div className='absolute top-2 left-0 opacity-50'>
+        <Image src='/images/contact/TR.png'width={486} height={486} alt=''/>
       </div>
     </section>
   );

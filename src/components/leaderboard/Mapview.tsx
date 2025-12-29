@@ -5,6 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
+import Image from 'next/image';
 
 const iconProto = L.Icon.Default.prototype as { _getIconUrl?: () => string };
 if (iconProto._getIconUrl) delete iconProto._getIconUrl;
@@ -161,11 +162,26 @@ export default function Mapview() {
   }, []);
 
   return (
-    <div className="w-full h-[620px] rounded-xl overflow-hidden relative" style={{ background: '#f5f7f6', boxShadow: '0 8px 32px rgba(0,0,0,0.08)' }}>
-      <MapContainer center={[20, 0]} zoom={2} minZoom={2} maxZoom={6} className="h-full w-full" scrollWheelZoom={true} attributionControl={false} zoomControl={false}>
-        <TileLayer 
+    <div
+      className="w-full h-[620px] rounded-xl overflow-hidden relative"
+      style={{
+        background: '#f5f7f6',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+      }}
+    >
+      <MapContainer
+        center={[20, 0]}
+        zoom={2}
+        minZoom={2}
+        maxZoom={6}
+        className="h-full w-full"
+        scrollWheelZoom={true}
+        attributionControl={false}
+        zoomControl={false}
+      >
+        <TileLayer
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-          attribution='&copy; OpenStreetMap, &copy; CARTO'
+          attribution="&copy; OpenStreetMap, &copy; CARTO"
         />
 
         <MapControls />
@@ -175,19 +191,49 @@ export default function Mapview() {
             key={loc.city}
             center={[loc.lat, loc.lng]}
             radius={Math.sqrt(loc.users) * 8}
-            pathOptions={{ color: '#10b981', fillColor: '#10b981', fillOpacity: 0.15, weight: 0 }}
+            pathOptions={{
+              color: '#10b981',
+              fillColor: '#10b981',
+              fillOpacity: 0.15,
+              weight: 0,
+            }}
             eventHandlers={{
-              add: (e) => { markerRefs.current[index] = e.target.getElement() as HTMLDivElement; },
-              mouseover: (e) => e.target.setStyle({ fillOpacity: 0.3 }),
-              mouseout: (e) => e.target.setStyle({ fillOpacity: 0.15 }),
+              add: e => {
+                markerRefs.current[index] =
+                  e.target.getElement() as HTMLDivElement;
+              },
+              mouseover: e => e.target.setStyle({ fillOpacity: 0.3 }),
+              mouseout: e => e.target.setStyle({ fillOpacity: 0.15 }),
             }}
           >
             <Popup>
-              <div style={{ background: 'white', padding: '14px 18px', borderRadius: '8px', minWidth: '160px' }}>
-                <p style={{ fontSize: '15px', fontWeight: '600', color: '#1f2937', margin: '0 0 6px 0', letterSpacing: '-0.01em' }}>
+              <div
+                style={{
+                  background: 'white',
+                  padding: '14px 18px',
+                  borderRadius: '8px',
+                  minWidth: '160px',
+                }}
+              >
+                <p
+                  style={{
+                    fontSize: '15px',
+                    fontWeight: '600',
+                    color: '#1f2937',
+                    margin: '0 0 6px 0',
+                    letterSpacing: '-0.01em',
+                  }}
+                >
                   {loc.city}, {loc.country}
                 </p>
-                <p style={{ fontSize: '13px', color: '#6b7280', margin: 0, fontWeight: '500' }}>
+                <p
+                  style={{
+                    fontSize: '13px',
+                    color: '#6b7280',
+                    margin: 0,
+                    fontWeight: '500',
+                  }}
+                >
                   {loc.users} Users
                 </p>
               </div>
@@ -195,6 +241,7 @@ export default function Mapview() {
           </CircleMarker>
         ))}
       </MapContainer>
+      
     </div>
   );
 }
