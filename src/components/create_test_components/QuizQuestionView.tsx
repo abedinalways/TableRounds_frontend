@@ -66,10 +66,18 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
     // console.log(`Submitting answer ${selectedAnswerId} for QID ${questionID}`);
   };
   
-  
-
-
   const isMarked = markedQuestions.some(q => q.index === currentQuestion);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const MIN_ZOOM = 0.8;
+  const MAX_ZOOM = 1.4;
+  const ZOOM_STEP = 0.1;
+  const handleZoomIn = () => {
+    setZoomLevel(prev => Math.min(prev + ZOOM_STEP, MAX_ZOOM));
+  };
+
+  const handleZoomOut = () => {
+    setZoomLevel(prev => Math.max(prev - ZOOM_STEP, MIN_ZOOM));
+  };
 
 
   return (
@@ -123,16 +131,25 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
             <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center ">
               <ChatBubble className="md:size-8 size-4" /> Feedback
             </button>
-            <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center">
+            <button
+              onClick={handleZoomIn}
+              className="text-white cursor-pointer p-2 gap-2 flex flex-col items-center"
+            >
               <ZoomInIcon className="md:size-8 size-4" />
               Zoom In
             </button>
-            <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center">
-              <ZoomOutIcon className="md:size-8 size-4" /> Zoom Out
+
+            <button
+              onClick={handleZoomOut}
+              className="text-white cursor-pointer p-2 gap-2 flex flex-col items-center"
+            >
+              <ZoomOutIcon className="md:size-8 size-4" />
+              Zoom Out
             </button>
-            <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center">
+
+            {/* <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center">
               <ShareIcon className="md:size-8 size-4" /> Share
-            </button>
+            </button> */}
             <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center">
               <PauseIcon className="md:size-8 size-4" /> Pause Test
             </button>
@@ -150,10 +167,10 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
       </div>
 
       {/* MAIN CONTENT */}
-      <div className="background p-2 rounded-md grid grid-cols-1 md:grid-cols-12">
+      <div className="background  rounded-md grid grid-cols-1 md:grid-cols-12">
         {/* LEFT SIDEBAR - QUESTION LIST */}
         <div className="lex md:col-span-1 md:flex-col flex-row gap-2 rounded-md mt-2 md:mt-4 mb-2 md:mb-4 background p-2 md:max-h-[700px] overflow-x-auto md:overflow-y-auto custom-scroll">
-          <aside className="flex md:flex-col gap-2 p-2 h-full">
+          <aside className="flex md:flex-col gap-3 h-full">
             {Array.from({ length: totalQuestions }, (_, i) => {
               const qIndex = i + 1;
               const isCurrent = qIndex === currentQuestion;
@@ -161,13 +178,12 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
                 q => q.index === qIndex
               );
 
-
               return (
                 <button
                   key={qIndex}
                   onClick={() => onJumpTo && onJumpTo(qIndex)}
                   className={cn(
-                    'w-full flex items-center justify-between px-3 py-2 rounded-md border transition-all',
+                    'flex items-center justify-between px-3 py-2 md:w-[80px] w-[120px] rounded-md border transition-all',
                     isCurrent
                       ? 'bg-[#b79e6b] text-white border-[#b79e6b]'
                       : 'bg-[#01281e] text-white/80 border-[#084434]'
@@ -203,7 +219,15 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
         </div>
 
         {/* RIGHT SIDE (QUESTION + EXPLANATION) */}
-        <div className=" col-span-11 flex flex-col md:flex-row gap-3 md:gap-[5px]">
+        <div
+          className=" col-span-11 flex flex-col md:flex-row gap-3 md:gap-[5px]"
+          style={{
+            transform: `scale(${zoomLevel})`,
+            transformOrigin: 'top left',
+            width: `${100 / zoomLevel}%`,
+            transition: 'transform 0.2s ease',
+          }}
+        >
           {/* Question Card */}
           <div className="w-full bg-[#f9f9f5] md:my-8 md:mx-[24px] md:p-[32px] rounded-[16px]">
             <div className="">

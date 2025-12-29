@@ -67,8 +67,8 @@ export function TestHistory({ tests }: { tests: TestItem[] }) {
                 ))}
               </TableCell>
               <TableCell className="md:text-[16px]">{test.topic}</TableCell>
-              <TableCell className="md:text-[16px]">{test.qs}</TableCell>
-              <TableCell className="text-right">•••</TableCell>
+              <TableCell className="md:text-[16px] ">{test.qs}</TableCell>
+              <TableCell className="text-right cursor-pointer">•••</TableCell>
             </TableRow>
           ))}
         </TableBody>

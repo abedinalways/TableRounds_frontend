@@ -14,21 +14,23 @@ export default function Header() {
   const textRef = useRef<HTMLHeadingElement | null>(null);
 
   return (
-    <div className="px-4 pt-2 d:pt-0 background text-white rounded-lg shadow-lg relative overflow-hidden font-[manrope] flex items-center max-w-full">
-      <div className="flex items-center justify-between gap-10 w-full">
-        <div className="flex gap-4 items-center">
-          <Image
-            src="/images/dashboard/main_dashboard/doctor.png"
-            width={90}
-            height={90}
-            alt="doctor"
-            className="md:w-[90px] md:h-[90px] w-[40px] h-[40px]"
-          />
+    <div className="md:px-4 px-2 pt-2 d:pt-0 background md:h-[130px] text-white rounded-lg shadow-lg md:relative overflow-hidden font-[manrope] flex md:items-center max-w-full">
+      <div className="md:flex flex-wrap items-center justify-between md:gap-10 md:w-full">
+        <div className="md:flex flex-wrap md:gap-4 items-center">
+          <div>
+            <Image
+              src="/images/dashboard/main_dashboard/doctor.png"
+              width={90}
+              height={90}
+              alt="doctor"
+              className="md:w-[90px] md:h-[90px] w-[30px] h-[30px]"
+            />
+          </div>
           <div className="space-y-2">
-            <h2 ref={textRef} className="md:text-2xl text-lg font-bold">
+            <h2 ref={textRef} className="md:text-2xl text-sm font-bold">
               Dr. {userName}
             </h2>
-            <p className="md:text-sm text-xs">
+            <p className="md:text-sm text-xs ">
               Stay up to date on your current progress
             </p>
             <div className="flex md:space-x-4 space-x-2 text-[#b79e6b]">
@@ -59,9 +61,8 @@ export default function Header() {
               Report User
             </DropdownMenuItem>
             <DropdownMenuItem className="cursor-pointer">
-             Unfollow User
+              Unfollow User
             </DropdownMenuItem>
-           
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

@@ -5,17 +5,17 @@ import { ChatProvider } from '../../context/ChatContext';
 export default function ChatLayout({ children }: React.PropsWithChildren) {
   return (
     <ChatProvider>
-     <section className="grid h-[calc(100dvh-108px)] grid-cols-12 gap-6 font-[manrope]">
-      <div className="h-[calc(100dvh-108px)] col-span-8 bg-white p-8 grid grid-rows-[190px_1fr_86px] rounded-2xl shadow-lg">
-        {children}
-      </div>
-
-      <aside className="col-span-4">
-        <div className="rounded-2xl bg-white p-6 max-h-[calc(100dvh-108px)] overflow-y-auto">
-          <MessageListSection />
-        </div>
-      </aside>
-    </section>
+     <section className="grid md:h-[calc(100dvh-140px)] grid-cols-12 md:gap-6 font-[manrope] ">
+             <div className="md:h-[calc(100dvh-140px)]  md:col-span-8 col-span-12 bg-white md:p-8 p-2 md:grid md:grid-rows-[190px_1fr_86px] rounded-2xl shadow-lg">
+               {children}
+             </div>
+     
+             <aside className="md:col-span-4 col-span-12 mt-4 md:mt-0">
+               <div className="rounded-2xl bg-white md:p-6 p-4 md:max-h-[calc(100dvh-140px)] overflow-y-auto">
+                 <MessageListSection />
+               </div>
+             </aside>
+           </section>
     </ChatProvider>
   );
 }

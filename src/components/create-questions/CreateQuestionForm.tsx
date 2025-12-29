@@ -239,16 +239,13 @@ export default function CreateQuestionForm() {
           onChange={v => setValue('references', v)}
         />
 
-        {/* implement logic here addd more question in the same secnario */}
-        <div className="flex items-center justify-center">
-          <Button
-            className="cursor-pointer"
-            variant="outline"
-            type="button"
+        <div className="flex items-center justify-center  md:w-fit mx-auto ">
+          <button
+            className="cursor-pointer md:px-6 px-3 py-2 md:py-4 rounded-[8px] border border-[#01503b] cursor-pointer text-[#01503b] md:text-[20px] text-sm font-semibold"
             onClick={handleAddMoreQuestionSameScenario}
           >
             Add More Questions For The Same Scenario
-          </Button>
+          </button>
         </div>
       </div>
       {/* here  */}

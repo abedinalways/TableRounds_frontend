@@ -8,6 +8,7 @@ import StatCards from './StatCards';
 import leaderboardData from '../../../public/data/leadership-stat.json';
 import type { LeaderboardData } from '@/types/type';
 import { LeaderboardTable } from './LeaderboardTable';
+import Image from 'next/image';
 
 const data = leaderboardData as LeaderboardData;
 
@@ -51,7 +52,7 @@ export default function LeaderboardMapToggle() {
               : 'Compare your performance with surgeons around the world'}
           </p>
         </div>
-
+          
         <div className="flex  md:items-center gap-2 bg-white px-6 py-4 rounded-2xl">
           <span
             className={`md:text-lg text-md ${!isMap ? 'font-semibold' : ''}`}
@@ -70,10 +71,10 @@ export default function LeaderboardMapToggle() {
           </span>
         </div>
       </CardHeader>
-
       <CardContent className="mt-4 text-[#01281e]">
         {isMap ? <MapView /> : <LeaderboardView />}
       </CardContent>
+      
     </div>
   );
 }

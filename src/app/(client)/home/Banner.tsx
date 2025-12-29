@@ -55,7 +55,7 @@ export default function Banner() {
         loop
         autoplay
         className="
-          absolute -left-[60px] top-[480px] md:top-[170px]
+          absolute -left-[60px] top-[420px] md:top-[170px]
           md:left-[-120px] 
           w-[200px] md:w-[600px]
           opacity-40 **:stroke-[8px]
@@ -95,13 +95,13 @@ export default function Banner() {
           fields of medicine and dentistry
         </h2>
 
-        <p className=" text-sm md:text-base text-white/90 mt-[64px]">
+        <p className=" text-sm md:text-base text-white/90 md:mt-[64px] mt-8">
           TableRounds brings board-style questions, structured learning{' '}
           <br className="hidden md:block" />
           tools, and a vetted professional community into one platform.
         </p>
 
-        <div className=" flex flex-col sm:flex-row gap-4 justify-center md:justify-start mt-[64px]">
+        <div className=" flex flex-col sm:flex-row gap-4 justify-center md:justify-start  md:mt-[64px] mt-8">
           <Btn
             text="Create Your Free Account"
             className="bg-[#B79E6B] text-white md:w-[245px] h-[54px]"
