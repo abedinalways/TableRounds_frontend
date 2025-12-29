@@ -39,10 +39,26 @@ export default function Sidebar({
 
   const menu: MenuItem[] = role === 'admin' ? adminMenu : userMenu;
 
+ const normalizePath = (path: string) => path.replace(/\/+$/, '');
+
+ const isActive = (href: string) => {
+   const currentPath = normalizePath(pathname);
+   const targetPath = normalizePath(href);
+
+   // dashboard should match ONLY the dashboard home page
+   if (targetPath === '/dashboard') {
+     return currentPath === '/dashboard';
+   }
+
+   return currentPath.startsWith(targetPath);
+ };
+
+
+
   // Desktop sidebar (always visible on lg+)
   if (!mobile) {
     return (
-      <div className="h-screen w-64 background border-r flex flex-col justify-between text-white overflow-y-auto">
+      <div className="h-screen w-64 background border-r flex flex-col justify-between text-white overflow-y-auto font-[manrope]">
         <div className="p-6">
           {/* Logo */}
           <Link href="/">
@@ -79,7 +95,7 @@ export default function Sidebar({
                   href={item.href}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-all
                     ${
-                      pathname === item.href
+                      isActive(item.href)
                         ? 'bg-[#B79E6B] text-white font-semibold'
                         : 'hover:bg-[#B79E6B] hover:text-white'
                     }
@@ -162,7 +178,7 @@ export default function Sidebar({
                     onClick={() => setOpen?.(false)}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-all
                       ${
-                        pathname === item.href
+                        isActive(item.href)
                           ? 'bg-[#B79E6B] text-white font-semibold'
                           : 'hover:bg-[#B79E6B] hover:text-white'
                       }

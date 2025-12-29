@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import colleaguesData from '../../../public/data/colleagues.json';
+import Btn from '../reusable/button/Btn';
+import Link from 'next/link';
 
 interface Colleague {
   id: number;
@@ -87,13 +89,16 @@ const FindColleagues: React.FC = () => {
               key={colleague.id}
               className="p-4 hover:shadow-lg transition-shadow cursor-pointer border border-gray-200"
             >
-              <div className="flex items-center gap-3">
-                <Avatar className="h-[59px] w-[59px]">
-                  <AvatarImage src={colleague.avatar} alt={colleague.name} />
-                  <AvatarFallback className="bg-teal-100 text-teal-700 font-semibold">
-                    {getInitials(colleague.name)}
-                  </AvatarFallback>
-                </Avatar>
+              <div className="flex items-center gap-3 ">
+                <Link href='/dashboard/profile'>
+                  <Avatar className="h-[59px] w-[59px]">
+                    <AvatarImage src={colleague.avatar} alt={colleague.name} />
+                    <AvatarFallback className="bg-teal-100 text-teal-700 font-semibold">
+                      {getInitials(colleague.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                </Link>
+
                 <div className="flex-1 min-w-0">
                   <h4 className="font-semibold text-gray-900 text-sm truncate">
                     {colleague.name}
@@ -103,6 +108,22 @@ const FindColleagues: React.FC = () => {
                   </p>
                 </div>
               </div>
+
+              {/* ✅ Buttons appear ONLY when View All is active */}
+              {showAll && (
+                <div className="mt-4 flex gap-2">
+                  <Btn
+                    href="/dashboard/messages"
+                    className="flex-1 bg-[#01503b] hover:bg-teal-800 text-white py-2 px-6 cursor-pointer"
+                  >
+                    Message
+                  </Btn>
+
+                  <Btn className="flex-1 card-bg border-none text-[#01503b] py-2 px-6 cursor-pointer">
+                    Following
+                  </Btn>
+                </div>
+              )}
             </Card>
           ))}
         </div>

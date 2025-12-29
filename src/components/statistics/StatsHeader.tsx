@@ -14,7 +14,7 @@ export function StatsHeader({ categories }: { categories: string[] }) {
           <Badge
             key={cat}
             variant="secondary"
-            className="rounded-full bg-white border border-gray-100 px-6 py-3"
+            className="rounded-full bg-white border border-gray-100 px-6 py-3 cursor-pointer"
           >
             {cat}
           </Badge>

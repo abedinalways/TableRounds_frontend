@@ -1,11 +1,22 @@
+'use client';
+
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { ProfileData, ProfileTab } from '@/types/profile';
+
 import EducationCard from './EducationCard';
 import SkillBadges from './SkillBadges';
-import SidebarActions from './SidebarActions';
 import ExperienceCard from './ExperienceCard';
 import PublicationCard from './PublicationCard';
+import QuickActions from './QuickActions';
 
+import PeopleIcon from '../reusable/icons/PeopleIcon';
+import EduIcon from '../reusable/icons/EduIcon';
+import ExperienceIcon from '../reusable/icons/ExperienceIcon';
+import ActivityIcon from '../reusable/icons/ActivityIcon';
+import QuestionBankSolved from './ActivityCard';
 
 interface ProfileTabsProps {
   activeTab: ProfileTab;
@@ -18,45 +29,90 @@ export default function ProfileTabs({
   setActiveTab,
   data,
 }: ProfileTabsProps) {
+  const contentRef = useRef<HTMLDivElement | null>(null);
+
+  // GSAP animation on tab change
+  useEffect(() => {
+    if (!contentRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        contentRef.current,
+        { opacity: 0, y: 16 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.4,
+          ease: 'power2.out',
+        }
+      );
+    });
+
+    return () => ctx.revert();
+  }, [activeTab]);
+
   return (
     <Tabs
       value={activeTab}
       onValueChange={value => setActiveTab(value as ProfileTab)}
-      className="mt-6"
+      className="mt-6 "
     >
-      <TabsList className="grid grid-cols-4 md:w-[500px]">
-        <TabsTrigger value="overview">Overview</TabsTrigger>
-        <TabsTrigger value="education">Education</TabsTrigger>
-        <TabsTrigger value="experience">Experience</TabsTrigger>
-        <TabsTrigger value="activity">Activity</TabsTrigger>
+      {/* Tabs Header */}
+      <TabsList className="flex flex-wrap justify-center gap-4 md:gap-6 max-w-full rounded-2xl md:p-4 xl:p-6 p-3  bg-white mb-20 md:mb-4 h-fit">
+        <TabsTrigger value="overview">
+          <PeopleIcon /> Overview
+        </TabsTrigger>
+        <TabsTrigger value="education">
+          <EduIcon /> Education
+        </TabsTrigger>
+        <TabsTrigger value="experience">
+          <ExperienceIcon /> Experience
+        </TabsTrigger>
+        <TabsTrigger value="publications">
+          <ActivityIcon /> Publications
+        </TabsTrigger>
+        <TabsTrigger value="activity">
+          <ActivityIcon /> Activity
+        </TabsTrigger>
       </TabsList>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-        <div className="lg:col-span-2 space-y-6">
-          <TabsContent value="overview">
+      {/* Animated Content Wrapper */}
+      <div ref={contentRef} className="mt-6">
+        <TabsContent
+          value="overview"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+        >
+          <div className="space-y-6">
             <EducationCard data={data.education} />
-            <PublicationCard data={data.publications} />
-          </TabsContent>
-
-          <TabsContent value="education">
-            <EducationCard data={data.education} />
-          </TabsContent>
-
-          <TabsContent value="experience">
             <ExperienceCard data={data.experience} />
-          </TabsContent>
+            <QuestionBankSolved data={data.questionBank} />
+          </div>
 
-          <TabsContent value="activity">
-            <p className="text-muted-foreground">
-              Recent activity coming soon...
-            </p>
-          </TabsContent>
-        </div>
+          <div className="space-y-6">
+            <PublicationCard data={data.publications} />
+            <SkillBadges skills={data.skills} />
+            <QuickActions />
+          </div>
+        </TabsContent>
 
-        <div className="space-y-6">
-          <SkillBadges skills={data.skills} />
-          <SidebarActions />
-        </div>
+        <TabsContent value="education">
+          <EducationCard data={data.education} />
+        </TabsContent>
+
+        <TabsContent value="experience">
+          <ExperienceCard data={data.experience} />
+        </TabsContent>
+
+        <TabsContent value="publications">
+          <PublicationCard data={data.publications} />
+        </TabsContent>
+
+        <TabsContent value="activity">
+          {/* here questionbank card placed */}
+          <div className="max-w-xl">
+            <QuestionBankSolved data={data.questionBank} />
+          </div>
+        </TabsContent>
       </div>
     </Tabs>
   );

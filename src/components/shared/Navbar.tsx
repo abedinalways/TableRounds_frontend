@@ -16,13 +16,14 @@ import { Sheet, SheetContent, SheetHeader, SheetTrigger } from '../ui/sheet';
 import { Button } from '../ui/button';
 import Link from 'next/link';
 import OmsLogo from '../reusable/icons/OmsLogo';
+import { usePathname } from 'next/navigation';
 
 const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Specialties', hasDropdown: true },
   { label: 'Question Bank', href: '#' },
   { label: 'Legal', href: '#' },
-  { label: 'Contact', href: '#' },
+  { label: 'Contact', href: '/contact' },
 ];
 
 const specialtyOptions = [
@@ -34,7 +35,20 @@ const specialtyOptions = [
 export default function Navbar({ isOms = false }) {
   const [open, setOpen] = useState(false);
   const [specialty, setSpecialty] = useState('');
+  const pathname = usePathname();
+  const normalizePath = (path: string) => path.replace(/\/+$/, '');
 
+  const isActive = (href?: string) => {
+    if (!href || href === '#') return false;
+
+    // ✅ Home should only match exact "/"
+    if (href === '/') return pathname === '/';
+
+    // ✅ Match exact or nested (like /contact/xyz)
+    return pathname === href || pathname.startsWith(href + '/');
+  };
+
+  // 
   const SpecialtyDropdown = ({ isMobile = false }) => (
     <DropdownMenu modal={!isMobile}>
       <DropdownMenuTrigger asChild>
@@ -63,7 +77,9 @@ export default function Navbar({ isOms = false }) {
             >
               <DropdownMenuRadioItem
                 value={option.value}
-                className="cursor-pointer"
+                className={`cursor-pointer ${
+                  isActive(option.href) ? 'text-[#B79E6B] font-semibold' : ''
+                }`}
               >
                 {option.label}
               </DropdownMenuRadioItem>
@@ -93,10 +109,10 @@ export default function Navbar({ isOms = false }) {
                   <div className="flex  items-center justify-center gap-1">
                     Table
                     <span className="">
-                      <OmsLogo/>
+                      <OmsLogo />
                     </span>
                   </div>
-                  <span className='absolute top-6'>Rounds</span>
+                  <span className="absolute top-6">Rounds</span>
                 </h1>
               ) : (
                 <h1 className="font-bold text-lg sm:text-xl lg:text-3xl text-white font-[manrope]">
@@ -113,12 +129,16 @@ export default function Navbar({ isOms = false }) {
                 {item.hasDropdown ? (
                   <SpecialtyDropdown />
                 ) : (
-                  <a
-                    href={item.href}
-                    className="cursor-pointer hover:text-[#B79E6B] transition-colors"
+                  <Link
+                    href={item.href || '#'}
+                    className={`cursor-pointer transition-colors ${
+                      isActive(item.href)
+                        ? 'text-[#B79E6B] font-semibold'
+                        : 'text-white hover:text-[#B79E6B]'
+                    }`}
                   >
                     {item.label}
-                  </a>
+                  </Link>
                 )}
               </li>
             ))}
@@ -173,13 +193,17 @@ export default function Navbar({ isOms = false }) {
                         {item.hasDropdown ? (
                           <SpecialtyDropdown isMobile />
                         ) : (
-                          <a
-                            href={item.href}
-                            className="block cursor-pointer hover:text-[#B79E6B] transition-colors"
+                          <Link
+                            href={item.href || '#'}
                             onClick={() => setOpen(false)}
+                            className={`block transition-colors ${
+                              isActive(item.href)
+                                ? 'text-[#B79E6B] font-semibold'
+                                : 'text-white hover:text-[#B79E6B]'
+                            }`}
                           >
                             {item.label}
-                          </a>
+                          </Link>
                         )}
                       </li>
                     ))}

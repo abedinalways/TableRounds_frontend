@@ -1,12 +1,14 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import QuizQuestionView from '@/components/create_test_components/QuizQuestionView';
 import { QuizQuestionData } from '@/types/quiz';
+import { useRouter } from 'next/navigation';
+import { MarkedQuestion } from '@/types/markedQuestion';
 // Mock data
 const mockData: QuizQuestionData = {
   testProgress: {
-    currentQuestion: 5,
-    totalQuestions: 30,
+    currentQuestion: 1,
+    totalQuestions: 10,
     questionID: '214541',
   },
 
@@ -75,20 +77,98 @@ usually CNS excitation, especially perioral numbness and tinnitus, not immediate
     },
   },
 };
+const questions: QuizQuestionData['quizDetails'][] = [
+  mockData.quizDetails,
+  mockData.quizDetails,
+  mockData.quizDetails,
+  mockData.quizDetails,
+  mockData.quizDetails,
+  mockData.quizDetails,
+  mockData.quizDetails,
+  mockData.quizDetails,
+  mockData.quizDetails,
+  mockData.quizDetails,
+  mockData.quizDetails,
+  mockData.quizDetails,
+  mockData.quizDetails,
+  mockData.quizDetails,
+  mockData.quizDetails,
+  mockData.quizDetails,
+  mockData.quizDetails,
+  mockData.quizDetails,
+ 
+];
 export default function CreateTestPage() {
+  const router = useRouter();
+  
+  const totalQuestions = questions.length;
   const [currentQuestion, setCurrentQuestion] = useState(1);
+  const [markedQuestions, setMarkedQuestions] = useState<MarkedQuestion[]>([]);
+ useEffect(() => {
+   const saved = localStorage.getItem('MARKED_QUESTIONS');
+   if (!saved) return;
 
-  return (
-    <QuizQuestionView
-      data={{
-        ...mockData,
-        testProgress: {
-          ...mockData.testProgress,
-          currentQuestion: currentQuestion,
-        },
-      }}
-      onJumpTo={num => setCurrentQuestion(num)}
-      onNext={() => setCurrentQuestion(prev => prev + 1)}
-    />
-  );
+   try {
+     const parsed = JSON.parse(saved);
+     if (Array.isArray(parsed)) {
+       setMarkedQuestions(parsed);
+     }
+   } catch (err) {
+     console.error('Invalid marked questions data', err);
+   }
+ }, []);
+
+
+   //  test-complete redirect
+   const handleNext = () => {
+     if (currentQuestion === totalQuestions) {
+       router.push('/dashboard/test-complete');
+     } else {
+       setCurrentQuestion(prev => prev + 1);
+     }
+   };
+
+ const toggleMark = () => {
+   setMarkedQuestions(prev => {
+     const exists = prev.some(q => q.index === currentQuestion);
+
+     const updated = exists
+       ? prev.filter(q => q.index !== currentQuestion)
+       : [
+           ...prev,
+           {
+             index: currentQuestion,
+             title: questions[currentQuestion - 1].title,
+             question: questions[currentQuestion - 1].question,
+           },
+         ];
+
+     localStorage.setItem('MARKED_QUESTIONS', JSON.stringify(updated));
+     return updated;
+   });
+ };
+ return (
+  <QuizQuestionView
+    data={{
+      testProgress: {
+        currentQuestion,
+        totalQuestions,
+        questionID: String(currentQuestion),
+      },
+      quizDetails: questions[currentQuestion - 1],
+    }}
+    markedQuestions={markedQuestions}
+    onToggleMark={toggleMark}
+    onJumpTo={setCurrentQuestion}
+    onNext={handleNext}
+  />
+);
+
+
+
+
+
+
+
+  
 }

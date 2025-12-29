@@ -4,42 +4,34 @@ export interface MenuItem {
   href: string;
   icon: string;
   section?: string;
+  
 }
 
 export const adminMenu: MenuItem[] = [
   {
     title: 'Dashboard',
-    href: '/dashboard',
+    href: '/dashboard/admin',
     icon: '/images/dashboard/img01.png',
   },
   {
-    title: 'Create Test',
-    href: '/dashboard/create-test',
+    title: 'Users',
+    href: '/dashboard/show-users',
     icon: '/images/dashboard/img02.png',
   },
   {
-    title: 'Previous Test',
-    href: '/dashboard/previous-test',
+    title: 'Create Questions',
+    href: '/dashboard/create-questions',
     icon: '/images/dashboard/img03.png',
   },
   {
-    title: 'Statistics',
-    href: '/dashboard/statistics',
+    title: 'Question Manager',
+    href: '/dashboard/question-manager',
     icon: '/images/dashboard/img04.png',
   },
-  {
-    title: 'Leaderboard',
-    href: '/dashboard/leaderboard',
-    icon: '/images/dashboard/img05.png',
-  },
-  {
-    title: 'Reset Question Bank',
-    href: '/dashboard/reset-question-bank',
-    icon: '/images/dashboard/img06.png',
-  },
+
   {
     title: 'Messages',
-    href: '/dashboard/messages',
+    href: '/dashboard/support-message',
     icon: '/images/dashboard/img07.png',
   },
 
@@ -47,17 +39,17 @@ export const adminMenu: MenuItem[] = [
   {
     section: 'Other',
     title: 'Help & Support',
-    href: '/dashboard/support',
+    href: '/dashboard/help-support',
     icon: '/images/dashboard/img08.png',
   },
   {
     title: 'Settings',
-    href: '/dashboard/settings',
+    href: '/dashboard/manage-settings',
     icon: '/images/dashboard/img09.png',
   },
   {
     title: 'Logout',
-    href: '/dashboard/logout',
+    href: '/login',
     icon: '/images/dashboard/img10.png',
   },
 ];
@@ -65,7 +57,7 @@ export const adminMenu: MenuItem[] = [
 export const userMenu: MenuItem[] = [
   {
     title: 'Dashboard',
-    href: '/dashboard',
+    href: '/dashboard/user',
     icon: '/images/dashboard/img01.png',
   },
   {

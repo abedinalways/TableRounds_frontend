@@ -1,6 +1,5 @@
 'use client';
-
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {  CardContent, CardHeader } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -18,29 +17,35 @@ import ZoomInIcon from '../reusable/icons/ZoomInIcon';
 import ZoomOutIcon from '../reusable/icons/ZoomOutIcon';
 import ShareIcon from '../reusable/icons/ShareIcon';
 import PauseIcon from '../reusable/icons/PauseIcon';
-
 import CorrectIcon from '../reusable/icons/CorrectIcon';
 import WrongIcon from '../reusable/icons/WrongIcon';
 import ExplainIcon from '../reusable/icons/ExpalinIcon';
 import OptionIcon from '../reusable/icons/OpotionIcon';
 import BookIcon from '../reusable/icons/BookIcon';
+import { useRouter } from 'next/navigation';
+import { MarkedQuestion } from '@/types/markedQuestion';
+
 
 interface QuizQuestionViewProps {
   data: QuizQuestionData;
-  onNext?: () => void;
-  onPrev?: () => void;
+  markedQuestions: MarkedQuestion[];
+  onToggleMark: () => void;
+  onNext: () => void;
   onJumpTo?: (index: number) => void;
-  onSubmitAnswer?: (questionId: string, answerId: string) => void;
 }
+
+
 
 export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   data,
+  markedQuestions,
+  onToggleMark,
   onNext,
   onJumpTo,
 }) => {
   const { testProgress, quizDetails } = data;
   const { currentQuestion, totalQuestions, questionID } = testProgress;
-
+  const router = useRouter();
   const [selectedAnswerId, setSelectedAnswer] = useState<string | null>(
     quizDetails.userAnswerId
   );
@@ -49,7 +54,7 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   // const [checkedAnswerId, setCheckedAnswerId] = useState('');
   const progressValue = (currentQuestion / totalQuestions) * 100;
   const isUserCorrect = selectedAnswerId === quizDetails.correctAnswerId;
-
+ 
   const handleAnswerChange = (value: string) => {
     setSelectedAnswer(value);
   };
@@ -58,8 +63,22 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
     if (!selectedAnswerId) return;
     setShowExplanation(true);
 
-    console.log(`Submitting answer ${selectedAnswerId} for QID ${questionID}`);
+    // console.log(`Submitting answer ${selectedAnswerId} for QID ${questionID}`);
   };
+  
+  const isMarked = markedQuestions.some(q => q.index === currentQuestion);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const MIN_ZOOM = 0.8;
+  const MAX_ZOOM = 1.4;
+  const ZOOM_STEP = 0.1;
+  const handleZoomIn = () => {
+    setZoomLevel(prev => Math.min(prev + ZOOM_STEP, MAX_ZOOM));
+  };
+
+  const handleZoomOut = () => {
+    setZoomLevel(prev => Math.max(prev - ZOOM_STEP, MIN_ZOOM));
+  };
+
 
   return (
     <div className="flex flex-col space-y-4 font-[manrope] ">
@@ -83,26 +102,54 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
           </div>
 
           <div className="flex flex-wrap md:flex-nowrap items-center gap-3 md:gap-6 xl:gap-10 md:text-[18px] text-xs">
-            <button className="text-white cursor-pointer p-2  gap-2 flex flex-col ">
+            <div>
               <span className="flex items-center gap-2">
-                <TopbarCheckbox className="md:size-6 size-4" />{' '}
-                <Flag className="size-4 md:size-8 " />{' '}
-              </span>{' '}
-              Mark
-            </button>
+                <button
+                  onClick={onToggleMark}
+                  className="text-white cursor-pointer p-2 gap-2 flex flex-col"
+                >
+                  <TopbarCheckbox
+                    checked={isMarked}
+                    className="md:size-6 size-4"
+                  />
+                </button>
+                {/* this icon is for show the all mark list  */}
+                <Flag
+                  className={cn(
+                    'size-4 md:size-8',
+                    'cursor-pointer text-yellow-400'
+                  )}
+                  onClick={() => router.push('/dashboard/create-test/mark')}
+                />
+              </span>
+              <div className="text-white flex items-center justify-center">
+                {' '}
+                Mark
+              </div>
+            </div>
+
             <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center ">
               <ChatBubble className="md:size-8 size-4" /> Feedback
             </button>
-            <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center">
+            <button
+              onClick={handleZoomIn}
+              className="text-white cursor-pointer p-2 gap-2 flex flex-col items-center"
+            >
               <ZoomInIcon className="md:size-8 size-4" />
               Zoom In
             </button>
-            <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center">
-              <ZoomOutIcon className="md:size-8 size-4" /> Zoom Out
+
+            <button
+              onClick={handleZoomOut}
+              className="text-white cursor-pointer p-2 gap-2 flex flex-col items-center"
+            >
+              <ZoomOutIcon className="md:size-8 size-4" />
+              Zoom Out
             </button>
-            <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center">
+
+            {/* <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center">
               <ShareIcon className="md:size-8 size-4" /> Share
-            </button>
+            </button> */}
             <button className="text-white cursor-pointer p-2  gap-2 flex flex-col items-center">
               <PauseIcon className="md:size-8 size-4" /> Pause Test
             </button>
@@ -120,49 +167,48 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
       </div>
 
       {/* MAIN CONTENT */}
-      <div className="background p-2 rounded-md grid grid-cols-1 md:grid-cols-12">
+      <div className="background  rounded-md grid grid-cols-1 md:grid-cols-12">
         {/* LEFT SIDEBAR - QUESTION LIST */}
-        <div
-          className="lex md:col-span-1
-  md:flex-col
-  flex-row
-  gap-2
-  rounded-md
-  mt-2 md:mt-4
-  mb-2 md:mb-4
-  background p-2
-  md:max-h-[700px]
-  overflow-x-auto md:overflow-y-auto
-  custom-scroll"
-        >
-          <aside className="flex md:flex-col gap-2 p-2 h-full">
+        <div className="lex md:col-span-1 md:flex-col flex-row gap-2 rounded-md mt-2 md:mt-4 mb-2 md:mb-4 background p-2 md:max-h-[700px] overflow-x-auto md:overflow-y-auto custom-scroll">
+          <aside className="flex md:flex-col gap-3 h-full">
             {Array.from({ length: totalQuestions }, (_, i) => {
               const qIndex = i + 1;
               const isCurrent = qIndex === currentQuestion;
+              const isMarkedQuestion = markedQuestions.some(
+                q => q.index === qIndex
+              );
 
               return (
                 <button
                   key={qIndex}
                   onClick={() => onJumpTo && onJumpTo(qIndex)}
                   className={cn(
-                    'w-full flex items-center gap-2 px-3 py-2 rounded-md border transition-all',
+                    'flex items-center justify-between px-3 py-2 md:w-[80px] w-[120px] rounded-md border transition-all',
                     isCurrent
                       ? 'bg-[#b79e6b] text-white border-[#b79e6b]'
-                      : 'bg-[#01281e] text-white/80 border-[#084434] hover:text-white'
+                      : 'bg-[#01281e] text-white/80 border-[#084434]'
                   )}
                 >
-                  <div
-                    className={cn(
-                      'w-4 h-4 rounded-full border flex items-center justify-center',
-                      isCurrent ? 'border-white bg-white' : 'border-white/50'
-                    )}
-                  >
-                    {isCurrent && (
-                      <div className="w-2 h-2 rounded-full bg-[#b79e6b]" />
-                    )}
+                  <div className="flex items-center gap-2">
+                    {/* current dot */}
+                    <div
+                      className={cn(
+                        'w-4 h-4 rounded-full border flex items-center justify-center',
+                        isCurrent ? 'border-white bg-white' : 'border-white/50'
+                      )}
+                    >
+                      {isCurrent && (
+                        <div className="w-2 h-2 rounded-full bg-[#b79e6b]" />
+                      )}
+                    </div>
+
+                    <span className="text-sm">{qIndex}</span>
                   </div>
 
-                  <span className="text-sm">{qIndex}</span>
+                  {/* MARK ICON */}
+                  {isMarkedQuestion && (
+                    <Flag className="size-4 text-yellow-400 shrink-0" />
+                  )}
                 </button>
               );
             })}
@@ -174,10 +220,13 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
 
         {/* RIGHT SIDE (QUESTION + EXPLANATION) */}
         <div
-          className=" col-span-11
-  flex flex-col
-  md:flex-row
-  gap-3 md:gap-[5px]"
+          className=" col-span-11 flex flex-col md:flex-row gap-3 md:gap-[5px]"
+          style={{
+            transform: `scale(${zoomLevel})`,
+            transformOrigin: 'top left',
+            width: `${100 / zoomLevel}%`,
+            transition: 'transform 0.2s ease',
+          }}
         >
           {/* Question Card */}
           <div className="w-full bg-[#f9f9f5] md:my-8 md:mx-[24px] md:p-[32px] rounded-[16px]">
