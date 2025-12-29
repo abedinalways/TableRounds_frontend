@@ -8,6 +8,7 @@ import { UserVerification } from '@/components/admin/UserVerification';
 import { RecentActivity } from '@/components/admin/RecentActivity';
 import { Activity, VerificationUser } from '@/types/admin';
 import { StatsCard } from '@/components/admin/StatsCard';
+import Link from 'next/link';
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -131,9 +132,13 @@ export default function AdminDashboardPage() {
         <h1 className="text-3xl md:text-[48px] text-[#01281e] font-bold">
           Admin Panel
         </h1>
-        <button className="bg-[#01503b] md:px-6 px-4 md:py-4 py-2 rounded-lg text-white cursor-pointer">Create Questions</button>
+        <Link href='/dashboard/create-questions'>
+          <button className="bg-[#01503b] md:px-6 px-4 md:py-4 py-2 rounded-lg text-white cursor-pointer">
+            Create Questions
+          </button>
+        </Link>
       </div>
-      <StatsCard/>
+      <StatsCard />
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-3">
