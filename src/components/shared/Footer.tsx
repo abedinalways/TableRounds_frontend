@@ -17,7 +17,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 px-10 md:mx-40 gap-4 ">
           {/* Logo Section */}
           <div className="flex flex-col items-start space-y-5 md:px-6">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center ">
               <div className="w-12 h-12 rounded-full  flex items-center justify-center">
                 <Image
                   src="/images/footer_logo.png"
@@ -113,8 +113,8 @@ const Footer = () => {
               <span className=" cursor-pointer">contact@tablerounds.ai</span>
             </Link>
             <a
-              href="mailto:tableround@gmail.com"
-              className="flex items-center space-x-2 text-sm text-gray-700 hover:text-[#1e5a4f] transition-colors"
+              href="https://contact@tablerounds.ai"
+              className="flex items-center space-x-2 text-sm text-gray-700 hover:text-[#1e5a4f] transition-colors underline"
             >
               <Mail className="w-4 h-4" />
               <span>tableround@gmail.com</span>
@@ -128,11 +128,11 @@ const Footer = () => {
             width={244}
             height={244}
             alt=""
-            className="absolute md:-bottom-25 bottom-28 -right-7 md:left-0"
+            className="absolute md:-bottom-24 bottom-28 -right-7 md:left-0"
           />
         </div>
         {/* Copyright */}
-        <div className="mt-17 py-6 border border-gray-50 bg-[#F5F4F2]">
+        <div className="mt-17 py-10 border border-gray-50 bg-[#f5f4f2]">
           <p className="text-center text-sm text-gray-700">
             Copyright © 2025 TableRounds. All rights reserved.
           </p>

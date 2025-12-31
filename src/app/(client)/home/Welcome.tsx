@@ -45,13 +45,13 @@ export default function Welcome() {
   }, []);
   return (
     <div className="card-bg py-[100px] font-[manrope]">
-      <div className="md:flex items-center justify-between custom-container md:px-0 px-4 pb-12">
-        <h2 className="text-[28px] md:text-[36px] leading-[110%] xl:text-[48px] text-center md:text-start  font-bold text-[#01281e]">
+      <div className="flex justify-between   custom-container md:px-0 px-4 pb-12">
+        <h2 className="text-[28px] md:[36px] leading-[110%] xl:text-[48px] text-center md:text-start  font-bold text-[#01281e] ">
           Welcome to TableRounds
         </h2>
-        <p className="md:text-[18px] text-xs text-gray-600 mt-6 md:mt-0 text-center md:text-start leading-[110%]">
+        <p className="md:text-[18px] text-xs text-gray-600 mt-6 md:mt-0 text-center md:text-start font-light leading-[160%] ">
           Watch the short overview video to see how it fits into your training
-          and day-today practice.
+          and day-to-<br />day practice.
         </p>
       </div>
       {/* intro video */}

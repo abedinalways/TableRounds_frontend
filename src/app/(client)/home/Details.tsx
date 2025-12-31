@@ -1,11 +1,11 @@
 'use client'
 import React from 'react'
-import heartbeat from '../../../../public/images/Heartbeat.json';
-import Lottie from 'lottie-react';
+// import heartbeat from '../../../../public/images/Heartbeat.json';
+// import Lottie from 'lottie-react';
 import Image from 'next/image';
 export default function Details() {
   return (
-    <div className="relative gradient-bg flex flex-col items-center justify-center gap-6 max-w-[1920px] h-[492px]  text-white text-center ">
+    <div id='details' className="relative gradient-bg flex flex-col items-center justify-center gap-6 max-w-[1920px] h-[492px]  text-white text-center ">
       <h2 className="text-2xl sm:text-[48px] px-4 md:px-0 font-bold leading-[110%] font-[manrope]">
         TableRounds: Specialty-Level Learning and a <br /> Verified Professional
         Network
@@ -14,7 +14,7 @@ export default function Details() {
         TableRounds is a clinician-built platform that brings board-style
         question banks and a vetted community of <br /> surgeons, dentists, and
         trainees into one place. Create a verified profile, work through
-        specialty- tagged <br />
+        specialty-tagged<br />
         questions with detailed explanations, track your performance by topic,
         and connect with colleagues who are <br />
         equally invested in maintaining a high standard of practice.

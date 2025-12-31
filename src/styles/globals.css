@@ -3,6 +3,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* theme */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -388,4 +389,8 @@ background: rgba(183, 158, 107, 0.14)
   
   .ProseMirror {
     outline: none !important;
+  }
+
+  .input-bg{
+  background: rgba(249, 250, 251, 0.1);
   }

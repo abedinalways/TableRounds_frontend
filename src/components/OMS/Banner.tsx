@@ -5,9 +5,26 @@ import Lottie from 'lottie-react';
 import Btn from '@/components/reusable/button/Btn';
 
 import heartbeat from '../../../public/images/Heartbeat.json';
-// import loadingAnim from '../../../public/images/loading.json';
+import { useCallback } from 'react';
+import { gsap } from 'gsap';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+
+gsap.registerPlugin(ScrollToPlugin);
+
 
 export default function Banner() {
+   const handleExploreMore = useCallback(() => {
+     const target = document.querySelector('#features');
+     if (!target) return;
+
+     const offsetY = 40;
+
+     gsap.to(window, {
+       duration: 1,
+       ease: 'power2.out',
+       scrollTo: { y: target, offsetY },
+     });
+   }, []);
   return (
     <section className="relative font-[manrope] py-10 px-4 md:px-0">
       {/* Background Image */}
@@ -32,10 +49,10 @@ export default function Banner() {
     right-[-60px]
     top-5
     w-[500px] 
-    sm:w-[650px] 
-    md:w-[750px] 
-    md:right-0 
-    md:top-6
+    
+    md:w-[830px] 
+    md:-right-10 
+    md:top-4
     z-10 opacity-50 md:opacity-100
   "
       />
@@ -46,23 +63,14 @@ export default function Banner() {
         loop
         autoplay
         className="
-          absolute -left-[30px] md:top-[210px]
-          md:left-[-70px] top-[300px]
+          absolute -left-[30px] md:top-[200px]
+          md:left-[-130px] top-[300px]
           w-[200px] md:w-[400px]
           opacity-20
         "
       />
 
-      {/* Ellipses / Loading Animation */}
-      {/* <Lottie
-        animationData={loadingAnim}
-        loop
-        autoplay
-        className="
-          absolute -bottom-70 left-[-350px]
-          w-[700px] opacity-10 rotate-9
-        "
-      /> */}
+     
 
       {/* === TEXT + BUTTONS === */}
       <div
@@ -77,7 +85,7 @@ export default function Banner() {
         "
       >
         
-          <h2 className="font-bold text-3xl md:text-[48px] xl:text-[60px]  leading-tight">
+          <h2 className="font-bold text-3xl md:text-[48px] xl:text-[52px]  leading-tight">
             Mastering Every Aspect of<br />
             Oral and Maxillofacial<br />Surgery
           </h2>
@@ -86,9 +94,10 @@ export default function Banner() {
             Built by surgeons. <br /> Evidence-based. <br /> Specialty-driven.
           </p>
 
-          <div className="mt-[64px] flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-            <Btn
-              text="Explore OSM Features"
+          <div className="mt-16 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+          <Btn
+              onClick={handleExploreMore}
+              text="Explore OMS Features"
               className="bg-white text-green-700 md:w-[217px] w-full h-[54px]"
             />
           </div>

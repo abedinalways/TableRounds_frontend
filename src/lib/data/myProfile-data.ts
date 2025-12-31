@@ -54,7 +54,7 @@ export const profileData: ProfileData = {
     {
       role: 'Chief Resident',
       hospital: 'Harvard Hospital',
-      location: 'Boston, MA',
+      location: 'Boston-900, MA',
       period: '2018 - 2020',
       specialty:
         'Led a team of residents in managing complex maxillofacial trauma cases and surgical education',

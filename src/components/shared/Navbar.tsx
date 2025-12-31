@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
@@ -20,9 +21,9 @@ import { usePathname } from 'next/navigation';
 
 const navItems = [
   { label: 'Home', href: '/' },
-  { label: 'Specialties', hasDropdown: true },
+  { label: 'Specialties', hasDropdown: true, dropdownKey: 'specialty' },
   { label: 'Question Bank', href: '#' },
-  { label: 'Legal', href: '#' },
+  { label: 'Legal', hasDropdown: true, dropdownKey: 'legal' },
   { label: 'Contact', href: '/contact' },
 ];
 
@@ -30,6 +31,12 @@ const specialtyOptions = [
   { value: 'oms', label: 'OMS', href: '/oms' },
   // { value: 'neurology', label: 'Neurology' },
   // { value: 'orthopedics', label: 'Orthopedics' },
+];
+
+const legalOptions = [
+  { label: 'Privacy Policy', href: '/privacy-policy' },
+  { label: 'Disclaimer', href: '/disclaimer' },
+  { label: 'Terms & Conditions', href: '/terms-conditions' },
 ];
 
 export default function Navbar({ isOms = false }) {
@@ -48,7 +55,6 @@ export default function Navbar({ isOms = false }) {
     return pathname === href || pathname.startsWith(href + '/');
   };
 
-  // 
   const SpecialtyDropdown = ({ isMobile = false }) => (
     <DropdownMenu modal={!isMobile}>
       <DropdownMenuTrigger asChild>
@@ -90,6 +96,47 @@ export default function Navbar({ isOms = false }) {
     </DropdownMenu>
   );
 
+  const LegalDropdown = ({ isMobile = false }) => (
+    <DropdownMenu modal={!isMobile}>
+      <DropdownMenuTrigger asChild>
+        <button
+          className={`flex items-center cursor-pointer  gap-1 focus:outline-none hover:text-[#B79E6B] transition-colors ${
+            isMobile ? 'w-full justify-between' : ''
+          }`}
+        >
+          Legal
+          <ChevronDown className="w-4 h-4" />
+        </button>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent
+        className={`bg-white ${isMobile ? 'w-full' : 'w-56'}`}
+      >
+        <DropdownMenuLabel>Legal</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+
+        {legalOptions.map(opt => (
+          <DropdownMenuItem
+            key={opt.href}
+            className={`cursor-pointer ${
+              isActive(opt.href) ? 'text-[#B79E6B] font-semibold' : ''
+            }`}
+            asChild
+          >
+            <Link
+              href={opt.href}
+              onClick={() => {
+                if (isMobile) setOpen(false);
+              }}
+            >
+              {opt.label}
+            </Link>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+
   return (
     <nav className="fixed inset-x-0 top-0 left-0 right-0 z-50 bg-custom-gradient backdrop-blur-md border-b border-green-600/30 overflow-hidden h-[92px] flex items-center justify-between">
       <div className=" mx-auto w-full px-4 sm:px-0 lg:px-0 custom-container">
@@ -127,7 +174,11 @@ export default function Navbar({ isOms = false }) {
             {navItems.map(item => (
               <li key={item.label}>
                 {item.hasDropdown ? (
-                  <SpecialtyDropdown />
+                  item.dropdownKey === 'specialty' ? (
+                    <SpecialtyDropdown />
+                  ) : (
+                    <LegalDropdown />
+                  )
                 ) : (
                   <Link
                     href={item.href || '#'}
@@ -152,7 +203,7 @@ export default function Navbar({ isOms = false }) {
               className="bg-[#B79E6B] text-white w-[105px] h-[54px] hover:bg-[#a08c5f] transition-colors"
             />
             <Btn
-              text="Sign up"
+              text="Sign Up"
               href="/register"
               className="bg-white text-[#B79E6B] w-[107px] h-[54px] hover:bg-gray-100 transition-colors"
             />
@@ -191,7 +242,11 @@ export default function Navbar({ isOms = false }) {
                     {navItems.map(item => (
                       <li key={item.label}>
                         {item.hasDropdown ? (
-                          <SpecialtyDropdown isMobile />
+                          item.dropdownKey === 'specialty' ? (
+                            <SpecialtyDropdown isMobile />
+                          ) : (
+                            <LegalDropdown isMobile />
+                          )
                         ) : (
                           <Link
                             href={item.href || '#'}
