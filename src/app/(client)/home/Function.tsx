@@ -11,11 +11,11 @@ const features = [
   {
     icon: '/images/function/img01.png',
     title: 'Use board-style learning tools',
-    description: 'Access specialty-tagged question banks',
+    description: 'Access specialty-tagged question banks.',
   },
   {
     icon: '/images/function/img04.png',
-    title: 'Track Your progress with advanced analytics',
+    title: 'Track your progress with advanced analytics',
     description:
       'Monitor your scores, spot weak areas, and climb specialty leaderboards.',
   },

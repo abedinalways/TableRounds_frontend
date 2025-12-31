@@ -5,9 +5,28 @@ import Lottie from 'lottie-react';
 import Btn from '@/components/reusable/button/Btn';
 
 import heartbeat from '../../../../public/images/Heartbeat.json';
-import loadingAnim from '../../../../public/images/loading.json';
+// import loadingAnim from '../../../../public/images/loading.json';
+import { useCallback } from 'react';
+import { gsap } from 'gsap';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+
+gsap.registerPlugin(ScrollToPlugin);
 
 export default function Banner() {
+    const handleLearnMore = useCallback(() => {
+      const target = document.querySelector('#details');
+      if (!target) return;
+
+      
+      const offsetY = 80;
+
+      gsap.to(window, {
+        duration: 1,
+        ease: 'power2.out',
+        scrollTo: { y: target, offsetY },
+      });
+    }, []);
+  
   return (
     <section className="relative w-full h-[750px] md:h-[900px] overflow-hidden font-[manrope]">
       {/* Background Image */}
@@ -103,12 +122,14 @@ export default function Banner() {
 
         <div className=" flex flex-col sm:flex-row gap-4 justify-center md:justify-start  md:mt-[64px] mt-8">
           <Btn
+            href="/register"
             text="Create Your Free Account"
             className="bg-[#B79E6B] text-white md:w-[245px] h-[54px]"
           />
 
           <Btn
             text="Learn More"
+            onClick={handleLearnMore}
             className="bg-white text-[#B79E6B] md:w-[217px] h-[54px]"
           />
         </div>
