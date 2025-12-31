@@ -1,67 +1,75 @@
-'use client'
-import LoginForm from '@/components/auth_components/LoginForm'
-import { login } from '@/lib/auth';
-import Image from 'next/image'
-import { useRouter } from 'next/navigation';
+'use client';
 
-import React, { useState } from 'react'
+import LoginForm from '@/components/auth_components/LoginForm';
+import { login } from '@/lib/auth';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-    const router = useRouter();
-    const [error, setError] = useState('');
-    // const [isLoading, setIsLoading] = useState(false);
-    const handleLogin = async (data: { email: string; password: string }) => {
-      setError('');
-      // setIsLoading(true);
-      try {
-        const user = await login(data.email, data.password);
-        toast.success('Welcome back! Redirecting to dashboard...', {
-          description: `Login as ${user.name}`,
-        });
-        // redirect based on role
-        setTimeout(() => {
-          router.push('/dashboard');
-          router.refresh();
-        }, 800);
-      } catch (err: unknown) {
-        const message =
-          err instanceof Error
-            ? err.message
-            : typeof err === 'string'
-            ? err
-            : 'Invalid email or password. Please try again.';
+  const handleLogin = async (data: { email: string; password: string }) => {
+    setError('');
+    setIsLoading(true);
 
-        setError(message);
-        toast.error('Login failed', {
-          description: message,
-        });
-      } 
-    };
+    try {
+      const user = await login(data.email, data.password);
+
+      toast.success('Welcome back! Redirecting to dashboard...', {
+        description: `Login as ${user.name}`,
+      });
+
+      setTimeout(() => {
+        router.push('/dashboard');
+        router.refresh();
+      }, 800);
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : typeof err === 'string'
+          ? err
+          : 'Invalid email or password. Please try again.';
+
+      setError(message);
+      toast.error('Login failed', { description: message });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <div className="mt-20 overflow-hidden font-[manrope] py-6">
-      <div className="relative">
-        <Image
-          src="/images/auth/logo.png"
-          alt=""
-          width={486}
-          height={486}
-          className="absolute -top-14 left-10"
-        />
-      </div>
-      <div className="text-center py-6 text-black">
-        <h3 className="text-xl md:text-3xl lg:text-5xl font-bold">
-          Login your TableRounds profile
+    <div className="relative min-h-screen  flex flex-col items-center justify-center overflow-hidden px-4 font-[manrope]">
+      {/* Watermark Logo */}
+      <Image
+        src="/images/TR.png"
+        alt="Logo watermark"
+        width={500}
+        height={500}
+        className="absolute top-30 left-20 pointer-events-none"
+      />
+
+      {/* Header */}
+      <div className="text-center mb-8 z-10">
+        <h3 className="text-3xl md:text-[48px] font-bold text-[#01281E] leading-[110%]">
+          Login
         </h3>
-        <p className="text-sm md:text-md text-gray-600 mt-4">
-          Join a verified network of surgeons and trainees. We manually review
-          every <br />
-          account to keep the community authentic and professional.
+        <p className="text-sm md:text-[18px] text-[#4B5563] mt-2 leading-[160%]">
+          Sign in to your TableRounds account
         </p>
       </div>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      <LoginForm onLogin={handleLogin} />
+
+      {/* Error */}
+      {error && (
+        <p className="mb-4 text-sm text-red-500 font-medium z-10">{error}</p>
+      )}
+
+      {/* Form */}
+      <LoginForm onLogin={handleLogin} isLoading={isLoading} />
     </div>
   );
 }
