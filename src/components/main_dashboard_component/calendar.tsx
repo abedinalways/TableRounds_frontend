@@ -82,7 +82,7 @@ const Calendar: React.FC = () => {
       days.push(
         <div
           key={`prev-${day}`}
-          className="h-12 flex items-center justify-center text-gray-400 text-sm font-medium"
+          className="h-10 flex items-center justify-center text-gray-400 text-sm font-medium"
         >
           {day}
         </div>
@@ -95,11 +95,11 @@ const Calendar: React.FC = () => {
       days.push(
         <div
           key={`current-${day}`}
-          className={`h-12 flex items-center justify-center text-sm font-medium cursor-pointer transition-colors
+          className={`h-10 flex items-center justify-center text-sm font-medium cursor-pointer transition-colors
             ${
               isTodayDate
-                ? 'bg-[#01503b] text-white rounded-full w-12 mx-auto hover:bg-teal-800'
-                : 'text-gray-900 hover:bg-gray-100 rounded-full w-12 mx-auto'
+                ? 'bg-[#01503b] text-white rounded-full w-10 mx-auto hover:bg-teal-800'
+                : 'text-gray-900 hover:bg-gray-100 rounded-full w-10 mx-auto'
             }`}
         >
           {day}
@@ -129,7 +129,7 @@ const Calendar: React.FC = () => {
       <div className="mb-6">
         <h3 className="text-sm font-medium text-gray-600 mb-1">Calendar</h3>
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold text-teal-800">
+          <h2 className="text-xl font-semibold text-teal-800">
             {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
           </h2>
           <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -139,7 +139,7 @@ const Calendar: React.FC = () => {
       </div>
 
       {/* Month Navigation */}
-      <div className="flex items-center justify-center gap-4 mb-6">
+      <div className="flex items-center justify-center gap-2 mb-6">
         <Button
           variant="ghost"
           size="icon"
@@ -148,7 +148,7 @@ const Calendar: React.FC = () => {
         >
           <ChevronLeft className="h-5 w-5 text-gray-600" />
         </Button>
-        <div className="bg-[#01503b] text-white px-4 py-2 rounded-full font-medium text-xs">
+        <div className="bg-[#01503b] text-white px-3 py-2 rounded-full font-medium text-xs">
           {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
         </div>
         <Button

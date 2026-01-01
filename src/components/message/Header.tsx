@@ -31,7 +31,7 @@ export default function Header() {
               Dr. {userName}
             </h2>
             <p className="md:text-sm text-xs ">
-              Stay up to date on your current progress
+             Chat with your colleague
             </p>
             <div className="flex md:space-x-4 space-x-2 text-[#b79e6b]">
               <span className="md:text-lg text-xs font-semibold">

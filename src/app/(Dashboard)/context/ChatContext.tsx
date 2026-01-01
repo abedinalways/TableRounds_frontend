@@ -47,7 +47,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   const [conversations, setConversations] = useState<Conversation[]>([
     {
       id: '1',
-      name: 'Dr. Sheikh Abedin',
+      name: 'Sheikh Abedin',
       avatar: '/images/dashboard/message/doctor.png',
       messages: [
         {
@@ -74,7 +74,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       ],
     },{
       id: '2',
-      name: 'Dr. Sheikh A Dinar',
+      name: 'Sheikh A Dinar',
       avatar: '/images/dashboard/message/doctor.png',
       messages: [
         {
