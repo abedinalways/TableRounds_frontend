@@ -112,11 +112,11 @@ export function ResultSummary({
       <Card className="background text-white font-[manrope]">
         <CardContent className="py-10 text-center space-y-4">
           <div className="flex justify-end gap-3">
-            <Link href="/dashboard/create-test/1">
+            
               <button className="cursor-pointer bg-[#b79e6b] text-white md:px-[65px] px-6 py-2 md:py-3.5 rounded-xl flex items-center gap-2">
-                Try Again
+                Review Test
               </button>
-            </Link>
+            
             <button
               onClick={handleShare}
               className="cursor-pointer bg-white text-[#01281e] md:px-[65px] md:py-3.5 px-6 py-2 rounded-xl flex items-center gap-2"
@@ -131,7 +131,7 @@ export function ResultSummary({
             <CompleteIcon />
           </div>
           <h2 className="text-xl md:text-[36px] leading-[170%]  font-bold">
-            Complete Test!
+           Test Complete!
           </h2>
           <div className="complete-card-bg w-fit py-4 px-8 rounded-[12px] mx-auto">
             <span ref={scoreRef} className="text-4xl font-bold">
