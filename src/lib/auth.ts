@@ -55,7 +55,7 @@ export function login(email: string, password: string): AuthUser {
   if (email === 'user@doctor.com' && password === 'user123') {
     const user = {
       id: '2',
-      name: 'Jhon',
+      name: 'John',
       email,
       role: 'user',
     } as AuthUser;

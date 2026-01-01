@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import QuizQuestionView from '@/components/create_test_components/QuizQuestionView';
 import { QuizQuestionData } from '@/types/quiz';
 import { useRouter } from 'next/navigation';
@@ -98,25 +98,25 @@ const questions: QuizQuestionData['quizDetails'][] = [
   mockData.quizDetails,
  
 ];
+function initializeMarkedQuestions(): MarkedQuestion[] {
+  const saved = localStorage.getItem('MARKED_QUESTIONS');
+  if (!saved) return [];
+
+  try {
+    const parsed = JSON.parse(saved);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (err) {
+    console.error('Invalid marked questions data', err);
+    return [];
+  }
+}
+
 export default function CreateTestPage() {
   const router = useRouter();
   
   const totalQuestions = questions.length;
   const [currentQuestion, setCurrentQuestion] = useState(1);
-  const [markedQuestions, setMarkedQuestions] = useState<MarkedQuestion[]>([]);
- useEffect(() => {
-   const saved = localStorage.getItem('MARKED_QUESTIONS');
-   if (!saved) return;
-
-   try {
-     const parsed = JSON.parse(saved);
-     if (Array.isArray(parsed)) {
-       setMarkedQuestions(parsed);
-     }
-   } catch (err) {
-     console.error('Invalid marked questions data', err);
-   }
- }, []);
+  const [markedQuestions, setMarkedQuestions] = useState<MarkedQuestion[]>(initializeMarkedQuestions);
 
 
    //  test-complete redirect
@@ -162,13 +162,5 @@ export default function CreateTestPage() {
     onJumpTo={setCurrentQuestion}
     onNext={handleNext}
   />
-);
-
-
-
-
-
-
-
-  
+); 
 }

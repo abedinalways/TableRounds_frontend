@@ -84,7 +84,7 @@ export const WelcomeBanner = () => {
             width={257}
             height={213}
             alt=""
-            className="absolute md:top-10 top-30 md:right-45 right-3 "
+            className="absolute md:top-10 top-30 md:right-20 right-3 "
           />
           <Image
             src="/images/dashboard/main_dashboard/doc.png"
