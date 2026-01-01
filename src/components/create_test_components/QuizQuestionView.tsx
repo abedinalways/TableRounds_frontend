@@ -114,7 +114,7 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
         onZoomOut={handleZoomOut}
       />
 
-      <div className="background rounded-md grid grid-cols-1 md:grid-cols-12">
+      <div className="background rounded-md grid grid-cols-1 md:grid-cols-12 ">
         <QuestionSidebar
           totalQuestions={totalQuestions}
           currentQuestion={currentQuestion}
@@ -122,57 +122,60 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
           onJumpTo={onJumpTo}
         />
 
+       
         {/* Right Side */}
-        <div
-          className="col-span-11 flex flex-col md:flex-row gap-6 min-w-0 mx-4 overflow-hidden"
-          style={{
-            transform: `scale(${zoomLevel})`,
-            transformOrigin: 'top left',
-            width: `${97 / zoomLevel}%`,
-            transition: 'transform 0.2s ease',
-          }}
-        >
-          {/* Question Card */}
-          
+        <div className="col-span-11 mx-4 min-w-0">
+          {/* ✅ this wrapper is the key */}
+          <div className="w-full overflow-auto">
             <div
-              ref={questionRef}
-              className={`flex-1 min-w-0 overflow-hidden ${
-                isQuestionHidden ? 'pointer-events-none' : ''
-              }`}
+              className="flex flex-col md:flex-row gap-6 min-w-0"
               style={{
-                flex: isQuestionHidden ? '0 0 0%' : '1 1 0%',
-                opacity: isQuestionHidden ? 0 : 1,
+                transform: `scale(${zoomLevel})`,
+                transformOrigin: 'top left',
+                transition: 'transform 0.2s ease',
               }}
             >
-              <QuestionCard
-                quizDetails={quizDetails}
-                selectedAnswerId={selectedAnswerId}
-                showExplanation={showExplanation}
-                isUserCorrect={isUserCorrect}
-                onAnswerChange={handleAnswerChange}
-                onSubmit={handleSubmit}
-                onToggleHide={handleToggleHide}
-                isQuestionHidden={isQuestionHidden}
-              />
-            </div>
-         
+              {/* Question Card */}
+              <div
+                ref={questionRef}
+                className={`flex-1 min-w-0 overflow-hidden ${
+                  isQuestionHidden ? 'pointer-events-none' : ''
+                }`}
+                style={{
+                  flex: isQuestionHidden ? '0 0 0%' : '1 1 0%',
+                  opacity: isQuestionHidden ? 0 : 1,
+                }}
+              >
+                <QuestionCard
+                  quizDetails={quizDetails}
+                  selectedAnswerId={selectedAnswerId}
+                  showExplanation={showExplanation}
+                  isUserCorrect={isUserCorrect}
+                  onAnswerChange={handleAnswerChange}
+                  onSubmit={handleSubmit}
+                  onToggleHide={handleToggleHide}
+                  isQuestionHidden={isQuestionHidden}
+                />
+              </div>
 
-          {/* Explanation Panel */}
-          {showExplanation && (
-            <div
-              ref={explanationRef}
-              className="min-w-0"
-              style={{
-                flex: isQuestionHidden ? '1 1 100%' : '1 1 0%',
-              }}
-            >
-              <ExplanationPanel
-                quizDetails={quizDetails}
-                isQuestionHidden={isQuestionHidden}
-                onShowQuestion={handleToggleHide}
-              />
+              {/* Explanation Panel */}
+              {showExplanation && (
+                <div
+                  ref={explanationRef}
+                  className="min-w-0"
+                  style={{
+                    flex: isQuestionHidden ? '1 1 100%' : '1 1 0%',
+                  }}
+                >
+                  <ExplanationPanel
+                    quizDetails={quizDetails}
+                    isQuestionHidden={isQuestionHidden}
+                    onShowQuestion={handleToggleHide}
+                  />
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
