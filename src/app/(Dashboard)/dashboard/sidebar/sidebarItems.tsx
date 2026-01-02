@@ -98,11 +98,11 @@ export const userMenu: MenuItem[] = [
     href: '/dashboard/support',
     icon: '/images/dashboard/img08.png',
   },
-  {
-    title: 'Settings',
-    href: '/dashboard/settings',
-    icon: '/images/dashboard/img09.png',
-  },
+  // {
+  //   title: 'Settings',
+  //   href: '/dashboard/settings',
+  //   icon: '/images/dashboard/img09.png',
+  // },
   {
     title: 'Logout',
     href: '/login',

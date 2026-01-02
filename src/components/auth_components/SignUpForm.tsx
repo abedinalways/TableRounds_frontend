@@ -126,7 +126,7 @@ opacity-xl"
                 </Label>
                 <Input
                   id="fullName"
-                  placeholder="Enter Your Full Name"
+                  placeholder="Enter your full name"
                   value={formData.fullName}
                   onChange={e => handleInputChange('fullName', e.target.value)}
                   className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
@@ -162,7 +162,7 @@ opacity-xl"
                   htmlFor="email"
                   className="text-white text-sm font-medium"
                 >
-                  Email (Institutioal Preferred){' '}
+                  Email (Institutional Preferred){' '}
                   <span className="text-red-600">*</span>
                 </Label>
                 <Input
@@ -236,7 +236,7 @@ opacity-xl"
                 </Label>
                 <Input
                   id="yearInTraining"
-                  placeholder="Enter training year/practice"
+                  placeholder="Student, PGY or Attending Surgeon"
                   value={formData.yearInTraining}
                   onChange={e =>
                     handleInputChange('yearInTraining', e.target.value)
