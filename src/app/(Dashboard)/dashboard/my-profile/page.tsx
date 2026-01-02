@@ -5,6 +5,7 @@ import { profileData } from '../../../../lib/data/myProfile-data';
 import { ProfileTab } from '@/types/myProfile';
 import ProfileHeader from '@/components/my-profile/ProfileHeader';
 import ProfileTabs from '@/components/my-profile/ProfileTabs';
+import ManageProfile from '@/components/settings/ManageProfile';
 
 export default function MyProfilePage() {
   const [activeTab, setActiveTab] = useState<ProfileTab>('overview');
@@ -22,7 +23,7 @@ export default function MyProfilePage() {
       <div className=" w-full rounded-2xl  background h-[383px]"></div>
       <div className="profile-container">
         <div className="-mt-60">
-          <ProfileHeader user={profileData.user} />
+          <ManageProfile />
         </div>
 
         <ProfileTabs
@@ -30,6 +31,9 @@ export default function MyProfilePage() {
           setActiveTab={setActiveTab}
           data={profileData}
         />
+      </div>
+      <div>
+
       </div>
     </div>
   );

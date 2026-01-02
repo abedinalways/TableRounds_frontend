@@ -100,7 +100,7 @@ export default function Elevate() {
         />
         
           <Btn
-          text="Learn More About Tablerounds"
+          text="Learn More About TableRounds"
           href="/"
             className="bg-white text-[#B79E6B] w-full h-10  transition-colors rounded-xl md:w-[305px] md:h-[54px] cursor-pointer z-30 "
           />

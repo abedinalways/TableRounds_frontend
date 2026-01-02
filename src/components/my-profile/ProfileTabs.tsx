@@ -17,6 +17,7 @@ import EduIcon from '../reusable/icons/EduIcon';
 import ExperienceIcon from '../reusable/icons/ExperienceIcon';
 import ActivityIcon from '../reusable/icons/ActivityIcon';
 import QuestionBankSolved from './ActivityCard';
+import AccountSettings from '../settings/AccountSettings';
 
 interface ProfileTabsProps {
   activeTab: ProfileTab;
@@ -80,8 +81,10 @@ export default function ProfileTabs({
       <div ref={contentRef} className="mt-6">
         <TabsContent
           value="overview"
-          className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+          className="flex flex-col gap-6"
         >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
           <div className="space-y-6">
             <EducationCard data={data.education} />
             <ExperienceCard data={data.experience} />
@@ -92,6 +95,10 @@ export default function ProfileTabs({
             <PublicationCard data={data.publications} />
             <SkillBadges skills={data.skills} />
             <QuickActions />
+          </div>
+          </div>
+          <div>
+            <AccountSettings />
           </div>
         </TabsContent>
 
