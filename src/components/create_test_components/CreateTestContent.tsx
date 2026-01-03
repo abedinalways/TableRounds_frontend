@@ -14,6 +14,7 @@ import {
 import { Switch } from '../ui/switch';
 import { useRouter } from 'next/navigation';
 import { CustomCheckbox } from '../ui/CustomCheckbox';
+import DownIcon from '../reusable/icons/DownIcon';
 
 // --- Mock Data ---
 const TOPICS: string[] = [
@@ -117,7 +118,10 @@ export function CreateTestContent() {
           </p>
 
           <Select value={numQuestions} onValueChange={setNumQuestions}>
-            <SelectTrigger className="w-full sm:w-[180px] h-[61px] bg-[#f7f7f3] p-4 rounded-[8px] cursor-pointer">
+            <SelectTrigger
+              className="w-full sm:w-[180px] h-[61px] bg-[#f7f7f3] p-4 rounded-[8px] cursor-pointer"
+              
+            >
               <SelectValue
                 placeholder="Select a number"
                 className="placeholder:text-[#4b5563] placeholder:text-[18px]"

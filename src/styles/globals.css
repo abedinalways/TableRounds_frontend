@@ -394,3 +394,7 @@ background: rgba(183, 158, 107, 0.14)
   .input-bg{
   background: rgba(249, 250, 251, 0.1);
   }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}

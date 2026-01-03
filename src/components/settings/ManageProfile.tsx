@@ -3,13 +3,12 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Button } from '@/components/ui/button';
+
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 
-import Btn from '../reusable/button/Btn';
 import AttachImageIcon from '../reusable/icons/AttachImageIcon';
 
 type ProfileFormData = {
@@ -23,6 +22,7 @@ type ProfileFormData = {
   twitter: string;
   facebook: string;
   description: string;
+  practiceName: string;
 };
 
 export default function ManageProfile() {
@@ -33,6 +33,8 @@ export default function ManageProfile() {
       name: '',
       credentials: '',
       year: '',
+      practiceName: '',
+    
     },
   });
 
@@ -158,6 +160,14 @@ export default function ManageProfile() {
             />
           </div>
 
+          <div className="flex flex-col gap-[8px]">
+            <Label className="font-bold">Current Practice</Label>
+            <Input
+              placeholder='Name of your residency, hospital or private practice'
+              {...register('practiceName')}
+              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
+            />
+          </div>
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">Joining Date</Label>
             <Input

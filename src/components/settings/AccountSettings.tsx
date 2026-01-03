@@ -75,7 +75,7 @@ export default function AccountSettings() {
           <Input
             type="password"
             {...register('currentPassword')}
-            placeholder="Set your Password"
+            placeholder="Set your password"
             className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
           />
         </div>
@@ -86,7 +86,7 @@ export default function AccountSettings() {
           <Input
             type="password"
             {...register('newPassword')}
-            placeholder="Set your New Password"
+            placeholder="Set your new password"
             className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
           />
         </div>
@@ -97,14 +97,14 @@ export default function AccountSettings() {
           <Input
             type="password"
             {...register('confirmPassword')}
-            placeholder="PGY vs. Attending Surgeon"
+            placeholder="Re-type your new password"
             className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
           />
         </div>
 
         {/* Notifications */}
         <div className="flex items-center justify-between">
-          <Label>Email Notification</Label>
+          <Label>Email Notifications</Label>
           <Switch
             checked={emailNotify}
             className="cursor-pointer"
@@ -116,7 +116,7 @@ export default function AccountSettings() {
         </div>
 
         <div className="flex items-center justify-between ">
-          <Label>Website Notification</Label>
+          <Label>Website Notifications</Label>
           <Switch
             className="cursor-pointer"
             checked={webNotify}

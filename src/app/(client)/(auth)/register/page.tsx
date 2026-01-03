@@ -14,7 +14,7 @@ export default function RegisterPage() {
           className="absolute -top-14 left-5"
         />
       </div>
-      <div className="text-center py-6 text-black font-[roboto]">
+      <div className="text-center py-6 text-black font-[manrope]">
         <h3 className="text-xl md:text-3xl lg:text-5xl font-bold">
           Create your TableRounds profile
         </h3>

@@ -44,7 +44,7 @@ export default function QuickActions() {
           className="w-full flex justify-start items-center bg-[#059166] hover:bg-emerald-600 text-sm md:text-[20px] rounded-[12px] py-[12px] px-[16px] cursor-pointer"
         >
           <Download className="mr-2 h-4 w-4" />
-          Download CV
+          Upload CV
         </button>
 
         <button

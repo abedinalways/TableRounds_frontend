@@ -72,6 +72,21 @@ export default function SkillBadges({ skills }: SkillBadgesProps) {
     setSkillValue(skillList[index]);
   };
 
+    const handleDeleteSkill = (index: number) => {
+      setSkillList(prev => prev.filter((_, i) => i !== index));
+
+      // keep current selection sane (no UI/logic changes beyond preventing broken state)
+      setActiveIndex(prev => {
+        if (prev === null) return null;
+        if (prev === index) return null;
+        return prev > index ? prev - 1 : prev;
+      });
+
+      // if the deleted one was selected, clear the input
+      setSkillValue(prev => (activeIndex === index ? '' : prev));
+    };
+
+
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     if (!skillValue.trim()) return;
@@ -113,13 +128,28 @@ export default function SkillBadges({ skills }: SkillBadgesProps) {
 
       {/* Skill badges */}
       <div className="flex flex-wrap gap-2">
-        {skillList.map(skill => (
+        {skillList.map((skill, index) => (
           <Badge
             key={skill}
-            variant="secondary"
-            className="bg-[#d1fae5] text-[#01503b] text-sm md:text-[18px] font-normal rounded-full px-[16px] py-[12px]"
+            onClick={() => handleEdit(index)}
+            className={`cursor-pointer p-3 rounded-full bg-[#d1fae5] text-[#01503b] ${
+              activeIndex === index ? 'ring-1 ring-[#b79e6b]' : ''
+            }`}
           >
             {skill}
+
+            {/* rounded delete button (edit section only) */}
+            <button
+              type="button"
+              aria-label={`Delete ${skill}`}
+              onClick={e => {
+                e.stopPropagation(); // don't trigger handleEdit
+                handleDeleteSkill(index);
+              }}
+              className="ml-2 inline-flex h-5 w-5 items-center justify-center rounded-full border border-[#01503b]/20 bg-[#f9f9f5] text-[#01503b] text-xs leading-none cursor-pointer"
+            >
+              ✕
+            </button>
           </Badge>
         ))}
 
@@ -152,7 +182,7 @@ export default function SkillBadges({ skills }: SkillBadgesProps) {
                 <span className="bg-[#d1fae5] p-2 rounded-[10px]">
                   <BagIcon />
                 </span>
-                Skill
+                Skills
               </DialogTitle>
 
               <DialogDescription className="space-y-3">
@@ -179,27 +209,21 @@ export default function SkillBadges({ skills }: SkillBadgesProps) {
                   <Input
                     value={skillValue}
                     onChange={e => setSkillValue(e.target.value)}
-                    placeholder="Enter skill name"
                   />
 
                   {isFullModal ? (
-                    <Btn type='submit' className="bg-[#b79e6b] text-white md:px-6 md:py-3">Save</Btn>
+                    <Btn
+                      type="submit"
+                      className="bg-[#b79e6b] text-white md:px-6 md:py-3"
+                    >
+                      Save
+                    </Btn>
                   ) : (
                     <Btn
                       type="submit"
-                      className="bg-[#f9f9f5] rounded-[12px] p-3 cursor-pointer w-full border border-[#00000012]"
+                      className="bg-[#b79e6b] text-white w-[102px] h-[54px] rounded-[12px] p-3 cursor-pointer  "
                     >
-                      <p className="flex justify-center items-center gap-2">
-                        <Image
-                          src="/images/dashboard/profile/plus.png"
-                          width={20}
-                          height={20}
-                          alt=""
-                        />
-                        <span className="text-[#01503b] font-semibold">
-                          Add New
-                        </span>
-                      </p>
+                      Save
                     </Btn>
                   )}
                 </div>
