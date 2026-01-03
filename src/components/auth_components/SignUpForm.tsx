@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useState } from 'react';
 import {
   Card,
@@ -11,8 +11,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 
-import {  CheckCircle2, CloudUpload } from 'lucide-react';
+import { CheckCircle2, CloudUpload } from 'lucide-react';
 import Image from 'next/image';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 
 interface SignUpFormData {
   fullName: string;
@@ -21,8 +28,10 @@ interface SignUpFormData {
   createPassword: string;
   confirmPassword: string;
   yearInTraining: string;
+  specialty: string;
   location: string;
   currentPractice: string;
+  briefBio: string;
   instagramUrl: string;
   linkedinUrl: string;
   twitterUrl: string;
@@ -43,8 +52,10 @@ export default function SignUpForm({ onSubmit, onCancel }: SignUpFormProps) {
     createPassword: '',
     confirmPassword: '',
     yearInTraining: '',
+    specialty: '',
     location: '',
     currentPractice: '',
+    briefBio:'',
     instagramUrl: '',
     linkedinUrl: '',
     twitterUrl: '',
@@ -80,6 +91,10 @@ export default function SignUpForm({ onSubmit, onCancel }: SignUpFormProps) {
     const newErrors: Partial<Record<keyof SignUpFormData, string>> = {};
 
     if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
+
+    if (!formData.credentials.trim())
+      newErrors.credentials = 'Credentials is required';
+
     if (!formData.email.trim()) newErrors.email = 'Email is required';
     else if (!/\S+@\S+\.\S+/.test(formData.email))
       newErrors.email = 'Invalid email format';
@@ -92,6 +107,9 @@ export default function SignUpForm({ onSubmit, onCancel }: SignUpFormProps) {
     if (formData.createPassword !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
+
+    if (!formData.specialty.trim())
+      newErrors.specialty = 'Specialty is required';
 
     if (!formData.agreeToTerms) {
       newErrors.agreeToTerms = 'You must agree to the terms';
@@ -110,46 +128,47 @@ export default function SignUpForm({ onSubmit, onCancel }: SignUpFormProps) {
   return (
     <div className="z-40 p-4 md:p-8 font-[manrope]">
       <div
-        className="max-w-6xl mx-auto gradient-bg rounded-md backdrop-blur  
+        className="custom-container mx-auto gradient-bg rounded-md backdrop-blur  
 opacity-xl"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="md:flex justify-between gap-10">
           {/* Left Column - Credentials */}
           <div className="space-y-1  md:p-6 p-2 rounded-lg">
             <div className="space-y-[20px]">
               <div>
                 <Label
                   htmlFor="fullName"
-                  className="text-white text-sm font-medium"
+                  className="text-white text-sm md:text-[18px] font-bold"
                 >
-                  Name <span className="text-red-600">*</span>
+                  Name<span className="text-red-600">*</span>
                 </Label>
                 <Input
                   id="fullName"
                   placeholder="Enter your full name"
                   value={formData.fullName}
                   onChange={e => handleInputChange('fullName', e.target.value)}
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 rounded-[8px] md:w-[644px] md:h-[61px] placeholder:text-[18px]"
                 />
                 {errors.fullName && (
                   <p className="text-red-300 text-xs mt-1">{errors.fullName}</p>
                 )}
               </div>
+
               <div>
                 <Label
                   htmlFor="credentials"
-                  className="text-white text-sm font-medium"
+                  className="text-white text-sm md:text-[18px] font-bold"
                 >
                   Credentials <span className="text-red-600">*</span>
                 </Label>
                 <Input
                   id="credentials"
                   placeholder="i.e. DDS, DMD, MD, Student"
-                  value={formData.fullName}
+                  value={formData.credentials}
                   onChange={e =>
                     handleInputChange('credentials', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
                 {errors.credentials && (
                   <p className="text-red-300 text-xs mt-1">
@@ -157,10 +176,11 @@ opacity-xl"
                   </p>
                 )}
               </div>
+
               <div>
                 <Label
                   htmlFor="email"
-                  className="text-white text-sm font-medium"
+                  className="text-white text-sm md:text-[18px] font-bold"
                 >
                   Email (Institutional Preferred){' '}
                   <span className="text-red-600">*</span>
@@ -171,7 +191,7 @@ opacity-xl"
                   placeholder="Enter your email"
                   value={formData.email}
                   onChange={e => handleInputChange('email', e.target.value)}
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
                 {errors.email && (
                   <p className="text-red-300 text-xs mt-1">{errors.email}</p>
@@ -181,7 +201,7 @@ opacity-xl"
               <div>
                 <Label
                   htmlFor="createPassword"
-                  className="text-white text-sm font-medium"
+                  className="text-white text-sm md:text-[18px] font-bold"
                 >
                   Create Password <span className="text-red-600">*</span>
                 </Label>
@@ -193,7 +213,7 @@ opacity-xl"
                   onChange={e =>
                     handleInputChange('createPassword', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
                 {errors.createPassword && (
                   <p className="text-red-300 text-xs mt-1">
@@ -205,7 +225,7 @@ opacity-xl"
               <div>
                 <Label
                   htmlFor="confirmPassword"
-                  className="text-white text-sm font-medium"
+                  className="text-white text-sm md:text-[18px] font-bold"
                 >
                   Confirm Password <span className="text-red-600">*</span>
                 </Label>
@@ -217,7 +237,7 @@ opacity-xl"
                   onChange={e =>
                     handleInputChange('confirmPassword', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D]  h-9"
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D]  h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
                 {errors.confirmPassword && (
                   <p className="text-red-300 text-xs mt-1">
@@ -229,9 +249,9 @@ opacity-xl"
               <div>
                 <Label
                   htmlFor="yearInTraining"
-                  className="text-white text-sm font-medium"
+                  className="text-white text-sm md:text-[18px] font-bold"
                 >
-                  Year in Training/Practice*
+                  Year in Training/Practice
                   <span className="text-red-600">*</span>
                 </Label>
                 <Input
@@ -241,14 +261,65 @@ opacity-xl"
                   onChange={e =>
                     handleInputChange('yearInTraining', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
+              </div>
+
+              {/* specialty */}
+              <div>
+                <Label
+                  htmlFor="Specialty"
+                  className="text-white text-sm md:text-[18px] font-bold"
+                >
+                  Specialty <span className="text-red-600">*</span>
+                </Label>
+
+                <Select
+                  value={formData.specialty}
+                  onValueChange={value => handleInputChange('specialty', value)}
+                >
+                  <SelectTrigger
+                    className="md:w-full mt-2 h-[61px] bg-[#1C765E] border-none p-4 rounded-[8px] cursor-pointer text-white
+  [&>span]:text-white
+  [&_[data-placeholder]]:text-white
+  [&_svg]:opacity-100 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                  >
+                    <SelectValue placeholder="Select a specialty" />
+                  </SelectTrigger>
+
+                  <SelectContent className="bg-[#1C765E] border-none text-white">
+                    <SelectItem
+                      className="text-white"
+                      value="Oral and Mexillofacial Surgery"
+                    >
+                      Oral and Mexillofacial Surgery
+                    </SelectItem>
+                    <SelectItem className="text-white" value="Plastic Surgery">
+                      Plastic Surgery
+                    </SelectItem>
+                    <SelectItem
+                      className="text-white"
+                      value="Otorhinolaryngology Surgery"
+                    >
+                      Otorhinolaryngology Surgery
+                    </SelectItem>
+                    <SelectItem className="text-white" value="Dentist">
+                      Dentist
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {errors.specialty && (
+                  <p className="text-red-300 text-xs mt-1">
+                    {errors.specialty}
+                  </p>
+                )}
               </div>
 
               <div>
                 <Label
                   htmlFor="location"
-                  className="text-white text-sm font-medium"
+                  className="text-white text-sm md:text-[18px] font-bold"
                 >
                   Location <span className="text-red-600">*</span>
                 </Label>
@@ -257,97 +328,95 @@ opacity-xl"
                   placeholder="Enter your city, state, and country"
                   value={formData.location}
                   onChange={e => handleInputChange('location', e.target.value)}
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
               </div>
 
               <div>
                 <Label
-                  htmlFor="currentPractice"
-                  className="text-white text-sm font-medium"
+                  htmlFor="briefBio"
+                  className="text-white text-sm md:text-[18px] font-bold"
                 >
-                  Current Practice
+                  Brief Bio
                 </Label>
                 <Input
                   id="currentPractice"
-                  placeholder="Describe your current hospital, or practice"
-                  value={formData.currentPractice}
-                  onChange={e =>
-                    handleInputChange('currentPractice', e.target.value)
-                  }
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
+                  placeholder="Enter a brief bio about yourself"
+                  value={formData.briefBio}
+                  onChange={e => handleInputChange('briefBio', e.target.value)}
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
               </div>
 
               <div>
                 <Label
                   htmlFor="instagram"
-                  className="text-white text-sm font-medium"
+                  className="text-white text-sm md:text-[18px] font-bold"
                 >
                   Instagram
                 </Label>
                 <Input
                   id="instagram"
-                  placeholder="@handle (Link)"
+                  placeholder="Personal link"
                   value={formData.instagramUrl}
                   onChange={e =>
                     handleInputChange('instagramUrl', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
               </div>
 
               <div>
                 <Label
                   htmlFor="linkedin"
-                  className="text-white text-sm font-medium"
+                  className="text-white text-sm md:text-[18px] font-bold"
                 >
                   LinkedIn
                 </Label>
                 <Input
                   id="linkedin"
-                  placeholder="@handle (Link)"
+                  placeholder="Personal link"
                   value={formData.linkedinUrl}
                   onChange={e =>
                     handleInputChange('linkedinUrl', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
               </div>
 
               <div>
                 <Label
                   htmlFor="twitter"
-                  className="text-white text-sm font-medium"
+                  className="text-white text-sm md:text-[18px] font-bold"
                 >
                   Twitter/X
                 </Label>
                 <Input
                   id="twitter"
-                  placeholder="@handle (Link)"
+                  placeholder="Personal link"
                   value={formData.twitterUrl}
                   onChange={e =>
                     handleInputChange('twitterUrl', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
               </div>
 
               <div>
                 <Label
                   htmlFor="facebook"
-                  className="text-white text-sm font-medium"
+                  className="text-white text-sm md:text-[18px] font-bold"
                 >
                   Facebook
                 </Label>
                 <Input
                   id="facebook"
-                  placeholder="@handle (Link)"
+                  placeholder="Personal link"
                   value={formData.facebookUrl}
                   onChange={e =>
                     handleInputChange('facebookUrl', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9"
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
               </div>
             </div>
@@ -357,7 +426,9 @@ opacity-xl"
           <div className="space-y-6 md:space-x-6">
             <Card className="bg-gradient border-none mt-2">
               <CardHeader>
-                <CardTitle className="text-white">Profile Photo</CardTitle>
+                <CardTitle className="text-white text-sm md:text-[18px]">
+                  Profile Photo <span className="text-red-600">*</span>
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="border-2 border-dashed border-[#22BA92] bg-[#1C765E] rounded-lg md:p-8 py-4  px-2 text-center">
@@ -366,11 +437,11 @@ opacity-xl"
                       <CloudUpload className="w-8 h-8 text-teal-700" />
                     </div>
                     <div className="text-white">
-                      <p className="font-medium">
-                        Upload your profile image/headshot
+                      <p className="text-white text-md md:text-[20px] font-semibold">
+                        Upload your professional headshot
                       </p>
-                      <p className="text-sm text-teal-200">
-                        Support format: .docx/.doc/.txt.rtf.txt
+                      <p className="text-xs md:text-sm text-teal-200">
+                        Supported format:JPG/PNG(up to 5 mb)
                       </p>
                     </div>
                     <label htmlFor="profilePhoto">
@@ -404,7 +475,7 @@ opacity-xl"
 
             <Card className="bg-gradient border-none">
               <CardHeader>
-                <CardTitle className="text-white">
+                <CardTitle className="text-white text-sm md:text-[18px]">
                   Profile Verification
                 </CardTitle>
               </CardHeader>
@@ -415,11 +486,11 @@ opacity-xl"
                       <CloudUpload className="w-8 h-8 text-teal-700" />
                     </div>
                     <div className="text-white">
-                      <p className="font-medium">
+                      <p className="text-white text-md md:text-[20px] font-semibold">
                         Upload verification document
                       </p>
-                      <p className="text-sm text-teal-200">
-                        Support format: .docx/.doc/.txt.rtf.txt
+                      <p className="text-xs md:text-sm text-teal-200">
+                        Supported format: .docx/.doc/.txt.rtf.txt
                       </p>
                     </div>
                     <label htmlFor="verificationDoc">
@@ -485,7 +556,7 @@ opacity-xl"
                     className="w-[20px] h-[20px]"
                   />
                   <p className="text-sm">
-                    Upload a live photo of your government-issued ID, or
+                    Upload a clear photo of your school/hospital ID, or
                   </p>
                 </div>
                 <div className="flex items-start gap-2">
@@ -497,8 +568,9 @@ opacity-xl"
                     className="w-[20px] h-[20px]"
                   />
                   <p className="text-sm">
-                    Send a direct message to @totalresource.com on Instagram
-                    from your personal account
+                    Send a direct message to{' '}
+                    <span className="text-yellow-600">TableRounds.OSM</span> on
+                    Instagram from your personal account
                   </p>
                 </div>
                 <div className="flex items-start gap-2">
@@ -510,31 +582,31 @@ opacity-xl"
                     className="w-[20px] h-[20px]"
                   />
                   <p className="text-sm">
-                    Verification documents are encrypted and stored for identity
-                    verification of children. Each account is automatically
-                    approved by an admin.
+                    All Verification documents are encrypted and used only for
+                    identify verification. Each account is personally reviewed
+                    and approved by an admin
                   </p>
                 </div>
               </CardContent>
             </Card>
+
             {/* Terms and Submit */}
             <div className="mt-6 flex  items-center justify-end  gap-4 mx-6 space-x-6">
-
               <div className="md:flex gap-4 p-6 space-y-4 sm:space-y-0">
-                <Button
+                <button
                   onClick={handleSubmit}
-                  className="bg-[#B79E6B] text-white w-fit h-10 hover:bg-[#a08c5f] transition-colors rounded-[8px] px-[24px] py-[14px] w-[168px] h-[54px]"
+                  className="bg-[#B79E6B] text-white hover:bg-[#a08c5f] transition-colors rounded-[8px] px-[24px] py-[14px] w-[168px] h-[54px] font-medium"
                 >
                   Create Account
-                </Button>
-                <Button
+                </button>
+                <button
                   type="button"
-                  variant="outline"
-                  className="bg-white text-green-700  w-fit h-10 hover:bg-white transition-colors rounded-[8px] px-[24px] py-[14px] w-[168px] h-[54px]"
+                  
+                  className="bg-white text-[#b79e6b] font-medium    hover:bg-white transition-colors rounded-[8px] px-[24px] py-[14px] w-[168px] h-[54px]"
                   onClick={onCancel}
                 >
                   Sign In
-                </Button>
+                </button>
               </div>
             </div>
           </div>

@@ -40,7 +40,7 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
     role: '',
     hospital: '',
     location: '',
-    specialty: '',
+    description: '',
     period: '',
   };
 
@@ -119,7 +119,7 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
             <span className="w-[40px] h-[40px] rounded-[10px] bg-[#d1fae5] flex justify-center items-center">
               <BagIcon />
             </span>
-            Experience
+            Clinical Experience
           </h3>
 
           <div
@@ -150,7 +150,7 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
                 <p className="flex items-center gap-2 text-[#6b7280]">
                   <LocationIcon /> {item.location}
                 </p>
-                <p className="text-muted-foreground">{item.specialty}</p>
+                <p className="text-muted-foreground">{item.description}</p>
               </div>
             </div>
 
@@ -183,7 +183,7 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
                   <span className="w-[40px] h-[40px] rounded-[10px] bg-[#d1fae5] flex justify-center items-center">
                     <BagIcon />
                   </span>
-                  Experience
+                  Clinical Experience
                 </DialogTitle>
 
                 <DialogDescription className="space-y-3">
@@ -213,7 +213,9 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
                   {/* Form */}
                   <div className="bg-[#f9f9f5] p-3 rounded-[10px] space-y-2">
                     <div className="flex flex-col gap-2">
-                      <Label>Role</Label>
+                      <Label>
+                        Role <span className="text-red-600">*</span>
+                      </Label>
                       <Input
                         name="role"
                         value={formData.role}
@@ -223,7 +225,10 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <Label>Hospital</Label>
+                      <Label>
+                        Hospital/Practice{' '}
+                        <span className="text-red-600">*</span>
+                      </Label>
                       <Input
                         name="hospital"
                         value={formData.hospital}
@@ -233,7 +238,9 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <Label>Location</Label>
+                      <Label>
+                        Location<span className="text-red-600">*</span>
+                      </Label>
                       <Input
                         name="location"
                         value={formData.location}
@@ -243,17 +250,19 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <Label>Specialty</Label>
+                      <Label>Description</Label>
                       <Input
-                        name="specialty"
-                        value={formData.specialty}
+                        name="description"
+                        value={formData.description}
                         onChange={handleChange}
                         className="border border-[#4444441A] rounded-sm py-[22px]"
                       />
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <Label>Period</Label>
+                      <Label>
+                        Period<span className="text-red-600">*</span>
+                      </Label>
                       <Input
                         name="period"
                         value={formData.period}
@@ -269,19 +278,9 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
                     ) : (
                       <Btn
                         type="submit"
-                        className="bg-[#f9f9f5] rounded-[12px] px-3 mt-4 py-3 cursor-pointer w-full border border-[#00000012]"
+                        className="bg-[#b79e6b] text-white rounded-[12px] px-3 mt-4 py-3 cursor-pointer  w-[102px] h-[54px]"
                       >
-                        <p className="flex justify-center items-center gap-2">
-                          <Image
-                            src="/images/dashboard/profile/plus.png"
-                            width={20}
-                            height={20}
-                            alt=""
-                          />
-                          <span className="text-[#01503b] font-semibold">
-                            Add New
-                          </span>
-                        </p>
+                        Save
                       </Btn>
                     )}
                   </div>

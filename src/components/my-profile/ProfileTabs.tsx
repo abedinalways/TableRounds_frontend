@@ -67,7 +67,7 @@ export default function ProfileTabs({
           <EduIcon /> Education
         </TabsTrigger>
         <TabsTrigger value="experience">
-          <ExperienceIcon /> Experience
+          <ExperienceIcon />Experience
         </TabsTrigger>
         <TabsTrigger value="publications">
           <ActivityIcon /> Publications

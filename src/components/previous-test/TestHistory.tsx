@@ -57,7 +57,7 @@ export function TestHistory({ tests }: { tests: TestItem[] }) {
                     key={mode}
                     variant="secondary"
                     className={
-                      mode === 'Tutor'
+                      mode === 'Timed'
                         ? 'text-[#01503b] bg-[#cdebe3] rounded-[4px] px-[8px] py-[4px]'
                         : 'test-background text-[#b79e6b] rounded-[4px] px-[8px] py-[4px]'
                     }
