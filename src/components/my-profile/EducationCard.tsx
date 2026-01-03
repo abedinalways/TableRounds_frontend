@@ -246,7 +246,9 @@ export default function EducationCard({ data }: EducationCardProps) {
 
                   <div className="bg-[#f9f9f5] space-y-3 rounded-[10px] p-3">
                     <div className="flex flex-col gap-2">
-                      <Label className="font-semibold">Degree Name</Label>
+                      <Label className="font-semibold">
+                        Degree<span className="text-red-600">*</span>
+                      </Label>
                       <Input
                         name="title"
                         value={formData.title}
@@ -256,7 +258,9 @@ export default function EducationCard({ data }: EducationCardProps) {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <Label className="font-semibold">Institute Name</Label>
+                      <Label className="font-semibold">
+                        Institution Name<span className="text-red-600">*</span>
+                      </Label>
                       <Input
                         name="institute"
                         value={formData.institute}
@@ -266,7 +270,9 @@ export default function EducationCard({ data }: EducationCardProps) {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <Label className="font-semibold">Year</Label>
+                      <Label className="font-semibold">
+                        Year Earned<span className="text-red-600">*</span>
+                      </Label>
                       <Input
                         name="year"
                         value={formData.year}
@@ -294,19 +300,9 @@ export default function EducationCard({ data }: EducationCardProps) {
                     ) : (
                       <Btn
                         type="submit"
-                        className="bg-[#f9f9f5] rounded-[12px] p-3 cursor-pointer w-full border border-[#00000012]"
+                        className="bg-[#b79e6b] text-white rounded-[12px] p-3 cursor-pointer w-[102px] h-[54px] "
                       >
-                        <p className="flex justify-center items-center gap-2">
-                          <Image
-                            src="/images/dashboard/profile/plus.png"
-                            width={20}
-                            height={20}
-                            alt=""
-                          />
-                          <span className="text-[#01503b] font-semibold">
-                            Add New
-                          </span>
-                        </p>
+                        Save
                       </Btn>
                     )}
                   </div>

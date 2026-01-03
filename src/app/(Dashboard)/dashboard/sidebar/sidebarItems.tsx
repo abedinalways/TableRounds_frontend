@@ -81,7 +81,7 @@ export const userMenu: MenuItem[] = [
     icon: '/images/dashboard/img05.png',
   },
   {
-    title: 'Reset Question Bank',
+    title: 'Reset Bank',
     href: '/dashboard/reset-qns-bank',
     icon: '/images/dashboard/img06.png',
   },

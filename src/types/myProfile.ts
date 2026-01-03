@@ -22,7 +22,7 @@ export interface ExperienceItem {
   hospital: string;
   location: string;
   period: string;
-  specialty: string;
+  description?: string;
 }
 
 export interface PublicationItem {

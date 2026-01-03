@@ -29,7 +29,7 @@ export default function QuestionBankSolved({ data }: Props) {
           <BagIcon />
         </div>
         <h3 className="font-bold text-[15px] md:text-[20px] text-[#01503b]">
-          Question Bank Solved
+          Question Bank Statistics
         </h3>
       </div>
 

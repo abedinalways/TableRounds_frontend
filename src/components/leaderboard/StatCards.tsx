@@ -40,17 +40,17 @@ export default function StatCards({ stats }: StatCardsProps) {
             <CardContent className="p-6 space-y-2 text-white">
               <div className="flex justify-between">
                 <div className="flex flex-col gap-[12px]">
-                  <p className="text-[18px]">{item.title}</p>
+                  <p className="xl:text-[16px]">{item.title}</p>
 
                   <h2 className="text-4xl font-bold">{item.value}</h2>
-                  <p className="text-[18px]">{item.subtitle}</p>
+                  <p className="text-[16px]">{item.subtitle}</p>
                 </div>
               <div className="w-[48px] h-[48px] rounded-[8px] bg-icon flex items-center justify-center ">
                 <Image
                   src={item.icon}
                   alt={item.title}
-                  width={32}
-                  height={32}
+                  width={26}
+                  height={26}
                 />
               </div>
               </div>

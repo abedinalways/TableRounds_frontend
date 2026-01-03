@@ -13,12 +13,11 @@ export default function VerifyOtpPage() {
   const email = searchParams.get('email') || '';
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleVerifyOtp = async (otp: string) => {
+  const handleVerifyOtp = async (otp?: string) => {
     setIsLoading(true);
 
     try {
-      // ✅ backend verify otp call here
-      // await verifyOtp(email, otp)
+     
 
       toast.success('OTP Verified!', {
         description: 'You can now reset your password.',
