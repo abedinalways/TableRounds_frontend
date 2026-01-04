@@ -1,18 +1,11 @@
 'use client';
 
-
+import DifficultyTopic from './DifficultyTopic';
 import { ResultSummary } from './ResultSummary';
 import { TopicResultCard } from './TopicResultCard';
 
-
-
-
-
 export default function TestResult() {
-
-
-
-  const topics = [
+const topics = [
     { title: 'Trauma', total: 10, correct: 9 },
     { title: 'Orthognathic', total: 10, correct: 9 },
     { title: 'Pathology', total: 10, correct: 9 },
@@ -52,10 +45,15 @@ export default function TestResult() {
               </div>
             ))}
           </div>
+          {/* difficulty topic */}
+          <div className="mt-10">
+            <h1 className="mb-2 text-[20px] md:text-[24px] font-bold text-[#444950]">
+              How You Did by Difficulty
+            </h1>
+            <DifficultyTopic/>
+          </div>
         </div>
       </div>
-
-     
     </>
   );
 }

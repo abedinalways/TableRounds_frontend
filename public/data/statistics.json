@@ -53,6 +53,12 @@
       { "title": "Orthognathics", "correct": 60, "rank": 4, "progress": 10 },
       { "title": "Pathology", "correct": 60, "rank": 4, "progress": 10 },
       { "title": "Dentoalveolar", "correct": 60, "rank": 4, "progress": 10 },
+      { "title": "Anesthesia/Medicine", "correct": 60, "rank": 4, "progress": 10 },
+      { "title": "Cancer", "correct": 60, "rank": 4, "progress": 10 },
+      { "title": "Cleft/Craniofacial", "correct": 60, "rank": 4, "progress": 10 },
+      { "title": "Cosmetics", "correct": 60, "rank": 4, "progress": 10 },
+      { "title": "Implants", "correct": 60, "rank": 4, "progress": 10 },
+      { "title": "Reconstruction", "correct": 60, "rank": 4, "progress": 10 },
       { "title": "TMJ", "correct": 60, "rank": 4, "progress": 10 }
     ]
   }
