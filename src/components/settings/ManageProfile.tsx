@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 
 import AttachImageIcon from '../reusable/icons/AttachImageIcon';
+import { Switch } from '../ui/switch';
 
 type ProfileFormData = {
   name: string;
@@ -73,13 +74,31 @@ export default function ManageProfile() {
               />
             </label>
           </div>
-
+          <div className='flex flex-col items-center'>
+            
           <button
             onClick={handleSubmit(onSubmit)}
-            className="bg-[#01503B] cursor-pointer md:px-[24px] px-3 py-2 md:py-[14px] rounded-[8px] text-white md:text-[16px] text-xs"
+            className="bg-[#01503B] cursor-pointer w-[142px] h-[54px]  rounded-[8px] text-white md:text-[16px] text-xs"
           >
             Save & Change
           </button>
+          <div className="flex  md:items-center gap-2 bg-white px-6 py-4 rounded-2xl">
+            <span
+              className={`md:text-lg text-md `}
+            >
+              Public
+            </span>
+            <Switch
+              
+              className="cursor-pointer"
+            />
+            <span
+              className={`md:text-lg text-md  `}
+            >
+              Private
+            </span>
+          </div>
+           </div>
         </div>
 
         {/* Contact Details */}
@@ -163,7 +182,7 @@ export default function ManageProfile() {
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">Current Practice</Label>
             <Input
-              placeholder='Name of your residency, hospital or private practice'
+              placeholder="Name of your residency, hospital or private practice"
               {...register('practiceName')}
               className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
             />

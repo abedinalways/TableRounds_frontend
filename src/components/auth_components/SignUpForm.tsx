@@ -126,9 +126,9 @@ export default function SignUpForm({ onSubmit, onCancel }: SignUpFormProps) {
   };
 
   return (
-    <div className="z-40 p-4 md:p-8 font-[manrope]">
+    <div className="z-40  font-[manrope]">
       <div
-        className="custom-container mx-auto gradient-bg rounded-md backdrop-blur  
+        className="custom-container p-6 md:p-8 mx-auto gradient-bg rounded-md backdrop-blur  
 opacity-xl"
       >
         <div className="md:flex justify-between gap-10">
@@ -279,10 +279,9 @@ opacity-xl"
                   onValueChange={value => handleInputChange('specialty', value)}
                 >
                   <SelectTrigger
-                    className="md:w-full mt-2 h-[61px] bg-[#1C765E] border-none p-4 rounded-[8px] cursor-pointer text-white
-  [&>span]:text-white
-  [&_[data-placeholder]]:text-white
-  [&_svg]:opacity-100 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                    size='xl'
+                    className="mt-2  bg-[#1C765E] border-none md:p-4 rounded-[8px] cursor-pointer text-white [&>span]:text-white [&_[data-placeholder]]:text-white [&_svg]:opacity-100 placeholder:text-[18px] rounded-[8px] md:w-[644px] w-[225px]"
+                    
                   >
                     <SelectValue placeholder="Select a specialty" />
                   </SelectTrigger>
