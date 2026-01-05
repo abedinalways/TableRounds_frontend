@@ -49,17 +49,78 @@
       }
     ],
     "breakdown": [
-      { "title": "Trauma", "correct": 60, "rank": 4, "progress": 10 },
-      { "title": "Orthognathics", "correct": 60, "rank": 4, "progress": 10 },
-      { "title": "Pathology", "correct": 60, "rank": 4, "progress": 10 },
-      { "title": "Dentoalveolar", "correct": 60, "rank": 4, "progress": 10 },
-      { "title": "Anesthesia/Medicine", "correct": 60, "rank": 4, "progress": 10 },
-      { "title": "Cancer", "correct": 60, "rank": 4, "progress": 10 },
-      { "title": "Cleft/Craniofacial", "correct": 60, "rank": 4, "progress": 10 },
-      { "title": "Cosmetics", "correct": 60, "rank": 4, "progress": 10 },
-      { "title": "Implants", "correct": 60, "rank": 4, "progress": 10 },
-      { "title": "Reconstruction", "correct": 60, "rank": 4, "progress": 10 },
-      { "title": "TMJ", "correct": 60, "rank": 4, "progress": 10 }
+      {
+        "title": "Trauma",
+        "correct": 60,
+        "rank": 4,
+        "progress": 10,
+        "icon": "/images/dashboard/statistics/img01.png"
+      },
+      {
+        "title": "Orthognathics",
+        "correct": 60,
+        "rank": 4,
+        "progress": 10,
+        "icon": "/images/dashboard/statistics/img09.png"
+      },
+      {
+        "title": "Pathology",
+        "correct": 60,
+        "rank": 4,
+        "progress": 10,
+        "icon": "/images/dashboard/statistics/img08.png"
+      },
+      {
+        "title": "Dentoalveolar",
+        "correct": 60,
+        "rank": 4,
+        "progress": 10,
+        "icon": "/images/dashboard/statistics/img07.png"
+      },
+      {
+        "title": "TMJ",
+        "correct": 60,
+        "rank": 4,
+        "progress": 10,
+        "icon": "/images/dashboard/statistics/img10.png"
+      },
+
+      {
+        "title": "Anesthesia/Medicine",
+        "correct": 60,
+        "rank": 4,
+        "progress": 10,
+        "icon": "/images/dashboard/statistics/img06.png"
+      },
+
+      {
+        "title": "Cleft/Craniofacial",
+        "correct": 60,
+        "rank": 4,
+        "progress": 10,
+        "icon": "/images/dashboard/statistics/img05.png"
+      },
+      {
+        "title": "Cosmetics",
+        "correct": 60,
+        "rank": 4,
+        "progress": 10,
+        "icon": "/images/dashboard/statistics/img03.png"
+      },
+      {
+        "title": "Implants",
+        "correct": 60,
+        "rank": 4,
+        "progress": 10,
+        "icon": "/images/dashboard/statistics/img11.png"
+      },
+      {
+        "title": "Reconstruction",
+        "correct": 60,
+        "rank": 4,
+        "progress": 10,
+        "icon": "/images/dashboard/statistics/img09.png"
+      }
     ]
   }
 }

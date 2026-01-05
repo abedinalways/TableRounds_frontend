@@ -4,7 +4,7 @@ import { ProfileData } from '@/types/profile';
 export const profileData: ProfileData = {
   user: {
     name: 'Jordan Nguyen, DMD, MD',
-    title: 'Oral and Maxillofacial Surgeon, PDR Resident',
+    title: 'Oral and Maxillofacial Surgeon, PGY-5 Resident',
     avatar: '/images/dashboard/profile/img01.png',
     location: 'New York, USA',
     jobArea: 'Oral and Maxillofacial Surgery',

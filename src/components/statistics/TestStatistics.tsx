@@ -6,6 +6,7 @@ import { TrendingUp, Loader2 } from 'lucide-react';
 import CircularProgressData from './CircularProgress';
 import TestStatIcon from '../reusable/icons/TestStatIcon';
 import GraphIcon from '../reusable/icons/GraphIcon';
+import Image from 'next/image';
 
 // Type definitions
 interface StatCard {
@@ -21,6 +22,7 @@ interface BreakdownItem {
   correct: number;
   rank: number;
   progress: number;
+  icon: string;
 }
 
 interface Performance {
@@ -137,7 +139,7 @@ const TestStatistics: React.FC = () => {
           <Card key={index} className="shadow-sm border-gray-200">
             <CardHeader className="pb-4">
               <CardTitle className="text-[24px] font-bold text-[#444950] flex items-center gap-2">
-                <GraphIcon />
+                <Image src={item?.icon} width={25} height={25} alt=''/>
                 {item.title}
               </CardTitle>
             </CardHeader>
