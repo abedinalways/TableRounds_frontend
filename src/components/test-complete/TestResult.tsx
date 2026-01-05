@@ -6,12 +6,37 @@ import { TopicResultCard } from './TopicResultCard';
 
 export default function TestResult() {
 const topics = [
-    { title: 'Trauma', total: 10, correct: 9 },
-    { title: 'Orthognathic', total: 10, correct: 9 },
-    { title: 'Pathology', total: 10, correct: 9 },
-    { title: 'Dentoalveolar', total: 10, correct: 8 },
-    { title: 'TMJ', total: 10, correct: 10 },
-  ];
+  {
+    title: 'Trauma',
+    total: 10,
+    correct: 9,
+    icon: '/images/dashboard/statistics/img01.png',
+  },
+  {
+    title: 'Orthognathic',
+    total: 10,
+    correct: 9,
+    icon: '/images/dashboard/statistics/img02.png',
+  },
+  {
+    title: 'Pathology',
+    total: 10,
+    correct: 9,
+    icon: '/images/dashboard/statistics/img08.png',
+  },
+  {
+    title: 'Dentoalveolar',
+    total: 10,
+    correct: 8,
+    icon: '/images/dashboard/statistics/img07.png',
+  },
+  {
+    title: 'TMJ',
+    total: 10,
+    correct: 10,
+    icon: '/images/dashboard/statistics/img10.png',
+  },
+];
 
   
 
