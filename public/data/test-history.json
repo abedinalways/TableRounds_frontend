@@ -5,21 +5,21 @@
       "title": "Total Tests",
       "value": "08",
       "subtitle": "All completed",
-      "icon": "/images/dashboard/test/img01.png"
+      "icon": "/images/dashboard/test/img001.png"
     },
     {
       "id": "averageScore",
       "title": "Average Score",
       "value": "60%",
       "subtitle": "+5% from last week",
-      "icon": "/images/dashboard/test/img02.png"
+      "icon": "/images/dashboard/test/img002.png"
     },
     {
       "id": "bestScore",
       "title": "Best Score",
       "value": "73%",
       "subtitle": "Test #45",
-      "icon": "/images/dashboard/test/img03.png"
+      "icon": "/images/dashboard/test/img05.png"
     },
     {
       "id": "questions",
@@ -32,7 +32,7 @@
   "tests": [
     {
       "score": 64,
-      "difficulty": "Intern",
+      "difficulties": ["Intern","Senior", "Boards"],
       "date": "Nov 13, 2025",
       "modes": [ "Timed"],
       "topic": "Trauma",
@@ -40,7 +40,7 @@
     },
     {
       "score": 84,
-      "difficulty": "Intern",
+      "difficulties": ["Intern", "Senior", "Boards"],
       "date": "Nov 10, 2025",
       "modes": ["Timed"],
       "topic": "Multiple",
@@ -48,7 +48,7 @@
     },
     {
       "score": 74,
-      "difficulty": "Intern",
+      "difficulties": ["Intern", "Senior", "Boards"],
       "date": "Nov 21, 2025",
       "modes": ["Untimed"],
       "topic": "All",
@@ -56,7 +56,7 @@
     },
     {
       "score": 64,
-      "difficulty": "Intern",
+      "difficulties": ["Intern", "Senior", "Boards"],
       "date": "Nov 13, 2025",
       "modes": ["Timed"],
       "topic": "Trauma",
@@ -64,7 +64,7 @@
     },
     {
       "score": 84,
-      "difficulty": "Intern",
+      "difficulties": ["Intern", "Senior", "Boards"],
       "date": "Nov 10, 2025",
       "modes": ["Untimed"],
       "topic": "Multiple",
@@ -72,7 +72,7 @@
     },
     {
       "score": 74,
-      "difficulty": "Intern",
+      "difficulties": ["Intern", "Senior", "Boards"],
       "date": "Nov 21, 2025",
       "modes": ["Timed"],
       "topic": "All",
@@ -80,7 +80,7 @@
     },
     {
       "score": 64,
-      "difficulty": "Intern",
+      "difficulties": ["Intern", "Senior", "Boards"],
       "date": "Nov 13, 2025",
       "modes": ["Timed"],
       "topic": "Trauma",
@@ -88,7 +88,7 @@
     },
     {
       "score": 54,
-      "difficulty": "Intern",
+      "difficulties": ["Intern", "Senior", "Boards"],
       "date": "Nov 10, 2025",
       "modes": ["Untimed"],
       "topic": "Multiple",
@@ -96,7 +96,7 @@
     },
     {
       "score": 70,
-      "difficulty": "Intern",
+      "difficulties": ["Intern", "Senior", "Boards"],
       "date": "Nov 21, 2025",
       "modes": ["Untimed"],
       "topic": "All",

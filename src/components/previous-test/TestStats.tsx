@@ -26,7 +26,7 @@ export function TestStats({ stats }: { stats: StatItem[] }) {
             </div>
 
             <div className="h-12 w-12 rounded-md test-bg  flex items-center justify-center">
-              <Image src={item.icon} alt={item.title} width={20} height={20} />
+              <Image src={item.icon} alt={item.title} width={32} height={32} />
             </div>
           </CardContent>
         </Card>

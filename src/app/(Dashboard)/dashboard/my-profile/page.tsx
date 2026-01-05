@@ -23,7 +23,8 @@ export default function MyProfilePage() {
       <div className=" w-full rounded-2xl  background h-[383px]"></div>
       <div className="profile-container">
         <div className="-mt-60">
-          <ManageProfile />
+          
+          <ManageProfile user={profileData.user} />
         </div>
 
         <ProfileTabs

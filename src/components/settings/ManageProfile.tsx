@@ -3,14 +3,24 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-
+import { UserProfile } from '@/types/profile';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { FaXTwitter } from 'react-icons/fa6';
+
+import { Facebook, Instagram, Linkedin } from 'lucide-react';
 
 import AttachImageIcon from '../reusable/icons/AttachImageIcon';
 import { Switch } from '../ui/switch';
+import LocationIcon from '../ui/LocationIcon';
+import BagIcon from '../reusable/icons/BagIcon';
+import CalendarIconForProfile from '../reusable/icons/CalendarIconForProfile';
+import { Card } from '../ui/card';
+import FollowersFollowingModal from '../my-profile/FollowersFollowingModal';
+
+
 
 type ProfileFormData = {
   name: string;
@@ -26,8 +36,95 @@ type ProfileFormData = {
   practiceName: string;
 };
 
-export default function ManageProfile() {
+interface ProfileHeaderProps {
+  user: UserProfile;
+}
+
+const followersData = [
+  {
+    id: '1',
+    name: 'John Doe',
+    username: 'john_doe',
+    avatar: '/images/settings/img01.png',
+  },
+  {
+    id: '2',
+    name: 'Sarah Smith',
+    username: 'sarah_smith',
+    avatar: '/images/settings/img01.png',
+  },
+  {
+    id: '3',
+    name: 'Sarah Smith',
+    username: 'sarah_smith',
+    avatar: '/images/settings/img01.png',
+  },
+  {
+    id: '4',
+    name: 'Sarah Smith',
+    username: 'sarah_smith',
+    avatar: '/images/settings/img01.png',
+  },
+  {
+    id: '5',
+    name: 'Sarah Smith',
+    username: 'sarah_smith',
+    avatar: '/images/settings/img01.png',
+  },
+  {
+    id: '6',
+    name: 'Sarah Smith',
+    username: 'sarah_smith',
+    avatar: '/images/settings/img01.png',
+  },
+];
+
+const followingData = [
+  {
+    id: '1',
+    name: 'Alex Carter',
+    username: 'alex_carter',
+    avatar: '/images/settings/img01.png',
+  },
+  {
+    id: '2',
+    name: 'Sarah Smith',
+    username: 'sarah_smith',
+    avatar: '/images/settings/img01.png',
+  },
+  {
+    id: '3',
+    name: 'Sarah Smith',
+    username: 'sarah_smith',
+    avatar: '/images/settings/img01.png',
+  },
+  {
+    id: '4',
+    name: 'Sarah Smith',
+    username: 'sarah_smith',
+    avatar: '/images/settings/img01.png',
+  },
+  {
+    id: '5',
+    name: 'Sarah Smith',
+    username: 'sarah_smith',
+    avatar: '/images/settings/img01.png',
+  },
+  {
+    id: '6',
+    name: 'Sarah Smith',
+    username: 'sarah_smith',
+    avatar: '/images/settings/img01.png',
+  },
+];
+
+export default function ManageProfile({ user }: ProfileHeaderProps) {
   const [preview, setPreview] = useState('/images/settings/img01.png');
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalType, setModalType] = useState<'followers' | 'following'>(
+    'followers'
+  );
 
   const { register, handleSubmit } = useForm<ProfileFormData>({
     defaultValues: {
@@ -35,7 +132,6 @@ export default function ManageProfile() {
       credentials: '',
       year: '',
       practiceName: '',
-    
     },
   });
 
@@ -54,55 +150,123 @@ export default function ManageProfile() {
     <>
       <div className="bg-white rounded-2xl p-6 shadow-sm font-[manrope]">
         {/* Header */}
-        <div className="flex justify-between items-start mb-8 gap-4">
-          <div className="relative w-[213px]">
-            <Image
-              src={preview}
-              alt="Profile image"
-              width={213}
-              height={255}
-              className="rounded-md object-cover"
-            />
-
-            <label className="absolute -bottom-5 -right-3 border-4 border-white bg-[#01503b] p-2 rounded-full md:w-[66px] md:h-[66px] w-[50px] h-[50px]">
-              <AttachImageIcon className="max-w-full md:ml-2 md:mt-2 cursor-pointer" />
-              <input
-                type="file"
-                accept="image/*"
-                hidden
-                onChange={handleImageChange}
+        <Card className="bg-white w-full rounded-2xl md:p-6 p-2 mb-10">
+          <div className="md:flex justify-between items-start mb-8 gap-4">
+            <div className="relative w-[213px]">
+              <Image
+                src={preview}
+                alt="Profile image"
+                width={213}
+                height={255}
+                className="rounded-md object-cover"
               />
-            </label>
+
+              <label className="absolute -bottom-5 -right-3 border-4 border-white bg-[#01503b] p-2 rounded-full md:w-[66px] md:h-[66px] w-[50px] h-[50px]">
+                <AttachImageIcon className="max-w-full md:ml-2 md:mt-2 cursor-pointer" />
+                <input
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  onChange={handleImageChange}
+                />
+              </label>
+            </div>
+
+            <div className="flex-1 space-y-3">
+              <h2 className="text-[28px] text-[#0f172b] font-semibold">
+                {user.name}
+              </h2>
+              <p className="text-[18px] text-[#047857]">{user.title}</p>
+
+              <div className="flex md:gap-[48px] gap-6 items-center text-xs md:text-[16px] font-light text-[#6b7280] ">
+                <h4 className="flex items-center gap-2">
+                  <LocationIcon />
+                  {user.location}
+                </h4>
+                <h4 className="md:flex items-center gap-2">
+                  <BagIcon />
+                  {user.jobArea}
+                </h4>
+                <h4 className="flex items-center gap-2">
+                  <CalendarIconForProfile />
+                  Joined {user.joiningDate}
+                </h4>
+              </div>
+
+              <p className="text-sm md:text-[18px] leading-[160%]">
+                {user.details}
+              </p>
+
+              {/* Followers / Following (Clickable) */}
+              <div className="flex gap-6 mt-3 text-md text-[32px] text-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setModalType('followers');
+                    setModalOpen(true);
+                  }}
+                  className="flex flex-col cursor-pointer hover:opacity-80 transition"
+                >
+                  <strong>{user.followers}</strong>
+                  <span className="font-normal text-[18px] text-[#62748e]">
+                    Followers
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setModalType('following');
+                    setModalOpen(true);
+                  }}
+                  className="flex flex-col cursor-pointer hover:opacity-80 transition"
+                >
+                  <strong>{user.following}</strong>
+                  <span className="font-normal text-[18px] text-[#62748e]">
+                    Following
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <button
+                onClick={handleSubmit(onSubmit)}
+                className="bg-[#01503B] cursor-pointer w-[142px] h-[54px] rounded-[8px] text-white md:text-[16px] text-xs"
+              >
+                Save & Change
+              </button>
+
+              <div className="flex md:items-center gap-2 bg-white px-6 py-4 rounded-2xl">
+                <span className="md:text-lg text-md">Public</span>
+                <Switch className="cursor-pointer" />
+                <span className="md:text-lg text-md">Private</span>
+              </div>
+            </div>
           </div>
-          <div className='flex flex-col items-center'>
-            
-          <button
-            onClick={handleSubmit(onSubmit)}
-            className="bg-[#01503B] cursor-pointer w-[142px] h-[54px]  rounded-[8px] text-white md:text-[16px] text-xs"
-          >
-            Save & Change
-          </button>
-          <div className="flex  md:items-center gap-2 bg-white px-6 py-4 rounded-2xl">
-            <span
-              className={`md:text-lg text-md `}
-            >
-              Public
-            </span>
-            <Switch
-              
-              className="cursor-pointer"
-            />
-            <span
-              className={`md:text-lg text-md  `}
-            >
-              Private
-            </span>
+
+          <hr />
+
+          {/* social media */}
+          <div className="flex flex-wrap items-center gap-4 md:gap-[24px] text-[#01281e] mt-[24px]">
+            <h2 className="font-bold text-[16px] md:text-[20px]">Contact</h2>
+            <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
+              <Linkedin size="24" />
+            </button>
+            <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer ">
+              <Instagram size="24" />
+            </button>
+            <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer ">
+              <Facebook size="24" />
+            </button>
+            <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer ">
+              <FaXTwitter size="24" />
+            </button>
           </div>
-           </div>
-        </div>
+        </Card>
 
         {/* Contact Details */}
-        <h3 className=" mb-4 text-[#0f172b] text-16px md:text-[24px] leading-[130%] font-bold">
+        <h3 className="mb-4 text-[#0f172b] text-16px md:text-[24px] leading-[130%] font-bold">
           Contact Details
         </h3>
 
@@ -187,6 +351,7 @@ export default function ManageProfile() {
               className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
             />
           </div>
+
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">Joining Date</Label>
             <Input
@@ -197,6 +362,7 @@ export default function ManageProfile() {
           </div>
         </div>
       </div>
+
       {/* Description */}
       <div className="mt-6 bg-white rounded-2xl p-6 shadow-sm font-[manrope] mb-6">
         <Label className="font-bold mb-4 text-[#0f172b] text-16px md:text-[24px] leading-[130%]">
@@ -209,6 +375,14 @@ export default function ManageProfile() {
           className="mt-4 bg-[#f9f9f5]"
         />
       </div>
+
+      {/* ✅ MODAL RENDER (THIS IS WHAT YOU MISSED) */}
+      <FollowersFollowingModal
+        open={modalOpen}
+        onClose={setModalOpen}
+        type={modalType}
+        data={modalType === 'followers' ? followersData : followingData}
+      />
     </>
   );
 }
