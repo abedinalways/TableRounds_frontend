@@ -12,7 +12,7 @@ export default function PreviousTestPage() {
         Test History
       </h2>
       <p className="text-[18px] text-[#6b7280] leading-[130%] font-normal">
-        Review your previous test performances
+        Review your previous tests
       </p>
       <TestStats stats={data.stats as StatItem[]} />
       <div className="rounded-[12px] p-[18px] border border-[#e9e9e9] shadow-lg mt-6">

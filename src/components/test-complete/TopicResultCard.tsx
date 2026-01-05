@@ -4,17 +4,20 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import GraphIcon from '../reusable/icons/GraphIcon';
+import Image from 'next/image';
 
 interface TopicResultCardProps {
   title: string;
   total: number;
   correct: number;
+  icon: string;
 }
 
 export function TopicResultCard({
   title,
   total,
   correct,
+  icon
 }: TopicResultCardProps) {
   const percentage = Math.round((correct / total) * 100);
   const barRef = useRef<HTMLDivElement>(null);
@@ -45,7 +48,7 @@ export function TopicResultCard({
           <div className="flex justify-between text-sm font-medium">
             <span className="flex items-center gap-2">
               <span>
-                <GraphIcon />
+              <Image src={icon} width={28} height={28} alt=''/>
               </span>{' '}
               {title}{' '}
             </span>
