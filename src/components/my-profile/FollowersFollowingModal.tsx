@@ -9,6 +9,8 @@ import {
 import Image from 'next/image';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { useState } from 'react';
 
 type UserItem = {
   id: string;
@@ -30,6 +32,19 @@ export default function FollowersFollowingModal({
   type,
   data,
 }: FollowersFollowingModalProps) {
+    const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
+
+    const handleFollowToggle = (userId: string) => {
+      setFollowedUsers(prev => {
+        const newFollowedUsers = new Set(prev);
+        if (newFollowedUsers.has(userId)) {
+          newFollowedUsers.delete(userId); // Unfollow
+        } else {
+          newFollowedUsers.add(userId); // Follow
+        }
+        return newFollowedUsers;
+      });
+    };
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-[480px] font-[manrope] rounded-2xl p-0 overflow-hidden">
@@ -51,27 +66,33 @@ export default function FollowersFollowingModal({
                   key={user.id}
                   className="flex items-center justify-between gap-4"
                 >
-                  <div className="flex items-center gap-3">
-                    <Image
-                      src={user.avatar}
-                      alt={user.name}
-                      width={44}
-                      height={44}
-                      className="rounded-md object-cover"
-                    />
-                    <div>
-                      <p className="font-semibold text-[#0f172b]">
-                        {user.name}
-                      </p>
-                      <p className="text-sm text-[#6b7280]">@{user.username}</p>
+                  <Link href="/dashboard/profile">
+                    <div className="flex items-center gap-3">
+                      <Image
+                        src={user.avatar}
+                        alt={user.name}
+                        width={44}
+                        height={44}
+                        className="rounded-md object-cover"
+                      />
+                      <div>
+                        <p className="font-semibold text-[#0f172b]">
+                          {user.name}
+                        </p>
+
+                        <p className="text-sm text-[#6b7280] cursor-pointer">
+                          @{user.username}
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                  </Link>
 
                   <Button
                     variant="outline"
+                    onClick={() => handleFollowToggle(user.id)}
                     className="rounded-sm cursor-pointer"
                   >
-                    View
+                    {followedUsers.has(user.id) ? 'Unfollow' : 'Follow'}
                   </Button>
                 </div>
               ))
