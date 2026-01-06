@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   InputGroup,
@@ -12,8 +12,27 @@ import AttachmentIcon from '../reusable/icons/AttachmentIcon';
 import { VoiceIcon } from '../reusable/icons/VoiceIcon';
 import { ArrowUp } from '../reusable/icons/ArrowUpperButton';
 import { useChat } from '@/app/(Dashboard)/context/ChatContext';
+import TestCard from './TestCard';
 
-export default function MessageInput() {
+
+export interface MessageInputProps {
+  testCardData: {
+    questions: number;
+    correctPercentage: number;
+    time: string;
+    percentile: number;
+    difficulty: string;
+    category: string;
+  };
+  showTestCard: boolean;
+}
+export default function MessageInput({ testCardData, showTestCard }: MessageInputProps) {
+  useEffect(() => {
+    if (showTestCard) {
+     
+      window.scrollTo(0, document.body.scrollHeight);
+    }
+  },[showTestCard])
   const { sendMessage, setTyping } = useChat();
   const [input, setInput] = useState('');
   const [attachments, setAttachments] = useState<File[]>([]);
@@ -78,6 +97,14 @@ export default function MessageInput() {
 
   return (
     <div className="relative">
+      {/* Display the TestCard */}
+      <div className="absolute -top-60 right-10 w-fit h-fit">
+        {showTestCard && (
+          <div className="absolute top-10 right-10 max-w-[280px] md:max-w-xs md:max-h-[300px]">
+            <TestCard {...testCardData} />
+          </div>
+        )}
+      </div>
       {/* Attachment preview */}
       {attachments.length > 0 && (
         <div className="pb-2 flex gap-2 flex-wrap absolute top-0 -translate-y-full left-0">
