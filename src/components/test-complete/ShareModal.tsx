@@ -1,31 +1,24 @@
-'use client';
-
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-
-import Image from 'next/image';
-import { ColleagueSkeleton } from './ColleagueSkeleton';
-import { useMemo, useState } from 'react';
-import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
-
-interface Colleague {
-  id: number;
-  name: string;
-  title: string;
-  university: string;
-  avatar: string;
-}
+import { useState, useMemo } from 'react';
+import Image from 'next/image';
+import { toast } from 'sonner';
+import TestCard from '../message/TestCard';
+import { Colleague, TestCardData } from './ResultSummary'; 
+import { useRouter } from 'next/navigation';
 
 interface ShareModalProps {
   open: boolean;
   onClose: () => void;
   loading: boolean;
   colleagues: Colleague[];
+  testCardData: TestCardData | null; // Ensure proper typing
+  onSendTestCard: (selectedUser: Colleague, testCardData: TestCardData) => void;
 }
 
 export function ShareModal({
@@ -33,10 +26,13 @@ export function ShareModal({
   onClose,
   loading,
   colleagues = [],
+  testCardData,
+  onSendTestCard,
 }: ShareModalProps) {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-
+//  const [messageText, setMessageText] = useState('');
+  const router = useRouter();
   const filteredColleagues = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
     if (!term) return colleagues;
@@ -57,12 +53,16 @@ export function ShareModal({
     const selectedUser = colleagues.find(c => c.id === selectedId);
     if (!selectedUser) return;
 
-    console.log('Sending result to:', selectedUser);
+    // Send the TestCard data to the selected user
+    if (testCardData) {
+      onSendTestCard(selectedUser, testCardData);
+    }
 
     setTimeout(() => {
       toast(`Result sent to ${selectedUser.name}`);
       onClose();
-    }, 500);
+      router.push('/dashboard/messages');
+    }, 100);
   };
 
   return (
@@ -72,19 +72,24 @@ export function ShareModal({
           <DialogTitle>Suggested Colleagues</DialogTitle>
         </DialogHeader>
 
-        {/* Search input right under title */}
         <Input
           value={searchTerm}
           onChange={e => setSearchTerm(e.target.value)}
           placeholder="Search..."
           className="w-full"
         />
-
+        {/* Message text input */}
+        {/* <textarea
+          value={messageText}
+          onChange={e => setMessageText(e.target.value)}
+          placeholder="Add a message..."
+          className="w-full mt-4 p-2 border rounded"
+        /> */}
         <div className="max-h-[300px] overflow-y-auto mt-3">
           <div className="grid sm:grid-cols-3 gap-1 font-[manrope]">
             {loading ? (
               Array.from({ length: 6 }).map((_, i) => (
-                <ColleagueSkeleton key={i} />
+                <div key={i}>Loading...</div>
               ))
             ) : filteredColleagues.length === 0 ? (
               <div className="sm:col-span-3 text-sm text-muted-foreground py-6 text-center">
@@ -100,8 +105,7 @@ export function ShareModal({
                       selectedId === item.id
                         ? 'border-[#01503b] bg-[#01503b]/5'
                         : 'border-gray-200 hover:border-[#01503b]'
-                    }
-                  `}
+                    }`}
                 >
                   <div>
                     <Image
@@ -112,14 +116,11 @@ export function ShareModal({
                       className="rounded-full mx-auto"
                     />
                   </div>
-
                   <div className="flex flex-col items-start gap-1">
                     <p className="text-sm font-semibold">{item.name}</p>
                     <p className="text-xs text-muted-foreground">
                       {item.title}
                     </p>
-                    {/* If you want university back, uncomment */}
-                    {/* <p className="text-xs text-muted-foreground">{item.university}</p> */}
                   </div>
                 </div>
               ))
