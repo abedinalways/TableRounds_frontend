@@ -1,8 +1,12 @@
 import React from 'react';
 import Image from 'next/image';
-import ExplainIcon from '../reusable/icons/ExpalinIcon';
+
 import OptionIcon from '../reusable/icons/OpotionIcon';
 import BookIcon from '../reusable/icons/BookIcon';
+import ExplainIcon from '../reusable/icons/ExplainIcon';
+import CancelIcon from '../reusable/icons/CancelIcon';
+import PimpingIcon from '../reusable/icons/PimpingIcon';
+import MemoryIcon from '../reusable/icons/MemoryIcon';
 
 interface Explanation {
   main: string;
@@ -28,7 +32,7 @@ const ExplanationPanel: React.FC<ExplanationPanelProps> = ({
     <div className="p-6 md:my-[32px] bg-[#f9f9f5] shadow-lg rounded-[16px] border font-[manrope] md:max-h-[1521px] overflow-x-hidden custom-scrollbar">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-bold text-[#01281e] flex items-center gap-2">
-          <ExplainIcon /> Explanations:
+          <ExplainIcon/> Explanations:
         </h2>
 
         {isQuestionHidden && (
@@ -58,7 +62,7 @@ const ExplanationPanel: React.FC<ExplanationPanelProps> = ({
       )}
 
       <h3 className="text-[20px] font-semibold text-[#01281e] mt-6 mb-2 flex items-center gap-2">
-        <OptionIcon /> Why the Other Options Are Incorrect:
+        <CancelIcon/> Why the Other Options Are Incorrect:
       </h3>
 
       <div className="space-y-3 whitespace-pre-line w-full">
@@ -77,14 +81,14 @@ const ExplanationPanel: React.FC<ExplanationPanelProps> = ({
       </div>
 
       <h3 className="text-md font-semibold text-[#01281e] mt-6 mb-1 flex items-center gap-2 text-[18px]">
-        <OptionIcon /> Pimping Point:
+        <PimpingIcon/> Pimping Point:
       </h3>
       <p className="text-[#01503b] text-[18px] whitespace-pre-line">
         {quizDetails.explanation.pinningPoint}
       </p>
 
       <h3 className="text-md font-semibold text-[#01281e] mt-6 mb-1 flex items-center gap-2 text-[18px]">
-        <OptionIcon /> Memory trick:
+        <MemoryIcon /> Memory trick:
       </h3>
       <p className="text-[#01281e] font-semibold leading-[150%] text-[18px]">
         {quizDetails.explanation.memoryTrick}
