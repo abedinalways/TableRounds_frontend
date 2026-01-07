@@ -4,7 +4,7 @@ import { ProfileData } from '@/types/profile';
 export const profileData: ProfileData = {
   user: {
     name: 'Jordan Nguyen, DMD, MD',
-    title: 'Oral and Maxillofacial Surgeon, PDR Resident',
+    title: 'Oral and Maxillofacial Surgeon, PGY-5 Resident',
     avatar: '/images/dashboard/profile/img01.png',
     location: 'New York, USA',
     jobArea: 'Oral and Maxillofacial Surgery',
@@ -15,9 +15,9 @@ export const profileData: ProfileData = {
     following: 234,
   },
   questionBank: {
-    completion: 80, 
-    ranking: 10, 
-    correctRate: 90, 
+    completion: 80,
+    ranking: 10,
+    correctRate: 90,
     bestTopic: 'Trauma',
   },
   education: [
