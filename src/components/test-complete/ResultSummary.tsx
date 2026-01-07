@@ -147,12 +147,12 @@ export function ResultSummary({
               </span>
             </button>
           </div>
-          {/* <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center">
             <CompleteIcon />
-          </div> */}
-          {/* <h2 className="text-xl md:text-[36px] leading-[170%] font-bold">
+          </div>
+          <h2 className="text-xl md:text-[36px] leading-[170%] font-bold">
             Test Complete!
-          </h2> */}
+          </h2>
           <div className="complete-card-bg w-fit py-4 px-8 rounded-[12px] mx-auto">
             <span ref={scoreRef} className="text-4xl font-bold">
               {correct}
