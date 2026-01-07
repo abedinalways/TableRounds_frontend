@@ -42,11 +42,11 @@ export const adminMenu: MenuItem[] = [
     href: '/dashboard/help-support',
     icon: '/images/dashboard/img08.png',
   },
-  {
-    title: 'Settings',
-    href: '/dashboard/manage-settings',
-    icon: '/images/dashboard/img09.png',
-  },
+  // {
+  //   title: 'Settings',
+  //   href: '/dashboard/manage-settings',
+  //   icon: '/images/dashboard/img09.png',
+  // },
   {
     title: 'Logout',
     href: '/login',

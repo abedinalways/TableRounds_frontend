@@ -44,7 +44,7 @@ export default function Welcome() {
     };
   }, []);
   return (
-    <div className="card-bg py-[100px] font-[manrope]">
+    <div className="card-bg py-[100px] font-[manrope]" id="welcome">
       <div className="flex justify-between   custom-container md:px-0 px-4 pb-12">
         <h2 className="text-[28px] md:[36px] leading-[110%] xl:text-[48px] text-center md:text-start  font-bold text-[#01281e] ">
           Welcome to TableRounds
