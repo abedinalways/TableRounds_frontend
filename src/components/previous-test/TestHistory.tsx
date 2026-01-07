@@ -9,8 +9,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-
 import { CircularProgressPercentage } from '../CircularProgressPercentage';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
 
 export interface TestItem {
   score: number;
@@ -21,12 +23,32 @@ export interface TestItem {
   qs: number;
 }
 
-export function TestHistory({ tests }: { tests: TestItem[] }) {
+export function TestHistory({
+  tests,
+  setTests,
+}: {
+  tests: TestItem[];
+  setTests: React.Dispatch<React.SetStateAction<TestItem[]>>;
+}) {
+  const [dropdownIndex, setDropdownIndex] = useState<number | null>(null);
+  const router = useRouter();
+
+  const handleDelete = (index: number) => {
+    setTests(prevTests => prevTests.filter((_, i) => i !== index));
+    setDropdownIndex(null);
+  };
+
+  const handlePreview = (index: number) => {
+    const test = tests[index];
+    router.push(`/dashboard/preview-test`); 
+    setDropdownIndex(null);
+  };
+
   return (
     <div className="rounded-lg border overflow-hidden mt-6 md:text-[16px]">
-      <Table className="">
+      <Table>
         <TableHeader className="bg-[#01503b]  md:text-[16px] font-semibold space-y-5">
-          <TableRow className="">
+          <TableRow>
             <TableHead className="text-white">Score</TableHead>
             <TableHead className="text-white">Difficulty</TableHead>
             <TableHead className="text-white">Date</TableHead>
@@ -36,7 +58,7 @@ export function TestHistory({ tests }: { tests: TestItem[] }) {
             <TableHead className="text-white text-right">Action</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody className="">
+        <TableBody>
           {tests.map((test, i) => (
             <TableRow key={i}>
               <TableCell>
@@ -57,11 +79,11 @@ export function TestHistory({ tests }: { tests: TestItem[] }) {
                         case 'Boards':
                           return 'text-[#01503b] bg-[#cdebe3] rounded-[4px] px-[8px] py-[4px] w-[57px] h-[34px]';
                         case 'Senior':
-                          return 'test-background text-[#b79e6b] rounded-[4px] px-[8px] py-[4px]  w-[57px] h-[34px]'; 
+                          return 'test-background text-[#b79e6b] rounded-[4px] px-[8px] py-[4px]  w-[57px] h-[34px]';
                         case 'Intern':
-                          return 'bg-[#fde1dc] text-red-400 rounded-[4px] px-[8px] py-[4px] w-[57px] h-[34px]'; 
+                          return 'bg-[#fde1dc] text-red-400 rounded-[4px] px-[8px] py-[4px] w-[57px] h-[34px]';
                         default:
-                          return 'test-background text-[#b79e6b] rounded-[4px] px-[8px] py-[4px] w-[57px] h-[34px]'; 
+                          return 'test-background text-[#b79e6b] rounded-[4px] px-[8px] py-[4px] w-[57px] h-[34px]';
                       }
                     })()}
                   >
@@ -87,7 +109,32 @@ export function TestHistory({ tests }: { tests: TestItem[] }) {
               </TableCell>
               <TableCell className="md:text-[16px]">{test.topic}</TableCell>
               <TableCell className="md:text-[16px] ">{test.qs}</TableCell>
-              <TableCell className="text-right cursor-pointer">•••</TableCell>
+              <TableCell className="text-right cursor-pointer relative">
+                <span
+                  onClick={() =>
+                    setDropdownIndex(dropdownIndex === i ? null : i)
+                  }
+                  className="text-lg"
+                >
+                  •••
+                </span>
+                {dropdownIndex === i && (
+                  <div className="absolute right-0 mt-2 w-32 z-20 bg-white shadow-lg rounded-md border border-gray-300">
+                    <button
+                      onClick={() => handleDelete(i)}
+                      className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
+                    >
+                      Delete
+                    </button>
+                    <button
+                      onClick={() => handlePreview(i)}
+                      className="block w-full text-left px-4 py-2 text-blue-500 hover:bg-gray-100"
+                    >
+                      Preview
+                    </button>
+                  </div>
+                )}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

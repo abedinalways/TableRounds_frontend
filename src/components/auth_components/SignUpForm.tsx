@@ -279,9 +279,8 @@ opacity-xl"
                   onValueChange={value => handleInputChange('specialty', value)}
                 >
                   <SelectTrigger
-                    size='xl'
+                    size="xl"
                     className="mt-2  bg-[#1C765E] border-none md:p-4 rounded-[8px] cursor-pointer text-white [&>span]:text-white [&_[data-placeholder]]:text-white [&_svg]:opacity-100 placeholder:text-[18px] rounded-[8px] md:w-[644px] w-[225px]"
-                    
                   >
                     <SelectValue placeholder="Select a specialty" />
                   </SelectTrigger>
@@ -422,15 +421,33 @@ opacity-xl"
           </div>
 
           {/* Right Column - Upload & Verification */}
-          <div className="space-y-6 md:space-x-6">
-            <Card className="bg-gradient border-none mt-2">
+          <div className="space-y-6  flex flex-col">
+            {/* Terms and Submit */}
+            <div className="mt-6 flex  items-center justify-end  gap-4 mx-6 space-x-6">
+              <div className="md:flex gap-4 p-6 space-y-4 sm:space-y-0">
+                <button
+                  onClick={handleSubmit}
+                  className="bg-[#B79E6B] text-white hover:bg-[#a08c5f] transition-colors rounded-[8px] px-[24px] py-[14px] w-[168px] h-[54px] font-medium"
+                >
+                  Create Account
+                </button>
+                <button
+                  type="button"
+                  className="bg-white text-[#b79e6b] font-medium    hover:bg-white transition-colors rounded-[8px] px-[24px] py-[14px] w-[168px] h-[54px]"
+                  onClick={onCancel}
+                >
+                  Sign In
+                </button>
+              </div>
+            </div>
+            <div className=" border-none mt-2">
               <CardHeader>
                 <CardTitle className="text-white text-sm md:text-[18px]">
                   Profile Photo <span className="text-red-600">*</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="border-2 border-dashed border-[#22BA92] bg-[#1C765E] rounded-lg md:p-8 py-4  px-2 text-center">
+                <div className="border-2 border-dashed border-[#22BA92] bg-[#1C765E] rounded-lg py-8  text-center">
                   <div className="flex flex-col items-center gap-3">
                     <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
                       <CloudUpload className="w-8 h-8 text-teal-700" />
@@ -470,16 +487,16 @@ opacity-xl"
                   </div>
                 </div>
               </CardContent>
-            </Card>
+            </div>
 
-            <Card className="bg-gradient border-none">
+            <div className="mt-2 border-none">
               <CardHeader>
                 <CardTitle className="text-white text-sm md:text-[18px]">
                   Profile Verification
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="border-2 border-dashed border-[#22BA92] bg-[#1C765E] rounded-lg p-8 text-center">
+                <div className="border-2 border-dashed border-[#22BA92] bg-[#1C765E] rounded-lg py-8 text-center">
                   <div className="flex flex-col items-center gap-3">
                     <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
                       <CloudUpload className="w-8 h-8 text-teal-700" />
@@ -521,9 +538,9 @@ opacity-xl"
                   </div>
                 </div>
               </CardContent>
-            </Card>
+            </div>
 
-            <Card className="bg-[#F9F9F5] border-[#EFE8E8] md:mx-8 mx-4">
+            <Card className="bg-[#F9F9F5] border-[#EFE8E8] mx-[22px]">
               <CardHeader>
                 <CardTitle className="text-teal-900 font-bold">
                   Verify your identity
@@ -588,26 +605,6 @@ opacity-xl"
                 </div>
               </CardContent>
             </Card>
-
-            {/* Terms and Submit */}
-            <div className="mt-6 flex  items-center justify-end  gap-4 mx-6 space-x-6">
-              <div className="md:flex gap-4 p-6 space-y-4 sm:space-y-0">
-                <button
-                  onClick={handleSubmit}
-                  className="bg-[#B79E6B] text-white hover:bg-[#a08c5f] transition-colors rounded-[8px] px-[24px] py-[14px] w-[168px] h-[54px] font-medium"
-                >
-                  Create Account
-                </button>
-                <button
-                  type="button"
-                  
-                  className="bg-white text-[#b79e6b] font-medium    hover:bg-white transition-colors rounded-[8px] px-[24px] py-[14px] w-[168px] h-[54px]"
-                  onClick={onCancel}
-                >
-                  Sign In
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       </div>

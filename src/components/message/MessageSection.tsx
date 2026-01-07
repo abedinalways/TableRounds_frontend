@@ -4,7 +4,11 @@ import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 
 import gsap from 'gsap';
-import { useChat } from '@/app/(Dashboard)/context/ChatContext';
+import {
+  isCustomAttachment,
+  useChat,
+} from '@/app/(Dashboard)/context/ChatContext';
+import TestCard from './TestCard';
 
 export default function MessageSection() {
   const { activeConversation, isTyping } = useChat();
@@ -45,6 +49,25 @@ export default function MessageSection() {
               {msg.attachments?.length && (
                 <div className="mt-2 space-y-2">
                   {msg.attachments.map((file, i) => {
+                    if (isCustomAttachment(file)) {
+                      switch (file.attachmentsType) {
+                        case 'test-result':
+                          return (
+                            <TestCard
+                              questions={25}
+                              correctPercentage={85}
+                              time="20 minutes"
+                              percentile={90}
+                              difficulty="Medium"
+                              category="Psychology"
+                            />
+                          );
+
+                        default:
+                          return 'unkown file';
+                      }
+                    }
+
                     const url = URL.createObjectURL(file);
 
                     return isImage(file) ? (
@@ -52,7 +75,6 @@ export default function MessageSection() {
                         key={i}
                         src={url}
                         alt={file.name}
-                        
                         className="rounded-lg max-w-full cursor-pointer"
                         onClick={() => window.open(url)}
                       />
@@ -77,15 +99,35 @@ export default function MessageSection() {
               {msg.attachments?.length && (
                 <div className="mt-2 space-y-2">
                   {msg.attachments.map((file, i) => {
+                    if (isCustomAttachment(file)) {
+                      switch (file.attachmentsType) {
+                        case 'test-result':
+                          return (
+                            <TestCard
+                              questions={25}
+                              correctPercentage={85}
+                              time="20 minutes"
+                              percentile={90}
+                              difficulty="Medium"
+                              category="Psychology"
+                            />
+                          );
+
+                        default:
+                          return 'unkown file';
+                      }
+                    }
+
                     const url = URL.createObjectURL(file);
 
                     return isImage(file) ? (
-                      <img
+                      <Image
                         key={i}
                         src={url}
                         alt={file.name}
-                        
-                        className=" cursor-pointer"
+                        width={300}
+                        height={200}
+                        className="cursor-pointer"
                         onClick={() => window.open(url)}
                       />
                     ) : (

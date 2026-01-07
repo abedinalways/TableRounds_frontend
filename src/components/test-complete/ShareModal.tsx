@@ -8,9 +8,9 @@ import { Input } from '@/components/ui/input';
 import { useState, useMemo } from 'react';
 import Image from 'next/image';
 import { toast } from 'sonner';
-import TestCard from '../message/TestCard';
-import { Colleague, TestCardData } from './ResultSummary'; 
+import { Colleague, TestCardData } from './ResultSummary';
 import { useRouter } from 'next/navigation';
+import { ColleagueSkeleton } from './ColleagueSkeleton'; // Import ColleagueSkeleton
 
 interface ShareModalProps {
   open: boolean;
@@ -31,8 +31,9 @@ export function ShareModal({
 }: ShareModalProps) {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-//  const [messageText, setMessageText] = useState('');
   const router = useRouter();
+
+  // Filter colleagues based on the search term
   const filteredColleagues = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
     if (!term) return colleagues;
@@ -78,18 +79,12 @@ export function ShareModal({
           placeholder="Search..."
           className="w-full"
         />
-        {/* Message text input */}
-        {/* <textarea
-          value={messageText}
-          onChange={e => setMessageText(e.target.value)}
-          placeholder="Add a message..."
-          className="w-full mt-4 p-2 border rounded"
-        /> */}
         <div className="max-h-[300px] overflow-y-auto mt-3">
           <div className="grid sm:grid-cols-3 gap-1 font-[manrope]">
             {loading ? (
+              // Show skeleton loaders while loading
               Array.from({ length: 6 }).map((_, i) => (
-                <div key={i}>Loading...</div>
+                <ColleagueSkeleton key={i} />
               ))
             ) : filteredColleagues.length === 0 ? (
               <div className="sm:col-span-3 text-sm text-muted-foreground py-6 text-center">

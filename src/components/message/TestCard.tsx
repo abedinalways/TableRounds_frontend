@@ -1,6 +1,7 @@
 import React from 'react';
 import TraumaIcon from '../reusable/icons/TraumaIcon';
 import CircularProgressData from '../statistics/CircularProgress';
+import Link from 'next/link';
 
 interface TestCardProps {
   questions: number;
@@ -44,10 +45,11 @@ const TestCard: React.FC<TestCardProps> = ({
           <span>Time</span>
         </div>
       </div>
-
+      <Link href="/dashboard/create-test">
       <button className="mt-6 w-full py-2 bg-[#B79E6B] text-white rounded-sm text-center cursor-pointer font-semibold">
         Take This Test
       </button>
+      </Link>
     </div>
   );
 };

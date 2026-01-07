@@ -1,23 +1,49 @@
 'use client';
 
-import React, {
-  createContext,
-  useContext,
-  useState,
-  
-} from 'react';
-
+import React, { createContext, useContext, useState } from 'react';
 
 export type Sender = 'me' | 'doctor';
 
+export type CustomAttachment = {
+  id: string;
+  name: string;
+  attachmentsType?: 'test-result' | 'file' | 'unknown';
+  testId?: string;
+};
+export function createCustomAttachment(
+  id: string,
+  name: string,
+  attachmentsType?: 'test-result' | 'file' | 'unknown',
+  testId?: string
+): CustomAttachment {
+  return {
+    id,
+    attachmentsType,
+    name,
+    testId,
+  };
+}
+
+export function isCustomAttachment(obj: unknown): obj is CustomAttachment {
+  return (
+    typeof obj === 'object' &&
+    obj !== null &&
+    typeof (obj as Record<string, unknown>).id === 'string' &&
+    ((obj as Record<string, unknown>).attachmentsType === undefined ||
+      ['test-result', 'file', 'unknown'].includes(
+        (obj as Record<string, unknown>).attachmentsType as string
+      )) &&
+    ((obj as Record<string, unknown>).testId === undefined ||
+      typeof (obj as Record<string, unknown>).testId === 'string')
+  );
+}
 export type Message = {
   id: string;
   sender: 'me' | 'doctor';
   text?: string;
-  attachments?: File[];
+  attachments?: File[] | CustomAttachment[];
   createdAt: number;
 };
-
 
 export type Conversation = {
   id: string;
@@ -64,15 +90,31 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
           // eslint-disable-next-line react-hooks/purity
           createdAt: Date.now(),
         },
+        // {
+        //   id: 'm1',
+        //   sender: 'doctor',
+        //   text: 'Hi! hav you any idea about it?',
+        //   // eslint-disable-next-line react-hooks/purity
+        //   createdAt: Date.now(),
+        // },
         {
-          id: 'm1',
+          id: 'm3',
           sender: 'doctor',
           text: 'Hi! hav you any idea about it?',
+          attachments: [
+            createCustomAttachment(
+              'foo',
+              'habijabi',
+              'test-result',
+              'test-id-1324'
+            ),
+          ],
           // eslint-disable-next-line react-hooks/purity
           createdAt: Date.now(),
         },
       ],
-    },{
+    },
+    {
       id: '2',
       name: 'Sheikh A Dinar',
       avatar: '/images/dashboard/message/doctor.png',

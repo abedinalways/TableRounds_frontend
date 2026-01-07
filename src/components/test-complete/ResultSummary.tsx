@@ -1,16 +1,11 @@
 'use client';
 
 import { Card, CardContent } from '@/components/ui/card';
-import { CheckCircle } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import CompleteIcon from '../reusable/icons/CompleteIcon';
-import { Button } from '../ui/button';
 import { ShareModal } from './ShareModal';
-import ShareIcon from '../reusable/icons/ShareIcon';
 import ShareIconBlack from '../reusable/icons/ShareIconBlack';
-import TestCard from '../message/TestCard'; // Import the TestCard component
-import Link from 'next/link';
 
 // Define the type for the ResultSummary props
 interface ResultSummaryProps {
@@ -23,7 +18,7 @@ interface ResultSummaryProps {
 }
 
 // Define the type for Colleague
- export interface Colleague {
+export interface Colleague {
   id: number;
   name: string;
   title: string;
@@ -67,7 +62,7 @@ export function ResultSummary({
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [colleagues, setColleagues] = useState<Colleague[]>([]);
-  const [testCardData, setTestCardData] = useState<TestCardData | null>(null); // Updated type
+  const [testCardData, setTestCardData] = useState<TestCardData | null>(null);
 
   const handleShare = () => {
     setOpen(true);
@@ -92,6 +87,27 @@ export function ResultSummary({
         },
         {
           id: 3,
+          name: 'Tim Brown, DDS',
+          title: 'Parkland',
+          university: '',
+          avatar: '/images/dashboard/main_dashboard/doc03.png',
+        },
+        {
+          id: 4,
+          name: 'Alex Martinez, MD',
+          title: 'UCLA',
+          university: '',
+          avatar: '/images/dashboard/main_dashboard/doc01.png',
+        },
+        {
+          id: 5,
+          name: 'Olivia Smith, DMD',
+          title: 'NYU',
+          university: '',
+          avatar: '/images/dashboard/main_dashboard/doc02.png',
+        },
+        {
+          id: 6,
           name: 'Tim Brown, DDS',
           title: 'Parkland',
           university: '',
@@ -163,7 +179,6 @@ export function ResultSummary({
         testCardData={testCardData}
         onSendTestCard={(selectedUser, testCardData) => {
           console.log('TestCard sent to:', selectedUser);
-          // Handle sending the test card to the selected user
         }}
       />
     </>

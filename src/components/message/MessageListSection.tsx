@@ -47,13 +47,20 @@ export default function MessageListSection() {
               <div className="flex-1">
                 <p className="text-sm font-medium">{conv.name}</p>
                 <p className="text-xs text-gray-500 truncate">
-                  
-                  {lastMessage?.text ??
-                    (lastMessage?.attachments?.length
-                      ? `📎 ${lastMessage.attachments
-                          .map(file => file.name)
-                          .join(', ')}`
-                      : '')}
+                  <p className="text-xs text-gray-500 truncate">
+                    {lastMessage?.text ??
+                      (lastMessage?.attachments?.length
+                        ? `📎 ${lastMessage.attachments
+                            .map(file => {
+                              
+                              if ('name' in file) {
+                                return file.name; 
+                              }
+                              return ''; 
+                            })
+                            .join(', ')}`
+                        : '')}
+                  </p>
                 </p>
               </div>
             </div>
