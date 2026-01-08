@@ -1,6 +1,12 @@
 'use client';
 
-import { MapContainer, Popup, CircleMarker, TileLayer, useMap } from 'react-leaflet';
+import {
+  MapContainer,
+  Popup,
+  CircleMarker,
+  TileLayer,
+  useMap,
+} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useEffect, useRef, useState } from 'react';
@@ -11,7 +17,8 @@ const iconProto = L.Icon.Default.prototype as { _getIconUrl?: () => string };
 if (iconProto._getIconUrl) delete iconProto._getIconUrl;
 
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  iconRetinaUrl:
+    'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
   iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
@@ -25,11 +32,29 @@ type Location = {
 };
 
 const locations: Location[] = [
-  { city: 'Calgary', country: 'Canada', users: 18, lat: 51.0447, lng: -114.0719 },
-  { city: 'São Paulo', country: 'Brazil', users: 18, lat: -23.5505, lng: -46.6333 },
+  {
+    city: 'Calgary',
+    country: 'Canada',
+    users: 18,
+    lat: 51.0447,
+    lng: -114.0719,
+  },
+  {
+    city: 'São Paulo',
+    country: 'Brazil',
+    users: 18,
+    lat: -23.5505,
+    lng: -46.6333,
+  },
   { city: 'Algiers', country: 'Algeria', users: 8, lat: 36.7538, lng: 3.0588 },
   { city: 'Shanghai', country: 'China', users: 6, lat: 31.2304, lng: 121.4737 },
-  { city: 'Melbourne', country: 'Australia', users: 5, lat: -37.8136, lng: 144.9631 },
+  {
+    city: 'Melbourne',
+    country: 'Australia',
+    users: 5,
+    lat: -37.8136,
+    lng: 144.9631,
+  },
 ];
 
 function MapControls() {
@@ -42,7 +67,7 @@ function MapControls() {
       gsap.to(targetRef.current, {
         scale: 1.1,
         duration: 1,
-        ease: "power1.inOut",
+        ease: 'power1.inOut',
         repeat: -1,
         yoyo: true,
       });
@@ -52,7 +77,11 @@ function MapControls() {
   const handleRecenter = () => {
     setIsLocating(true);
     if (targetRef.current) {
-      gsap.to(targetRef.current, { rotation: 360, duration: 0.6, ease: "power2.out" });
+      gsap.to(targetRef.current, {
+        rotation: 360,
+        duration: 0.6,
+        ease: 'power2.out',
+      });
     }
     map.flyTo([20, 0], 2, { duration: 1.5 });
     setTimeout(() => setIsLocating(false), 1500);
@@ -72,41 +101,113 @@ function MapControls() {
     color: '#374151',
   };
 
-  const handleHover = (e: React.MouseEvent<HTMLButtonElement>, isEnter: boolean) => {
+  const handleHover = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    isEnter: boolean
+  ) => {
     gsap.to(e.currentTarget, {
-      boxShadow: isEnter ? '0 4px 12px rgba(0,0,0,0.15)' : '0 2px 8px rgba(0,0,0,0.1)',
+      boxShadow: isEnter
+        ? '0 4px 12px rgba(0,0,0,0.15)'
+        : '0 2px 8px rgba(0,0,0,0.1)',
       y: isEnter ? -2 : 0,
       duration: 0.2,
     });
   };
 
   return (
-    <div style={{ position: 'absolute', top: '16px', left: '16px', zIndex: 1000, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      <button ref={targetRef} onClick={handleRecenter} disabled={isLocating} style={{ ...buttonStyle, cursor: isLocating ? 'wait' : 'pointer' }}
-        onMouseEnter={(e) => !isLocating && handleHover(e, true)} onMouseLeave={(e) => !isLocating && handleHover(e, false)}>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/>
-          <line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/>
+    <div
+      style={{
+        position: 'absolute',
+        top: '16px',
+        left: '16px',
+        zIndex: 500,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px',
+      }}
+      className=""
+    >
+      <button
+        ref={targetRef}
+        onClick={handleRecenter}
+        disabled={isLocating}
+        style={{ ...buttonStyle, cursor: isLocating ? 'wait' : 'pointer' }}
+        onMouseEnter={e => !isLocating && handleHover(e, true)}
+        onMouseLeave={e => !isLocating && handleHover(e, false)}
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <circle cx="12" cy="12" r="3" />
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="2" x2="12" y2="4" />
+          <line x1="12" y1="20" x2="12" y2="22" />
+          <line x1="2" y1="12" x2="4" y2="12" />
+          <line x1="20" y1="12" x2="22" y2="12" />
         </svg>
       </button>
-      
-      <button onClick={() => map.zoomIn()} style={buttonStyle} onMouseEnter={(e) => handleHover(e, true)} onMouseLeave={(e) => handleHover(e, false)}>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-          <line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/>
+
+      <button
+        onClick={() => map.zoomIn()}
+        style={buttonStyle}
+        onMouseEnter={e => handleHover(e, true)}
+        onMouseLeave={e => handleHover(e, false)}
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" />
+          <line x1="11" y1="8" x2="11" y2="14" />
+          <line x1="8" y1="11" x2="14" y2="11" />
         </svg>
       </button>
-      
-      <button onClick={() => map.zoomOut()} style={buttonStyle} onMouseEnter={(e) => handleHover(e, true)} onMouseLeave={(e) => handleHover(e, false)}>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><line x1="8" y1="11" x2="14" y2="11"/>
+
+      <button
+        onClick={() => map.zoomOut()}
+        style={buttonStyle}
+        onMouseEnter={e => handleHover(e, true)}
+        onMouseLeave={e => handleHover(e, false)}
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" />
+          <line x1="8" y1="11" x2="14" y2="11" />
         </svg>
       </button>
-      
-      <button onClick={() => map.invalidateSize()} style={buttonStyle} onMouseEnter={(e) => handleHover(e, true)} onMouseLeave={(e) => handleHover(e, false)}>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+
+      <button
+        onClick={() => map.invalidateSize()}
+        style={buttonStyle}
+        onMouseEnter={e => handleHover(e, true)}
+        onMouseLeave={e => handleHover(e, false)}
+      >
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
         </svg>
       </button>
     </div>
@@ -163,7 +264,7 @@ export default function Mapview() {
 
   return (
     <div
-      className="w-full h-[620px] rounded-xl overflow-hidden relative"
+      className="w-full h-[620px] rounded-xl overflow-hidden relative "
       style={{
         background: '#f5f7f6',
         boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
@@ -174,7 +275,7 @@ export default function Mapview() {
         zoom={2}
         minZoom={2}
         maxZoom={6}
-        className="h-full w-full"
+        className="h-full w-full relative "
         scrollWheelZoom={true}
         attributionControl={false}
         zoomControl={false}
@@ -241,7 +342,6 @@ export default function Mapview() {
           </CircleMarker>
         ))}
       </MapContainer>
-      
     </div>
   );
 }

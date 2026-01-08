@@ -22,6 +22,12 @@ export default function Elevate() {
 
   const handleScrollToSection = () => {
     router.push('/'); // Navigate to homepage
+    setTimeout(() => {
+      const el = document.querySelector('#welcome');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 200);
   };
 
   // GSAP animation for the image movement
@@ -107,7 +113,7 @@ export default function Elevate() {
 
         <Btn
           text="Learn More About TableRounds"
-          href="/"
+          // href="/#welcome"
           className="bg-white text-[#B79E6B] w-full h-10 transition-colors rounded-xl md:w-[305px] md:h-[54px] cursor-pointer z-30"
           onClick={handleScrollToSection} // Scroll to section when clicked
         />

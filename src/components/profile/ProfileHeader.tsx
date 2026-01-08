@@ -10,6 +10,7 @@ import { FaXTwitter } from 'react-icons/fa6';
 import CalendarIconForProfile from '../reusable/icons/CalendarIconForProfile';
 import { Facebook, Instagram, Linkedin } from 'lucide-react';
 import FollowersFollowingModal from '../my-profile/FollowersFollowingModal';
+import Link from 'next/link';
 
 
 
@@ -42,6 +43,8 @@ const followingData = [
 ];
 
 export default function ProfileHeader({ user }: ProfileHeaderProps) {
+  const [isFollowing, setIsFollowing] = useState(false);
+
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'followers' | 'following'>(
     'followers'
@@ -118,11 +121,21 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
             </div>
 
             <div className="flex gap-3 mb-[24px]">
-              <button className="bg-[#01503b] px-[24px] py-[14px] text-center text-[#fff] rounded-[8px] cursor-pointer">
-                Message
-              </button>
-              <button className="bg-[#fff] border border-[#01503b] text-[#01503b] px-[24px] py-[14px] text-center rounded-[8px] cursor-pointer">
-                Follow
+              <Link href="/dashboard/messages">
+                <button className="bg-[#01503b] px-[24px] py-[14px] text-center text-[#fff] rounded-[8px] cursor-pointer">
+                  Message
+                </button>
+              </Link>
+              <button
+                onClick={() => setIsFollowing(prev => !prev)}
+                className={`px-[24px] py-[14px] text-center rounded-[8px] cursor-pointer border
+    ${
+      isFollowing
+        ? 'bg-[#01503b] text-white border-[#01503b]'
+        : 'bg-white text-[#01503b] border-[#01503b]'
+    }`}
+              >
+                {isFollowing ? 'Unfollow' : 'Follow'}
               </button>
             </div>
           </div>

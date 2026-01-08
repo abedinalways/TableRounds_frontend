@@ -5,8 +5,8 @@ import { ChatProvider } from '../../context/ChatContext';
 export default function ChatLayout({ children }: React.PropsWithChildren) {
   return (
     <ChatProvider>
-     <section className="grid md:h-[calc(100dvh-140px)] grid-cols-12 md:gap-6 font-[manrope] ">
-             <div className="md:h-[calc(100dvh-140px)]  md:col-span-8 col-span-12 bg-white md:p-8 p-2 md:grid md:grid-rows-[190px_1fr_86px] rounded-2xl shadow-lg">
+     <section className="grid md:h-[calc(100dvh-190px)] grid-cols-12 md:gap-6 font-[manrope] ">
+             <div className="md:h-[calc(100dvh-190px)]  md:col-span-8 col-span-12 bg-white md:p-8 p-2 md:grid md:grid-rows-[190px_1fr_86px] rounded-2xl shadow-lg">
                {children}
              </div>
      
