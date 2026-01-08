@@ -21,7 +21,7 @@ const TestCard: React.FC<TestCardProps> = ({
   category,
 }) => {
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md max-w-xs w-full font-[manrope] h-fit">
+    <div className="p-4 bg-white rounded-lg shadow-md  w-full font-[manrope] h-fit">
       <div className="flex flex-col text-white space-x-2 background p-6 rounded-[10px]">
         <h3 className="mt-2 text-xl font-semibold ">{questions} Questions</h3>
         <div className="text-sm">Difficulty: {difficulty} </div>

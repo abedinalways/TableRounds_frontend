@@ -87,17 +87,16 @@ const FindColleagues: React.FC = () => {
           {displayedColleagues.map(colleague => (
             <Card
               key={colleague.id}
-              className="p-4 hover:shadow-lg transition-shadow cursor-pointer border border-gray-200"
+              className="p-4 hover:shadow-lg transition-shadow cursor-pointer border border-gray-200 "
             >
-              <div className="flex items-center gap-3 ">
                 <Link href='/dashboard/profile'>
+              <div className="flex items-center gap-3 ">
                   <Avatar className="h-[59px] w-[59px]">
                     <AvatarImage src={colleague.avatar} alt={colleague.name} />
                     <AvatarFallback className="bg-teal-100 text-teal-700 font-semibold">
                       {getInitials(colleague.name)}
                     </AvatarFallback>
                   </Avatar>
-                </Link>
 
                 <div className="flex-1 min-w-0">
                   <h4 className="font-semibold text-gray-900 text-sm truncate">
@@ -108,6 +107,7 @@ const FindColleagues: React.FC = () => {
                   </p>
                 </div>
               </div>
+                </Link>
 
               {/* ✅ Buttons appear ONLY when View All is active */}
               {showAll && (

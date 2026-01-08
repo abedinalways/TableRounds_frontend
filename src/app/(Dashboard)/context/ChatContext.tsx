@@ -100,7 +100,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
         {
           id: 'm3',
           sender: 'doctor',
-          text: 'Hi! hav you any idea about it?',
+          text: 'Just wrapped up this Trauma block —60% correct. Curious how you would do.',
           attachments: [
             createCustomAttachment(
               'foo',
@@ -140,6 +140,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
           // eslint-disable-next-line react-hooks/purity
           createdAt: Date.now(),
         },
+        
       ],
     },
   ]);

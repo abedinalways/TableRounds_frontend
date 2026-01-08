@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
+import Link from 'next/link';
 
 interface SignUpFormData {
   fullName: string;
@@ -427,17 +428,19 @@ opacity-xl"
               <div className="md:flex gap-4 p-6 space-y-4 sm:space-y-0">
                 <button
                   onClick={handleSubmit}
-                  className="bg-[#B79E6B] text-white hover:bg-[#a08c5f] transition-colors rounded-[8px] px-[24px] py-[14px] w-[168px] h-[54px] font-medium"
+                  className="bg-[#B79E6B] text-white hover:bg-[#a08c5f] transition-colors rounded-[8px] px-[24px] py-[14px] w-[168px] h-[54px] font-medium cursor-pointer"
                 >
                   Create Account
                 </button>
-                <button
-                  type="button"
-                  className="bg-white text-[#b79e6b] font-medium    hover:bg-white transition-colors rounded-[8px] px-[24px] py-[14px] w-[168px] h-[54px]"
-                  onClick={onCancel}
-                >
-                  Sign In
-                </button>
+                <Link href='/login'>
+                  <button
+                    type="button"
+                    className="bg-white text-[#b79e6b] font-medium    hover:bg-white transition-colors rounded-[8px] px-[24px] py-[14px] w-[168px] h-[54px] cursor-pointer"
+                    onClick={onCancel}
+                  >
+                    Sign In
+                  </button>
+                </Link>
               </div>
             </div>
             <div className=" border-none mt-2">
@@ -463,7 +466,7 @@ opacity-xl"
                     <label htmlFor="profilePhoto">
                       <Button
                         type="button"
-                        className="bg-[#B79E6B] text-white w-fit h-10 hover:bg-[#a08c5f] transition-colors rounded-[8px] px-[32px] py-[14px] w-[150px] h-[54px]"
+                        className="bg-[#B79E6B] text-white w-fit h-10 hover:bg-[#a08c5f] transition-colors rounded-[8px] px-[32px] py-[14px] w-[150px] h-[54px] cursor-pointer"
                         asChild
                       >
                         <span>Choose File</span>
@@ -512,7 +515,7 @@ opacity-xl"
                     <label htmlFor="verificationDoc">
                       <Button
                         type="button"
-                        className="bg-[#B79E6B] text-white w-fit h-10 hover:bg-[#a08c5f] transition-colors rounded-[8px] px-[32px] py-[14px] w-[150px] h-[54px]"
+                        className="bg-[#B79E6B] text-white w-fit h-10 hover:bg-[#a08c5f] transition-colors rounded-[8px] px-[32px] py-[14px] w-[150px] h-[54px] cursor-pointer"
                         asChild
                       >
                         <span>Choose File</span>

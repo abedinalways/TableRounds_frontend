@@ -58,8 +58,8 @@ export default function Sidebar({
   // Desktop sidebar (always visible on lg+)
   if (!mobile) {
     return (
-      <div className="h-screen w-64 background border-r flex flex-col justify-between text-white overflow-y-auto font-[manrope]">
-        <div className="p-6">
+      <div className="h-screen w-55 background border-r flex flex-col justify-between text-white overflow-y-auto font-[manrope]">
+        <div className="p-2.5">
           {/* Logo */}
           <Link href="/">
             <div className="flex items-center gap-2 mb-6">
@@ -125,7 +125,7 @@ export default function Sidebar({
 
       {/* Mobile Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 w-64 background border-r flex flex-col text-white transition-transform duration-300 z-50 lg:hidden
+        className={`fixed inset-y-0 left-0 w-64  background border-r flex flex-col text-white transition-transform duration-300 z-1000 lg:hidden
           ${open ? 'translate-x-0' : '-translate-x-full'}
         `}
       >

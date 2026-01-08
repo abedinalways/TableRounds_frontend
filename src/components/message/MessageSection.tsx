@@ -44,7 +44,7 @@ export default function MessageSection() {
                 className="rounded-full"
               />
             </div>
-            <div className="bg-gray-100 p-4 rounded-xl max-w-md text-sm">
+            <div className="bg-gray-100 p-4 rounded-xl max-w-lg md:w-[336px] text-sm">
               {msg.text}
               {msg.attachments?.length && (
                 <div className="mt-2 space-y-2">
@@ -55,11 +55,11 @@ export default function MessageSection() {
                           return (
                             <TestCard
                               questions={25}
-                              correctPercentage={85}
+                              correctPercentage={60}
                               time="20 minutes"
                               percentile={90}
                               difficulty="Medium"
-                              category="Psychology"
+                              category="Trauma"
                             />
                           );
 

@@ -13,7 +13,7 @@ export default function Topbar({ onMenuClick }: TopbarProps = {}) {
   const user = getUser();
 
   return (
-    <header className="sticky top-0 z-30 bg-white border-b flex items-center justify-between gap-3 px-4 sm:px-6 h-15">
+    <header className="sticky top-0 z-1000 bg-white border-b flex items-center justify-between gap-3 px-4 sm:px-6 h-15">
       {/* Mobile Menu Button */}
       {onMenuClick && (
         <button
