@@ -17,13 +17,16 @@ const StatsCards = () => {
         >
           <CardContent className="p-0">
             <div className="flex items-center gap-3">
+              <div className="icon-bg rounded-full w-[54px] h-[54px] flex items-center justify-center">
+
               <Image
                 src={item.icon}
-                width={32}
+                  width={32}
                 height={32}
                 alt={item.title}
-                className="icon-bg rounded-full p-[9px]"
+                className=""
               />
+              </div>
               <h2 className="text-sm font-medium text-gray-600">
                 {item.title}
               </h2>

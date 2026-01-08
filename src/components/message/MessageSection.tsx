@@ -31,7 +31,7 @@ export default function MessageSection() {
   const isImage = (file: File) => file.type.startsWith('image/');
 
   return (
-    <div ref={containerRef} className="p-6 space-y-4 overflow-y-auto">
+    <div ref={containerRef} className="p-3  overflow-y-auto ">
       {activeConversation.messages.map(msg =>
         msg.sender === 'doctor' ? (
           <div key={msg.id} className="flex gap-3">
@@ -44,7 +44,7 @@ export default function MessageSection() {
                 className="rounded-full"
               />
             </div>
-            <div className="bg-gray-100 p-4 rounded-xl max-w-lg md:w-[336px] text-sm">
+            <div className="bg-gray-100  p-4 rounded-xl max-w-lg md:w-[336px] text-sm">
               {msg.text}
               {msg.attachments?.length && (
                 <div className="mt-2 space-y-2">
@@ -94,7 +94,7 @@ export default function MessageSection() {
           </div>
         ) : (
           <div key={msg.id} className="flex justify-end gap-3">
-            <div className="bg-[#095f48] text-white p-4 rounded-xl max-w-md text-sm">
+            <div className="bg-[#095f48] my-2 text-white p-4 rounded-xl max-w-md text-sm">
               {msg.text}
               {msg.attachments?.length && (
                 <div className="mt-2 space-y-2">

@@ -156,7 +156,7 @@ export default function CreateQuestionForm() {
             <label className="font-bold">Answer Choices</label>
             <Button
               variant="outline"
-              className="border-none bg-white font-[manrope] text-[#01503b] hover:bg-white hover:border-none cursor-pointer"
+              className="border-none font-bold bg-white font-[manrope] text-[#01503b] hover:bg-white hover:border-none cursor-pointer"
               type="button"
               onClick={() =>
                 append({
@@ -249,12 +249,12 @@ export default function CreateQuestionForm() {
         </div>
       </div>
       {/* here  */}
-      <Button
+      <button
         type="submit"
-        className="cursor-pointer md:px-8 md:py-3 rounded-[8px] bg-[#01503b]"
+        className="cursor-pointer text-white px-8 py-3 rounded-[8px]  bg-[#01503b]"
       >
         Submit
-      </Button>
+      </button>
     </form>
   );
 }
