@@ -14,8 +14,8 @@ export default function Header() {
   const textRef = useRef<HTMLHeadingElement | null>(null);
 
   return (
-    <div className="md:px-4 px-2 pt-2 d:pt-0 background md:h-[130px] text-white rounded-lg shadow-lg md:relative overflow-hidden font-[manrope] flex md:items-center max-w-full">
-      <div className="md:flex flex-wrap items-center justify-between md:gap-10 md:w-full">
+    <div className="md:px-4 px-2 pt-2 d:pt-0 background md:h-[130px] text-white rounded-lg shadow-lg md:relative overflow-hidden font-[manrope] flex md:items-center max-w-full ">
+      <div className="md:flex flex-wrap items-center justify-between md:gap-10 md:w-full ">
         <div className="md:flex flex-wrap md:gap-4 items-center">
           <div>
             <Image

@@ -3,18 +3,18 @@
     "title": "Percent Correct",
     "value": "65%",
     "subText": "Correct",
-    "icon": "/images/dashboard/main_dashboard/card01.png"
+    "icon": "/images/dashboard/main_dashboard/card001.png"
   },
   {
     "title": "Percent Completed",
     "value": "60%",
     "subText": "1286/2164 used",
-    "icon": "/images/dashboard/main_dashboard/card02.png"
+    "icon": "/images/dashboard/main_dashboard/card002.png"
   },
   {
     "title": "Total Tests",
     "value": "49/50",
     "subText": "Completed",
-    "icon": "/images/dashboard/main_dashboard/card03.png"
+    "icon": "/images/dashboard/main_dashboard/card003.png"
   }
 ]
