@@ -83,7 +83,7 @@ export default function Elevate() {
         growth <br /> through our proven, integrated learning platform today.
       </p>
       <Btn
-        text="Sing Up"
+        text="Sign Up"
         href="/register"
         className="bg-[#B79E6B] text-white  hover:bg-[#a08c5f] transition-colors rounded-[8px]  w-[124px] h-[54px] z-20 cursor-pointer"
       />

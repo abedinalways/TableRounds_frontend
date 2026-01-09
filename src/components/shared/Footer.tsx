@@ -132,7 +132,7 @@ const Footer = () => {
           />
         </div>
         {/* Copyright */}
-        <div className="mt-17 py-10 border border-gray-50 bg-[#f5f4f2]">
+        <div className="mt-17 py-10 ">
           <p className="text-center text-sm text-gray-700">
             Copyright © 2025 TableRounds. All rights reserved.
           </p>
