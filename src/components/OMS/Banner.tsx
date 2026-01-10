@@ -50,7 +50,7 @@ export default function Banner() {
     top-5
     w-[500px] 
     
-    md:w-[830px] 
+    md:w-[730px] 
     md:-right-10 
     md:top-4
     z-10 opacity-50 md:opacity-100
@@ -85,9 +85,9 @@ export default function Banner() {
         "
       >
         
-          <h2 className="font-bold text-3xl md:text-[48px] xl:text-[52px]  leading-tight">
+          <h2 className="font-bold text-3xl md:text-[40px] xl:text-[48px]  leading-tight">
             Mastering Every Aspect of<br />
-            Oral and Maxillofacial<br />Surgery
+            Oral and Maxillofacial Surgery
           </h2>
 
           <p className="mt-4 text-sm md:text-[24px] text-white/90">

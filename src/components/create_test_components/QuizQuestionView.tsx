@@ -14,6 +14,7 @@ interface QuizQuestionViewProps {
   markedQuestions: MarkedQuestion[];
   onToggleMark: () => void;
   onNext: () => void;
+  onPrevious: () => void;
   onJumpTo?: (index: number) => void;
 }
 
@@ -22,6 +23,7 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   markedQuestions,
   onToggleMark,
   onNext,
+  onPrevious,
   onJumpTo,
 }) => {
   const { testProgress, quizDetails } = data;
@@ -47,6 +49,29 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
     setShowExplanation(true);
     setIsQuestionHidden(false); // reset hidden state after submit
   };
+
+  // handle previous
+  const handlePrevious = () => {
+    // reset UI states
+    setShowExplanation(false);
+    setIsQuestionHidden(false);
+    setSelectedAnswer(null);
+
+    // reset GSAP styles if needed
+    if (questionRef.current && explanationRef.current) {
+      gsap.set(questionRef.current, {
+        flex: '1 1 0%',
+        opacity: 1,
+      });
+
+      gsap.set(explanationRef.current, {
+        flex: '1 1 0%',
+      });
+    }
+
+    onPrevious();
+  };
+
 
  const handleToggleHide = () => {
    if (!showExplanation) return;
@@ -110,6 +135,7 @@ export const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
         isMarked={isMarked}
         onToggleMark={onToggleMark}
         onNext={onNext}
+        onPrevious={handlePrevious}
         onZoomIn={handleZoomIn}
         onZoomOut={handleZoomOut}
       />

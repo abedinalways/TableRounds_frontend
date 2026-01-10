@@ -32,7 +32,7 @@ const ExplanationPanel: React.FC<ExplanationPanelProps> = ({
     <div className="p-6 md:my-[32px] bg-[#f9f9f5] shadow-lg rounded-[16px] border font-[manrope] md:max-h-[1521px] overflow-x-hidden custom-scrollbar">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-bold text-[#01281e] flex items-center gap-2">
-          <ExplainIcon/> Explanations:
+          <ExplainIcon/> Explanation:
         </h2>
 
         {isQuestionHidden && (

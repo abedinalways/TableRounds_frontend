@@ -82,12 +82,17 @@ export const userMenu: MenuItem[] = [
   },
   {
     title: 'Reset Bank',
-    href: '/dashboard/reset-qns-bank',
+    href: '',
     icon: '/images/dashboard/img06.png',
   },
   {
     title: 'Messages',
     href: '/dashboard/messages',
+    icon: '/images/dashboard/img07.png',
+  },
+  {
+    title: 'My Profile',
+    href: '/dashboard/my-profile',
     icon: '/images/dashboard/img07.png',
   },
 

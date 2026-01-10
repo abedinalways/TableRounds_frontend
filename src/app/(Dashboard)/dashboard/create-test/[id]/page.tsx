@@ -128,6 +128,11 @@ export default function CreateTestPage() {
      }
    };
 
+  const handlePrevious = () => {
+    if (currentQuestion > 1) {
+      setCurrentQuestion(prev => prev - 1);
+    }
+  };
  const toggleMark = () => {
    setMarkedQuestions(prev => {
      const exists = prev.some(q => q.index === currentQuestion);
@@ -160,7 +165,8 @@ export default function CreateTestPage() {
     markedQuestions={markedQuestions}
     onToggleMark={toggleMark}
     onJumpTo={setCurrentQuestion}
-    onNext={handleNext}
+     onNext={handleNext}
+     onPrevious={handlePrevious}
   />
 ); 
 }

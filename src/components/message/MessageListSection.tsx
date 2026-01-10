@@ -29,7 +29,7 @@ export default function MessageListSection() {
             <div
               key={conv.id}
               onClick={() => selectConversation(conv.id)}
-              className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer
+              className={`flex items-center gap-3 p-3 rounded-xl overflow-hidden cursor-pointer
               ${
                 activeConversation?.id === conv.id
                   ? 'bg-gray-100'

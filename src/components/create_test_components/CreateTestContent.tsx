@@ -11,10 +11,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-import { Switch } from '../ui/switch';
+
 import { useRouter } from 'next/navigation';
 import { CustomCheckbox } from '../ui/CustomCheckbox';
-import DownIcon from '../reusable/icons/DownIcon';
+import { Switch } from '../ui/CustomSwitch';
+
 
 // --- Mock Data ---
 const TOPICS: string[] = [
@@ -111,19 +112,16 @@ export function CreateTestContent() {
         {/* 1. No. of Questions */}
         <div className="space-y-4 bg-white p-4 rounded-[12px] border border-[#e9e9e9] custom-shadow ">
           <h3 className="text-xl md:text-2xl text-[#444950] font-bold">
-            No. of Questions
+            Question Count
           </h3>
           <p className="text-sm md:text-[18px] leading-[160%] font-normal text-[#01281e]">
-            Set the maximum questions allowed per block
+            Set the number of questions for your test
           </p>
 
           <Select value={numQuestions} onValueChange={setNumQuestions}>
-            <SelectTrigger
-              className="w-full sm:w-[180px] h-[61px] bg-[#f7f7f3] p-4 rounded-[8px] cursor-pointer"
-              
-            >
+            <SelectTrigger className="w-full sm:w-[180px] h-[61px] bg-[#f7f7f3] p-4 rounded-[8px] cursor-pointer">
               <SelectValue
-                placeholder="Select a number"
+                placeholder="Select number"
                 className="placeholder:text-[#4b5563] placeholder:text-[18px]"
               />
             </SelectTrigger>
@@ -164,7 +162,7 @@ export function CreateTestContent() {
             />
 
             <Label
-              className={`cursor-pointer text-sm md:text-[16px] ${
+              className={`cursor-pointer text-[#01503b] text-sm md:text-[16px] ${
                 testMode === 'Untimed' ? 'text-yellow-600 font-semibold' : ''
               }`}
             >
@@ -263,18 +261,6 @@ export function CreateTestContent() {
               />{' '}
               Topic
             </h3>
-
-            {/* <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              className="h-[32px] text-xs px-3"
-              onClick={toggleAllTopics}
-            >
-              {selectedTopics.length === TOPICS.length
-                ? 'Unselect All'
-                : 'Select All'}
-            </Button> */}
           </div>
 
           <p className="text-sm md:text-[18px] leading-[160%] text-[#01281e] font-normal">
@@ -295,12 +281,11 @@ export function CreateTestContent() {
                     }`}
                   onClick={() => handleTopicToggle(topic, !isSelected)}
                 >
-                  {isSelected && (
-                    <CustomCheckbox
-                      checked={isSelected}
-                      className="cursor-pointer"
-                    />
-                  )}
+                  <CustomCheckbox
+                    checked={isSelected}
+                    className="cursor-pointer"
+                  />
+
                   <Label className="text-sm md:text-[18px]">{topic}</Label>
                 </div>
               );

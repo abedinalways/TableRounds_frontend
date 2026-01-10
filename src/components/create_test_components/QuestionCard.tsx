@@ -42,14 +42,14 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
           />
         )}
       </div>
-      <CardHeader className="p-4">
+      <CardHeader className="">
         <p className="text-sm md:text-[20px] text-gray-700 leading-relaxed font-normal">
           {quizDetails.title}
         </p>
       </CardHeader>
 
-      <CardContent className="md:p-6 space-y-6">
-        <div className="font-semibold text-sm md:text-[20px] text-[#01281e] flex items-center ">
+      <CardContent className=" space-y-4">
+        <div className="font-normal text-sm md:text-[20px] text-[#01281e] flex items-center  ">
           <Image
             src="/images/dashboard/main_dashboard/qns.png"
             width={28}
@@ -197,8 +197,11 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
         <Btn
           text="Submit Answer"
           onClick={onSubmit}
-          disabled={!selectedAnswerId}
-          className="bg-[#01281e] text-white px-8 py-3 text-md font-semibold cursor-auto"
+          disabled={!selectedAnswerId || showExplanation}
+          className={cn(
+            'bg-[#01281e] text-white px-8 py-3 text-md font-semibold',
+            showExplanation ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'
+          )}
         />
       </CardContent>
     </div>
