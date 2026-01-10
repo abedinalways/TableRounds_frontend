@@ -4,10 +4,10 @@ import { ProfileData } from '@/types/profile';
 export const profileData: ProfileData = {
   user: {
     name: 'Jordan Nguyen, DMD, MD',
-    title: 'Oral and Maxillofacial Surgeon, PGY-5 Resident',
+    title: 'Oral and Maxillofacial Surgery, PGY-5 Resident', //this will be linked to Specialty when create profile
     avatar: '/images/dashboard/profile/img01.png',
     location: 'New York, USA',
-    jobArea: 'Oral and Maxillofacial Surgery',
+    jobArea: 'Bellevue Hospital',
     joiningDate: 'March 2021',
     details:
       'Board-certified Oral and Maxillofacial Surgeon with extensive experience in reconstructive surgery, TMJ disorders, and complex facial trauma. Dedicated to advancing surgical techniques through research and education.',
@@ -64,11 +64,13 @@ export const profileData: ProfileData = {
   publications: [
     {
       title: 'Novel Approaches to TMJ Reconstruction',
+      articleLink: 'https://www.ncbi.nlm.nih.gov/books/NBK481948/',
       author: ' Jordan Nguyen, DMD, MD',
       year: '2023',
     },
     {
       title: 'Maxillofacial Trauma Surgery',
+      articleLink: 'https://www.ncbi.nlm.nih.gov/books/NBK589654/',
       author: 'Wiley-Blackwell',
       year: '2021',
     },

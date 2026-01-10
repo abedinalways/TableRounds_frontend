@@ -177,11 +177,14 @@ export default function EducationCard({ data }: EducationCardProps) {
 
         {/* Modal */}
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogContent ref={modalRef}>
+          <DialogContent
+            ref={modalRef}
+            className="z-1000 h-132  overflow-x-hidden"
+          >
             <form onSubmit={handleSave}>
               <DialogHeader>
                 <DialogTitle>
-                  <div className="flex justify-between gap-2 items-center px-4">
+                  <div className="flex justify-between gap-2 items-center md:px-4">
                     <h3 className="font-semibold text-[#01503b] flex items-center gap-2">
                       <span className="w-[40px] h-[40px] rounded-[10px] bg-[#dbeafe] flex justify-center items-center">
                         <EducationIcon />
@@ -197,13 +200,13 @@ export default function EducationCard({ data }: EducationCardProps) {
                   </div>
                 </DialogTitle>
 
-                <DialogDescription className="space-y-3 p-3">
+                <DialogDescription className="space-y-3 md:p-3">
                   {isFullModal && (
                     <>
                       {educationList.map((item, index) => (
                         <div
                           key={index}
-                          className="bg-[#f9f9f5] px-4 py-2 rounded-[12px] flex items-start justify-between gap-2"
+                          className="bg-[#f9f9f5] md:px-4 py-2 rounded-[12px] flex items-start justify-between gap-2"
                         >
                           <div className="font-medium flex items-start gap-2">
                             <div>
@@ -253,7 +256,7 @@ export default function EducationCard({ data }: EducationCardProps) {
                         name="title"
                         value={formData.title}
                         onChange={handleChange}
-                        className="border border-[#4444441A] rounded-sm py-[22px]"
+                        className="border border-[#4444441A] rounded-sm py-[22px] w-full"
                       />
                     </div>
 
@@ -265,7 +268,7 @@ export default function EducationCard({ data }: EducationCardProps) {
                         name="institute"
                         value={formData.institute}
                         onChange={handleChange}
-                        className="border border-[#4444441A] rounded-sm py-[22px]"
+                        className="border border-[#4444441A] rounded-sm py-[22px] w-full"
                       />
                     </div>
 
@@ -277,7 +280,7 @@ export default function EducationCard({ data }: EducationCardProps) {
                         name="year"
                         value={formData.year}
                         onChange={handleChange}
-                        className="border border-[#4444441A] rounded-sm py-[22px]"
+                        className="border border-[#4444441A] rounded-sm py-[22px] w-full"
                       />
                     </div>
 
@@ -287,20 +290,20 @@ export default function EducationCard({ data }: EducationCardProps) {
                         name="degree"
                         value={formData.degree}
                         onChange={handleChange}
-                        className="border border-[#4444441A] rounded-sm py-[22px]"
+                        className="border border-[#4444441A] rounded-sm py-[22px] w-full"
                       />
                     </div>
                     {isFullModal ? (
                       <Btn
                         type="submit"
-                        className="bg-[#b79e6b] rounded-[10px] text-white md:px-[24px] md:py-[12px]"
+                        className="bg-[#b79e6b] rounded-[10px] text-white md:px-[24px] md:py-[12px] w-full md:w-fit py-2 mt-2"
                       >
                         Save
                       </Btn>
                     ) : (
                       <Btn
                         type="submit"
-                        className="bg-[#b79e6b] text-white rounded-[12px] p-3 cursor-pointer w-[102px] h-[54px] "
+                        className="bg-[#b79e6b] text-white rounded-[12px] p-3 cursor-pointer w-[102px] h-[54px] w-full  py-2 mt-2"
                       >
                         Save
                       </Btn>
