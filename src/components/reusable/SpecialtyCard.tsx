@@ -8,7 +8,7 @@ const specialtiesData = {
       id: 1,
       name: 'Anesthesia/Medicine',
       icon: '/images/specialty/img02.png',
-      label: 'Anesthesia/\nMedicine',
+      label: 'Anesthesia/Medicine',
     },
     {
       id: 2,
@@ -96,7 +96,7 @@ const SpecialtyCard = () => {
                   </div>
                 </div>
               </div>
-              <p className="text-white text-center text-sm sm:text-base font-medium leading-tight whitespace-pre-line">
+              <p className="text-white text-center text-sm md:text-base font-medium leading-tight whitespace-pre-line">
                 {specialty.label}
               </p>
             </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Progress } from '@/components/ui/progress';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight} from 'lucide-react';
 import { TopbarCheckbox } from '../topbarCheckbox';
 import Btn from '../reusable/button/Btn';
 import Flag from '../reusable/icons/Flag';
@@ -10,6 +10,7 @@ import ZoomOutIcon from '../reusable/icons/ZoomOutIcon';
 import PauseIcon from '../reusable/icons/PauseIcon';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
+import { Button } from '../ui/button';
 
 interface QuizTopbarProps {
   progressValue: number;
@@ -19,6 +20,7 @@ interface QuizTopbarProps {
   isMarked: boolean;
   onToggleMark: () => void;
   onNext: () => void;
+  onPrevious: () => void;
   onZoomIn: () => void;
   onZoomOut: () => void;
 }
@@ -31,6 +33,7 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
   isMarked,
   onToggleMark,
   onNext,
+  onPrevious,
   onZoomIn,
   onZoomOut,
 }) => {
@@ -39,20 +42,28 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
   return (
     <div className="md:flex items-center md:justify-between gap-4 rounded-[12px] xl:text-[18px] md:text-sm text-xs border question-bg py-4">
       <div className="md:flex items-center space-y-2">
-        <div className="md:px-2 px-1">
+        <div className="md:px-2 px-1 flex flex-col   justify-between ">
           <Progress value={progressValue} className="md:h-5 h-2 bg-white/60" />
+          <div>
+            <Btn
+              className="bg-[#b79e6b] py-2 text-sm px-2 text-white rounded-sm! mt-4"
+              href="/dashboard/test-complete"
+            >
+              Submit Test
+            </Btn>
+          </div>
         </div>
 
-        <div className="space-x-2 flex flex-col gap-4 md:items-start mx-4 md:mx-0">
-          <div className="text-sm md:text-[20px] text-white font-bold">
+        <div className="space-x-3 flex flex-col gap-6 md:items-center mx-5 md:mx-0">
+          <div className="text-sm md:text-[16px] text-white font-bold">
             {String(currentQuestion).padStart(2, '0')} / {totalQuestions}
           </div>
-          <div className="md:text-[18px] text-sm text-white">
-            Question ID: {questionID}
+          <div className="md:text-[14px] flex justify-center text-xs text-white">
+            Question ID:{questionID}
           </div>
         </div>
 
-        <div className="flex flex-wrap md:flex-nowrap items-center gap-3 md:gap-6 xl:gap-10 md:text-[18px] text-xs">
+        <div className="flex flex-wrap md:flex-nowrap items-center gap-3 md:gap-3 xl:gap-3 md:text-[14px] text-xs">
           <div>
             <span className="flex items-center gap-2">
               <button
@@ -104,14 +115,27 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
         </div>
       </div>
 
-      <Btn
-        onClick={onNext}
-        className="bg-[#b79e6b] text-white transition-colors md:w-[97px] w-[67px] h-[53px] md:mx-10 mx-4"
-      >
-        <span className="flex items-center">
-          Next <ArrowRight size="18px" />
-        </span>
-      </Btn>
+      <div className="flex gap-3 mx-2">
+        <button
+          onClick={onPrevious}
+          disabled={currentQuestion === 1}
+          className={cn(
+            'bg-[#b79e6b] text-white cursor-pointer rounded-md text-center text-[16px] px-3 py-3',
+            currentQuestion === 1 && 'opacity-50 cursor-not-allowed'
+          )}
+        >
+          <span className="flex items-center">Previous</span>
+        </button>
+
+        <button
+          onClick={onNext}
+          className="bg-[#b79e6b] cursor-pointer text-white rounded-md  text-center text-[16px] px-3 py-3"
+        >
+          <span className="flex items-center">
+            Next <ArrowRight size="18px" />
+          </span>
+        </button>
+      </div>
     </div>
   );
 };

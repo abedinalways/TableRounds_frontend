@@ -30,7 +30,7 @@ export default function Function() {
   return (
     <div className="card-bg font-[manrope] py-[100px]">
       <div className="custom-container px-4 md:px-0">
-        <div className="md:flex gap-8 items-center justify-between leading-[110%] pb-6">
+        <div className="md:flex gap-8 items-center justify-around leading-[110%] pb-6">
           <h2 className="text-2xl sm:text-[48px]  font-bold text-black">
             How It works
           </h2>

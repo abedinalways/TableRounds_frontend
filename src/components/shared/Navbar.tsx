@@ -138,7 +138,7 @@ export default function Navbar({ isOms = false }) {
   );
 
   return (
-    <nav className="fixed inset-x-0 top-0 left-0 right-0 z-50 bg-custom-gradient backdrop-blur-md border-b border-green-600/30 overflow-hidden h-[92px] flex items-center justify-between">
+    <nav className="fixed inset-x-0 top-0 left-0 right-0 z-50 bg-[#02533d]/90 backdrop-blur-xs border-b border-green-600/30 overflow-hidden h-[92px] flex items-center justify-between">
       <div className=" mx-auto w-full px-4 sm:px-0 lg:px-0 custom-container">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}

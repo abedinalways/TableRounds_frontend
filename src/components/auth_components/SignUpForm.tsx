@@ -134,7 +134,7 @@ opacity-xl"
       >
         <div className="md:flex justify-between gap-10">
           {/* Left Column - Credentials */}
-          <div className="space-y-1  md:p-6 p-2 rounded-lg">
+          <div className="space-y-1   rounded-lg">
             <div className="space-y-[20px]">
               <div>
                 <Label
@@ -257,7 +257,7 @@ opacity-xl"
                 </Label>
                 <Input
                   id="yearInTraining"
-                  placeholder="Student, PGY or Attending Surgeon"
+                  placeholder="Student, PGY, Attending"
                   value={formData.yearInTraining}
                   onChange={e =>
                     handleInputChange('yearInTraining', e.target.value)
@@ -289,9 +289,9 @@ opacity-xl"
                   <SelectContent className="bg-[#1C765E] border-none text-white">
                     <SelectItem
                       className="text-white"
-                      value="Oral and Mexillofacial Surgery"
+                      value="Oral and Maxillofacial Surgery"
                     >
-                      Oral and Mexillofacial Surgery
+                      Oral and Maxillofacial Surgery
                     </SelectItem>
                     <SelectItem className="text-white" value="Plastic Surgery">
                       Plastic Surgery
@@ -300,10 +300,10 @@ opacity-xl"
                       className="text-white"
                       value="Otorhinolaryngology Surgery"
                     >
-                      Otorhinolaryngology Surgery
+                      Otorhinolaryngology
                     </SelectItem>
                     <SelectItem className="text-white" value="Dentist">
-                      Dentist
+                      Dentistry
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -330,6 +330,24 @@ opacity-xl"
                   className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
               </div>
+              {/* current practice */}
+              <div>
+                <Label
+                  htmlFor="currentPractice"
+                  className="text-white text-sm md:text-[18px] font-bold"
+                >
+                  Current Practice<span className="text-red-600">*</span>
+                </Label>
+                <Input
+                  id="currentPractice"
+                  placeholder="Name of your residency, hospital or private practice"
+                  value={formData.currentPractice}
+                  onChange={e =>
+                    handleInputChange('currentPractice', e.target.value)
+                  }
+                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                />
+              </div>
 
               <div>
                 <Label
@@ -339,7 +357,7 @@ opacity-xl"
                   Brief Bio
                 </Label>
                 <Input
-                  id="currentPractice"
+                  id="briefBio"
                   placeholder="Enter a brief bio about yourself"
                   value={formData.briefBio}
                   onChange={e => handleInputChange('briefBio', e.target.value)}
@@ -422,17 +440,17 @@ opacity-xl"
           </div>
 
           {/* Right Column - Upload & Verification */}
-          <div className="space-y-6  flex flex-col">
+          <div className="space-y-6 p-6 flex flex-col ">
             {/* Terms and Submit */}
             <div className="mt-6 flex  items-center justify-end  gap-4 mx-6 space-x-6">
-              <div className="md:flex gap-4 p-6 space-y-4 sm:space-y-0">
-                <button
-                  onClick={handleSubmit}
-                  className="bg-[#B79E6B] text-white hover:bg-[#a08c5f] transition-colors rounded-[8px] px-[24px] py-[14px] w-[168px] h-[54px] font-medium cursor-pointer"
-                >
-                  Create Account
-                </button>
-                <Link href='/login'>
+              {/* submit button */}
+              <button
+                onClick={handleSubmit}
+                className="bg-[#B79E6B] text-white hover:bg-[#a08c5f] transition-colors rounded-[8px] px-[24px] py-[14px]  w-full  h-[54px] font-medium cursor-pointer"
+              >
+                Submit
+              </button>
+              {/* <Link href='/login'>
                   <button
                     type="button"
                     className="bg-white text-[#b79e6b] font-medium    hover:bg-white transition-colors rounded-[8px] px-[24px] py-[14px] w-[168px] h-[54px] cursor-pointer"
@@ -440,8 +458,7 @@ opacity-xl"
                   >
                     Sign In
                   </button>
-                </Link>
-              </div>
+                </Link> */}
             </div>
             <div className=" border-none mt-2">
               <CardHeader>
@@ -460,7 +477,7 @@ opacity-xl"
                         Upload your professional headshot
                       </p>
                       <p className="text-xs md:text-sm text-teal-200">
-                        Supported format:JPG/PNG(up to 5 mb)
+                        Supported format:JPG / PNG (up to 5 mb)
                       </p>
                     </div>
                     <label htmlFor="profilePhoto">
@@ -509,7 +526,7 @@ opacity-xl"
                         Upload verification document
                       </p>
                       <p className="text-xs md:text-sm text-teal-200">
-                        Supported format: .docx/.doc/.txt.rtf.txt
+                        Supported format: JPG / PNG (up to 5 mb)
                       </p>
                     </div>
                     <label htmlFor="verificationDoc">
@@ -588,8 +605,12 @@ opacity-xl"
                   />
                   <p className="text-sm">
                     Send a direct message to{' '}
-                    <span className="text-yellow-600">TableRounds.OSM</span> on
-                    Instagram from your personal account
+                    <Link href="#">
+                      <span className="text-yellow-600 cursor-pointer">
+                        TableRounds.OMS
+                      </span>
+                    </Link>{' '}
+                    on Instagram from your personal account
                   </p>
                 </div>
                 <div className="flex items-start gap-2">
@@ -601,9 +622,9 @@ opacity-xl"
                     className="w-[20px] h-[20px]"
                   />
                   <p className="text-sm">
-                    All Verification documents are encrypted and used only for
+                    All verification documents are encrypted and used only for
                     identify verification. Each account is personally reviewed
-                    and approved by an admin
+                    and approved by an admin.
                   </p>
                 </div>
               </CardContent>
