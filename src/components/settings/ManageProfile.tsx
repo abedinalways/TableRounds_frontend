@@ -272,7 +272,9 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
 
         <div className="grid md:grid-cols-2 gap-6 text-[#4b5563]">
           <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold">Name</Label>
+            <Label className="font-bold">
+              Name <span className="text-red-600">*</span>
+            </Label>
             <Input
               {...register('name')}
               placeholder="Enter Your Name"
@@ -290,7 +292,9 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
           </div>
 
           <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold">Credentials</Label>
+            <Label className="font-bold">
+              Credentials <span className="text-red-600">*</span>
+            </Label>
             <Input
               {...register('credentials')}
               placeholder="i.e. DDS, DMD, MD, Student"
@@ -308,7 +312,9 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
           </div>
 
           <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold">Location</Label>
+            <Label className="font-bold">
+              Location <span className="text-red-600">*</span>
+            </Label>
             <Input
               placeholder="Enter your city, state, and country"
               {...register('location')}
@@ -326,10 +332,12 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
           </div>
 
           <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold">Year in Training/Practice</Label>
+            <Label className="font-bold">
+              Year in Training/Practice <span className="text-red-600">*</span>
+            </Label>
             <Input
               {...register('year')}
-              placeholder="PGY vs. Attending Surgeon"
+              placeholder="Student, PGY, or Attending"
               className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
             />
           </div>
@@ -344,9 +352,11 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
           </div>
 
           <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold">Current Practice</Label>
+            <Label className="font-bold">
+              Current Practice <span className="text-red-600">*</span>
+            </Label>
             <Input
-              placeholder="Name of your residency, hospital or private practice"
+              placeholder="Name of your residency, hospital, private practice"
               {...register('practiceName')}
               className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
             />

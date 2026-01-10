@@ -119,7 +119,7 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
             <span className="w-[40px] h-[40px] rounded-[10px] bg-[#d1fae5] flex justify-center items-center">
               <BagIcon />
             </span>
-            Clinical Experience
+            Clinical Experiences
           </h3>
 
           <div
@@ -176,14 +176,14 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
 
         {/* Modal */}
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogContent ref={modalRef}>
+          <DialogContent ref={modalRef} className="z-1000 h-144 overflow-y-auto overflow-x-hidden">
             <form onSubmit={handleSave}>
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
                   <span className="w-[40px] h-[40px] rounded-[10px] bg-[#d1fae5] flex justify-center items-center">
                     <BagIcon />
                   </span>
-                  Clinical Experience
+                  Clinical Experiences
                 </DialogTitle>
 
                 <DialogDescription className="space-y-3">
@@ -220,7 +220,7 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
                         name="role"
                         value={formData.role}
                         onChange={handleChange}
-                        className="border border-[#4444441A] rounded-sm py-[22px]"
+                        className="border border-[#4444441A] rounded-sm py-[22px] w-full"
                       />
                     </div>
 
@@ -233,7 +233,7 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
                         name="hospital"
                         value={formData.hospital}
                         onChange={handleChange}
-                        className="border border-[#4444441A] rounded-sm py-[22px]"
+                        className="border border-[#4444441A] rounded-sm py-[22px] w-full"
                       />
                     </div>
 
@@ -245,7 +245,18 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
                         name="location"
                         value={formData.location}
                         onChange={handleChange}
-                        className="border border-[#4444441A] rounded-sm py-[22px]"
+                        className="border border-[#4444441A] rounded-sm py-[22px] w-full"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label>
+                        Period<span className="text-red-600">*</span>
+                      </Label>
+                      <Input
+                        name="period"
+                        value={formData.period}
+                        onChange={handleChange}
+                        className="border border-[#4444441A] rounded-sm py-[22px] w-full"
                       />
                     </div>
 
@@ -255,30 +266,18 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
                         name="description"
                         value={formData.description}
                         onChange={handleChange}
-                        className="border border-[#4444441A] rounded-sm py-[22px]"
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-2">
-                      <Label>
-                        Period<span className="text-red-600">*</span>
-                      </Label>
-                      <Input
-                        name="period"
-                        value={formData.period}
-                        onChange={handleChange}
-                        className="border border-[#4444441A] rounded-sm py-[22px]"
+                        className="border border-[#4444441A] rounded-sm py-[22px] w-full"
                       />
                     </div>
 
                     {isFullModal ? (
-                      <Btn className="bg-[#b79e6b] text-white md:px-6 md:py-3 rounded-[10px]">
+                      <Btn className="bg-[#b79e6b] text-white md:px-6 md:py-3 rounded-[10px] w-full md:w-fit py-2 mt-2">
                         Save
                       </Btn>
                     ) : (
                       <Btn
                         type="submit"
-                        className="bg-[#b79e6b] text-white rounded-[12px] px-3 mt-4 py-3 cursor-pointer  w-[102px] h-[54px]"
+                        className="bg-[#b79e6b] text-white rounded-[12px] px-3 mt-4  cursor-pointer  w-[102px] h-[54px] w-full  py-2 mt-2"
                       >
                         Save
                       </Btn>

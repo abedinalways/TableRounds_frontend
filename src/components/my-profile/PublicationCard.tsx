@@ -32,6 +32,7 @@ const EMPTY_FORM: PublicationItem = {
   title: '',
   author: '',
   year: '',
+  articleLink:'',
 };
 
 export default function PublicationCard({ data }: PublicationCardProps) {
@@ -104,7 +105,7 @@ export default function PublicationCard({ data }: PublicationCardProps) {
 
   /* ---------------- UI ---------------- */
   return (
-    <Card className="font-[manrope] h-fit">
+    <Card className="font-[manrope] h-fit overflow-x-hidden">
       <CardContent className="p-3 space-y-4">
         {/* Header */}
         <div className="flex items-center justify-between gap-4">
@@ -117,7 +118,7 @@ export default function PublicationCard({ data }: PublicationCardProps) {
 
           <button
             onClick={openEditAllModal}
-            className="flex items-center gap-2 text-[#01503b] text-[10px] md:text-[16px]"
+            className="flex items-center gap-2 text-[#01503b] text-[10px] md:text-[16px] cursor-pointer"
           >
             <EditIcon />
             Edit
@@ -128,31 +129,34 @@ export default function PublicationCard({ data }: PublicationCardProps) {
         {publicationList.map((item, index) => (
           <div
             key={index}
-            className="flex items-start justify-between gap-4 rounded-[12px] bg-[#f9f9f5] p-4"
+            className="flex items-start justify-between md:gap-4 rounded-[12px] bg-[#f9f9f5] md:p-4 "
           >
-            <div className="flex items-start gap-2 font-medium">
-              <div className="flex h-[48px] w-[48px] items-center justify-center rounded-[10px] bg-white shadow">
+            <div className="flex items-start gap-2 font-medium ">
+              <div className="flex h-[48px] w-[48px] items-center justify-center rounded-[10px] bg-white  shadow">
                 <ScholarIcon />
               </div>
 
               <div className="flex flex-col gap-3 justify-center">
-                <p className="text-[20px] font-semibold text-[#01281e]">
+                <p className="md:text-[20px] text-[14px] font-semibold text-[#01281e]">
                   {item.title}
                 </p>
-                <p className="text-[16px] text-muted-foreground">
+                <p className="md:text-[16px] text-[10px] text-[#01503b] font-semibold">
                   {item.author}
+                </p>
+                <p className="underline md:text-sm text-[8px] cursor-pointer text-[#01503b]">
+                  {item.articleLink}
                 </p>
               </div>
             </div>
 
-            <div>{item.year}</div>
+            <div className="md:text-[14px] text-xs">{item.year}</div>
           </div>
         ))}
 
         {/* Add New */}
         <button
           onClick={openAddModal}
-          className="w-full rounded-[12px] bg-[#f9f9f5] p-2 md:p-3 border border-[#00000012]"
+          className="w-full rounded-[12px] bg-[#f9f9f5] p-2 md:p-3 border border-[#00000012] cursor-pointer"
         >
           <span className="flex items-center justify-center gap-2">
             <Image
@@ -161,7 +165,7 @@ export default function PublicationCard({ data }: PublicationCardProps) {
               height={20}
               alt="add"
             />
-            <span className="font-semibold text-[#01503b] text-[12px] md:text-[18px]">
+            <span className="font-semibold text-[#01503b] text-[12px] md:text-[18px] ">
               Add New
             </span>
           </span>
@@ -169,7 +173,10 @@ export default function PublicationCard({ data }: PublicationCardProps) {
 
         {/* Modal */}
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogContent ref={modalRef}>
+          <DialogContent
+            ref={modalRef}
+            className="z-1000 h-130 overflow-y-auto overflow-x-hidden"
+          >
             <form onSubmit={handleSave}>
               <DialogHeader>
                 <DialogTitle className="px-4">
@@ -194,9 +201,12 @@ export default function PublicationCard({ data }: PublicationCardProps) {
                             <ScholarIcon />
                           </div>
 
-                          <div>
+                          <div className='flex flex-col gap-2'>
                             <p className="font-semibold text-[#01281e]">
                               {item.title}
+                            </p>
+                            <p className="font-semibold text-[#01281e]">
+                              {item.articleLink}
                             </p>
                             <p className="text-sm text-muted-foreground">
                               {item.author}
@@ -207,7 +217,7 @@ export default function PublicationCard({ data }: PublicationCardProps) {
                         <button
                           type="button"
                           onClick={() => openEditModal(index)}
-                          className="text-[#01503b]"
+                          className="text-[#01503b] cursor-pointer"
                         >
                           <EditIcon />
                         </button>
@@ -224,7 +234,7 @@ export default function PublicationCard({ data }: PublicationCardProps) {
                         name="title"
                         value={formData.title}
                         onChange={handleChange}
-                        className="border border-[#4444441A] py-[22px]"
+                        className="border border-[#4444441A] py-[22px] w-full"
                       />
                     </div>
 
@@ -236,7 +246,7 @@ export default function PublicationCard({ data }: PublicationCardProps) {
                         name="author"
                         value={formData.author}
                         onChange={handleChange}
-                        className="border border-[#4444441A] py-[22px]"
+                        className="border border-[#4444441A] py-[22px] w-full"
                       />
                     </div>
 
@@ -248,13 +258,24 @@ export default function PublicationCard({ data }: PublicationCardProps) {
                         name="year"
                         value={formData.year}
                         onChange={handleChange}
-                        className="border border-[#4444441A] py-[22px]"
+                        className="border border-[#4444441A] py-[22px] w-full"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label className="font-semibold">
+                        Link<span className="text-red-600">*</span>
+                      </Label>
+                      <Input
+                        name="link"
+                        value={formData.articleLink}
+                        onChange={handleChange}
+                        className="border border-[#4444441A] py-[22px] w-full"
                       />
                     </div>
 
                     <Btn
                       type="submit"
-                      className="rounded-[10px] bg-[#b79e6b] px-6 py-3 text-white"
+                      className="rounded-[10px] bg-[#b79e6b] px-6 py-3 text-white w-full mt-2"
                     >
                       Save
                     </Btn>

@@ -31,6 +31,7 @@ export interface PublicationItem {
   title: string;
   year: string;
   author: string;
+  articleLink: string;
 }
 
 export interface ProfileData {

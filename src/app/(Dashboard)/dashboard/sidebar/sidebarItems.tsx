@@ -66,7 +66,7 @@ export const userMenu: MenuItem[] = [
     icon: '/images/dashboard/img02.png',
   },
   {
-    title: 'Previous Test',
+    title: 'Previous Tests',
     href: '/dashboard/previous-test',
     icon: '/images/dashboard/img03.png',
   },
