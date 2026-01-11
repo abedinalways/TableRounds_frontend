@@ -45,7 +45,7 @@ export default function ContactForm() {
           <Input
             placeholder="Enter your name"
             {...register('name')}
-            className="bg-[#1D886B] px-[12px] py-[16px] placeholder:text-[#f9f9f5] placeholder:text-[12px] rounded-[8px] border-none shadow-lg text-white md:h-[60px]"
+            className="bg-[#1D886B] px-[12px] py-[16px] placeholder:text-[#f9f9f5] placeholder:text-[12px] rounded-[8px] border-none shadow-lg text-white md:h-[60px] w-full"
           />
           {errors.name && (
             <p className="text-red-300 text-xs mt-1">{errors.name.message}</p>
@@ -60,7 +60,7 @@ export default function ContactForm() {
           <Input
             placeholder="Enter your email address"
             {...register('email')}
-            className="bg-[#1D886B] px-[12px] py-[16px] placeholder:text-[#f9f9f5] placeholder:text-[12px] rounded-[8px] border-none shadow-lg text-white md:h-[60px]"
+            className="bg-[#1D886B] px-[12px] py-[16px] placeholder:text-[#f9f9f5] placeholder:text-[12px] rounded-[8px] border-none shadow-lg text-white md:h-[60px] w-full"
           />
           {errors.email && (
             <p className="text-red-300 text-xs mt-1">{errors.email.message}</p>

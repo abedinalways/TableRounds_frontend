@@ -15,9 +15,9 @@ export const profileData: ProfileData = {
     following: 234,
   },
   questionBank: {
-    completion: 80, 
-    ranking: 10, 
-    correctRate: 90, 
+    completion: 80,
+    ranking: 10,
+    correctRate: 90,
     bestTopic: 'Trauma',
   },
   education: [
@@ -65,10 +65,12 @@ export const profileData: ProfileData = {
     {
       title: 'Novel Approaches to TMJ Reconstruction',
       author: ' Jordan Nguyen, DMD, MD',
+      articleLink: 'https://www.ncbi.nlm.nih.gov/books/NBK481948/',
       year: '2023',
     },
     {
       title: 'Maxillofacial Trauma Surgery',
+      articleLink: 'https://www.ncbi.nlm.nih.gov/books/NBK589654/',
       author: 'Wiley-Blackwell',
       year: '2021',
     },

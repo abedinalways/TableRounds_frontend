@@ -41,7 +41,7 @@ export default function Function() {
           </p>
         </div>
         {/* cards */}
-        <div className="grid grid-cols-1 md:grid-cols-12 md:gap-[32px] ">
+        <div className="grid grid-cols-1 md:grid-cols-12 md:gap-[32px] space-y-4 md:space-y-0">
           {/* skeleton div */}
           <div className="col-span-5 ">
             <Image

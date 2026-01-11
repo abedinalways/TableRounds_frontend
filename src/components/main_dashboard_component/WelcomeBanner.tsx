@@ -77,7 +77,7 @@ export const WelcomeBanner = () => {
             width={138}
             height={138}
             alt="doctor"
-            className="absolute md:top-14 top-4 md:left-30 right-10 opacity-80 "
+            className="absolute md:top-14 top-8 md:left-30 right-10 opacity-80 "
           />
           <Image
             src="/images/dashboard/main_dashboard/img01.png"
@@ -91,7 +91,7 @@ export const WelcomeBanner = () => {
             width={176}
             height={245}
             alt="doctor"
-            className="md:mr-22 mr-32 mt-34 md:mt-0 z-30 md:w-full"
+            className="md:mr-22 mr-32 relative top-9 md:mt-0 z-30 md:w-full"
           />
         </div>
       </div>

@@ -108,13 +108,13 @@ export default function Elevate() {
         <Btn
           text="Create Your Free Account"
           href="/register"
-          className="bg-[#B79E6B] text-white hover:bg-[#B79E6B] transition-colors rounded-xl w-full h-10 md:w-[261px] md:h-[54px] cursor-pointer z-30"
+          className="bg-[#B79E6B] text-white hover:bg-[#B79E6B] transition-colors rounded-xl w-full h-10 md:w-[261px] md:h-[54px] text-sm cursor-pointer z-30"
         />
 
         <Btn
           text="Learn More About TableRounds"
           // href="/#welcome"
-          className="bg-white text-[#B79E6B] w-full h-10 transition-colors rounded-xl md:w-[305px] md:h-[54px] cursor-pointer z-30"
+          className="bg-white text-[#B79E6B] w-full h-10 transition-colors rounded-xl md:w-[305px] md:h-[54px] cursor-pointer z-30 text-sm"
           onClick={handleScrollToSection} // Scroll to section when clicked
         />
       </div>

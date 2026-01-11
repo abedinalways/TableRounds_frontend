@@ -440,9 +440,9 @@ opacity-xl font-[manrope]"
           </div>
 
           {/* Right Column - Upload & Verification */}
-          <div className="space-y-6 p-6 flex flex-col ">
+          <div className="space-y-6 md:p-6 flex flex-col ">
             {/* Terms and Submit */}
-            <div className="mt-6 flex  items-center justify-end  gap-4 mx-6 space-x-6">
+            <div className="mt-6 flex  items-center   gap-4 mx-6 space-x-6">
               {/* submit button */}
               <button
                 onClick={handleSubmit}

@@ -5,7 +5,7 @@ import React from 'react'
 import Image from 'next/image';
 export default function Details() {
   return (
-    <div id='details' className="relative gradient-bg flex flex-col items-center justify-center gap-6 max-w-[1920px] h-[492px]  text-white text-center ">
+    <div id='details' className="relative gradient-bg flex flex-col items-center justify-center gap-6 max-w-[1920px] md:h-[492px] py-2 md:py-0 text-white text-center ">
       <h2 className="text-2xl sm:text-[48px] px-4 md:px-0 font-bold leading-[110%] font-[manrope]">
         TableRounds: Specialty-Level Learning and a <br /> Verified Professional
         Network
