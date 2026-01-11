@@ -54,7 +54,7 @@ export default function LoginPage() {
       />
 
       {/* Header */}
-      <div className="text-center mb-8 z-10">
+      <div className="text-center mb-8 mt-20 md:mt-0 z-10">
         <h3 className="text-3xl md:text-[48px] font-bold text-[#01281E] leading-[110%]">
           Login
         </h3>

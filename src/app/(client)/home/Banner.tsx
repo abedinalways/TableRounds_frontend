@@ -97,17 +97,17 @@ export default function Banner() {
         className="
           relative z-20
           md:space-y-[
-          64px]
+          24px]
           max-w-3xl
           mx-auto md:mx-0 md:ml-[160px]
            md:text-left
-          pt-[280px] md:pt-[270px]
+          pt-[200px] md:pt-[270px]
           px-4 ms:px-0
           text-white
           custom-container
         "
       >
-        <h2 className="font-bold text-3xl md:text-[60px] leading-[120%]">
+        <h2 className="font-bold text-2xl md:text-[60px] leading-[120%]">
           Where healthcare providers come
           <br />
           to learn and collaborate, in all <br />
@@ -124,13 +124,13 @@ export default function Banner() {
           <Btn
             href="/register"
             text="Create Your Free Account"
-            className="bg-[#B79E6B] text-white md:w-[245px] h-[54px]"
+            className="bg-[#B79E6B] text-white text-sm xl:text-md md:w-[245px] h-[54px]"
           />
 
           <Btn
             text="Learn More"
             onClick={handleLearnMore}
-            className="bg-white text-[#B79E6B] md:w-[217px] h-[54px]"
+            className="bg-white text-[#B79E6B] md:w-[217px] h-[54px] text-sm xl:text-md "
           />
         </div>
       </div>

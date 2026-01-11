@@ -38,7 +38,7 @@ export default function LoginForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="md:w-[1132px] w-full rounded-xl md:px-16 md:py-16 py-4 shadow-xl 
+      className="md:w-[1132px] px-40 rounded-xl md:px-16 md:py-16 py-4 shadow-xl 
       background relative overflow-hidden z-10 mx-2 md:mx-0 font-[manrope]"
     >
       {/* Input Field */}
@@ -53,7 +53,7 @@ export default function LoginForm({
             value={formData.email}
             onChange={e => handleChange('email', e.target.value)}
             disabled={isLoading}
-            className="w-full input-bg md:w-[644px] md:h-[61px] text-white placeholder:text-white/60 px-4 py-3 rounded-[8px]  outline-none "
+            className=" input-bg md:w-[644px] md:h-[61px] text-white placeholder:text-white/60 px-4 py-3 rounded-[8px]  outline-none w-fit"
           />
         </div>
       </div>
@@ -76,12 +76,12 @@ export default function LoginForm({
       </div>
 
       {/* Buttons */}
-      <div className="md:flex items-center justify-center gap-4">
+      <div className="md:flex items-center justify-center gap-4 space-y-2 md:space-y-0">
         {/* Login */}
         <button
           type="submit"
           disabled={isDisabled}
-          className="bg-[#B79E6B] text-white text-[16px] hover:bg-[#a08c5f] rounded-[8px] cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed w-[126px] h-[54px] font-medium"
+          className="bg-[#B79E6B] text-white text-[16px] hover:bg-[#a08c5f] rounded-[8px] cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed md:w-[126px] w-full h-[54px] font-medium"
         >
           {isLoading ? (
             <>
@@ -97,7 +97,7 @@ export default function LoginForm({
         <button
           type="button"
           onClick={() => router.push('/forgot-password')}
-          className="w-[225px] h-[54px] bg-white text-[16px] text-[#b79e6b] font-medium  rounded-md hover:bg-white/90 transition cursor-pointer"
+          className="md:w-[225px] w-full h-[54px] bg-white text-[16px] text-[#b79e6b] font-medium  rounded-md hover:bg-white/90 transition cursor-pointer"
         >
           Forgot Your Password?
         </button>
