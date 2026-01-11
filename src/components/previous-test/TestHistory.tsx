@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { CircularProgressPercentage } from '../CircularProgressPercentage';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Search } from 'lucide-react';
 
 
 export interface TestItem {
@@ -120,17 +121,20 @@ export function TestHistory({
                 </span>
                 {dropdownIndex === i && (
                   <div className="absolute right-0 mt-2 w-32 z-20 bg-white shadow-lg rounded-md border border-gray-300">
-                    <button
-                      onClick={() => handleDelete(i)}
-                      className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
-                    >
-                      Delete
+                    <button className="block w-full text-left px-4 py-2 text-[#01281E] hover:bg-gray-100 cursor-pointer">
+                      Review
                     </button>
                     <button
                       onClick={() => handlePreview(i)}
-                      className="block w-full text-left px-4 py-2 text-blue-500 hover:bg-gray-100"
+                      className="block w-full text-left px-4 py-2 text-[#01281E] hover:bg-gray-100 cursor-pointer"
                     >
-                      Preview
+                      Results
+                    </button>
+                    <button
+                      
+                      className="block w-full text-left px-4 py-2 text-[#01281E] hover:bg-gray-100 cursor-pointer"
+                    >
+                      Send
                     </button>
                   </div>
                 )}

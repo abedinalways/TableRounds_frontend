@@ -103,7 +103,7 @@ export function LeaderboardTable({ data }: LeaderboardTableProps) {
               <CalendarIcon />
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className='text-sm'>
               <SelectItem value="this-week">This Week</SelectItem>
               <SelectItem value="this-month">This Month</SelectItem>
               <SelectItem value="this-quarter">This Quarter</SelectItem>
