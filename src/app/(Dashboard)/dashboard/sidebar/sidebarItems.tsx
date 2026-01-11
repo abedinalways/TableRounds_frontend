@@ -32,18 +32,18 @@ export const adminMenu: MenuItem[] = [
   {
     title: 'Messages',
     href: '/dashboard/support-message',
-    icon: '/images/dashboard/img07.png',
+    icon: '/images/dashboard/img007.png',
   },
   {
-    title: 'My Profile',
-    href: '/dashboard/my-profile',
+    title: 'Admin Profile',
+    href: '/dashboard/manage-settings',
     icon: '/images/dashboard/img00008.png',
   },
 
   // OTHER SECTION
   {
     section: 'Other',
-    title: 'Help & Support',
+    title: 'Legal',
     href: '/dashboard/help-support',
     icon: '/images/dashboard/img08.png',
   },

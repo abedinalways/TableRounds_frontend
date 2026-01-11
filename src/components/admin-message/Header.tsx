@@ -28,18 +28,10 @@ export default function Header() {
             <h2 ref={textRef} className="md:text-2xl text-md font-bold">
               Dr. {userName}
             </h2>
-            <p className="md:text-sm text-xs">
+            {/* <p className="md:text-sm text-xs">
               Stay up to date on your current progress
-            </p>
-            <div className="flex md:space-x-4 space-x-2 text-[#b79e6b]">
-              <span className="md:text-lg text-xs font-semibold">
-                333 Followers
-              </span>
-              <span className="opacity-60">|</span>
-              <span className="md:text-lg text-xs font-semibold">
-                666 Following
-              </span>
-            </div>
+            </p> */}
+            
           </div>
         </div>
 
@@ -56,11 +48,9 @@ export default function Header() {
             className="md:w-40 w-20 bg-background text-foreground"
           >
             <DropdownMenuItem className="cursor-pointer text-[8px] md:text-sm">
-              Report User
+             Suspend User
             </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer text-[8px] md:text-sm">
-             Unfollow User
-            </DropdownMenuItem>
+            
            
           </DropdownMenuContent>
         </DropdownMenu>

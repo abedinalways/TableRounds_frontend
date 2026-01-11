@@ -1,8 +1,9 @@
-
+'use client'
 import { VerificationUser } from '@/types/admin';
 
 import Image from 'next/image';
 import EyeIcon from '../reusable/icons/EyeIcon';
+import { useState } from 'react';
 
 type Props = {
   users: VerificationUser[];
@@ -10,7 +11,9 @@ type Props = {
 };
 
 export function UserVerification({ users, onAction }: Props) {
+   const [previewImage, setPreviewImage] = useState<string | null>(null);
   return (
+    <>
     <div className="bg-white rounded-lg shadow p-[18px] font-[manrope]">
       <div className="mb-4 text-[#01281e] text-[20px] font-bold leading-[150%]">
         User Verifications
@@ -21,7 +24,7 @@ export function UserVerification({ users, onAction }: Props) {
             <tr className="text-left text-white">
               <th className="p-3 text-left">Name</th>
               <th className="p-3 text-left">Email</th>
-              <th className="p-3 text-left">Location</th>
+              <th className="p-3 text-left">Profile</th>
               <th className="p-3 text-left">Document</th>
               <th className="p-3 text-left">Action</th>
             </tr>
@@ -36,7 +39,10 @@ export function UserVerification({ users, onAction }: Props) {
                     alt={user.name}
                     width={32}
                     height={32}
-                    className="rounded-full"
+                    className="rounded-full cursor-pointer"
+                    onClick={() =>
+                      setPreviewImage(user.image ?? '/images/doc.png')
+                    }
                   />
                   {user.name}
                 </td>
@@ -69,5 +75,33 @@ export function UserVerification({ users, onAction }: Props) {
         </table>
       </div>
     </div>
+    {/*  */}
+    {previewImage && (
+        <div
+          className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center"
+          onClick={() => setPreviewImage(null)}
+        >
+          <div
+            className="relative bg-white rounded-lg p-4 max-w-[90vw] max-h-[90vh]"
+            onClick={e => e.stopPropagation()}
+          >
+            <Image
+              src={previewImage}
+              alt="Profile Preview"
+              width={400}
+              height={400}
+              className="object-contain rounded-lg"
+            />
+
+            <button
+              onClick={() => setPreviewImage(null)}
+              className="absolute top-2 right-2 bg-black text-white rounded-full w-7 h-7 flex items-center justify-center cursor-pointer"
+            >
+              ✕
+        </button>
+         </div>
+        </div>
+      )}
+    </>
   );
 }

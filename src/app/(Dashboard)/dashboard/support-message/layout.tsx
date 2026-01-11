@@ -5,9 +5,11 @@ import { ChatProvider } from '../../context/ChatContext';
 export default function ChatLayout({ children }: React.PropsWithChildren) {
   return (
     <ChatProvider>
-      <h2 className="text-[#01281e] text-[36px] md:text-[48px] font-bold font-[manrope] mt-6">Support Message</h2>
+      <h2 className="text-[#01281e] text-[36px] md:text-[48px] font-bold font-[manrope] mt-6">
+        Admin Messenger
+      </h2>
       <section className="grid md:h-[calc(100dvh-140px)] grid-cols-12 md:gap-6 font-[manrope] ">
-        <div className="md:h-[calc(100dvh-140px)]  md:col-span-8 col-span-12 bg-white md:p-8 p-2 md:grid md:grid-rows-[190px_1fr_86px] rounded-2xl shadow-lg">
+        <div className="md:h-[calc(100dvh-140px)]  md:col-span-8 col-span-12 bg-white md:p-8 p-2 md:grid md:grid-rows-[130px_1fr_86px] rounded-2xl shadow-lg">
           {children}
         </div>
 

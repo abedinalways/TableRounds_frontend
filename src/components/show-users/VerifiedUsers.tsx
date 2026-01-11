@@ -24,7 +24,7 @@ export function VerifiedUsers({ users, onDelete }: Props) {
   return (
     <div className="bg-white rounded-lg shadow p-[18px] font-[manrope]">
       <div className="mb-4 text-[#01281e] text-[20px] font-bold leading-[150%]">
-        User Verifications
+        User Verified
       </div>
       <div className="rounded-t-[8px] overflow-x-auto">
         <table className="w-full text-sm min-w-[900px]">
@@ -33,7 +33,7 @@ export function VerifiedUsers({ users, onDelete }: Props) {
               <th className="p-3">Name</th>
               <th className="p-3">Email</th>
               <th className="p-3">Location</th>
-              <th className="p-3">Current Practice</th>
+
               <th className="p-3">Social media</th>
               <th className="p-3">Documents</th>
               <th className="p-3 text-center">Action</th>
@@ -58,9 +58,7 @@ export function VerifiedUsers({ users, onDelete }: Props) {
                 </td>
                 <td className="p-4">{user.email}</td>
                 <td className="p-4 truncate max-w-[150px]">{user.location}</td>
-                <td className="p-4 truncate max-w-[150px]">
-                  {user?.currentPractice}
-                </td>
+
                 <td className="p-4">
                   <div className="flex gap-3 text-[#01503b]">
                     {/* Replace with your actual social icons */}
@@ -94,14 +92,17 @@ export function VerifiedUsers({ users, onDelete }: Props) {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                       <DropdownMenuItem>
-                        <Link href="/dashboard/profile">View Profile</Link>
+                        <Link href="/dashboard/profile">View profile</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Link href="/dashboard/support-message">Contact user</Link>
                       </DropdownMenuItem>
                       {/* implement delete user functionality */}
                       <DropdownMenuItem
                         onClick={() => onDelete(user.id)}
                         className=" cursor-pointer"
                       >
-                        Delete User
+                        Delete user
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

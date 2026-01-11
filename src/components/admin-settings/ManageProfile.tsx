@@ -104,14 +104,14 @@ export default function ManageProfile() {
             />
           </div>
 
-          <div className="flex flex-col gap-[8px]">
+          {/* <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">Credentials</Label>
             <Input
               {...register('credentials')}
               placeholder="i.e. DDS, DMD, MD, Student"
               className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
             />
-          </div>
+          </div> */}
 
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">LinkedIn</Label>
@@ -122,14 +122,14 @@ export default function ManageProfile() {
             />
           </div>
 
-          <div className="flex flex-col gap-[8px]">
+          {/* <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">Location</Label>
             <Input
               placeholder="Enter your city, state, and country"
               {...register('location')}
               className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
             />
-          </div>
+          </div> */}
 
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">Twitter/X</Label>
@@ -140,14 +140,14 @@ export default function ManageProfile() {
             />
           </div>
 
-          <div className="flex flex-col gap-[8px]">
+          {/* <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">Year in Training/Practice</Label>
             <Input
               {...register('year')}
               placeholder="PGY vs. Attending Surgeon"
               className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
             />
-          </div>
+          </div> */}
 
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">Facebook</Label>
@@ -171,7 +171,7 @@ export default function ManageProfile() {
       {/* Description */}
       <div className="mt-6 bg-white rounded-2xl p-6 shadow-sm font-[manrope] mb-6">
         <Label className="font-bold mb-4 text-[#0f172b] text-16px md:text-[24px] leading-[130%]">
-          Descriptions
+          Description
         </Label>
         <Textarea
           rows={4}

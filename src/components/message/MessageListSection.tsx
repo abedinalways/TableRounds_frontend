@@ -11,7 +11,7 @@ export default function MessageListSection() {
 
   return (
     <>
-      <h4 className="font-semibold mb-3">Message List</h4>
+      <h4 className="font-semibold mb-3">All Messages</h4>
 
       <div className="relative mb-4">
         <Search

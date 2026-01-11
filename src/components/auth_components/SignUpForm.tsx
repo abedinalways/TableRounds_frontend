@@ -130,7 +130,7 @@ export default function SignUpForm({ onSubmit, onCancel }: SignUpFormProps) {
     <div className="z-40  font-[manrope]">
       <div
         className="custom-container p-6 md:p-8 mx-auto gradient-bg rounded-md backdrop-blur  
-opacity-xl"
+opacity-xl font-[manrope]"
       >
         <div className="md:flex justify-between gap-10">
           {/* Left Column - Credentials */}
