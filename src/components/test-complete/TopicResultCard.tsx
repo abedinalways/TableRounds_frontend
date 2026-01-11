@@ -68,7 +68,7 @@ export function TopicResultCard({
 
           <div className="space-y-3 text-[20px] flex-1 items-center ">
             <div className="flex items-center justify-between bg-[#ecfdf5] px-[24px] py-[12px] rounded-[8px]">
-              <span className="text-gray-600">Total Question</span>
+              <span className="text-gray-600">Total Questions</span>
               <span className="font-semibold text-green-700">{total}</span>
             </div>
             <div className="flex items-center justify-between  bg-[#f9f9f5] px-[24px] py-[12px] rounded-[8px]">

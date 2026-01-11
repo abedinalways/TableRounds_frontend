@@ -34,6 +34,11 @@ export const adminMenu: MenuItem[] = [
     href: '/dashboard/support-message',
     icon: '/images/dashboard/img07.png',
   },
+  {
+    title: 'My Profile',
+    href: '/dashboard/my-profile',
+    icon: '/images/dashboard/img00008.png',
+  },
 
   // OTHER SECTION
   {
@@ -88,12 +93,12 @@ export const userMenu: MenuItem[] = [
   {
     title: 'Messages',
     href: '/dashboard/messages',
-    icon: '/images/dashboard/img07.png',
+    icon: '/images/dashboard/img007.png',
   },
   {
     title: 'My Profile',
     href: '/dashboard/my-profile',
-    icon: '/images/dashboard/img07.png',
+    icon: '/images/dashboard/img00008.png',
   },
 
   // OTHER SECTION

@@ -15,8 +15,8 @@ const topics = [
   {
     title: 'Orthognathic',
     total: 10,
-    correct: 9,
-    icon: '/images/dashboard/statistics/img02.png',
+    correct: 8,
+    icon: '/images/dashboard/statistics/img10.png',
   },
   {
     title: 'Pathology',
