@@ -14,7 +14,7 @@ export function PendingUsers({ users, onApprove, onReject }: Props) {
   return (
     <div className="bg-white rounded-lg shadow p-[18px] font-[manrope]">
       <div className="mb-4 text-[#01281e] text-[20px] font-bold leading-[150%]">
-        User Verifications
+        Users Pending
       </div>
       <div className="rounded-t-[8px]  overflow-x-auto">
         <table className="w-full text-sm min-w-[700px]">

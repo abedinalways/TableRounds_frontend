@@ -15,19 +15,12 @@ export default function AdminSupportPage() {
 
   return (
     <div className="font-[manrope] text-[#01281E]">
-      <h1 className="text-5xl font-bold  mb-8">Help & Support</h1>
-      
-      <div className="min-h-screen md:flex">
+      <h1 className="text-5xl font-bold  mb-8">Legal</h1>
+
+      <div className="min-h-screen md:flex gap-4">
         {/* Sidebar */}
         <aside className="h-[216px] md:w-[266px] bg-white rounded-lg ">
           <nav className="">
-            <Button
-              variant={activeTab === 'privacy' ? 'default' : 'ghost'}
-              className="w-full mx-auto  text-lg py-6 text-center rounded-t-2xl rounded-b-none!"
-              onClick={() => setActiveTab('privacy')}
-            >
-              Privacy Policy
-            </Button>
             <Button
               variant={activeTab === 'disclaimer' ? 'default' : 'ghost'}
               className="w-full mx-auto  text-lg py-6 text-center rounded-t-2xl rounded-b-none!"
@@ -35,6 +28,14 @@ export default function AdminSupportPage() {
             >
               Disclaimer
             </Button>
+            <Button
+              variant={activeTab === 'privacy' ? 'default' : 'ghost'}
+              className="w-full mx-auto  text-lg py-6 text-center rounded-t-2xl rounded-b-none!"
+              onClick={() => setActiveTab('privacy')}
+            >
+              Privacy Policy
+            </Button>
+
             <Button
               variant={activeTab === 'terms' ? 'default' : 'ghost'}
               className="w-full mx-auto  text-lg py-6 text-center rounded-t-2xl rounded-b-none!"

@@ -8,7 +8,7 @@ export default function SettingsPage() {
     <div className="font-[manrope]">
       <div className="my-8">
         <h2 className="text-[#01281e] text-[32px] md:text-[48px] font-bold ">
-          Settings
+          Admin Profile
         </h2>
         <p className="text-12px] md:text-[18px] font-normal text-[#6b7280]">
           Manage your professional profile

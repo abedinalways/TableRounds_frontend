@@ -39,7 +39,7 @@ export default function LoginForm({
     <form
       onSubmit={handleSubmit}
       className="md:w-[1132px] w-full rounded-xl md:px-16 md:py-16 py-4 shadow-xl 
-      background relative overflow-hidden z-10 mx-2 md:mx-0"
+      background relative overflow-hidden z-10 mx-2 md:mx-0 font-[manrope]"
     >
       {/* Input Field */}
       <div className="mb-6 flex justify-center">

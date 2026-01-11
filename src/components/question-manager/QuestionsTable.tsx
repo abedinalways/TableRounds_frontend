@@ -70,7 +70,7 @@ export default function QuestionsTable({ data, onEdit, onDelete }: Props) {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
         <h3 className="font-semibold text-[#01281e] text-[16px] md:text-[20px]">
-          Questions Performance
+          Questions
         </h3>
 
         <div className="flex flex-wrap items-center gap-3">
@@ -104,9 +104,9 @@ export default function QuestionsTable({ data, onEdit, onDelete }: Props) {
             onChange={e => setCorrectFilter(e.target.value)}
             className="border border-[#e5e7eb] rounded-md px-3 py-[6px] text-sm text-[#6b7280] outline-none w-[120px] bg-[#f7f7f3]"
           >
-            <option value="all">Correct</option>
-            <option value="correct">Has Correct</option>
-            <option value="incorrect">No Correct</option>
+            <option value="all">Intern</option>
+            <option value="correct">Senior</option>
+            <option value="incorrect">Boards</option>
           </select>
 
           {/* Topic Filter */}
@@ -115,7 +115,7 @@ export default function QuestionsTable({ data, onEdit, onDelete }: Props) {
             onChange={e => setTopicFilter(e.target.value)}
             className="border border-[#e5e7eb] rounded-md px-3 py-[6px] text-sm text-[#6b7280] outline-none w-[120px] bg-[#f7f7f3]"
           >
-            <option value="all">Topics</option>
+            <option value="all">Topic</option>
             {topicOptions
               .filter(t => t !== 'all')
               .map(topic => (
@@ -136,10 +136,10 @@ export default function QuestionsTable({ data, onEdit, onDelete }: Props) {
                 Question ID
               </th>
               <th className="px-4 py-3 text-left font-medium text-[12px] md:text-[16px]">
-                Question Text
+                Question Stem
               </th>
               <th className="px-4 py-3 text-left font-medium text-[12px] md:text-[16px]">
-                Topic(s)
+                Topic
               </th>
               <th className="px-4 py-3 text-left font-medium text-[12px] md:text-[16px]">
                 Difficulty
@@ -148,7 +148,7 @@ export default function QuestionsTable({ data, onEdit, onDelete }: Props) {
                 Attempts
               </th>
               <th className="px-4 py-3 text-center font-medium text-[12px] md:text-[16px]">
-                Correct
+                % Correct
               </th>
               <th className="px-4 py-3 text-center font-medium text-[12px] md:text-[16px]">
                 Action

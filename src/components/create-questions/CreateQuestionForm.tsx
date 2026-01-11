@@ -1,29 +1,30 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
 import { TagSelector } from './TagSelector';
 
 import { QuestionFormValues, Difficulty } from '@/types/question';
 import { RichTextEditor } from './RichTextEditor';
 import { toast } from 'sonner';
+import { Label } from '../ui/label';
+import { InputGroup, InputGroupInput } from '../ui/input-group';
 
 const TOPICS = [
   'Anesthesia/Medicine',
   'Cancer',
-  'Trauma',
-  'TMJ',
-  'Pathology',
-  'Implants',
-  'Dentoalveolar',
   'Cosmetics',
-  'Reconstruction',
+  'Dentoalveolar',
+  'Implants',
   'Orthognathic',
+  'Pathology',
+  'Reconstruction',
+  'TMJ',
+  'Trauma',
 ];
-const DIFFICULTIES: Difficulty[] = ['Intern', 'Boards', 'Senior'];
+const DIFFICULTIES: Difficulty[] = ['Intern', 'Senior', 'Boards'];
 
 export default function CreateQuestionForm() {
   const { register, control, handleSubmit, watch, setValue, reset } =
@@ -40,6 +41,10 @@ export default function CreateQuestionForm() {
 
   const { fields, append } = useFieldArray({ control, name: 'answers' });
   const [editorKey, setEditorKey] = React.useState(0);
+
+  // File attachment state
+  const [attachedFile, setAttachedFile] = React.useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleAddMoreQuestionSameScenario = () => {
     const currentDifficulty = watch('difficulty');
@@ -61,36 +66,48 @@ export default function CreateQuestionForm() {
       ],
     });
 
-    setEditorKey(prev => prev + 1); 
+    setEditorKey(prev => prev + 1);
+    setAttachedFile(null);
 
     toast.success('New question added for the same scenario');
   };
 
+  const onSubmit = (data: QuestionFormValues) => {
+    console.log('Form Data Submitted:', data);
+    if (attachedFile) {
+      console.log('Attached File:', attachedFile);
+    }
+    toast.success('Question created successfully!');
 
- const onSubmit = (data: QuestionFormValues) => {
-   console.log('Form Data Submitted:', data);
-   toast.success('Question created successfully!');
+    reset({
+      difficulty: 'Intern',
+      topic: 'Anatomy & Medicine',
+      questionStem: '',
+      questionTitle: '',
+      explanation: '',
+      keyPoints: '',
+      keepingPoint: '',
+      memoryTrick: '',
+      references: '',
+      answers: [
+        { id: '1', text: '', isCorrect: false },
+        { id: '2', text: '', isCorrect: true },
+      ],
+    });
+    setEditorKey(prev => prev + 1);
+    setAttachedFile(null);
+  };
 
-   reset({
-     difficulty: 'Intern',
-     topic: 'Anatomy & Medicine',
-     questionStem: '',
-     questionTitle: '',
-     explanation: '',
-     keyPoints: '',
-     keepingPoint: '',
-     memoryTrick: '',
-     references: '',
-     answers: [
-       { id: '1', text: '', isCorrect: false },
-       { id: '2', text: '', isCorrect: true },
-     ],
-   });
+  const handleAttachFileClick = () => {
+    fileInputRef.current?.click();
+  };
 
-   setEditorKey(prev => prev + 1); 
- };
-
-
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setAttachedFile(e.target.files[0]);
+      toast.success(`File "${e.target.files[0].name}" attached!`);
+    }
+  };
 
   return (
     <form
@@ -120,6 +137,21 @@ export default function CreateQuestionForm() {
         selected={watch('topic')}
         onChange={val => setValue('topic', val)}
       />
+
+      {/* Question ID */}
+      <div className="mx-2 space-y-2">
+        <Label className="text-md md:text-[20px] text-[#444950] font-bold  leading-[160%]">
+          Question ID
+        </Label>
+        <InputGroup>
+          <InputGroupInput
+            placeholder="an unique question id"
+            type="number"
+            className="border-none"
+          />
+        </InputGroup>
+      </div>
+
       <div className="flex justify-between items-center">
         <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
           Write Questions
@@ -128,27 +160,17 @@ export default function CreateQuestionForm() {
           Create New
         </button>
       </div>
+
       <div className="bg-white p-6 rounded-lg border space-y-6">
+        {/* Question Stem */}
         <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
           Question Stem
         </h2>
-
         <RichTextEditor
           key={`questionStem-${editorKey}`}
           value={watch('questionStem')}
           onChange={val => setValue('questionStem', val)}
         />
-
-        <div className="space-y-2 ">
-          <label className="text-[16px] md:text-[24px] text-[#444950] leading-[160%] font-bold">
-            Question Title
-          </label>
-          <Input
-            {...register('questionTitle')}
-            placeholder="Enter question title"
-            className="h-12"
-          />
-        </div>
 
         {/* Answer Choices */}
         <div className="space-y-4">
@@ -175,11 +197,16 @@ export default function CreateQuestionForm() {
               key={field.id}
               className="flex items-center gap-3 p-3 border rounded-lg bg-white"
             >
-              <Checkbox
+              <input
+                type="radio"
+                name="correctAnswer"
                 checked={watch(`answers.${index}.isCorrect`)}
-                onCheckedChange={checked => {
-                  setValue(`answers.${index}.isCorrect`, !!checked);
+                onChange={() => {
+                  fields.forEach((f, i) =>
+                    setValue(`answers.${i}.isCorrect`, i === index)
+                  );
                 }}
+                className="w-4 h-4 accent-[#01503b]"
               />
               <span className="text-gray-400">
                 {String.fromCharCode(65 + index)}.
@@ -202,7 +229,7 @@ export default function CreateQuestionForm() {
           value={watch('explanation')}
           onChange={v => setValue('explanation', v)}
         />
-        {/* Why The Other Options Are Incorrect */}
+
         <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
           Why The Other Options Are Incorrect
         </h2>
@@ -211,7 +238,7 @@ export default function CreateQuestionForm() {
           value={watch('keyPoints')}
           onChange={v => setValue('keyPoints', v)}
         />
-        {/* Pimping Point */}
+
         <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
           Pimping Point
         </h2>
@@ -220,7 +247,7 @@ export default function CreateQuestionForm() {
           value={watch('keepingPoint')}
           onChange={v => setValue('keepingPoint', v)}
         />
-        {/* Memory Trick */}
+
         <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
           Memory Trick
         </h2>
@@ -229,7 +256,7 @@ export default function CreateQuestionForm() {
           value={watch('memoryTrick')}
           onChange={v => setValue('memoryTrick', v)}
         />
-        {/* References */}
+
         <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
           References
         </h2>
@@ -239,19 +266,55 @@ export default function CreateQuestionForm() {
           onChange={v => setValue('references', v)}
         />
 
-        <div className="flex items-center justify-center  md:w-fit mx-auto ">
+        {/* Attach File Button */}
+        {/* <div className="flex items-center gap-4">
           <button
-            className="cursor-pointer md:px-6 px-3 py-2 md:py-4 rounded-[8px] border border-[#01503b] cursor-pointer text-[#01503b] md:text-[20px] text-sm font-semibold"
-            onClick={handleAddMoreQuestionSameScenario}
+            type="button"
+            onClick={handleAttachFileClick}
+            className="px-6 py-3 rounded-[8px] border border-[#01503b] text-[#01503b] font-semibold cursor-pointer"
+          >
+            Attach File
+          </button>
+          {attachedFile && (
+            <span className="text-green-600">
+              Attached: {attachedFile.name}
+            </span>
+          )}
+          <input
+            type="file"
+            accept=".pdf,.doc,.docx"
+            ref={fileInputRef}
+            className="hidden"
+            onChange={handleFileChange}
+          />
+        </div> */}
+
+        <div className="flex items-center justify-center md:w-fit mx-auto">
+          <button
+            type="button"
+            onClick={handleAttachFileClick}
+            className="cursor-pointer md:px-6 px-3 py-2 md:py-4 rounded-[8px] border border-[#01503b] text-[#01503b] md:text-[20px] text-sm font-semibold"
           >
             Add More Questions For The Same Scenario
           </button>
+          {attachedFile && (
+            <div className="text-green-600 p-3">
+              Attached: {attachedFile.name}
+            </div>
+          )}
+          <input
+            type="file"
+            accept=".pdf,.doc,.docx"
+            ref={fileInputRef}
+            className="hidden"
+            onChange={handleFileChange}
+          />
         </div>
       </div>
-      {/* here  */}
+
       <button
         type="submit"
-        className="cursor-pointer text-white px-8 py-3 rounded-[8px]  bg-[#01503b]"
+        className="cursor-pointer text-white px-8 py-3 rounded-[8px] bg-[#01503b]"
       >
         Submit
       </button>

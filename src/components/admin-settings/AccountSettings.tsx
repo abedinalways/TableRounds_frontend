@@ -1,12 +1,17 @@
 'use client';
 
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { useState } from 'react';
 
 type FormData = {
   email: string;
@@ -16,132 +21,152 @@ type FormData = {
 };
 
 export default function AccountSettings() {
-  const { register, handleSubmit, reset } = useForm<FormData>({
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [otp, setOtp] = useState('');
+  const [pendingPassword, setPendingPassword] = useState('');
+
+  const { register, handleSubmit, reset, getValues } = useForm<FormData>({
     defaultValues: {
       email: 'jordan@gmail.com',
-      currentPassword: 'bfedf1368724',
     },
   });
 
-  const [emailNotify, setEmailNotify] = useState(false);
-  const [webNotify, setWebNotify] = useState(true);
-
-  const onSubmit = (data: FormData) => {
+  // STEP 1: Request OTP
+  const onSubmit = async (data: FormData) => {
     if (data.newPassword !== data.confirmPassword) {
       toast.error('Passwords do not match');
       return;
     }
 
-    toast.success('Password updated successfully');
-    reset({
-      newPassword: '',
-      confirmPassword: '',
-    });
+    try {
+      const res = await fetch('/api/auth/request-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          purpose: 'PASSWORD_CHANGE',
+          currentPassword: data.currentPassword,
+        }),
+      });
+
+      if (!res.ok) throw new Error();
+
+      setPendingPassword(data.newPassword);
+      setShowOtpModal(true);
+      toast.success('OTP sent to your email');
+    } catch {
+      toast.error('Failed to send OTP');
+    }
   };
 
-  const handleDelete = () => {
-    toast.error('Account deleted');
+  // STEP 2: Verify OTP & Update Password
+  const verifyOtp = async () => {
+    try {
+      const res = await fetch('/api/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          otp,
+          newPassword: pendingPassword,
+        }),
+      });
+
+      if (!res.ok) throw new Error();
+
+      toast.success('Password updated securely');
+      setShowOtpModal(false);
+      setOtp('');
+      reset({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+      });
+    } catch {
+      toast.error('Invalid or expired OTP');
+    }
   };
 
   return (
-    <div className="bg-white rounded-2xl p-6 border border-[#4444441A] ">
-      <h2 className="font-bold text-[16px] md:text-[24px] text-[#0f172b] mb-4">
-        Account Settings
-      </h2>
+    <>
+      <div className="bg-white rounded-2xl p-6 border border-[#4444441A]">
+        <h2 className="font-bold text-[16px] md:text-[24px] text-[#0f172b] mb-4">
+          Account Settings
+        </h2>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-        {/* Email */}
-        <div className="flex flex-col gap-[8px]">
-          <Label>Email</Label>
-          <Input
-            disabled
-            {...register('email')}
-            className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
-          />
-        </div>
-
-        {/* Current Password */}
-        <div className="flex flex-col gap-[8px]">
-          <div className="flex justify-between items-center">
-            <Label>Current Password</Label>
-            <button
-              type="button"
-              onClick={() => toast.info('Redirect to change password')}
-              className="text-sm text-[#01503b] hover:underline"
-            >
-              Change Password?
-            </button>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          {/* Email */}
+          <div className="flex flex-col gap-2">
+            <Label>Email</Label>
+            <Input disabled {...register('email')} className="bg-[#f9f9f5]" />
           </div>
-          <Input
-            type="password"
-            {...register('currentPassword')}
-            placeholder="Set your Password"
-            className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
-          />
-        </div>
 
-        {/* New Password */}
-        <div className="flex flex-col gap-[8px]">
-          <Label>New Password</Label>
-          <Input
-            type="password"
-            {...register('newPassword')}
-            placeholder="Set your New Password"
-            className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
-          />
-        </div>
+          {/* Current Password */}
+          <div className="flex flex-col gap-2">
+            <Label>Current Password</Label>
+            <Input
+              type="password"
+              {...register('currentPassword', { required: true })}
+              placeholder="Enter current password"
+              className="bg-[#f9f9f5]"
+            />
+          </div>
 
-        {/* Confirm Password */}
-        <div className="flex flex-col gap-[8px]">
-          <Label>Confirm New Password</Label>
-          <Input
-            type="password"
-            {...register('confirmPassword')}
-            placeholder="PGY vs. Attending Surgeon"
-            className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
-          />
-        </div>
+          {/* New Password */}
+          <div className="flex flex-col gap-2">
+            <Label>New Password</Label>
+            <Input
+              type="password"
+              {...register('newPassword', { required: true })}
+              placeholder="New password"
+              className="bg-[#f9f9f5]"
+            />
+          </div>
 
-        {/* Notifications */}
-        <div className="flex items-center justify-between">
-          <Label>Email Notification</Label>
-          <Switch
-            checked={emailNotify}
-            className="cursor-pointer"
-            onCheckedChange={v => {
-              setEmailNotify(v);
-              toast.success(`Email notification ${v ? 'enabled' : 'disabled'}`);
-            }}
-          />
-        </div>
+          {/* Confirm Password */}
+          <div className="flex flex-col gap-2">
+            <Label>Confirm Password</Label>
+            <Input
+              type="password"
+              {...register('confirmPassword', { required: true })}
+              placeholder="Confirm new password"
+              className="bg-[#f9f9f5]"
+            />
+          </div>
 
-        <div className="flex items-center justify-between ">
-          <Label>Website Notification</Label>
-          <Switch
-            className="cursor-pointer"
-            checked={webNotify}
-            onCheckedChange={v => {
-              setWebNotify(v);
-              toast.success(
-                `Website notification ${v ? 'enabled' : 'disabled'}`
-              );
-            }}
-          />
-        </div>
-
-        {/* Delete */}
-        <div className="flex items-center justify-between ">
-          <Label className="">Delete Account</Label>
-          <Button
-            type="button"
-            variant="destructive"
-            onClick={handleDelete}
-            className="px-[24px] py-[12px] rounded-[8px] bg-[#01503B]"
-          >
-            Delete
+          <Button type="submit" className="bg-[#01503B] w-fit cursor-pointer">
+            Update Password (2FA)
           </Button>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+
+      {/* OTP MODAL */}
+      <Dialog open={showOtpModal} onOpenChange={setShowOtpModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Verify OTP</DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <p className="text-sm text-gray-500">
+              Enter the 6-digit code sent to your email
+            </p>
+
+            <Input
+              value={otp}
+              onChange={e => setOtp(e.target.value)}
+              maxLength={6}
+              placeholder="123456"
+            />
+
+            <Button
+              onClick={verifyOtp}
+              disabled={otp.length !== 6}
+              className="w-full bg-[#01503B]"
+            >
+              Verify & Update Password
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
