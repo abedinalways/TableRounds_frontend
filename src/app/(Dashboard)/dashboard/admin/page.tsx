@@ -130,7 +130,7 @@ export default function AdminDashboardPage() {
     <div className="p-6 space-y-6 font-[manrope]">
       <div className="flex justify-between items-center gap-2">
         <h1 className="text-3xl md:text-[48px] text-[#01281e] font-bold">
-          Admin Panel
+          Admin Dashboard
         </h1>
         <Link href='/dashboard/create-questions'>
           <button className="bg-[#01503b] md:px-6 px-4 md:py-4 py-2 rounded-lg text-white cursor-pointer">

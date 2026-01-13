@@ -250,7 +250,7 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
                     </div>
                     <div className="flex flex-col gap-2">
                       <Label>
-                        Period<span className="text-red-600">*</span>
+                        Years<span className="text-red-600">*</span>
                       </Label>
                       <Input
                         name="period"

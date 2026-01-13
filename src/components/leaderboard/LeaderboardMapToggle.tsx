@@ -1,14 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { Switch } from '@/components/ui/switch';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
+import {  CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import dynamic from 'next/dynamic';
 import StatCards from './StatCards';
 import leaderboardData from '../../../public/data/leadership-stat.json';
 import type { LeaderboardData } from '@/types/type';
 import { LeaderboardTable } from './LeaderboardTable';
-import Image from 'next/image';
+import { Switch } from '../ui/CustomSwitch';
+
 
 const data = leaderboardData as LeaderboardData;
 
@@ -37,17 +38,17 @@ function LeaderboardView() {
 }
 
 export default function LeaderboardMapToggle() {
-  const [isMap, setIsMap] = useState(true);
-
+  // const [isMap, setIsMap] = useState(true);
+  const [isLeaderboard, setIsLeaderboard] = useState(true);
   return (
     <div className="w-full bg-none font-[manrope] ">
       <CardHeader className="flex flex-wrap items-center justify-between">
         <div>
           <CardTitle className="md:text-[48px] text-[32px] text-[#01281e]">
-            {isMap ? 'Map' : 'Leaderboard'}
+            {isLeaderboard? 'Leaderboard':'Map' }
           </CardTitle>
           <p className="text-[18px] text-muted-foreground">
-            {isMap
+            {isLeaderboard
               ? 'Explore where TableRounds surgeons are worldwide'
               : 'Compare your performance with surgeons around the world'}
           </p>
@@ -55,24 +56,24 @@ export default function LeaderboardMapToggle() {
           
         <div className="flex  md:items-center gap-2 bg-white px-6 py-4 rounded-2xl">
           <span
-            className={`md:text-lg text-md ${!isMap ? 'font-semibold' : ''}`}
+            className={`md:text-lg text-md ${isLeaderboard ? 'font-semibold' : ''}`}
           >
             Leaderboard
           </span>
           <Switch
-            checked={isMap}
-            onCheckedChange={setIsMap}
+            checked={isLeaderboard}
+            onCheckedChange={setIsLeaderboard}
             className="cursor-pointer"
           />
           <span
-            className={`md:text-lg text-md  ${isMap ? 'font-semibold' : ''}`}
+            className={`md:text-lg text-md  ${!isLeaderboard ? 'font-semibold' : ''}`}
           >
             Map
           </span>
         </div>
       </CardHeader>
       <CardContent className="mt-4 text-[#01281e]">
-        {isMap ? <MapView /> : <LeaderboardView />}
+        {isLeaderboard ? <LeaderboardView />:  <MapView />}
       </CardContent>
       
     </div>

@@ -44,12 +44,13 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
       </div>
       <CardHeader className="">
         <p className="text-sm md:text-[20px] text-gray-700 leading-relaxed font-normal">
-          {quizDetails.title}
+          {quizDetails.title} {quizDetails.question}
         </p>
+        <span></span>
       </CardHeader>
 
       <CardContent className=" space-y-4">
-        <div className="font-normal text-sm md:text-[20px] text-[#01281e] flex items-center  ">
+        {/* <span className="font-normal text-sm md:text-[20px] text-[#01281e] flex items-center  ">
           <Image
             src="/images/dashboard/main_dashboard/qns.png"
             width={28}
@@ -57,8 +58,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
             alt=""
             className="mr-3"
           />
-          {quizDetails.question}
-        </div>
+        </span> */}
 
         <RadioGroup
           onValueChange={onAnswerChange}
@@ -194,15 +194,24 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
           )}
         </RadioGroup>
 
-        <Btn
-          text="Submit Answer"
-          onClick={onSubmit}
-          disabled={!selectedAnswerId || showExplanation}
-          className={cn(
-            'bg-[#01281e] text-white px-8 py-3 text-md font-semibold',
-            showExplanation ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'
-          )}
-        />
+        <div className="md:flex justify-between  items-center space-y-2 md:space-y-0 mb-6 md:mb-0">
+          <Btn
+            text="Submit Answer"
+            onClick={onSubmit}
+            disabled={!selectedAnswerId || showExplanation}
+            className={cn(
+              'bg-[#01281e] text-white w-full md:w-[164px] h-[50px] text-md font-semibold',
+              showExplanation
+                ? 'cursor-not-allowed opacity-60'
+                : 'cursor-pointer'
+            )}
+          />
+          <Btn
+            className="bg-[#b79e6b]  text-sm w-full md:w-[164px] h-[50px] text-white font-semibold rounded-sm! mb-2 mds:mb-0"
+            href="/dashboard/test-complete"
+            text="Submit Test"
+          />
+        </div>
       </CardContent>
     </div>
   );
