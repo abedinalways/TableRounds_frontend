@@ -340,7 +340,7 @@ opacity-xl font-[manrope]"
                 </Label>
                 <Input
                   id="currentPractice"
-                  placeholder="Name of your residency, hospital or private practice"
+                  placeholder="Name of your residency, hospital, or private practice"
                   value={formData.currentPractice}
                   onChange={e =>
                     handleInputChange('currentPractice', e.target.value)
@@ -477,7 +477,7 @@ opacity-xl font-[manrope]"
                         Upload your professional headshot
                       </p>
                       <p className="text-xs md:text-sm text-teal-200">
-                        Supported format:JPG / PNG (up to 5 mb)
+                        Supported format: JPG / PNG (up to 5 mb)
                       </p>
                     </div>
                     <label htmlFor="profilePhoto">
@@ -606,8 +606,8 @@ opacity-xl font-[manrope]"
                   <p className="text-sm">
                     Send a direct message to{' '}
                     <Link href="#">
-                      <span className="text-yellow-600 cursor-pointer">
-                        TableRounds.OMS
+                      <span className="text-yellow-600 cursor-pointer font-bold">
+                        @TableRounds.OMS
                       </span>
                     </Link>{' '}
                     on Instagram from your personal account
@@ -623,7 +623,7 @@ opacity-xl font-[manrope]"
                   />
                   <p className="text-sm">
                     All verification documents are encrypted and used only for
-                    identify verification. Each account is personally reviewed
+                    identity verification. Each account is personally reviewed
                     and approved by an admin.
                   </p>
                 </div>

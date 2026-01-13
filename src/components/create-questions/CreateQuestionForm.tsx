@@ -15,6 +15,7 @@ import { InputGroup, InputGroupInput } from '../ui/input-group';
 const TOPICS = [
   'Anesthesia/Medicine',
   'Cancer',
+  'Cleft/Craniofacial',
   'Cosmetics',
   'Dentoalveolar',
   'Implants',
@@ -138,30 +139,30 @@ export default function CreateQuestionForm() {
         onChange={val => setValue('topic', val)}
       />
 
-      {/* Question ID */}
-      <div className="mx-2 space-y-2">
-        <Label className="text-md md:text-[20px] text-[#444950] font-bold  leading-[160%]">
-          Question ID
-        </Label>
-        <InputGroup>
-          <InputGroupInput
-            placeholder="an unique question id"
-            type="number"
-            className="border-none"
-          />
-        </InputGroup>
-      </div>
-
       <div className="flex justify-between items-center">
         <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
           Write Questions
         </h2>
-        <button className="bg-[#01503b] px-6 py-3 rounded-[8px] cursor-pointer font-bold text-white">
+        {/* <button className="bg-[#01503b] px-6 py-3 rounded-[8px] cursor-pointer font-bold text-white">
           Create New
-        </button>
+        </button> */}
       </div>
 
       <div className="bg-white p-6 rounded-lg border space-y-6">
+        {/* Question ID */}
+        <div className="mx-2 space-y-2">
+          <Label className="text-md md:text-[20px] text-[#444950] font-bold  leading-[160%]">
+            Question ID
+          </Label>
+          <InputGroup>
+            <InputGroupInput
+              placeholder="Unique question id"
+              type="number"
+              className="border-none"
+            />
+          </InputGroup>
+        </div>
+
         {/* Question Stem */}
         <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
           Question Stem

@@ -29,18 +29,18 @@ export default function HelpPage() {
         <aside className="h-[216px] md:w-[266px] bg-white rounded-lg ">
           <nav className="">
             <Button
-              variant={activeTab === 'privacy' ? 'default' : 'ghost'}
-              className="w-full mx-auto  text-lg py-6 text-center rounded-t-2xl rounded-b-none!"
-              onClick={() => setActiveTab('privacy')}
-            >
-              Privacy Policy
-            </Button>
-            <Button
               variant={activeTab === 'disclaimer' ? 'default' : 'ghost'}
               className="w-full mx-auto  text-lg py-6 text-center rounded-t-2xl rounded-b-none!"
               onClick={() => setActiveTab('disclaimer')}
             >
               Disclaimer
+            </Button>
+            <Button
+              variant={activeTab === 'privacy' ? 'default' : 'ghost'}
+              className="w-full mx-auto  text-lg py-6 text-center rounded-t-2xl rounded-b-none!"
+              onClick={() => setActiveTab('privacy')}
+            >
+              Privacy Policy
             </Button>
             <Button
               variant={activeTab === 'terms' ? 'default' : 'ghost'}
@@ -62,8 +62,8 @@ export default function HelpPage() {
         {/* Main Content Area */}
         <main className="flex-1   mt-16 md:mt-0">
           <div className="max-w-5xl mx-auto">
-            {activeTab === 'privacy' && <PrivacyPolicyContent />}
             {activeTab === 'disclaimer' && <DisclaimerContent />}
+            {activeTab === 'privacy' && <PrivacyPolicyContent />}
             {activeTab === 'terms' && <TermsContent />}
             {activeTab === 'contact' && <ContactForm />}
           </div>

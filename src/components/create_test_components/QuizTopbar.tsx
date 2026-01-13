@@ -45,12 +45,7 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
         <div className="md:px-2 px-1 flex flex-col   justify-between ">
           <Progress value={progressValue} className="md:h-5 h-2 bg-white/60" />
           <div>
-            <Btn
-              className="bg-[#b79e6b] py-2 text-sm px-2 text-white rounded-sm! mt-4"
-              href="/dashboard/test-complete"
-            >
-              Submit Test
-            </Btn>
+           
           </div>
         </div>
 

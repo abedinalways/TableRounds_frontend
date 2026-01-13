@@ -13,12 +13,13 @@ import { FaXTwitter } from 'react-icons/fa6';
 import { Facebook, Instagram, Linkedin } from 'lucide-react';
 
 import AttachImageIcon from '../reusable/icons/AttachImageIcon';
-import { Switch } from '../ui/switch';
+
 import LocationIcon from '../ui/LocationIcon';
 import BagIcon from '../reusable/icons/BagIcon';
 import CalendarIconForProfile from '../reusable/icons/CalendarIconForProfile';
 import { Card } from '../ui/card';
 import FollowersFollowingModal from '../my-profile/FollowersFollowingModal';
+import { Switch } from '../ui/CustomSwitch';
 
 
 
@@ -120,7 +121,7 @@ const followingData = [
 
 export default function ManageProfile({ user }: ProfileHeaderProps) {
   const [preview, setPreview] = useState('/images/settings/img01.png');
-
+  const [isPublic, setIsPublic] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'followers' | 'following'>(
     'followers'
@@ -238,9 +239,25 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
               </button>
 
               <div className="flex md:items-center gap-2 bg-white px-6 py-4 rounded-2xl">
-                <span className="md:text-lg text-md">Public</span>
-                <Switch className="cursor-pointer" />
-                <span className="md:text-lg text-md">Private</span>
+                <span
+                  className={`${
+                    isPublic ? 'font-bold' : ''
+                  } md:text-lg text-md`}
+                >
+                  Public
+                </span>
+                <Switch
+                  checked={isPublic}
+                  onCheckedChange={setIsPublic}
+                  className="cursor-pointer"
+                />
+                <span
+                  className={`${
+                    !isPublic ? 'font-bold' : ''
+                  } md:text-lg text-md`}
+                >
+                  Private
+                </span>
               </div>
             </div>
           </div>
@@ -277,7 +294,8 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
             </Label>
             <Input
               {...register('name')}
-              placeholder="Enter Your Name"
+              placeholder="Jordan Nguyen"
+              readOnly
               className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
             />
           </div>
@@ -356,7 +374,7 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
               Current Practice <span className="text-red-600">*</span>
             </Label>
             <Input
-              placeholder="Name of your residency, hospital, private practice"
+              placeholder="Name of your residency, hospital, or private practice"
               {...register('practiceName')}
               className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
             />

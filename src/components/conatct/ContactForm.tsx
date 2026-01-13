@@ -40,7 +40,7 @@ export default function ContactForm() {
         {/* Name */}
         <div>
           <label className="text-white text-sm md:text-[18px] mb-1 block">
-            Name *
+            Name <span className="text-red-600">*</span>
           </label>
           <Input
             placeholder="Enter your name"
@@ -55,7 +55,7 @@ export default function ContactForm() {
         {/* Email */}
         <div>
           <label className="text-white text-sm md:text-[18px] mb-1 block">
-            Email *
+            Email <span className="text-red-600">*</span>
           </label>
           <Input
             placeholder="Enter your email address"
@@ -70,7 +70,7 @@ export default function ContactForm() {
         {/* Message */}
         <div>
           <label className="text-white text-sm md:text-[18px] mb-1 block">
-            Message *
+            Message <span className="text-red-600">*</span>
           </label>
           <Textarea
             rows={4}

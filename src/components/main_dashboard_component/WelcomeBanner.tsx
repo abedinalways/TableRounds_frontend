@@ -3,11 +3,91 @@ import { useEffect, useRef, useState } from 'react';
 import { getUser } from '@/lib/auth';
 import Image from 'next/image';
 import gsap from 'gsap';
+import FollowersFollowingModal from './FollowersFollowingModal';
+const followersData = [
+  {
+    id: '1',
+    name: 'John Doe',
+    username: 'john_doe',
+    avatar: '/images/dashboard/message/doctor.png',
+  },
+  {
+    id: '2',
+    name: 'Sarah Smith',
+    username: 'sarah_smith',
+    avatar: '/images/dashboard/message/doctor.png',
+  },
+  {
+    id: '3',
+    name: 'Sarah Smith',
+    username: 'sarah_smith',
+    avatar: '/images/dashboard/message/doctor.png',
+  },
+  {
+    id: '4',
+    name: 'Sarah Smith',
+    username: 'sarah_smith',
+    avatar: '/images/dashboard/message/doctor.png',
+  },
+  {
+    id: '5',
+    name: 'Sarah Smith',
+    username: 'sarah_smith',
+    avatar: '/images/dashboard/message/doctor.png',
+  },
+  {
+    id: '6',
+    name: 'Sarah Smith',
+    username: 'sarah_smith',
+    avatar: '/images/dashboard/message/doctor.png',
+  },
+];
 
+const followingData = [
+  {
+    id: '1',
+    name: 'Alex Carter',
+    username: 'alex_carter',
+    avatar: '/images/dashboard/message/doctor.png',
+  },
+  {
+    id: '2',
+    name: 'Sarah Smith',
+    username: 'sarah_smith',
+    avatar: '/images/dashboard/message/doctor.png',
+  },
+  {
+    id: '3',
+    name: 'Sarah Smith',
+    username: 'sarah_smith',
+    avatar: '/images/dashboard/message/doctor.png',
+  },
+  {
+    id: '4',
+    name: 'Sarah Smith',
+    username: 'sarah_smith',
+    avatar: '/images/dashboard/message/doctor.png',
+  },
+  {
+    id: '5',
+    name: 'Sarah Smith',
+    username: 'sarah_smith',
+    avatar: '/images/dashboard/message/doctor.png',
+  },
+  {
+    id: '6',
+    name: 'Sarah Smith',
+    username: 'sarah_smith',
+    avatar: '/images/dashboard/message/doctor.png',
+  },
+];
 export const WelcomeBanner = () => {
   const [userName] = useState(() => getUser()?.name ?? '');
   const textRef = useRef<HTMLHeadingElement | null>(null);
-
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalType, setModalType] = useState<'followers' | 'following'>(
+    'followers'
+  );
 
   
   useEffect(() => {
@@ -32,6 +112,7 @@ export const WelcomeBanner = () => {
   });
 
   return (
+    <>
     <div className="px-4 pt-2 d:pt-0 background text-white rounded-lg shadow-lg relative overflow-hidden font-[manrope]">
       <div className="flex  items-start justify-between relative z-10">
         <div className="flex flex-col justify-between gap-18 md:p-8">
@@ -58,13 +139,33 @@ export const WelcomeBanner = () => {
               </p>
 
               <div className="flex md:space-x-4 space-x-2  text-[#b79e6b]">
-                <span className="md:text-lg text-xs font-semibold">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setModalType('followers');
+                    setModalOpen(true);
+                  }}
+                  className="flex flex-col cursor-pointer hover:opacity-80 transition"
+                >
+
+                <span className="md:text-lg text-xs font-semibold cursor-pointer">
                   333 Followers
                 </span>
+                </button>
                 <span className="flex items-center opacity-60">|</span>
-                <span className="md:text-lg text-xs font-semibold">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setModalType('following');
+                    setModalOpen(true);
+                  }}
+                  className="flex flex-col cursor-pointer hover:opacity-80 transition"
+                >
+
+                <span className="md:text-lg text-xs font-semibold cursor-pointer">
                   666 Following
                 </span>
+                </button>
               </div>
             </div>
           </div>
@@ -96,5 +197,13 @@ export const WelcomeBanner = () => {
         </div>
       </div>
     </div>
+      {/* ✅ MODAL RENDER (THIS IS WHAT YOU MISSED) */}
+            <FollowersFollowingModal
+              open={modalOpen}
+              onClose={setModalOpen}
+              type={modalType}
+              data={modalType === 'followers' ? followersData : followingData}
+            />
+    </>
   );
 };

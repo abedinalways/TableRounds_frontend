@@ -96,7 +96,7 @@ const Footer = () => {
               href="#"
               className="text-sm text-gray-700 hover:text-[#1e5a4f] transition-colors"
             >
-              Terms and Conditions
+              Terms & Conditions
             </a>
           </div>
 
@@ -117,7 +117,7 @@ const Footer = () => {
               className="flex items-center space-x-2 text-sm text-gray-700 hover:text-[#1e5a4f] transition-colors underline"
             >
               <Mail className="w-4 h-4" />
-              <span>tableround@gmail.com</span>
+              <span>tableround@email.com</span>
             </a>
           </div>
         </div>
