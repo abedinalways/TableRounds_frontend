@@ -61,7 +61,7 @@
         "correct": 60,
         "rank": 4,
         "progress": 10,
-        "icon": "/images/dashboard/statistics/img10.png"
+        "icon": "/images/dashboard/statistics/img02.png"
       },
       {
         "title": "Pathology",
@@ -119,7 +119,7 @@
         "correct": 60,
         "rank": 4,
         "progress": 10,
-        "icon": "/images/dashboard/statistics/img09.png"
+        "icon": "/images/dashboard/statistics/img12.png"
       }
     ]
   }

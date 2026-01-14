@@ -48,12 +48,17 @@ export default function Sidebar({
     const currentPath = normalizePath(pathname);
     const targetPath = normalizePath(href);
 
-    if (targetPath === '/dashboard') {
-      return currentPath === '/dashboard';
+    // Exact match only for dashboards
+    const exactMatchRoutes = ['/dashboard/admin', '/dashboard/user'];
+
+    if (exactMatchRoutes.includes(targetPath)) {
+      return currentPath === targetPath;
     }
 
+    // Other routes can use startsWith
     return currentPath.startsWith(targetPath);
   };
+
 
   const handleResetConfirm = () => {
     console.log('Question bank reset confirmed');
