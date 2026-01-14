@@ -24,7 +24,7 @@ export function VerifiedUsers({ users, onDelete }: Props) {
   return (
     <div className="bg-white rounded-lg shadow p-[18px] font-[manrope]">
       <div className="mb-4 text-[#01281e] text-[20px] font-bold leading-[150%]">
-        User Verified
+        Users Verified
       </div>
       <div className="rounded-t-[8px] overflow-x-auto">
         <table className="w-full text-sm min-w-[900px]">
@@ -36,6 +36,7 @@ export function VerifiedUsers({ users, onDelete }: Props) {
 
               <th className="p-3">Social media</th>
               <th className="p-3">Documents</th>
+              <th className="p-3">Profile</th>
               <th className="p-3 text-center">Action</th>
             </tr>
           </thead>
@@ -80,6 +81,13 @@ export function VerifiedUsers({ users, onDelete }: Props) {
                   <Link href="/dashboard/profile">
                     <button className="bg-[#cdebe3] text-[#01503b] cursor-pointer rounded-[4px] py-1 px-3 flex items-center gap-2">
                       <EyeIcon /> View
+                    </button>
+                  </Link>
+                </td>
+                <td className="p-4">
+                  <Link href="/dashboard/profile">
+                    <button className="bg-[#cdebe3] text-[#01503b] cursor-pointer rounded-[4px] py-1 px-3 flex items-center gap-2">
+                      <EyeIcon /> Profile
                     </button>
                   </Link>
                 </td>

@@ -15,28 +15,28 @@ export const adminMenu: MenuItem[] = [
   },
   {
     title: 'Users',
-    href: '/dashboard/show-users',
+    href: '/dashboard/admin/show-users',
     icon: '/images/dashboard/img02.png',
   },
   {
     title: 'Create Questions',
-    href: '/dashboard/create-questions',
+    href: '/dashboard/admin/create-questions',
     icon: '/images/dashboard/img03.png',
   },
   {
     title: 'Question Manager',
-    href: '/dashboard/question-manager',
+    href: '/dashboard/admin/question-manager',
     icon: '/images/dashboard/img04.png',
   },
 
   {
     title: 'Messages',
-    href: '/dashboard/support-message',
+    href: '/dashboard/admin/support-message',
     icon: '/images/dashboard/img007.png',
   },
   {
     title: 'Admin Profile',
-    href: '/dashboard/manage-settings',
+    href: '/dashboard/admin/manage-settings',
     icon: '/images/dashboard/img00008.png',
   },
 
@@ -44,7 +44,7 @@ export const adminMenu: MenuItem[] = [
   {
     section: 'Other',
     title: 'Legal',
-    href: '/dashboard/help-support',
+    href: '/dashboard/admin/help-support',
     icon: '/images/dashboard/img08.png',
   },
   // {
