@@ -1,6 +1,5 @@
 import React from 'react'
 import { CardHeader, CardTitle } from '@/components/ui/card';
-
 import { CheckCircle2 } from 'lucide-react';
 export default function Disclaimer() {
   return (

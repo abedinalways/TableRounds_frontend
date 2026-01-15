@@ -48,7 +48,7 @@ export default function Banner() {
         height={1536}
         className="
           absolute top-1 right-20
-          md:right-5 md:-top-22
+          md:right-10 md:-top-22
           w-[1024px]
           opacity-100 md:opacity-100
           rotate-7 md:rotate-0
@@ -107,7 +107,7 @@ export default function Banner() {
           custom-container
         "
       >
-        <h2 className="font-bold text-2xl md:text-[60px] leading-[120%]">
+        <h2 className="font-bold text-3xl md:text-[36px] lg:text-[48px]  leading-[120%]">
           Where healthcare providers come
           <br />
           to learn and collaborate, in all <br />

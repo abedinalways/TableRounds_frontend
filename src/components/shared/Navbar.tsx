@@ -22,7 +22,7 @@ import { usePathname } from 'next/navigation';
 const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Specialties', hasDropdown: true, dropdownKey: 'specialty' },
-  { label: 'Question Bank', href: '#' },
+  { label: 'Question Bank', href: '/pricing' },
   { label: 'Legal', hasDropdown: true, dropdownKey: 'legal' },
   { label: 'Contact', href: '/contact' },
 ];
