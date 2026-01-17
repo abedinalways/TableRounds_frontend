@@ -148,7 +148,7 @@ opacity-xl font-[manrope]"
                   placeholder="Enter your full name"
                   value={formData.fullName}
                   onChange={e => handleInputChange('fullName', e.target.value)}
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 rounded-[8px] md:w-[644px] md:h-[61px] placeholder:text-[18px]"
+                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 rounded-[8px] md:w-[644px] md:h-[61px] placeholder:text-[18px]"
                 />
                 {errors.fullName && (
                   <p className="text-red-300 text-xs mt-1">{errors.fullName}</p>
@@ -169,7 +169,7 @@ opacity-xl font-[manrope]"
                   onChange={e =>
                     handleInputChange('credentials', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
                 {errors.credentials && (
                   <p className="text-red-300 text-xs mt-1">
@@ -192,7 +192,7 @@ opacity-xl font-[manrope]"
                   placeholder="Enter your email"
                   value={formData.email}
                   onChange={e => handleInputChange('email', e.target.value)}
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
                 {errors.email && (
                   <p className="text-red-300 text-xs mt-1">{errors.email}</p>
@@ -214,7 +214,7 @@ opacity-xl font-[manrope]"
                   onChange={e =>
                     handleInputChange('createPassword', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
                 {errors.createPassword && (
                   <p className="text-red-300 text-xs mt-1">
@@ -238,7 +238,7 @@ opacity-xl font-[manrope]"
                   onChange={e =>
                     handleInputChange('confirmPassword', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D]  h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D]  h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
                 {errors.confirmPassword && (
                   <p className="text-red-300 text-xs mt-1">
@@ -262,7 +262,7 @@ opacity-xl font-[manrope]"
                   onChange={e =>
                     handleInputChange('yearInTraining', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
               </div>
 
@@ -281,7 +281,7 @@ opacity-xl font-[manrope]"
                 >
                   <SelectTrigger
                     size="xl"
-                    className="mt-2  bg-[#1C765E] border-none md:p-4 rounded-[8px] cursor-pointer text-white [&>span]:text-white [&_[data-placeholder]]:text-white [&_svg]:opacity-100 placeholder:text-[18px] rounded-[8px] md:w-[644px] w-[225px]"
+                    className="mt-2  bg-[#1C765E] border-none md:p-4 rounded-[8px] cursor-pointer text-white text-[18px]! [&>span]:text-white [&_[data-placeholder]]:text-white [&_svg]:opacity-100 placeholder:text-[18px] rounded-[8px] md:w-[644px] w-[225px]"
                   >
                     <SelectValue placeholder="Select a specialty" />
                   </SelectTrigger>
@@ -327,7 +327,7 @@ opacity-xl font-[manrope]"
                   placeholder="Enter your city, state, and country"
                   value={formData.location}
                   onChange={e => handleInputChange('location', e.target.value)}
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
               </div>
               {/* current practice */}
@@ -345,7 +345,7 @@ opacity-xl font-[manrope]"
                   onChange={e =>
                     handleInputChange('currentPractice', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
               </div>
 
@@ -361,7 +361,7 @@ opacity-xl font-[manrope]"
                   placeholder="Enter a brief bio about yourself"
                   value={formData.briefBio}
                   onChange={e => handleInputChange('briefBio', e.target.value)}
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
               </div>
 
@@ -379,7 +379,7 @@ opacity-xl font-[manrope]"
                   onChange={e =>
                     handleInputChange('instagramUrl', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
               </div>
 
@@ -397,7 +397,7 @@ opacity-xl font-[manrope]"
                   onChange={e =>
                     handleInputChange('linkedinUrl', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
               </div>
 
@@ -415,7 +415,7 @@ opacity-xl font-[manrope]"
                   onChange={e =>
                     handleInputChange('twitterUrl', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
               </div>
 
@@ -433,7 +433,7 @@ opacity-xl font-[manrope]"
                   onChange={e =>
                     handleInputChange('facebookUrl', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-[#F9FAFB7D] placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
               </div>
             </div>
@@ -605,8 +605,8 @@ opacity-xl font-[manrope]"
                   />
                   <p className="text-sm">
                     Send a direct message to{' '}
-                    <Link href="#">
-                      <span className="text-yellow-600 cursor-pointer font-bold">
+                    <Link href="https://instagram.com/tablerounds.oms">
+                      <span className="text-yellow-600 cursor-pointer font-bold hover:underline">
                         @TableRounds.OMS
                       </span>
                     </Link>{' '}

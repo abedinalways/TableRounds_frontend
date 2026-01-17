@@ -241,7 +241,7 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
               <div className="flex md:items-center gap-2 bg-white px-6 py-4 rounded-2xl">
                 <span
                   className={`${
-                    isPublic ? 'font-bold' : ''
+                    isPublic ? '' : ''
                   } md:text-lg text-md`}
                 >
                   Public
@@ -253,7 +253,7 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
                 />
                 <span
                   className={`${
-                    !isPublic ? 'font-bold' : ''
+                    !isPublic ? '' : ''
                   } md:text-lg text-md`}
                 >
                   Private

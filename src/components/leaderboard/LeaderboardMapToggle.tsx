@@ -56,7 +56,7 @@ export default function LeaderboardMapToggle() {
           
         <div className="flex  md:items-center gap-2 bg-white px-6 py-4 rounded-2xl">
           <span
-            className={`md:text-lg text-md ${isLeaderboard ? 'font-semibold' : ''}`}
+            className={`md:text-lg text-md ${isLeaderboard ? '' : ''}`}
           >
             Leaderboard
           </span>
@@ -66,13 +66,13 @@ export default function LeaderboardMapToggle() {
             className="cursor-pointer"
           />
           <span
-            className={`md:text-lg text-md  ${!isLeaderboard ? 'font-semibold' : ''}`}
+            className={`md:text-lg text-md  ${!isLeaderboard ? '' : ''}`}
           >
             Map
           </span>
         </div>
       </CardHeader>
-      <CardContent className="mt-4 text-[#01281e]">
+      <CardContent className="mt-4 text-black">
         {isLeaderboard ? <LeaderboardView />:  <MapView />}
       </CardContent>
       

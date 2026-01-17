@@ -113,28 +113,30 @@ export const WelcomeBanner = () => {
 
   return (
     <>
-    <div className="px-4 pt-2 d:pt-0 background text-white rounded-lg shadow-lg relative overflow-hidden font-[manrope]">
-      <div className="flex  items-start justify-between relative z-10">
-        <div className="flex flex-col justify-between gap-18 md:p-8">
-          <div>
+      <div className="px-4 pt-2 d:pt-0 background text-white rounded-lg shadow-lg relative overflow-hidden font-[manrope]">
+        <div className="md:flex  items-center justify-evenly py-4 relative z-10">
+          <div className="flex flex-col justify-between  gap-4">
             <p className="text-[16px] font-medium">{formattedDate}</p>
-          </div>
-          <div className="md:flex items-center gap-2">
-            <div>
+
+            <div className="">
               <Image
-                src="/images/dashboard/main_dashboard/doctor.png"
-                width={90}
-                height={90}
+                src="/images/dashboard/main_dashboard/tr.png"
+                width={138}
+                height={138}
                 alt="doctor"
-                className="md:w-[90px] md:h-[90px] w-[40px] h-[40px]"
+                className=" "
               />
             </div>
-            <div className="space-y-2">
-              <h2 ref={textRef} className="md:text-2xl text-lg font-bold">
+          </div>
+          {/* introduce */}
+
+          <div className="space-y-2  flex items-center justify-center">
+            <div className="flex flex-col gap-1 justify-center">
+              <h2 ref={textRef} className="md:text-4xl text-lg font-bold">
                 Welcome, Dr. {userName}!
               </h2>
 
-              <p className="md:text-sm text-xs">
+              <p className="md:text-[18px] text-xs">
                 Stay up to date on your current progress
               </p>
 
@@ -147,10 +149,9 @@ export const WelcomeBanner = () => {
                   }}
                   className="flex flex-col cursor-pointer hover:opacity-80 transition"
                 >
-
-                <span className="md:text-lg text-xs font-semibold cursor-pointer">
-                  333 Followers
-                </span>
+                  <span className="md:text-lg text-xs font-semibold cursor-pointer">
+                    333 Followers
+                  </span>
                 </button>
                 <span className="flex items-center opacity-60">|</span>
                 <button
@@ -161,49 +162,48 @@ export const WelcomeBanner = () => {
                   }}
                   className="flex flex-col cursor-pointer hover:opacity-80 transition"
                 >
-
-                <span className="md:text-lg text-xs font-semibold cursor-pointer">
-                  666 Following
-                </span>
+                  <span className="md:text-lg text-xs font-semibold cursor-pointer">
+                    666 Following
+                  </span>
                 </button>
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Images */}
-        <div className="flex items-center relative">
-          <Image
-            src="/images/dashboard/main_dashboard/tr.png"
-            width={138}
-            height={138}
-            alt="doctor"
-            className="absolute md:top-14 top-8 md:left-30 right-10 opacity-80 "
-          />
-          <Image
+          {/* Images */}
+          <div className="flex items-center relative">
+            <div className="rounded-full border-2 border-[#B79E6B]">
+              <Image
+                src="/images/dashboard/doctor.png"
+                width={182}
+                height={182}
+                alt="doctor"
+                className=" md:w-full"
+              />
+              {/* <Image
+                src="/images/dashboard/main_dashboard/doctor.png"
+                width={90}
+                height={90}
+                alt="doctor"
+                className="md:w-[90px] md:h-[90px] w-[40px] h-[40px]"
+              /> */}
+            </div>
+            {/* <Image
             src="/images/dashboard/main_dashboard/img01.png"
             width={257}
             height={213}
             alt=""
             className="absolute md:top-10 top-30 md:right-20 right-3 "
-          />
-          <Image
-            src="/images/dashboard/main_dashboard/doc.png"
-            width={176}
-            height={245}
-            alt="doctor"
-            className="md:mr-22 mr-32 relative top-9 md:mt-0 z-30 md:w-full"
-          />
+          /> */}
+          </div>
         </div>
       </div>
-    </div>
       {/* ✅ MODAL RENDER (THIS IS WHAT YOU MISSED) */}
-            <FollowersFollowingModal
-              open={modalOpen}
-              onClose={setModalOpen}
-              type={modalType}
-              data={modalType === 'followers' ? followersData : followingData}
-            />
+      <FollowersFollowingModal
+        open={modalOpen}
+        onClose={setModalOpen}
+        type={modalType}
+        data={modalType === 'followers' ? followersData : followingData}
+      />
     </>
   );
 };

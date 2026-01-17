@@ -4,6 +4,8 @@ import Image from 'next/image';
 import { Menu } from 'lucide-react';
 import { getUser, getRole } from '@/lib/auth';
 import Link from 'next/link';
+import Btn from '@/components/reusable/button/Btn';
+import { NotificationButton } from '@/components/topbar/NotificationButton';
 
 interface TopbarProps {
   onMenuClick?: () => void;
@@ -33,13 +35,17 @@ export default function Topbar({ onMenuClick }: TopbarProps = {}) {
 
       {/* Right side items */}
       <div className="flex items-center gap-3 ml-auto">
-        <Image
-          src="/images/dashboard/topbar/bell.png"
-          width={20}
-          height={20}
-          alt="Notifications"
-          className="cursor-pointer"
-        />
+        {/* notifications */}
+        <button className='cursor-pointer'>
+          <NotificationButton/>
+          {/* <Image
+            src="/images/dashboard/topbar/bell.png"
+            width={20}
+            height={20}
+            alt="Notifications"
+            className="cursor-pointer"
+          /> */}
+        </button>
 
         <Image
           src="/images/dashboard/topbar/message.png"

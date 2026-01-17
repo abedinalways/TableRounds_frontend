@@ -156,7 +156,7 @@ export default function CreateQuestionForm() {
           </Label>
           <InputGroup>
             <InputGroupInput
-              placeholder="Unique question id"
+              placeholder="Unique Question ID"
               type="number"
               className="border-none"
             />
@@ -267,28 +267,7 @@ export default function CreateQuestionForm() {
           onChange={v => setValue('references', v)}
         />
 
-        {/* Attach File Button */}
-        {/* <div className="flex items-center gap-4">
-          <button
-            type="button"
-            onClick={handleAttachFileClick}
-            className="px-6 py-3 rounded-[8px] border border-[#01503b] text-[#01503b] font-semibold cursor-pointer"
-          >
-            Attach File
-          </button>
-          {attachedFile && (
-            <span className="text-green-600">
-              Attached: {attachedFile.name}
-            </span>
-          )}
-          <input
-            type="file"
-            accept=".pdf,.doc,.docx"
-            ref={fileInputRef}
-            className="hidden"
-            onChange={handleFileChange}
-          />
-        </div> */}
+       
 
         <div className="flex items-center justify-center md:w-fit mx-auto">
           <button

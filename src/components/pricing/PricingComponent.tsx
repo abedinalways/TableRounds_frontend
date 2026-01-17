@@ -17,7 +17,7 @@ export default function Pricing() {
       </div>
       <div className="text-center">
         <h3 className="text-[#B79E6B] font-semibold text-2xl">Frequently asked questions</h3>
-        <p>Have questions? we've got answers.</p>
+        <p>Have questions? we&apos;ve got answers.</p>
       </div>
     </div>
   );

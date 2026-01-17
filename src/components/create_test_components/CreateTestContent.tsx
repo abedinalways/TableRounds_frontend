@@ -144,10 +144,10 @@ export function CreateTestContent() {
             Choose how you want to take the test
           </p>
 
-          <div className="flex items-center flex-wrap gap-4 text-[#4b5563] ">
+          <div className="flex items-center flex-wrap gap-4 text-black ">
             <Label
               className={`cursor-pointer text-sm md:text-[16px] ${
-                testMode === 'Timed' ? 'text-green-600 font-semibold' : ''
+                testMode === 'Timed' ? '' : ''
               }`}
             >
               Timed
@@ -162,8 +162,8 @@ export function CreateTestContent() {
             />
 
             <Label
-              className={`cursor-pointer text-[#01503b] text-sm md:text-[16px] ${
-                testMode === 'Untimed' ? 'text-yellow-600 font-semibold' : ''
+              className={`cursor-pointer  text-sm md:text-[16px] ${
+                testMode === 'Untimed' ? '' : ''
               }`}
             >
               Untimed
