@@ -36,3 +36,17 @@ export type VerifiedUser = {
   socialMedia?: string;
   action?: string;
 };
+
+export type ReportedUser = {
+  id: number;
+  reportingUser: {
+    name: string;
+    image?: string;
+    email: string;
+  };
+  reportedUser: {
+    name: string;
+    image?: string;
+    email: string;
+  };
+};

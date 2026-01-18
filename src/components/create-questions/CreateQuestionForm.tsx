@@ -33,6 +33,8 @@ export default function CreateQuestionForm() {
       defaultValues: {
         difficulty: 'Intern',
         topic: 'Anatomy & Medicine',
+        hasMemoryTrick: false,
+        memoryTrick:'',
         answers: [
           { id: '1', text: '', isCorrect: false },
           { id: '2', text: '', isCorrect: true },
@@ -82,7 +84,7 @@ export default function CreateQuestionForm() {
 
     reset({
       difficulty: 'Intern',
-      topic: 'Anatomy & Medicine',
+      topic: 'Anatomy/Medicine',
       questionStem: '',
       questionTitle: '',
       explanation: '',
@@ -156,6 +158,7 @@ export default function CreateQuestionForm() {
           </Label>
           <InputGroup>
             <InputGroupInput
+              {...register('questionId')}
               placeholder="Unique Question ID"
               type="number"
               className="border-none"
@@ -204,7 +207,7 @@ export default function CreateQuestionForm() {
                 checked={watch(`answers.${index}.isCorrect`)}
                 onChange={() => {
                   fields.forEach((f, i) =>
-                    setValue(`answers.${i}.isCorrect`, i === index)
+                    setValue(`answers.${i}.isCorrect`, i === index),
                   );
                 }}
                 className="w-4 h-4 accent-[#01503b]"
@@ -249,14 +252,34 @@ export default function CreateQuestionForm() {
           onChange={v => setValue('keepingPoint', v)}
         />
 
-        <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
-          Memory Trick
-        </h2>
-        <RichTextEditor
-          key={`memoryTrick-${editorKey}`}
-          value={watch('memoryTrick')}
-          onChange={v => setValue('memoryTrick', v)}
-        />
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
+            Memory Trick
+          </h2>
+
+          <label className="flex items-center gap-2 cursor-pointer">
+            <span className="text-sm font-semibold text-gray-600">Enable</span>
+            <input
+              type="checkbox"
+              checked={watch('hasMemoryTrick')}
+              onChange={e => {
+                setValue('hasMemoryTrick', e.target.checked);
+                if (!e.target.checked) {
+                  setValue('memoryTrick', '');
+                }
+              }}
+              className="w-5 h-5 accent-[#01503b] cursor-pointer"
+            />
+          </label>
+        </div>
+
+        {watch('hasMemoryTrick') && (
+          <RichTextEditor
+            key={`memoryTrick-${editorKey}`}
+            value={watch('memoryTrick')}
+            onChange={v => setValue('memoryTrick', v)}
+          />
+        )}
 
         <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
           References
@@ -266,8 +289,6 @@ export default function CreateQuestionForm() {
           value={watch('references')}
           onChange={v => setValue('references', v)}
         />
-
-       
 
         <div className="flex items-center justify-center md:w-fit mx-auto">
           <button

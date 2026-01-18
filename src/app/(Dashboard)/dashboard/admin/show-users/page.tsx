@@ -7,9 +7,14 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { toast } from 'sonner';
 
+import { ReportedUser } from '@/types/admin';
+import { ReportedUsers } from '@/components/show-users/ReportedUsers';
+
 export default function ShowUsersPage() {
   const [users, setUsers] = useState<PendingUser[]>([]);
   const [verifiedUsers, setVerifiedUsers] = useState<VerifiedUser[]>([]);
+  const [reportedUsers, setReportedUsers] = useState<ReportedUser[]>([]);
+
   const [tab, setTab] = useState('pending');
   const boxRef = useRef<HTMLDivElement>(null);
 
@@ -163,6 +168,49 @@ export default function ShowUsersPage() {
           socialMedia: 'active',
         },
       ]);
+
+      setReportedUsers([
+        {
+          id: 1,
+          reportingUser: {
+            name: 'Kristin Watson',
+            image: '/images/dashboard/Admin/doc-01.png',
+            email: 'georgia@example.com',
+          },
+          reportedUser: {
+            name: 'Robert Josh',
+            image: '/images/dashboard/Admin/doc-06.png',
+            email: 'georgia@example.com',
+          },
+        },
+        {
+          id: 2,
+          reportingUser: {
+            name: 'Floyd Miles',
+            image: '/images/dashboard/Admin/doc-02.png',
+            email: 'sanders@example.com',
+          },
+          reportedUser: {
+            name: 'Cline Hiles',
+            image: '/images/dashboard/Admin/doc-07.png',
+            email: 'sanders@example.com',
+          },
+        },
+        {
+          id: 3,
+          reportingUser: {
+            name: 'Savannah Nguyen',
+            image: '/images/dashboard/Admin/doc-03.png',
+            email: 'jackson@example.com',
+          },
+          reportedUser: {
+            name: 'Nice Gorjia',
+            image: '/images/dashboard/Admin/doc-05.png',
+            email: 'jackson@example.com',
+          },
+        },
+      ]);
+
     };
 
     initializeData();
@@ -237,6 +285,17 @@ export default function ShowUsersPage() {
         >
           Verified Users
         </button>
+        <button
+          onClick={() => setTab('reported')}
+          className={`md:px-6 px-4 md:py-4 py-2 rounded-[4px] font-semibold cursor-pointer
+    ${
+      tab === 'reported'
+        ? 'bg-[#01503b] text-white'
+        : 'bg-white text-[#01503b] border border-[#01503b]'
+    }`}
+        >
+          Report Users
+        </button>
       </div>
       <div ref={boxRef}>
         {tab === 'pending' && (
@@ -252,6 +311,7 @@ export default function ShowUsersPage() {
             onDelete={handleDeleteVerifiedUser}
           />
         )}
+        {tab === 'reported' && <ReportedUsers users={reportedUsers} />}
       </div>
     </div>
   );

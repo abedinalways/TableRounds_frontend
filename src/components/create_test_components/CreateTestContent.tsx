@@ -144,7 +144,7 @@ export function CreateTestContent() {
             Choose how you want to take the test
           </p>
 
-          <div className="flex items-center flex-wrap gap-4 text-black ">
+          <div className="flex items-center flex-wrap gap-4 text-black font-normal">
             <Label
               className={`cursor-pointer text-sm md:text-[16px] ${
                 testMode === 'Timed' ? '' : ''
