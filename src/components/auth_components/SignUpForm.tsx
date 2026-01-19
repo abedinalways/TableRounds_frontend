@@ -127,7 +127,7 @@ export default function SignUpForm({ onSubmit, onCancel }: SignUpFormProps) {
   };
 
   return (
-    <div className="z-40  font-[manrope]">
+    <div className="z-40  font-[manrope] py-6 mb-12">
       <div
         className="custom-container p-6 md:p-8 mx-auto gradient-bg rounded-md backdrop-blur  
 opacity-xl font-[manrope]"

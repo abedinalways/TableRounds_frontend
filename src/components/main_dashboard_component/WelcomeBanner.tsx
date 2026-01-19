@@ -116,7 +116,6 @@ export const WelcomeBanner = () => {
       <div className="px-4 pt-2 d:pt-0 background text-white rounded-lg shadow-lg relative overflow-hidden font-[manrope]">
         <div className="md:flex  items-center justify-evenly py-4 relative z-10">
           <div className="flex flex-col justify-between items-center  gap-4">
-            <p className="text-[16px] font-medium">{formattedDate}</p>
             <div className="rounded-full border-4 border-[#B79E6B] bg-red-400 w-fit">
               <Image
                 src="/images/dashboard/doctor.png"
@@ -169,7 +168,8 @@ export const WelcomeBanner = () => {
             </div>
           </div>
           {/* Images */}
-          <div className="flex items-center relative">
+          <div className="flex flex-col items-center relative">
+            <p className="text-[16px] font-medium">{formattedDate}</p>
             <div className="">
               <Image
                 src="/images/dashboard/main_dashboard/tr.png"
