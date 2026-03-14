@@ -16,7 +16,7 @@ import type {
 
 import {
   useAnswerQuestionMutation,
-  useLazyGetTestResultQuery,
+  // useLazyGetTestResultQuery,
   useSkipQuestionMutation,
   useToggleMarkMutation,
 } from '@/app/redux/api/testSessionApi';
@@ -68,7 +68,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
     useAnswerQuestionMutation();
   const [toggleMarkApi] = useToggleMarkMutation();
   const [skipQuestionApi] = useSkipQuestionMutation();
-  const [getResultTrigger] = useLazyGetTestResultQuery();
+ 
 
   
   useEffect(() => {
@@ -90,58 +90,130 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   /**
    * Submit Answer
    */
-  const handleSubmit = async () => {
-    if (!selectedAnswerId || showExplanation || isAnswering) return;
+  // const handleSubmit = async () => {
+  //   if (!selectedAnswerId || showExplanation || isAnswering) return;
 
-    try {
-      await answerQuestion({
-        test_id: testId,
-        question_id: questionID,
-        answer_option_id: selectedAnswerId,
-      }).unwrap();
+  //   try {
+  //     await answerQuestion({
+  //       test_id: testId,
+  //       question_id: questionID,
+  //       answer_option_id: selectedAnswerId,
+  //     }).unwrap();
 
-      const res = await getResultTrigger({
-        test_id: testId,
-        question_id: questionID,
-      }).unwrap();
+  //     // const res = await getResultTrigger({
+  //     //   test_id: testId,
+  //     //   question_id: questionID,
+  //     // }).unwrap();
 
-      if (!res?.success || !res?.data) {
-        throw new Error(res?.message || 'Failed to fetch result');
-      }
+  //     if (!res?.success || !res?.data) {
+  //       throw new Error(res?.message || 'Failed to fetch result');
+  //     }
 
-      setQuestions(prev => {
-        const copy = [...prev];
-        const idx = currentQuestion - 1;
-        const existing = copy[idx];
+  //     setQuestions(prev => {
+  //       const copy = [...prev];
+  //       const idx = currentQuestion - 1;
+  //       const existing = copy[idx];
 
-        if (!existing) return prev;
+  //       if (!existing) return prev;
 
-        const percentages = res.data.answer_percentages ?? {};
+  //       const percentages = res.data.answer_percentages ?? {};
 
-        copy[idx] = {
-          ...existing,
-          quizDetails: {
-            ...existing.quizDetails,
-            userAnswerId: res.data.user_answer_id,
-            correctAnswerId: res.data.correct_answer_id,
-            explanation: res.data.explanation,
-            answerOptions: existing.quizDetails.answerOptions.map(o => ({
-              ...o,
-              percentage:
-                typeof percentages[o.id] === 'number' ? percentages[o.id] : 0,
-            })),
-          },
-        };
+  //       copy[idx] = {
+  //         ...existing,
+  //         quizDetails: {
+  //           ...existing.quizDetails,
+  //           userAnswerId: res.data.user_answer_id,
+  //           correctAnswerId: res.data.correct_answer_id,
+  //           explanation: res.data.explanation,
+  //           answerOptions: existing.quizDetails.answerOptions.map(o => ({
+  //             ...o,
+  //             percentage:
+  //               typeof percentages[o.id] === 'number' ? percentages[o.id] : 0,
+  //           })),
+  //         },
+  //       };
 
-        return copy;
-      });
+  //       return copy;
+  //     });
 
-      setShowExplanation(true);
-    } catch (error) {
-      console.error('Submit failed:', error);
-    }
-  };
+  //     setShowExplanation(true);
+  //   } catch (error) {
+  //     console.error('Submit failed:', error);
+  //   }
+  // };
+   const handleSubmit = async () => {
+     if (!selectedAnswerId || showExplanation || isAnswering) return;
 
+     try {
+       const res = await answerQuestion({
+         test_id: testId,
+         question_id: questionID,
+         answer_option_id: selectedAnswerId,
+       }).unwrap();
+
+       console.log('ANSWER API RESPONSE:', res);
+
+       if (!res?.success || !res?.data) {
+         throw new Error(res?.message || 'Failed to submit answer');
+       }
+
+       const answerOptions = res.data.answerOptions ?? [];
+
+       setQuestions(prev => {
+         const copy = [...prev];
+         const idx = currentQuestion - 1;
+         const existing = copy[idx];
+
+         if (!existing) return prev;
+
+         copy[idx] = {
+           ...existing,
+           quizDetails: {
+             ...existing.quizDetails,
+
+             // user answer
+             userAnswerId: res.data.user_answer,
+
+             // correct answer id
+             correctAnswerId: answerOptions.find((opt: any) => opt.is_correct)
+               ?.id,
+
+             // explanation object mapping
+             explanation: {
+               main: res.data.explanation,
+               image: res.data.explanation_image ?? null,
+
+               whyIncorrect: res.data.why_incorrect
+                 ? [
+                     {
+                       option: '',
+                       text: res.data.why_incorrect,
+                     },
+                   ]
+                 : [],
+
+               pinningPoint: res.data.pimping_point,
+               memoryTrick: res.data.memory_trick,
+               references: res.data.reference ?? [],
+             },
+
+             // answer options update
+             answerOptions: answerOptions.map((o: any) => ({
+               id: o.id,
+               option_text: o.option_text,
+               percentage: o.total_select ?? 0,
+             })),
+           },
+         };
+
+         return copy;
+       });
+
+       setShowExplanation(true);
+     } catch (error) {
+       console.error('Submit failed:', error);
+     }
+   };
   /**
    * Toggle Mark
    */
@@ -179,6 +251,20 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
 
   const handlePrevious = () => {
     onPrevious();
+  };
+
+  // Skip Question
+  const handleSkip = async () => {
+    try {
+      await skipQuestionApi({
+        test_id: testId,
+        question_id: questionID,
+      }).unwrap();
+
+      onNext();
+    } catch (err) {
+      console.log('skip failed');
+    }
   };
 
   /**
@@ -239,6 +325,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   return (
     <div className="flex flex-col space-y-4 font-[manrope]">
       <QuizTopbar
+        onSkip={handleSkip}
         progressValue={progressValue}
         currentQuestion={currentQuestion}
         totalQuestions={totalQuestions}

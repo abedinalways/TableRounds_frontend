@@ -9,7 +9,7 @@ import MemoryIcon from '../reusable/icons/MemoryIcon';
 interface Explanation {
   main: string;
   image?: string | null;
-  whyIncorrect: { option: string; text: string }[];
+  whyIncorrect?: string;
   pinningPoint?: string;
   memoryTrick?: string;
   references: string[];
@@ -30,7 +30,7 @@ const ExplanationPanel: React.FC<ExplanationPanelProps> = ({
     <div className="p-6 md:my-[32px] bg-[#f9f9f5] shadow-lg rounded-[16px] border font-[manrope] md:max-h-[1521px] overflow-x-hidden custom-scrollbar">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-bold text-[#01281e] flex items-center gap-2">
-          <ExplainIcon/> Explanation:
+          <ExplainIcon /> Explanation:
         </h2>
 
         {isQuestionHidden && (
@@ -60,26 +60,22 @@ const ExplanationPanel: React.FC<ExplanationPanelProps> = ({
       )}
 
       <h3 className="text-[20px] font-semibold text-[#01281e] mt-6 mb-2 flex items-center gap-2">
-        <CancelIcon/> Why the Other Options Are Incorrect:
+        <CancelIcon /> Why the Other Options Are Incorrect:
       </h3>
 
       <div className="space-y-3 whitespace-pre-line w-full">
-        {quizDetails.explanation.whyIncorrect.map(
-          (item: { option: string; text: string }, idx: number) => (
-            <div key={idx} className="text-[18px] text-gray-700">
-              <span className="font-semibold text-[#01503b]">
-                {item.option}:
-              </span>{' '}
-              <span className="leading-relaxed whitespace-pre-line">
-                {item.text}
-              </span>
-            </div>
-          )
+        {quizDetails?.explanation?.whyIncorrect && (
+          <div
+            className="text-[18px] text-gray-700 whitespace-pre-line"
+            dangerouslySetInnerHTML={{
+              __html: quizDetails.explanation.whyIncorrect,
+            }}
+          />
         )}
       </div>
 
       <h3 className="text-md font-semibold text-[#01281e] mt-6 mb-1 flex items-center gap-2 text-[18px]">
-        <PimpingIcon/> Pimping Point:
+        <PimpingIcon /> Pimping Point:
       </h3>
       <p className="text-[#01503b] text-[18px] whitespace-pre-line">
         {quizDetails.explanation.pinningPoint}
@@ -99,7 +95,7 @@ const ExplanationPanel: React.FC<ExplanationPanelProps> = ({
         {quizDetails.explanation.references.map(
           (ref: string, index: number) => (
             <li key={index}>{ref}</li>
-          )
+          ),
         )}
       </ul>
     </div>

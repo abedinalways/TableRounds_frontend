@@ -3,7 +3,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import GraphIcon from '../reusable/icons/GraphIcon';
+
 import Image from 'next/image';
 
 interface TopicResultCardProps {
