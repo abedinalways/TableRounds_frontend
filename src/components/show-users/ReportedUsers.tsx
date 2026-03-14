@@ -2,7 +2,7 @@ import Image from "next/image";
 
 
 type ReportedUser = {
-  id: number;
+  id: string; 
   reportingUser: {
     name: string;
     image?: string;
@@ -14,6 +14,7 @@ type ReportedUser = {
     email: string;
   };
 };
+
 
 type Props = {
   users: ReportedUser[];

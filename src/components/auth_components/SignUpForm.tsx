@@ -21,6 +21,11 @@ import {
   SelectValue,
 } from '../ui/select';
 import Link from 'next/link';
+import { Country, State } from 'country-state-city';
+
+import { toast } from 'sonner';
+
+
 
 interface SignUpFormData {
   fullName: string;
@@ -30,6 +35,8 @@ interface SignUpFormData {
   confirmPassword: string;
   yearInTraining: string;
   specialty: string;
+  country: string;
+  state: string;
   location: string;
   currentPractice: string;
   briefBio: string;
@@ -41,11 +48,17 @@ interface SignUpFormData {
 }
 
 interface SignUpFormProps {
-  onSubmit?: (data: SignUpFormData) => void;
+  onSubmit?: (data: any) => Promise<void> | void;
   onCancel?: () => void;
+  isLoading?: boolean;
 }
 
-export default function SignUpForm({ onSubmit, onCancel }: SignUpFormProps) {
+export default function SignUpForm({
+  onSubmit,
+  onCancel,
+  
+  isLoading = false,
+}: SignUpFormProps) {
   const [formData, setFormData] = useState<SignUpFormData>({
     fullName: '',
     credentials: '',
@@ -54,15 +67,18 @@ export default function SignUpForm({ onSubmit, onCancel }: SignUpFormProps) {
     confirmPassword: '',
     yearInTraining: '',
     specialty: '',
+    country: '',
+    state: '',
     location: '',
     currentPractice: '',
-    briefBio:'',
+    briefBio: '',
     instagramUrl: '',
     linkedinUrl: '',
     twitterUrl: '',
     facebookUrl: '',
     agreeToTerms: false,
   });
+  // const [registerUser, { isLoading }] = useRegisterNewUserMutation();
 
   const [profilePhoto, setProfilePhoto] = useState<File | null>(null);
   const [verificationDoc, setVerificationDoc] = useState<File | null>(null);
@@ -72,7 +88,7 @@ export default function SignUpForm({ onSubmit, onCancel }: SignUpFormProps) {
 
   const handleInputChange = (
     field: keyof SignUpFormData,
-    value: string | boolean
+    value: string | boolean,
   ) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
@@ -112,19 +128,49 @@ export default function SignUpForm({ onSubmit, onCancel }: SignUpFormProps) {
     if (!formData.specialty.trim())
       newErrors.specialty = 'Specialty is required';
 
-    if (!formData.agreeToTerms) {
-      newErrors.agreeToTerms = 'You must agree to the terms';
+    // if (!formData.agreeToTerms) {
+    //   newErrors.agreeToTerms = 'You must agree to the terms';
+    // }
+
+    if (!profilePhoto) {
+      toast.error('Profile photo is required');
+      return false;
+    }
+
+    if (!verificationDoc) {
+      toast.error('Verification document is required');
+      return false;
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
-    if (validateForm()) {
-      onSubmit?.(formData);
-    }
-  };
+ const handleSubmit = async () => {
+   if (!validateForm()) return;
+
+   const payload = {
+     name: formData.fullName,
+     email: formData.email,
+     password: formData.createPassword,
+     credentials: formData.credentials,
+     training_practice: formData.yearInTraining,
+     address: formData.location,
+     current_practice: formData.currentPractice,
+     bio: formData.briefBio,
+     specialty: formData.specialty,
+     instagram: formData.instagramUrl || undefined,
+     linkedin: formData.linkedinUrl || undefined,
+     twitter_x: formData.twitterUrl || undefined,
+     facebook: formData.facebookUrl || undefined,
+     avatar: profilePhoto,
+     verification_doc: verificationDoc,
+     type: 'user',
+   };
+
+   await onSubmit?.(payload);
+ };
+  // console.log(handleSubmit, 'mjcsdcsd');
 
   return (
     <div className="z-40  font-[manrope] py-6 mb-12">
@@ -322,12 +368,52 @@ opacity-xl font-[manrope]"
                 >
                   Location <span className="text-red-600">*</span>
                 </Label>
+
+                {/* Country */}
+                <Select
+                  value={formData.country}
+                  onValueChange={value => {
+                    handleInputChange('country', value);
+                    handleInputChange('state', ''); // reset state
+                  }}
+                >
+                  <SelectTrigger className="mt-2 bg-[#1C765E] border-none rounded-[8px] text-white md:w-[644px] py-6">
+                    <SelectValue placeholder="Select country" />
+                  </SelectTrigger>
+
+                  <SelectContent className="bg-[#1C765E] text-white max-h-[300px]">
+                    {Country.getAllCountries().map(country => (
+                      <SelectItem key={country.isoCode} value={country.isoCode}>
+                        {country.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {/* State */}
+                <Select
+                  value={formData.state}
+                  onValueChange={value => handleInputChange('state', value)}
+                  disabled={!formData.country}
+                >
+                  <SelectTrigger className="mt-3 bg-[#1C765E] border-none rounded-[8px] text-white md:w-[644px] py-6">
+                    <SelectValue placeholder="Select state / province" />
+                  </SelectTrigger>
+
+                  <SelectContent className="bg-[#1C765E] text-white max-h-[300px] py-4">
+                    {State.getStatesOfCountry(formData.country).map(state => (
+                      <SelectItem key={state.isoCode} value={state.name}>
+                        {state.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <Input
                   id="location"
                   placeholder="Enter your city, state, and country"
                   value={formData.location}
                   onChange={e => handleInputChange('location', e.target.value)}
-                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                  className="mt-6 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
               </div>
               {/* current practice */}
@@ -445,10 +531,12 @@ opacity-xl font-[manrope]"
             <div className="mt-6 flex  items-center   gap-4 mx-6 space-x-6">
               {/* submit button */}
               <button
+                type="button"
                 onClick={handleSubmit}
+                disabled={isLoading}
                 className="bg-[#B79E6B] text-white hover:bg-[#a08c5f] transition-colors rounded-[8px] px-[24px] py-[14px]  w-full  h-[54px] font-medium cursor-pointer"
               >
-                Submit
+                {isLoading ? 'Submitting...' : 'Submit'}
               </button>
               {/* <Link href='/login'>
                   <button
@@ -544,7 +632,7 @@ opacity-xl font-[manrope]"
                         onChange={e =>
                           handleFileUpload(
                             'document',
-                            e.target.files?.[0] || null
+                            e.target.files?.[0] || null,
                           )
                         }
                       />

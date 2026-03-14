@@ -28,7 +28,7 @@ export default function QuickActions() {
       return;
     }
 
-    // ✅ Ready for backend upload
+    
     toast.success(`CV uploaded: ${file.name}`);
 
     // Example: send to backend later

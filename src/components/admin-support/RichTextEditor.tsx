@@ -5,7 +5,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Link from '@tiptap/extension-link';
 import TextAlign from '@tiptap/extension-text-align';
-import { TextStyle } from '@tiptap/extension-text-style';
+import { Color, TextStyle } from '@tiptap/extension-text-style';
 import Highlight from '@tiptap/extension-highlight';
 import Image from '@tiptap/extension-image';
 import { useState } from 'react';
@@ -22,6 +22,7 @@ import {
   Paperclip,
   ChevronDown,
   Highlighter,
+  Wallpaper,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -68,8 +69,15 @@ export function RichTextEditor({ value = '', onChange }: RichTextEditorProps) {
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        blockquote: {
+          HTMLAttributes: {
+            class: 'bg-[#f5f1e8] border-l-2 border-[#e3dacb] rounded-lg p-4 my-4',
+          },
+        },
+      }),
       Underline,
+      Color,
       TextStyle,
       Highlight.configure({ multicolor: true }),
       Image.configure({
@@ -111,7 +119,7 @@ export function RichTextEditor({ value = '', onChange }: RichTextEditorProps) {
 
   if (!editor) return null;
 
-  const headingLevels = [1, 2, 3, 4, 5] as const; // ✅ strict literal types
+  const headingLevels = [1, 2, 3, 4, 5] as const; 
 
   return (
     <div className="rounded-xl overflow-hidden border border-gray-100 shadow-sm">
@@ -234,6 +242,15 @@ export function RichTextEditor({ value = '', onChange }: RichTextEditorProps) {
           <Italic className="w-5 h-5 text-white" />
         </ToolbarButton>
 
+        {/* Blockquote */}
+        <ToolbarButton
+          onClick={() => editor.chain().focus().toggleBlockquote().run()}
+          isActive={editor.isActive('blockquote')}
+          title="Notice Box"
+        >
+          <Wallpaper color='white'/>
+        </ToolbarButton>
+
         {/* Underline */}
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleUnderline().run()}
@@ -293,7 +310,7 @@ export function RichTextEditor({ value = '', onChange }: RichTextEditorProps) {
                 >
                   {size}
                 </DropdownMenuItem>
-              )
+              ),
             )}
           </DropdownMenuContent>
         </DropdownMenu>
@@ -369,7 +386,9 @@ export function RichTextEditor({ value = '', onChange }: RichTextEditorProps) {
             input.type = 'file';
             input.accept = 'image/*';
             input.onchange = e =>
-              handleFileUpload(e as unknown as React.ChangeEvent<HTMLInputElement>);
+              handleFileUpload(
+                e as unknown as React.ChangeEvent<HTMLInputElement>,
+              );
             input.click();
           }}
           title="Attach File"
@@ -390,7 +409,7 @@ export function RichTextEditor({ value = '', onChange }: RichTextEditorProps) {
         <ToolbarButton
           onClick={() => {
             const url = prompt(
-              'Enter image URL (or use Attach File button for local images)'
+              'Enter image URL (or use Attach File button for local images)',
             );
             if (url) editor.chain().focus().setImage({ src: url }).run();
           }}

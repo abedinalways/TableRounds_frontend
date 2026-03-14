@@ -58,14 +58,7 @@ const Calendar: React.FC = () => {
     );
   };
 
-  // const isCurrentMonth = (
-  //   day: number,
-  //   isPrevMonth: boolean,
-  //   isNextMonth: boolean
-  // ) => {
-  //   if (isPrevMonth || isNextMonth) return false;
-  //   return true;
-  // };
+ 
 
   const renderCalendar = () => {
     const daysInMonth = getDaysInMonth(currentDate);

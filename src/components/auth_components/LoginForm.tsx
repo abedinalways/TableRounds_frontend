@@ -31,6 +31,7 @@ export default function LoginForm({
     e.preventDefault();
     if (!formData.email || !formData.password) return;
     await onLogin?.(formData);
+   
   };
 
   const isDisabled = isLoading || !formData.email || !formData.password;
@@ -53,7 +54,7 @@ export default function LoginForm({
             value={formData.email}
             onChange={e => handleChange('email', e.target.value)}
             disabled={isLoading}
-            className=" input-bg md:w-[644px] md:h-[61px] text-white placeholder:text-white/60 px-4 py-3 rounded-[8px]  outline-none w-fit"
+            className="input-bg md:w-[644px] md:h-[61px] text-white placeholder:text-white/60 px-4 py-3 rounded-[8px]  outline-none w-fit"
           />
         </div>
       </div>

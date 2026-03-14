@@ -1,5 +1,5 @@
 
-export type Difficulty = 'Intern' | 'Boards' | 'Senior';
+export type Difficulty = 'Intern' | 'Board' | 'Senior';
 
 export interface AnswerChoice {
   id: string;

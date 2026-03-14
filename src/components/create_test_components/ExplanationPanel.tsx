@@ -1,7 +1,5 @@
 import React from 'react';
 import Image from 'next/image';
-
-import OptionIcon from '../reusable/icons/OpotionIcon';
 import BookIcon from '../reusable/icons/BookIcon';
 import ExplainIcon from '../reusable/icons/ExplainIcon';
 import CancelIcon from '../reusable/icons/CancelIcon';

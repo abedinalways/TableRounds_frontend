@@ -21,7 +21,6 @@ export default function StatsCard({
           <h2 className="text-2xl md:text-[36px] leading-[120%] font-bold">
             {totalQuestions}
           </h2>
-         
         </div>
         <div className="stats-card-bg  w-12 h-12 rounded-xl flex items-center justify-center">
           <QuestionsIcon />

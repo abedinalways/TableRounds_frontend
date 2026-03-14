@@ -20,7 +20,7 @@ export default function Welcome() {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top 80%',
-          once: true, // ✅ Only animate once
+          once: true, 
         },
       });
 

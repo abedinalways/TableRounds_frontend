@@ -2,7 +2,7 @@ import React from 'react';
 import { Progress } from '@/components/ui/progress';
 import { ArrowRight} from 'lucide-react';
 import { TopbarCheckbox } from '../topbarCheckbox';
-import Btn from '../reusable/button/Btn';
+
 import Flag from '../reusable/icons/Flag';
 import ChatBubble from '../reusable/icons/ChatBubble';
 import ZoomInIcon from '../reusable/icons/ZoomInIcon';
@@ -10,7 +10,7 @@ import ZoomOutIcon from '../reusable/icons/ZoomOutIcon';
 import PauseIcon from '../reusable/icons/PauseIcon';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
-import { Button } from '../ui/button';
+
 
 interface QuizTopbarProps {
   progressValue: number;

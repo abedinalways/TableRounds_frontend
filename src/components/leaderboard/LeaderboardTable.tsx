@@ -2,10 +2,9 @@
 
 import { useState, useMemo } from 'react';
 import { Card } from '@/components/ui/card';
-import { LeaderboardItem } from '@/types/type';
 import { LeaderboardProgress } from '../ui/LeaderboardProgress';
 import { LineChart, Line } from 'recharts';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, Loader2 } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -24,6 +23,8 @@ import { Input } from '@/components/ui/input';
 import CalendarIcon from '../reusable/icons/CalendarIcon';
 import Image from 'next/image';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { useGetLeaderboardQuery } from '@/app/redux/api/leaderboardApi';
+
 
 const getRankWithBadge = (rank: number) => {
   const isTopThree = rank <= 3;
@@ -45,10 +46,6 @@ const getRankWithBadge = (rank: number) => {
   );
 };
 
-interface LeaderboardTableProps {
-  data: LeaderboardItem[];
-}
-
 function TrendChart({ data }: { data: number[] }) {
   const chartData = data.map((value, index) => ({ index, value }));
 
@@ -65,7 +62,7 @@ function TrendChart({ data }: { data: number[] }) {
   );
 }
 
-export function LeaderboardTable({ data }: LeaderboardTableProps) {
+export function LeaderboardTable() {
   const [searchQuery, setSearchQuery] = useState('');
   const [timePeriod, setTimePeriod] = useState('this-month');
   const [filters, setFilters] = useState({
@@ -74,23 +71,36 @@ export function LeaderboardTable({ data }: LeaderboardTableProps) {
     activeUsers: false,
   });
 
+  // Fetch data from backend
+  const {
+    data: response,
+    isLoading,
+    isError,
+    error,
+  } = useGetLeaderboardQuery();
+  console.log(DataTransfer, 'oop')
   const filteredData = useMemo(() => {
-    let filtered = [...data];
+    if (!response?.data?.leaderboard) return [];
+
+    let filtered = [...response.data.leaderboard];
 
     if (searchQuery) {
       filtered = filtered.filter(
         item =>
-          item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.institution.toLowerCase().includes(searchQuery.toLowerCase())
+          item.user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.user.institution
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()),
       );
     }
 
     if (filters.highAccuracy) filtered = filtered.filter(i => i.accuracy >= 70);
     if (filters.topPerformers) filtered = filtered.filter(i => i.rank <= 10);
-    if (filters.activeUsers) filtered = filtered.filter(i => i.tests >= 50);
+    if (filters.activeUsers)
+      filtered = filtered.filter(i => i.tests_completed >= 50);
 
     return filtered;
-  }, [data, searchQuery, filters]);
+  }, [response, searchQuery, filters]);
 
   return (
     <Card className="mt-6 p-4">
@@ -103,7 +113,7 @@ export function LeaderboardTable({ data }: LeaderboardTableProps) {
               <CalendarIcon />
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className='text-sm'>
+            <SelectContent className="text-sm">
               <SelectItem value="this-week">This Week</SelectItem>
               <SelectItem value="this-month">This Month</SelectItem>
               <SelectItem value="this-quarter">This Quarter</SelectItem>
@@ -214,7 +224,22 @@ export function LeaderboardTable({ data }: LeaderboardTableProps) {
             </tr>
           </thead>
           <tbody>
-            {filteredData.length === 0 ? (
+            {isLoading ? (
+              <tr>
+                <td colSpan={6} className="p-8 text-center">
+                  <div className="flex items-center justify-center gap-2">
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span>Loading leaderboard...</span>
+                  </div>
+                </td>
+              </tr>
+            ) : isError ? (
+              <tr>
+                <td colSpan={6} className="p-8 text-center text-red-500">
+                  Error loading leaderboard data. Please try again later.
+                </td>
+              </tr>
+            ) : filteredData.length === 0 ? (
               <tr>
                 <td
                   colSpan={6}
@@ -229,21 +254,36 @@ export function LeaderboardTable({ data }: LeaderboardTableProps) {
                   key={row.rank}
                   className="not-last:border-b hover:bg-gray-50"
                 >
-                  <td className="p-3">{getRankWithBadge(row.rank)}</td>
+                  <td className="p-3">{getRankWithBadge(Number(row?.rank))}</td>
                   <td className="p-3">
-                    <p className="font-medium">{row.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {row.institution}
-                    </p>
+                    <div className="flex items-center gap-3">
+                      {row.user.avatar && (
+                        <Image
+                          src={row.user.avatar}
+                          alt={row.user.name}
+                          width={40}
+                          height={40}
+                          className="rounded-full"
+                        />
+                      )}
+                      <div>
+                        <p className="font-medium">{row.user.name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {row.user.institution}
+                        </p>
+                      </div>
+                    </div>
                   </td>
-                  <td className="p-3 text-center">{row.tests}</td>
+                  <td className="p-3 text-center">{row.tests_completed}</td>
                   <td className="p-3">
                     <span className="text-xs">{row.accuracy}%</span>
                     <LeaderboardProgress value={row.accuracy} />
                   </td>
-                  <td className="p-3 text-center">{row.avgScore}%</td>
+                  <td className="p-3 text-center">{row.avg_score}%</td>
                   <td className="p-3 flex justify-center">
-                    {row.trend && <TrendChart data={row.trend} />}
+                    {row.trend && row.trend.length > 0 && (
+                      <TrendChart data={row.trend} />
+                    )}
                   </td>
                 </tr>
               ))

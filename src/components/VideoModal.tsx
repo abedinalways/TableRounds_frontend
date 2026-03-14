@@ -64,7 +64,7 @@ const VideoModal = () => {
             ref={videoRef}
             controls
             className="w-full h-auto"
-            src="/video/amrounds.mp4"
+            src="/video/Amrounds00.mp4"
           >
             Your browser does not support the video tag.
           </video>

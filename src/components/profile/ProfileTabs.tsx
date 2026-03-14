@@ -44,7 +44,7 @@ export default function ProfileTabs({
           y: 0,
           duration: 0.4,
           ease: 'power2.out',
-        }
+        },
       );
     });
 
@@ -90,7 +90,7 @@ export default function ProfileTabs({
 
           <div className="space-y-6">
             <PublicationCard data={data.publications} />
-            <SkillBadges skills={data.skills} />
+            {/* <SkillBadges skills={data.skills} /> */}
             <QuickActions />
           </div>
         </TabsContent>

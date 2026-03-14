@@ -398,3 +398,9 @@ background: rgba(183, 158, 107, 0.14)
   input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
+
+/* Blur background when dialog open */
+
+[data-state="open"][role="dialog"] ~ * {
+  filter: blur(3px);
+}

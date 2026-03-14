@@ -2,72 +2,48 @@
 
 import Image from 'next/image';
 import { Menu } from 'lucide-react';
-import { getUser, getRole } from '@/lib/auth';
-import Link from 'next/link';
-import Btn from '@/components/reusable/button/Btn';
 import { NotificationButton } from '@/components/topbar/NotificationButton';
+import { useMeQuery } from '@/app/redux/api/authApi';
+import { useNotificationSocket } from '@/app/socket/useNotificationSocket';
+import { useGetUserNotificationsQuery } from '@/app/redux/api/notificationApi';
+import { useChatSocket } from '@/app/redux/api/chat/useChatSocket';
 
 interface TopbarProps {
   onMenuClick?: () => void;
 }
 
 export default function Topbar({ onMenuClick }: TopbarProps = {}) {
-  const user = getUser();
-  const role = getRole();
+  // 
+  useChatSocket();
+  useGetUserNotificationsQuery();
 
-  const profileHref =
-    role === 'admin'
-      ? '/dashboard/admin/manage-settings'
-      : '/dashboard/my-profile';
+  const { data: user } = useMeQuery();
+  console.log(user, 'user data=====================')
+
+  console.log('TOPBAR USER:', user);
 
   return (
     <header className="sticky top-0 z-1000 bg-white border-b flex items-center justify-between gap-3 px-4 sm:px-6 h-15">
-      {/* Mobile Menu Button */}
       {onMenuClick && (
         <button
           onClick={onMenuClick}
-          className="lg:hidden p-2 hover:bg-gray-100 rounded-md transition-colors"
-          aria-label="Open menu"
+          className="lg:hidden p-2 hover:bg-gray-100 rounded-md"
         >
           <Menu className="w-5 h-5 text-gray-700" />
         </button>
       )}
 
-      {/* Right side items */}
       <div className="flex items-center gap-3 ml-auto">
-        {/* notifications */}
-        <button className='cursor-pointer'>
-          <NotificationButton/>
-          {/* <Image
-            src="/images/dashboard/topbar/bell.png"
-            width={20}
-            height={20}
-            alt="Notifications"
-            className="cursor-pointer"
-          /> */}
-        </button>
-
+        <NotificationButton />
         <Image
-          src="/images/dashboard/topbar/message.png"
-          width={20}
-          height={20}
-          alt="Messages"
-          className="cursor-pointer"
+          src={user?.avatar || '/images/dashboard/Admin/admin.png'}
+          width={36}
+          height={36}
+          alt=""
+          className="rounded-full"
         />
-
-        {/* Profile */}
-        <Link href={profileHref}>
-          <Image
-            src="/images/dashboard/topbar/doctor.png"
-            width={36}
-            height={36}
-            alt="Profile"
-            className="rounded-full cursor-pointer"
-          />
-        </Link>
-
         <span className="hidden sm:block font-semibold text-gray-700">
-          {user?.name}
+           Dr. {user?.name}
         </span>
       </div>
     </header>

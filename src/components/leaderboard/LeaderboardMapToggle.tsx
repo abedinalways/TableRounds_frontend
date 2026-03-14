@@ -30,8 +30,8 @@ function LeaderboardView() {
   return (
     <div className='min-h-screen'>
 
-      <StatCards stats={data.stats} />
-      <LeaderboardTable data={leaderboardData.leaderboard}/>
+      <StatCards/>
+      <LeaderboardTable/>
     </div>
      
   );

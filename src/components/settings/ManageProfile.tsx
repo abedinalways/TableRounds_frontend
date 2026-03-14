@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { UserProfile } from '@/types/profile';
 import { Input } from '@/components/ui/input';
@@ -20,8 +20,6 @@ import CalendarIconForProfile from '../reusable/icons/CalendarIconForProfile';
 import { Card } from '../ui/card';
 import FollowersFollowingModal from '../my-profile/FollowersFollowingModal';
 import { Switch } from '../ui/CustomSwitch';
-
-
 
 type ProfileFormData = {
   name: string;
@@ -48,36 +46,6 @@ const followersData = [
     username: 'john_doe',
     avatar: '/images/dashboard/message/doctor.png',
   },
-  {
-    id: '2',
-    name: 'Sarah Smith',
-    username: 'sarah_smith',
-    avatar: '/images/dashboard/message/doctor.png',
-  },
-  {
-    id: '3',
-    name: 'Sarah Smith',
-    username: 'sarah_smith',
-    avatar: '/images/dashboard/message/doctor.png',
-  },
-  {
-    id: '4',
-    name: 'Sarah Smith',
-    username: 'sarah_smith',
-    avatar: '/images/dashboard/message/doctor.png',
-  },
-  {
-    id: '5',
-    name: 'Sarah Smith',
-    username: 'sarah_smith',
-    avatar: '/images/dashboard/message/doctor.png',
-  },
-  {
-    id: '6',
-    name: 'Sarah Smith',
-    username: 'sarah_smith',
-    avatar: '/images/dashboard/message/doctor.png',
-  },
 ];
 
 const followingData = [
@@ -87,54 +55,40 @@ const followingData = [
     username: 'alex_carter',
     avatar: '/images/dashboard/message/doctor.png',
   },
-  {
-    id: '2',
-    name: 'Sarah Smith',
-    username: 'sarah_smith',
-    avatar: '/images/dashboard/message/doctor.png',
-  },
-  {
-    id: '3',
-    name: 'Sarah Smith',
-    username: 'sarah_smith',
-    avatar: '/images/dashboard/message/doctor.png',
-  },
-  {
-    id: '4',
-    name: 'Sarah Smith',
-    username: 'sarah_smith',
-    avatar: '/images/dashboard/message/doctor.png',
-  },
-  {
-    id: '5',
-    name: 'Sarah Smith',
-    username: 'sarah_smith',
-    avatar: '/images/dashboard/message/doctor.png',
-  },
-  {
-    id: '6',
-    name: 'Sarah Smith',
-    username: 'sarah_smith',
-    avatar: '/images/dashboard/message/doctor.png',
-  },
 ];
 
 export default function ManageProfile({ user }: ProfileHeaderProps) {
-  const [preview, setPreview] = useState('/images/settings/img01.png');
+  const [preview, setPreview] = useState('/images/dashboard/doctor.png');
   const [isPublic, setIsPublic] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'followers' | 'following'>(
-    'followers'
+    'followers',
   );
 
-  const { register, handleSubmit } = useForm<ProfileFormData>({
-    defaultValues: {
-      name: '',
-      credentials: '',
-      year: '',
-      practiceName: '',
-    },
-  });
+  const { register, handleSubmit, reset } = useForm<ProfileFormData>();
+
+  /* ✅ Populate form when user loads */
+  useEffect(() => {
+    if (!user) return;
+
+    reset({
+      name: user.name || '',
+      credentials: user.credentials || '',
+      location: user.location || '',
+      year: user.year || '',
+      joiningDate: user.joiningDate || '',
+      instagram: user.instagram || '',
+      linkedin: user.linkedin || '',
+      twitter: user.twitter || '',
+      facebook: user.facebook || '',
+      description: user.details || '',
+      practiceName: user.practiceName || '',
+    });
+
+    if (user.avatar) {
+     
+    }
+  }, [user, reset]);
 
   const onSubmit = (data: ProfileFormData) => {
     console.log(data);
@@ -155,10 +109,13 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
           <div className="md:flex justify-between items-start mb-8 gap-4">
             <div className="relative w-[213px]">
               <Image
-                src={preview}
-                alt="Profile image"
+                src={preview || '/images/dashboard/doctor.png'}
+                alt=""
                 width={213}
                 height={255}
+                priority
+                quality={100}
+                
                 className="rounded-md object-cover"
               />
 
@@ -177,6 +134,7 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
               <h2 className="text-[28px] text-[#0f172b] font-semibold">
                 {user.name}
               </h2>
+
               <p className="text-[18px] text-[#047857]">{user.title}</p>
 
               <div className="flex md:gap-[48px] gap-6 items-center text-xs md:text-[16px] font-light text-[#6b7280] ">
@@ -184,10 +142,12 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
                   <LocationIcon />
                   {user.location}
                 </h4>
+
                 <h4 className="md:flex items-center gap-2">
                   <BagIcon />
                   {user.jobArea}
                 </h4>
+
                 <h4 className="flex items-center gap-2">
                   <CalendarIconForProfile />
                   Joined {user.joiningDate}
@@ -198,7 +158,7 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
                 {user.details}
               </p>
 
-              {/* Followers / Following (Clickable) */}
+              {/* Followers / Following */}
               <div className="flex gap-6 mt-3 text-md text-[32px] text-center">
                 <button
                   type="button"
@@ -239,25 +199,15 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
               </button>
 
               <div className="flex md:items-center gap-2 bg-white px-6 py-4 rounded-2xl">
-                <span
-                  className={`${
-                    isPublic ? '' : ''
-                  } md:text-lg text-md`}
-                >
-                  Public
-                </span>
+                <span className="md:text-lg text-md">Public</span>
+
                 <Switch
                   checked={isPublic}
                   onCheckedChange={setIsPublic}
                   className="cursor-pointer"
                 />
-                <span
-                  className={`${
-                    !isPublic ? '' : ''
-                  } md:text-lg text-md`}
-                >
-                  Private
-                </span>
+
+                <span className="md:text-lg text-md">Private</span>
               </div>
             </div>
           </div>
@@ -267,15 +217,19 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
           {/* social media */}
           <div className="flex flex-wrap items-center gap-4 md:gap-[24px] text-[#01281e] mt-[24px]">
             <h2 className="font-bold text-[16px] md:text-[20px]">Contact</h2>
+
             <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
               <Linkedin size="24" />
             </button>
+
             <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer ">
               <Instagram size="24" />
             </button>
+
             <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer ">
               <Facebook size="24" />
             </button>
+
             <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer ">
               <FaXTwitter size="24" />
             </button>
@@ -292,16 +246,16 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
             <Label className="font-bold">
               Name <span className="text-red-600">*</span>
             </Label>
+
             <Input
               {...register('name')}
-              placeholder="Jordan Nguyen"
-              readOnly
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
+              className="bg-[#f9f9f5] text-black border [border-[rgba(68,68,68,0.1)]]"
             />
           </div>
 
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">Instagram</Label>
+
             <Input
               placeholder="Personal Link"
               {...register('instagram')}
@@ -313,6 +267,7 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
             <Label className="font-bold">
               Credentials <span className="text-red-600">*</span>
             </Label>
+
             <Input
               {...register('credentials')}
               placeholder="i.e. DDS, DMD, MD, Student"
@@ -322,6 +277,7 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
 
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">LinkedIn</Label>
+
             <Input
               placeholder="Personal Link"
               {...register('linkedin')}
@@ -333,6 +289,7 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
             <Label className="font-bold">
               Location <span className="text-red-600">*</span>
             </Label>
+
             <Input
               placeholder="Enter your city, state, and country"
               {...register('location')}
@@ -342,6 +299,7 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
 
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">Twitter/X</Label>
+
             <Input
               placeholder="Personal Link"
               {...register('twitter')}
@@ -353,6 +311,7 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
             <Label className="font-bold">
               Year in Training/Practice <span className="text-red-600">*</span>
             </Label>
+
             <Input
               {...register('year')}
               placeholder="Student, PGY, or Attending"
@@ -362,6 +321,7 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
 
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">Facebook</Label>
+
             <Input
               placeholder="Personal Link"
               {...register('facebook')}
@@ -373,6 +333,7 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
             <Label className="font-bold">
               Current Practice <span className="text-red-600">*</span>
             </Label>
+
             <Input
               placeholder="Name of your residency, hospital, or private practice"
               {...register('practiceName')}
@@ -382,6 +343,7 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
 
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">Joining Date</Label>
+
             <Input
               type="date"
               {...register('joiningDate')}
@@ -396,6 +358,7 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
         <Label className="font-bold mb-4 text-[#0f172b] text-16px md:text-[24px] leading-[130%]">
           Descriptions
         </Label>
+
         <Textarea
           rows={4}
           {...register('description')}
@@ -404,7 +367,6 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
         />
       </div>
 
-      {/* ✅ MODAL RENDER (THIS IS WHAT YOU MISSED) */}
       <FollowersFollowingModal
         open={modalOpen}
         onClose={setModalOpen}

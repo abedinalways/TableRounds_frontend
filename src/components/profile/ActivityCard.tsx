@@ -82,7 +82,7 @@ export default function QuestionBankSolved({ data }: Props) {
           {/* Center Text */}
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span className="text-[32px] md:text-[48px] leading-[130%] font-bold text-[#01503b]">
-              {completion}%
+              {completion || 0}%
             </span>
             <span className="text-sm md:text-[20px]  text-[#01281e]">
               Complete
@@ -92,9 +92,9 @@ export default function QuestionBankSolved({ data }: Props) {
 
         {/* Stats */}
         <div className="flex-1 w-full space-y-3">
-          <StatRow label="Ranking" value={ranking} />
-          <StatRow label="Correct" value={`${correctRate}%`} />
-          <StatRow label="Best Topic" value={bestTopic} />
+          <StatRow label="Ranking" value={ranking || 0} />
+          <StatRow label="Correct" value={`${correctRate || 0}%`} />
+          <StatRow label="Best Topic" value={bestTopic || 'None'} />
         </div>
       </div>
     </Card>

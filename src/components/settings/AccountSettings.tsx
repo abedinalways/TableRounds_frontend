@@ -6,7 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+import { useMeQuery, useUpdateUserMutation } from '@/app/redux/api/authApi';
 
 type FormData = {
   email: string;
@@ -16,27 +18,60 @@ type FormData = {
 };
 
 export default function AccountSettings() {
-  const { register, handleSubmit, reset } = useForm<FormData>({
-    defaultValues: {
-      email: 'jordan@gmail.com',
-      currentPassword: 'bfedf1368724',
-    },
-  });
+  const { data: profile } = useMeQuery();
+  const [updateUser] = useUpdateUserMutation();
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { errors },
+  } = useForm<FormData>();
 
   const [emailNotify, setEmailNotify] = useState(false);
   const [webNotify, setWebNotify] = useState(true);
 
-  const onSubmit = (data: FormData) => {
+  const newPassword = watch('newPassword');
+
+  // ✅ Populate email when profile loads
+  useEffect(() => {
+    if (profile?.email) {
+      reset({
+        email: profile.email,
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+      });
+    }
+  }, [profile, reset]);
+
+  const onSubmit = async (data: FormData) => {
     if (data.newPassword !== data.confirmPassword) {
       toast.error('Passwords do not match');
       return;
     }
 
-    toast.success('Password updated successfully');
-    reset({
-      newPassword: '',
-      confirmPassword: '',
-    });
+    try {
+      const formData = new FormData();
+
+      formData.append('password', data.currentPassword);
+      formData.append('new_password', data.newPassword);
+
+      await updateUser(formData).unwrap();
+
+      toast.success('Password updated successfully');
+
+      reset({
+        email: profile?.email || '',
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+      });
+    } catch (err: unknown) {
+      const error = err as { data?: { message?: string } };
+      toast.error(error?.data?.message || 'Update failed');
+    }
   };
 
   const handleDelete = () => {
@@ -72,37 +107,66 @@ export default function AccountSettings() {
               Change Password?
             </button>
           </div>
+
           <Input
             type="password"
-            {...register('currentPassword')}
+            {...register('currentPassword', {
+              required: 'Current password is required',
+            })}
             placeholder="Set your password"
             className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
           />
+
+          {errors.currentPassword && (
+            <p className="text-sm text-red-500">
+              {errors.currentPassword.message}
+            </p>
+          )}
         </div>
 
         {/* New Password */}
         <div className="flex flex-col gap-[8px]">
           <Label>New Password</Label>
+
           <Input
             type="password"
-            {...register('newPassword')}
+            {...register('newPassword', {
+              minLength: {
+                value: 6,
+                message: 'Password must be at least 6 characters',
+              },
+            })}
             placeholder="Set your new password"
             className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
           />
+
+          {errors.newPassword && (
+            <p className="text-sm text-red-500">{errors.newPassword.message}</p>
+          )}
         </div>
 
         {/* Confirm Password */}
         <div className="flex flex-col gap-[8px]">
           <Label>Confirm New Password</Label>
+
           <Input
             type="password"
-            {...register('confirmPassword')}
+            {...register('confirmPassword', {
+              validate: value =>
+                value === newPassword || 'Passwords do not match',
+            })}
             placeholder="Re-type your new password"
             className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
           />
+
+          {errors.confirmPassword && (
+            <p className="text-sm text-red-500">
+              {errors.confirmPassword.message}
+            </p>
+          )}
         </div>
 
-        {/* Notifications */}
+        {/* Email Notifications */}
         <div className="flex items-center justify-between">
           <Label>Email Notifications</Label>
           <Switch
@@ -115,6 +179,7 @@ export default function AccountSettings() {
           />
         </div>
 
+        {/* Website Notifications */}
         <div className="flex items-center justify-between ">
           <Label>Website Notifications</Label>
           <Switch
@@ -123,7 +188,7 @@ export default function AccountSettings() {
             onCheckedChange={v => {
               setWebNotify(v);
               toast.success(
-                `Website notification ${v ? 'enabled' : 'disabled'}`
+                `Website notification ${v ? 'enabled' : 'disabled'}`,
               );
             }}
           />
@@ -141,6 +206,11 @@ export default function AccountSettings() {
             Delete
           </Button>
         </div>
+
+        {/* Submit */}
+        <Button type="submit" className="bg-[#01503B] w-fit cursor-pointer">
+          Update Password
+        </Button>
       </form>
     </div>
   );

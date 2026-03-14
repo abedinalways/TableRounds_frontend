@@ -67,37 +67,37 @@ export const userMenu: MenuItem[] = [
   },
   {
     title: 'Create Test',
-    href: '/dashboard/create-test',
+    href: '/dashboard/user/create-test',
     icon: '/images/dashboard/img02.png',
   },
   {
     title: 'Previous Tests',
-    href: '/dashboard/previous-test',
+    href: '/dashboard/user/previous-test',
     icon: '/images/dashboard/img03.png',
   },
   {
     title: 'Statistics',
-    href: '/dashboard/statistics',
+    href: '/dashboard/user/statistics',
     icon: '/images/dashboard/img04.png',
   },
   {
     title: 'Leaderboard',
-    href: '/dashboard/leaderboard',
+    href: '/dashboard/user/leaderboard',
     icon: '/images/dashboard/img05.png',
   },
   {
     title: 'Reset Bank',
-    href: '',
+    href: '/dashboard/user/reset-bank',
     icon: '/images/dashboard/img06.png',
   },
   {
     title: 'Messages',
-    href: '/dashboard/messages',
+    href: '/dashboard/user/messages',
     icon: '/images/dashboard/img007.png',
   },
   {
     title: 'My Profile',
-    href: '/dashboard/my-profile',
+    href: '/dashboard/user/my-profile',
     icon: '/images/dashboard/img00008.png',
   },
 
@@ -105,14 +105,10 @@ export const userMenu: MenuItem[] = [
   {
     section: 'Other',
     title: 'Help & Support',
-    href: '/dashboard/support',
+    href: '/dashboard/user/support',
     icon: '/images/dashboard/img08.png',
   },
-  // {
-  //   title: 'Settings',
-  //   href: '/dashboard/settings',
-  //   icon: '/images/dashboard/img09.png',
-  // },
+
   {
     title: 'Logout',
     href: '/login',

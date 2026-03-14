@@ -17,7 +17,7 @@ import {
 import Link from 'next/link';
 type Props = {
   users: VerifiedUser[];
-  onDelete: (id: number) => void;
+  onDelete: (id: string) => void;
 };
 
 export function VerifiedUsers({ users, onDelete }: Props) {

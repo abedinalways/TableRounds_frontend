@@ -1,17 +1,19 @@
 import React from 'react';
-import Image from 'next/image';
 import { CardContent, CardHeader } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { QuizQuestionData, Option } from '@/types/quiz';
+import { QuizDetailsUI } from '@/types/test-session';
 import Btn from '../reusable/button/Btn';
 import { cn } from '@/lib/utils';
 import { CircularProgress } from '../progress-10';
 import CorrectIcon from '../reusable/icons/CorrectIcon';
 import WrongIcon from '../reusable/icons/WrongIcon';
+import { useCompleteTestMutation } from '@/app/redux/api/testSessionApi';
+import { useRouter } from 'next/navigation';
 
 interface QuestionCardProps {
-  quizDetails: QuizQuestionData['quizDetails'];
+  testId: string;
+  quizDetails: QuizDetailsUI;
   selectedAnswerId: string | null;
   showExplanation: boolean;
   isUserCorrect: boolean;
@@ -22,179 +24,150 @@ interface QuestionCardProps {
 }
 
 const QuestionCard: React.FC<QuestionCardProps> = ({
+  testId,
   quizDetails,
   selectedAnswerId,
   showExplanation,
   isUserCorrect,
   onAnswerChange,
   onSubmit,
+  onToggleHide,
   isQuestionHidden,
-  onToggleHide
 }) => {
+  const [completeTest] = useCompleteTestMutation();
+  const router = useRouter();
+
+  const handleSubmitTest = async () => {
+    try {
+      await completeTest({ test_id: testId }).unwrap();
+      router.push(`/dashboard/user/test-complete/${testId}`);
+    } catch (err) {
+      console.error('Submit test failed', err);
+    }
+  };
+
   return (
-    <div className="w-full bg-[#f9f9f5] md:my-8  md:p-[32px] rounded-[16px]">
-      <div>
-        {showExplanation && (
+    <div className="w-full bg-[#f9f9f5] md:my-8 md:p-[32px] rounded-[16px]">
+      {showExplanation && (
+        <div className="mb-4">
           <Btn
             text={isQuestionHidden ? 'Show Question' : 'Hide Question'}
             onClick={onToggleHide}
             className="bg-[#b79e6b] text-white px-6 py-2 text-sm font-semibold cursor-pointer"
           />
+        </div>
+      )}
+
+      <CardHeader>
+        {quizDetails?.question_title && (
+          <h2 className="text-lg md:text-2xl font-bold text-[#01281e] mb-3">
+            {quizDetails.question_title}
+          </h2>
         )}
-      </div>
-      <CardHeader className="">
-        <p className="text-sm md:text-[20px] text-gray-700 leading-relaxed font-normal">
-          {quizDetails.title} {quizDetails.question}
-        </p>
-        <span></span>
+
+        <div
+          className="prose prose-sm md:prose-base max-w-none text-gray-700"
+          dangerouslySetInnerHTML={{
+            __html: quizDetails?.question_steam || '',
+          }}
+        />
       </CardHeader>
 
-      <CardContent className=" space-y-4">
-        {/* <span className="font-normal text-sm md:text-[20px] text-[#01281e] flex items-center  ">
-          <Image
-            src="/images/dashboard/main_dashboard/qns.png"
-            width={28}
-            height={28}
-            alt=""
-            className="mr-3"
-          />
-        </span> */}
-
+      <CardContent className="space-y-4">
         <RadioGroup
+          value={selectedAnswerId ?? undefined}
           onValueChange={onAnswerChange}
-          value={selectedAnswerId || undefined}
           className="space-y-4"
         >
-          {quizDetails.options.map((option: Option) => {
-            const isCorrectOption = option.id === quizDetails.correctAnswerId;
-            const isUserWrongOption =
-              option.id === selectedAnswerId && !isCorrectOption;
-
-            const isOtherOption =
-              showExplanation &&
-              option.id !== selectedAnswerId &&
-              !isCorrectOption;
+          {quizDetails.answerOptions.map((option, index) => {
+            const isCorrect = option.id === quizDetails.correctAnswerId;
+            const isSelected = option.id === selectedAnswerId;
+            const isWrongSelected = showExplanation && isSelected && !isCorrect;
 
             return (
               <div
                 key={option.id}
                 className={cn(
-                  'relative flex items-center justify-between p-2 rounded-xl border border-[#00000026] transition-all',
+                  'relative flex items-center justify-between p-3 rounded-xl border border-[#00000026] transition-all',
                   showExplanation &&
-                    isCorrectOption &&
+                    isCorrect &&
                     'bg-green-100 border-green-500',
-                  showExplanation &&
-                    isUserWrongOption &&
-                    'bg-red-100 border-red-500',
-                  !showExplanation && 'bg-gray-50 hover:bg-gray-100'
+                  isWrongSelected && 'bg-red-100 border-red-500',
+                  !showExplanation && 'bg-gray-50 hover:bg-gray-100',
                 )}
               >
                 <div className="flex items-center gap-3">
-                  {showExplanation ? (
-                    <RadioGroupItem
-                      value="foo"
-                      checked={
-                        selectedAnswerId === option.id || isCorrectOption
-                      }
-                      varient={isCorrectOption ? 'default' : 'destructive'}
-                      disabled={showExplanation}
-                    />
-                  ) : (
-                    <RadioGroupItem
-                      varient="default"
-                      value={option.id}
-                      id={`option-${option.id}`}
-                      disabled={showExplanation}
-                    />
-                  )}
+                  <RadioGroupItem
+                    varient="default"
+                    value={option.id}
+                    id={`option-${option.id}`}
+                    disabled={showExplanation}
+                  />
 
                   <Label
                     htmlFor={`option-${option.id}`}
-                    className={`${
-                      isUserCorrect &&
-                      isOtherOption &&
-                      'opacity-60 line-through'
-                    } cursor-pointer text-xs md:text-base`}
+                    className={cn(
+                      'cursor-pointer text-xs md:text-base',
+                      showExplanation &&
+                        !isCorrect &&
+                        isUserCorrect &&
+                        'opacity-60 line-through',
+                    )}
                   >
-                    <span className="font-bold mr-2">{option.id}.</span>
-                    {option.text}
+                    <span className="font-bold mr-2">
+                      {String.fromCharCode(65 + index)}.
+                    </span>
+                    {option.option_text}
                   </Label>
                 </div>
 
                 {showExplanation && (
                   <CircularProgress
                     showLabel
-                    value={option?.percentage ?? 0}
+                    value={option.percentage ?? 0}
                     className="text-sm md:text-md font-semibold text-gray-600"
                   />
                 )}
               </div>
             );
           })}
-
-          {showExplanation && (
-            <div
-              className={cn(
-                'mt-6 border-l-[4px] border-[#20ac19] p-[16px] rounded-[12px]',
-                isUserCorrect
-                  ? 'border-green-500 bg-green-50'
-                  : 'border-red-500 bg-red-50'
-              )}
-            >
-              <CardContent className="flex items-center justify-between">
-                <div className="font-bold text-lg">
-                  {isUserCorrect ? (
-                    <h4 className="text-[#20AC19] flex items-center gap-2 text-xs md:text-sm">
-                      <CorrectIcon /> Correct ({quizDetails.correctAnswerId})
-                    </h4>
-                  ) : (
-                    <h4 className="text-red-600 flex gap-2 items-center text-xs md:text-sm">
-                      <WrongIcon /> Wrong Answer
-                    </h4>
-                  )}
-                </div>
-
-                {!isUserCorrect && (
-                  <div className="text-xs md:text-sm text-gray-600">
-                    <p className="flex items-center gap-2 font-semibold text-[#20AC19]">
-                      <CorrectIcon /> Correct Answer:{' '}
-                      {quizDetails.correctAnswerId}
-                    </p>
-                  </div>
-                )}
-
-                {/* <div className="text-right flex gap-2 items-start">
-                  <div className="flex items-center justify-center">
-                    <Image
-                      src="/images/dashboard/statistics.png"
-                      width={32}
-                      height={32}
-                      alt=""
-                    />
-                  </div>
-
-                  {isUserCorrect ? (
-                    <div className="flex flex-col">
-                      <h2>68%</h2>
-                      <p className="text-xs text-gray-600">
-                        Answered Correctly
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col">
-                      <h2>6%</h2>
-                      <p className="text-xs text-gray-600 font-semibold">
-                        Answered {selectedAnswerId}
-                      </p>
-                    </div>
-                  )}
-                </div> */}
-              </CardContent>
-            </div>
-          )}
         </RadioGroup>
 
-        <div className="md:flex justify-between  items-center space-y-2 md:space-y-0 mb-6 md:mb-0">
+        {showExplanation && (
+          <div
+            className={cn(
+              'mt-6 border-l-[4px] p-[16px] rounded-[12px]',
+              isUserCorrect
+                ? 'border-green-500 bg-green-50'
+                : 'border-red-500 bg-red-50',
+            )}
+          >
+            <CardContent className="flex items-center justify-between">
+              <div className="font-bold text-lg">
+                {isUserCorrect ? (
+                  <h4 className="text-[#20AC19] flex items-center gap-2 text-xs md:text-sm">
+                    <CorrectIcon /> Correct
+                  </h4>
+                ) : (
+                  <h4 className="text-red-600 flex gap-2 items-center text-xs md:text-sm">
+                    <WrongIcon /> Wrong Answer
+                  </h4>
+                )}
+              </div>
+
+              {!isUserCorrect && (
+                <div className="text-xs md:text-sm text-gray-600">
+                  <p className="flex items-center gap-2 font-semibold text-[#20AC19]">
+                    <CorrectIcon /> Correct Answer:{' '}
+                    {quizDetails.correctAnswerId}
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </div>
+        )}
+
+        <div className="md:flex justify-between items-center space-y-2 md:space-y-0">
           <Btn
             text="Submit Answer"
             onClick={onSubmit}
@@ -203,14 +176,16 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
               'bg-[#01281e] text-white w-full md:w-[164px] h-[50px] text-md font-semibold',
               showExplanation
                 ? 'cursor-not-allowed opacity-60'
-                : 'cursor-pointer'
+                : 'cursor-pointer',
             )}
           />
-          <Btn
-            className="bg-[#b79e6b]  text-sm w-full md:w-[164px] h-[50px] text-white font-semibold rounded-sm! mb-2 mds:mb-0"
-            href="/dashboard/test-complete"
-            text="Submit Test"
-          />
+
+          <button
+            onClick={handleSubmitTest}
+            className="bg-[#b79e6b] text-sm w-full md:w-[164px] h-[50px] text-white font-semibold rounded-md"
+          >
+            Submit Test
+          </button>
         </div>
       </CardContent>
     </div>

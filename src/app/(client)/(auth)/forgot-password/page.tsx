@@ -6,34 +6,31 @@ import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import ForgotPasswordForm from '@/components/auth_components/ForgotPasswordForm';
-
+import { useForgotPasswordMutation } from '@/app/redux/api/authApi';
 export default function ForgotPasswordPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [forgotPassword] = useForgotPasswordMutation();
 
-  const handleForgotPassword = async (email: string) => {
-    setIsLoading(true);
+ const handleForgotPassword = async (email: string) => {
+   setIsLoading(true);
 
-    try {
-      // ✅ Call your backend API here
-      // await forgotPassword(email)
+   try {
+     await forgotPassword({ email }).unwrap();
 
-      toast.success('OTP sent successfully!', {
-        description: 'Check your email for the verification code.',
-      });
+     toast.success('OTP sent successfully!', {
+       description: 'Check your email for the verification code.',
+     });
 
-      setTimeout(() => {
-        router.push(`/verify-otp?email=${encodeURIComponent(email)}`);
-      }, 800);
-    } catch (err) {
-      toast.error('Failed to send OTP', {
-        description: 'Something went wrong. Please try again.',
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+     router.push(`/verify-otp?email=${encodeURIComponent(email)}`);
+   } catch (err) {
+     const error = err as { data?: { message: string } } | Error;
+     const message = 'data' in error && error.data?.message ? error.data.message : 'Failed to send OTP';
+     toast.error(message);
+   } finally {
+     setIsLoading(false);
+   }
+ };
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-4 font-[manrope]">
       <Image

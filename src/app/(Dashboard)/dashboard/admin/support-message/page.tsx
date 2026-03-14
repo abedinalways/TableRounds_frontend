@@ -1,14 +1,9 @@
-import Header from "@/components/admin-message/Header";
-import MessageInput from "@/components/admin-message/MessageInput";
-import MessageSection from "@/components/admin-message/MessageSection";
+import React from 'react'
 
-
-export default function ChatLayout() {
+export default function MessagesHome() {
   return (
-    <>
-      <Header/>
-      <MessageSection/>
-      <MessageInput/>
-    </>
+    <div className="flex items-center justify-center h-full font-bold text-4xl text-green-900">
+      Select a chat to start messaging
+    </div>
   );
 }

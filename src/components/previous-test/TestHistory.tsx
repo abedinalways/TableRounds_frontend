@@ -10,45 +10,54 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { CircularProgressPercentage } from '../CircularProgressPercentage';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
+import { useGetPreviousTestHistoryStatsQuery } from '@/app/redux/api/previousTestHistoryApi';
 
-
-export interface TestItem {
-  score: number;
-  difficulties: string[];
-  date: string;
-  modes: string[];
-  topic: string;
-  qs: number;
+interface Props {
+  search: string;
 }
 
-export function TestHistory({
-  tests,
-  setTests,
-}: {
-  tests: TestItem[];
-  setTests: React.Dispatch<React.SetStateAction<TestItem[]>>;
-}) {
+export function TestHistory({ search }: Props) {
+  const { data, isLoading, isError } = useGetPreviousTestHistoryStatsQuery();
   const [dropdownIndex, setDropdownIndex] = useState<number | null>(null);
   const router = useRouter();
 
-  const handleDelete = (index: number) => {
-    setTests(prevTests => prevTests.filter((_, i) => i !== index));
-    setDropdownIndex(null);
-  };
+  const filteredTests = useMemo(() => {
+    if (!data?.data) return [];
 
-  const handlePreview = (index: number) => {
-    const test = tests[index];
-    router.push(`/dashboard/preview-test`); 
-    setDropdownIndex(null);
-  };
+    const q = search.toLowerCase();
+
+    return data.data.filter(
+      test =>
+        test.difficulty.toLowerCase().includes(q) ||
+        test.topic.some(t => t.toLowerCase().includes(q)) ||
+        test.test_mode.some(m => m.toLowerCase().includes(q)) ||
+        new Date(test.created_at).toLocaleDateString().includes(q),
+    );
+  }, [data, search]);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center mt-6">
+        <Loader2 className="animate-spin text-[#01503b]" />
+      </div>
+    );
+  }
+
+  if (isError || !data) {
+    return (
+      <div className="text-center text-red-500 mt-6">
+        Failed to load test history
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-lg border overflow-hidden mt-6 md:text-[16px]">
       <Table>
-        <TableHeader className="bg-[#01503b]  md:text-[16px] font-semibold space-y-5">
+        <TableHeader className="bg-[#01503b] font-semibold">
           <TableRow>
             <TableHead className="text-white">Score</TableHead>
             <TableHead className="text-white">Difficulty</TableHead>
@@ -59,88 +68,97 @@ export function TestHistory({
             <TableHead className="text-white text-right">Action</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
-          {tests.map((test, i) => (
-            <TableRow key={i}>
-              <TableCell>
-                <CircularProgressPercentage
-                  showLabel
-                  value={test?.score ?? 0}
-                  className="text-xs font-normal"
-                />
-              </TableCell>
 
-              <TableCell className="md:text-[16px] space-x-2">
-                {test.difficulties.map(difficulty => (
-                  <Badge
-                    key={difficulty}
-                    variant="secondary"
-                    className={(() => {
-                      switch (difficulty) {
-                        case 'Boards':
-                          return 'text-[#01503b] bg-[#cdebe3] rounded-[4px] px-[8px] py-[4px] w-[57px] h-[34px]';
-                        case 'Senior':
-                          return 'test-background text-[#b79e6b] rounded-[4px] px-[8px] py-[4px]  w-[57px] h-[34px]';
-                        case 'Intern':
-                          return 'bg-[#fde1dc] text-red-400 rounded-[4px] px-[8px] py-[4px] w-[57px] h-[34px]';
-                        default:
-                          return 'test-background text-[#b79e6b] rounded-[4px] px-[8px] py-[4px] w-[57px] h-[34px]';
-                      }
-                    })()}
-                  >
-                    {difficulty}
-                  </Badge>
-                ))}
-              </TableCell>
-              <TableCell className="md:text-[16px]">{test.date}</TableCell>
-              <TableCell className="space-x-4">
-                {test.modes.map(mode => (
-                  <Badge
-                    key={mode}
-                    variant="secondary"
-                    className={
-                      mode === 'Timed'
-                        ? 'text-[#01503b] bg-[#cdebe3] rounded-[4px] px-[8px] py-[4px] w-[57px] h-[34px]'
-                        : 'test-background text-[#b79e6b] rounded-[4px] px-[8px] py-[4px]  w-[57px] h-[34px]'
-                    }
-                  >
-                    {mode}
-                  </Badge>
-                ))}
-              </TableCell>
-              <TableCell className="md:text-[16px]">{test.topic}</TableCell>
-              <TableCell className="md:text-[16px] ">{test.qs}</TableCell>
-              <TableCell className="text-right cursor-pointer relative">
-                <span
-                  onClick={() =>
-                    setDropdownIndex(dropdownIndex === i ? null : i)
-                  }
-                  className="text-lg"
-                >
-                  •••
-                </span>
-                {dropdownIndex === i && (
-                  <div className="absolute right-0 mt-2 w-32 z-20 bg-white shadow-lg rounded-md border border-gray-300">
-                    <button className="block w-full text-left px-4 py-2 text-[#01281E] hover:bg-gray-100 cursor-pointer">
-                      Review
-                    </button>
-                    <button
-                      onClick={() => handlePreview(i)}
-                      className="block w-full text-left px-4 py-2 text-[#01281E] hover:bg-gray-100 cursor-pointer"
-                    >
-                      Results
-                    </button>
-                    <button
-                      
-                      className="block w-full text-left px-4 py-2 text-[#01281E] hover:bg-gray-100 cursor-pointer"
-                    >
-                      Send
-                    </button>
-                  </div>
-                )}
+        <TableBody>
+          {filteredTests.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={7} className="text-center py-6 text-gray-500">
+                No results found
               </TableCell>
             </TableRow>
-          ))}
+          ) : (
+            filteredTests.map((test, i) => (
+              <TableRow key={test.id}>
+                <TableCell>
+                  <CircularProgressPercentage
+                    showLabel
+                    value={test.score ?? 0}
+                    className="text-xs font-normal"
+                  />
+                </TableCell>
+
+                <TableCell>
+                  <Badge
+                    className={
+                      test.difficulty === 'Intern'
+                        ? 'bg-[#fde1dc] text-red-400 px-2 rounded-[4px] py-2'
+                        : 'test-background text-[#b79e6b] rounded-[4px] px-2 py-2'
+                    }
+                  >
+                    {test.difficulty}
+                  </Badge>
+                </TableCell>
+
+                <TableCell>
+                  {new Date(test.created_at).toLocaleDateString()}
+                </TableCell>
+
+                <TableCell className="space-x-2">
+                  {test.test_mode.map(mode => (
+                    <Badge
+                      key={mode}
+                      className="bg-[#cdebe3] text-[#01503b] rounded-[4px] px-2 py-2"
+                    >
+                      {mode}
+                    </Badge>
+                  ))}
+                </TableCell>
+
+                <TableCell className="space-x-2">
+                  {test.topic.map(t => (
+                    <Badge
+                      key={t}
+                      className="bg-[#cdebe3] text-[#01503b] rounded-[4px] px-2 py-2"
+                    >
+                      {t}
+                    </Badge>
+                  ))}
+                </TableCell>
+
+                <TableCell>{test.total_questions}</TableCell>
+
+                <TableCell className="text-right relative">
+                  <span
+                    onClick={() =>
+                      setDropdownIndex(dropdownIndex === i ? null : i)
+                    }
+                    className="cursor-pointer text-lg"
+                  >
+                    •••
+                  </span>
+
+                  {dropdownIndex === i && (
+                    <div className="absolute right-0 mt-2 w-32 bg-white shadow-lg rounded-md border z-20">
+                      <button className="block w-full px-4 py-2 hover:bg-gray-100">
+                        Review
+                      </button>
+                      <button
+                        onClick={() =>
+                          router.push(`/dashboard/preview-test/${test.id}`)
+                        }
+                        className="block w-full px-4 py-2 hover:bg-gray-100"
+                      >
+                        Results
+                      </button>
+                      <button className="block w-full px-4 py-2 hover:bg-gray-100">
+                        Send
+                      </button>
+                    </div>
+                  )}
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </div>

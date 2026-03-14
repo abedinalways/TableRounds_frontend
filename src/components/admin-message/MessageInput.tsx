@@ -12,8 +12,23 @@ import AttachmentIcon from '../reusable/icons/AttachmentIcon';
 import { VoiceIcon } from '../reusable/icons/VoiceIcon';
 import { ArrowUp } from '../reusable/icons/ArrowUpperButton';
 import { useChat } from '@/app/(Dashboard)/context/ChatContext';
+import { LiveWaveform } from '../ui/live-waveform';
 
+
+
+export interface MessageInputProps {
+  testCardData: {
+    questions: number;
+    correctPercentage: number;
+    time: string;
+    percentile: number;
+    difficulty: string;
+    category: string;
+  };
+  showTestCard: boolean;
+}
 export default function MessageInput() {
+ 
   const { sendMessage, setTyping } = useChat();
   const [input, setInput] = useState('');
   const [attachments, setAttachments] = useState<File[]>([]);
@@ -70,11 +85,23 @@ export default function MessageInput() {
     setFileInputKey(prev => prev + 1);
   };
 
-  const handleSend = () => {
-    sendMessage(input, attachments);
-    setInput('');
-    setAttachments([]);
-  };
+  // const handleSend = async () => {
+   
+  //   const attachmentNames = attachments.map(file => file.name);
+
+  //   await sendMessage(input, attachmentNames);
+
+  //   setInput('');
+  //   setAttachments([]);
+  // };
+ const handleSend = async () => {
+   if (!input.trim() && attachments.length === 0) return;
+
+   await sendMessage(input, attachments); 
+
+   setInput('');
+   setAttachments([]);
+ };
 
   return (
     <div className="relative">
@@ -84,9 +111,9 @@ export default function MessageInput() {
           {attachments.map((file, i) => (
             <div
               key={i}
-              className="flex items-center gap-2 bg-gray-100 px-3 py-1.5 rounded-lg text-xs"
+              className="flex items-center gap-2  px-3 py-1.5 rounded-lg text-xs"
             >
-              <span className="truncate max-w-[120px]">{file.name}</span>
+              {/* <span className="truncate max-w-[120px]">{file.name}</span>
               <button
                 onClick={() =>
                   setAttachments(prev => prev.filter((_, idx) => idx !== i))
@@ -94,9 +121,22 @@ export default function MessageInput() {
                 className="text-red-500"
               >
                 ✕
-              </button>
+              </button> */}
             </div>
           ))}
+        </div>
+      )}
+      {isRecording && (
+        <div className="absolute top-16 -translate-y-full right-16">
+          <LiveWaveform
+            active={isRecording}
+            height={50}
+            barWidth={3}
+            barGap={2}
+            mode="static"
+            fadeEdges
+            barColor="#35664f"
+          />
         </div>
       )}
 
@@ -136,15 +176,12 @@ export default function MessageInput() {
         />
 
         <InputGroupAddon align="inline-end">
-          <Button
-            size="icon"
-            variant="ghost"
+          <button
             onClick={toggleRecording}
-            className={isRecording ? 'text-red-500' : ''}
+            className={`px-3 ${isRecording ? 'text-red-500 animate-pulse' : ''}`}
           >
-            {/* voice recording function */}
-            <VoiceIcon />
-          </Button>
+            <VoiceIcon className="cursor-pointer" />
+          </button>
           <Button size="icon" className="rounded-full" onClick={handleSend}>
             <ArrowUp />
           </Button>

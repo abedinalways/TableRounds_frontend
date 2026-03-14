@@ -1,60 +1,94 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-
-import Btn from '../reusable/button/Btn';
 import AttachImageIcon from '../reusable/icons/AttachImageIcon';
+
+import { useMeQuery, useUpdateUserMutation } from '@/app/redux/api/authApi';
 
 type ProfileFormData = {
   name: string;
-  credentials: string;
-  location: string;
-  year: string;
-  joiningDate: string;
+  join_date: string;
   instagram: string;
   linkedin: string;
-  twitter: string;
+  twitter_x: string;
   facebook: string;
-  description: string;
+  bio: string;
 };
 
 export default function ManageProfile() {
-  const [preview, setPreview] = useState('/images/dashboard/Admin/admin.png');
+  const { data: profile } = useMeQuery();
+  const [updateUser] = useUpdateUserMutation();
 
-  const { register, handleSubmit } = useForm<ProfileFormData>({
-    defaultValues: {
-      name: '',
-      credentials: '',
-      year: '',
-    },
-  });
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [localPreview, setLocalPreview] = useState<string | null>(null);
 
-  const onSubmit = (data: ProfileFormData) => {
-    console.log(data);
-    toast.success('Profile updated successfully');
+  const { register, handleSubmit, reset } = useForm<ProfileFormData>();
+
+  useEffect(() => {
+    if (!profile) return;
+
+    reset({
+      name: profile.name || '',
+      instagram: profile.instagram || '',
+      linkedin: profile.linkedin || '',
+      twitter_x: profile.twitter_x || '',
+      facebook: profile.facebook || '',
+      bio: profile.bio || '',
+      join_date: profile.join_date?.slice(0, 10),
+    });
+  }, [profile, reset]);
+
+  const preview =
+    localPreview ||
+    (profile?.avatar
+      ? `${process.env.NEXT_PUBLIC_API_ENDPOINT}${profile.avatar}`
+      : '/images/dashboard/Admin/admin.png');
+
+  const onSubmit = async (data: ProfileFormData) => {
+    try {
+      const formData = new FormData();
+
+      formData.append('name', data.name);
+      formData.append('instagram', data.instagram || '');
+      formData.append('linkedin', data.linkedin || '');
+      formData.append('twitter_x', data.twitter_x || '');
+      formData.append('facebook', data.facebook || '');
+      formData.append('bio', data.bio || '');
+
+      if (avatarFile) {
+        formData.append('avatar', avatarFile);
+      }
+
+      await updateUser(formData).unwrap();
+
+      toast.success('Profile updated successfully');
+    } catch (err: unknown) {
+      const error = err as { data?: { message?: string } };
+      toast.error(error?.data?.message || 'Update failed');
+    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setPreview(URL.createObjectURL(file));
+
+    setAvatarFile(file);
+    setLocalPreview(URL.createObjectURL(file));
   };
 
   return (
     <>
       <div className="bg-white rounded-2xl p-6 shadow-sm font-[manrope]">
-        {/* Header */}
         <div className="flex justify-between items-start mb-8 gap-4">
           <div className="relative w-[213px]">
             <Image
-              src={preview}
+              src='/images/dashboard/Admin/admin.png'
               alt="Profile image"
               width={213}
               height={255}
@@ -80,105 +114,53 @@ export default function ManageProfile() {
           </button>
         </div>
 
-        {/* Contact Details */}
-        <h3 className=" mb-4 text-[#0f172b] text-16px md:text-[24px] leading-[130%] font-bold">
+        <h3 className="mb-4 text-[#0f172b] md:text-[24px] font-bold">
           Contact Details
         </h3>
 
         <div className="grid md:grid-cols-2 gap-6 text-[#4b5563]">
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">Name</Label>
-            <Input
-              {...register('name')}
-              placeholder="Enter Your Name"
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
-            />
+            <Input {...register('name')} className="bg-[#f9f9f5]" />
           </div>
 
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">Instagram</Label>
-            <Input
-              placeholder="Personal Link"
-              {...register('instagram')}
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
-            />
+            <Input {...register('instagram')} className="bg-[#f9f9f5]" />
           </div>
-
-          {/* <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold">Credentials</Label>
-            <Input
-              {...register('credentials')}
-              placeholder="i.e. DDS, DMD, MD, Student"
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
-            />
-          </div> */}
 
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">LinkedIn</Label>
-            <Input
-              placeholder="Personal Link"
-              {...register('linkedin')}
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
-            />
+            <Input {...register('linkedin')} className="bg-[#f9f9f5]" />
           </div>
-
-          {/* <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold">Location</Label>
-            <Input
-              placeholder="Enter your city, state, and country"
-              {...register('location')}
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
-            />
-          </div> */}
 
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">Twitter/X</Label>
-            <Input
-              placeholder="Personal Link"
-              {...register('twitter')}
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
-            />
+            <Input {...register('twitter_x')} className="bg-[#f9f9f5]" />
           </div>
-
-          {/* <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold">Year in Training/Practice</Label>
-            <Input
-              {...register('year')}
-              placeholder="PGY vs. Attending Surgeon"
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
-            />
-          </div> */}
 
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">Facebook</Label>
-            <Input
-              placeholder="Personal Link"
-              {...register('facebook')}
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
-            />
+            <Input {...register('facebook')} className="bg-[#f9f9f5]" />
           </div>
 
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">Joining Date</Label>
             <Input
               type="date"
-              {...register('joiningDate')}
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
+              {...register('join_date')}
+              disabled
+              className="bg-[#f1f1f1]"
             />
           </div>
         </div>
       </div>
-      {/* Description */}
+
       <div className="mt-6 bg-white rounded-2xl p-6 shadow-sm font-[manrope] mb-6">
-        <Label className="font-bold mb-4 text-[#0f172b] text-16px md:text-[24px] leading-[130%]">
+        <Label className="font-bold mb-4 text-[#0f172b] md:text-[24px]">
           Description
         </Label>
-        <Textarea
-          rows={4}
-          {...register('description')}
-          placeholder="Write something about yourself..."
-          className="mt-4 bg-[#f9f9f5]"
-        />
+        <Textarea rows={4} {...register('bio')} className="mt-4 bg-[#f9f9f5]" />
       </div>
     </>
   );

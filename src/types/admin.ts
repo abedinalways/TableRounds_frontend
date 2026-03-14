@@ -8,7 +8,7 @@ export type VerificationUser = {
   
 };
 export type PendingUser = {
-  id: number;
+  id: string;
   name: string;
   email: string;
   location: string;
@@ -18,7 +18,7 @@ export type PendingUser = {
 };
 
 export type Activity = {
-  id: number;
+  id: string;
   message: string;
   time: string;
   icon?: string;
@@ -26,7 +26,7 @@ export type Activity = {
 
 
 export type VerifiedUser = {
-  id: number;
+  id: string;
   name: string;
   email: string;
   location: string;
@@ -38,7 +38,7 @@ export type VerifiedUser = {
 };
 
 export type ReportedUser = {
-  id: number;
+  id: string;
   reportingUser: {
     name: string;
     image?: string;

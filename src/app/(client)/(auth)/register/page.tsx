@@ -1,8 +1,29 @@
-import SignUpForm from '@/components/auth_components/SignUpForm'
+'use client';
+
+import { useRegisterNewUserMutation } from '@/app/redux/api/registerApi';
+import SignUpForm from '@/components/auth_components/SignUpForm';
 import Image from 'next/image';
-import React from 'react'
+import React from 'react';
+import { toast } from 'sonner';
+
 
 export default function RegisterPage() {
+  const [registerUser, { isLoading }] = useRegisterNewUserMutation();
+
+  const handleRegister = async (data: any) => {
+    try {
+      const res = await registerUser(data).unwrap();
+
+      toast.success(
+        res?.message || 'Registration successful! Check your email.',
+      );
+    } catch (err: any) {
+      const message =
+        err?.data?.message || 'Something went wrong during registration.';
+      toast.error('Registration failed', { description: message });
+    }
+  };
+
   return (
     <div className="bg-card mt-25 ">
       <div className="relative">
@@ -14,6 +35,7 @@ export default function RegisterPage() {
           className="absolute -top-14 left-5"
         />
       </div>
+
       <div className="text-center py-6 text-black font-[manrope]">
         <h3 className="text-xl md:text-3xl lg:text-5xl font-bold">
           Create your TableRounds profile
@@ -24,7 +46,8 @@ export default function RegisterPage() {
           account to keep the community authentic and professional.
         </p>
       </div>
-      <SignUpForm />
+
+      <SignUpForm onSubmit={handleRegister} isLoading={isLoading} />
     </div>
   );
 }

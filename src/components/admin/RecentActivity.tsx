@@ -1,4 +1,4 @@
-// components/admin/RecentActivity.tsx
+
 import { Activity } from '@/types/admin';
 
 type Props = {

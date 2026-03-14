@@ -15,9 +15,9 @@ export default function SkillBadges({ skills }: SkillBadgesProps) {
         Skills
       </h3>
       <div className="flex flex-wrap gap-2">
-        {skills.map(skill => (
+        {skills.map((skill, index) => (
           <Badge
-            key={skill}
+            key={index}
             variant="secondary"
             className="bg-[#d1fae5] text-[#01503b] text-sm md:text-[18px] font-normal rounded-full px-[16px] py-[12px]"
           >

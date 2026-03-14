@@ -7,7 +7,7 @@ import EyeIcon from '../reusable/icons/EyeIcon';
 type Props = {
   users: PendingUser[];
   onApprove: (user: PendingUser) => void;
-  onReject: (id: number) => void;
+  onReject: (id: string) => void; 
 };
 
 export function PendingUsers({ users, onApprove, onReject }: Props) {

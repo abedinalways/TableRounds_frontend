@@ -2,161 +2,160 @@
 
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
+import { useChat } from '@/app/(Dashboard)/context/ChatContext';
+import { useSelector } from 'react-redux';
+import { AudioBubble } from './AudioBubble';
+import { useMeQuery } from '@/app/redux/api/authApi';
+import { FileIcon } from 'lucide-react';
 
-import gsap from 'gsap';
-import {
-  isCustomAttachment,
-  useChat,
-} from '@/app/(Dashboard)/context/ChatContext';
-import TestCard from '../message/TestCard';
+interface AuthState {
+  user?: { id: string };
+  auth?: { user?: { id: string } };
+}
+
+interface RootState {
+  auth?: AuthState;
+}
 
 export default function MessageSection() {
-  const { activeConversation, isTyping } = useChat();
-  const containerRef = useRef<HTMLDivElement>(null);
+  const { messages } = useChat();
+  console.log(messages,'fgfgfgfgfgfgfgfgd')
   const endRef = useRef<HTMLDivElement>(null);
+
+    
+  const me = useMeQuery();
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
-
-    if (containerRef.current) {
-      gsap.fromTo(
-        containerRef.current.children,
-        { opacity: 0, y: 8 },
-        { opacity: 1, y: 0, duration: 0.3, stagger: 0.04 }
-      );
-    }
-  }, [activeConversation?.messages.length]);
-
-  if (!activeConversation) return null;
-  const isImage = (file: File) => file.type.startsWith('image/');
+  }, [messages.length]);
 
   return (
-    <div ref={containerRef} className="md:p-6 p-2 space-y-4  overflow-y-auto">
-      {activeConversation.messages.map(msg =>
-        msg.sender === 'doctor' ? (
-          <div key={msg.id} className="flex md:gap-3 gap-1">
-            <div className="flex items-start">
-              <Image
-                src={activeConversation.avatar}
-                alt="doctor"
-                width={40}
-                height={40}
-                className="rounded-full md:w-[40px] md:h-[40px] w-[20px] h-[20px] "
-              />
-            </div>
-            <div className="bg-gray-100 md:p-4  p-2 rounded-xl max-w-md md:text-sm text-xs">
-              {msg.text}
-              {msg.attachments?.length && (
-                <div className="mt-2 space-y-2 ">
-                  {msg.attachments.map((file, i) => {
-                    if (isCustomAttachment(file)) {
-                      switch (file.attachmentsType) {
-                        case 'test-result':
-                          return (
-                            <TestCard
-                              questions={25}
-                              correctPercentage={85}
-                              time="20 minutes"
-                              percentile={90}
-                              difficulty="Medium"
-                              category="Psychology"
-                            />
-                          );
-
-                        default:
-                          return 'unkown file';
-                      }
-                    }
-
-                    const url = URL.createObjectURL(file);
-
-                    return isImage(file) ? (
-                      <img
-                        key={i}
-                        src={url}
-                        alt={file.name}
-                        className="rounded-lg max-w-full cursor-pointer"
-                        onClick={() => window.open(url)}
-                      />
-                    ) : (
-                      <div
-                        key={i}
-                        className="text-xs underline cursor-pointer opacity-80"
-                        onClick={() => window.open(url)}
-                      >
-                        📎 {file.name}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </div>
-        ) : (
-          <div key={msg.id} className="flex justify-end md:gap-3 gap-1">
-            <div className="bg-[#095f48] text-white p-4 rounded-xl max-w-md text-sm">
-              {msg.text}
-              {msg.attachments?.length && (
-                <div className="mt-2 space-y-2">
-                  {msg.attachments.map((file, i) => {
-                    if (isCustomAttachment(file)) {
-                      switch (file.attachmentsType) {
-                        case 'test-result':
-                          return (
-                            <TestCard
-                              questions={25}
-                              correctPercentage={85}
-                              time="20 minutes"
-                              percentile={90}
-                              difficulty="Medium"
-                              category="Psychology"
-                            />
-                          );
-
-                        default:
-                          return 'unkown file';
-                      }
-                    }
-                    
-                    const url = URL.createObjectURL(file);
-
-                    return isImage(file) ? (
-                      <img
-                        key={i}
-                        src={url}
-                        alt={file.name}
-                        className=" cursor-pointer"
-                        onClick={() => window.open(url)}
-                      />
-                    ) : (
-                      <div
-                        key={i}
-                        className="text-xs underline cursor-pointer opacity-80"
-                        onClick={() => window.open(url)}
-                      >
-                        📎 {file.name}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-            <div className="flex items-end">
-              <Image
-                src="/images/dashboard/message/me.png"
-                alt="me"
-                width={12}
-                height={12}
-                className="rounded-full"
-              />
-            </div>
-          </div>
+    <div className="flex flex-col p-4 overflow-y-auto space-y-3">
+      {[...messages]
+        .sort(
+          (a, b) =>
+            new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
         )
-      )}
+        .map(msg => {
+          const isMe = msg?.sender?.id === me.data?.id;
 
-      {isTyping && (
-        <p className="text-sm text-gray-400">Someone is typing...</p>
-      )}
+          return (
+            <div
+              key={msg.id}
+              className={`flex items-end gap-2 ${
+                isMe ? 'justify-end' : 'justify-start'
+              }`}
+            >
+              {/* Avatar */}
+              {!isMe && (
+                <Image
+                  src="/images/dashboard/img008.png"
+                  alt="avatar"
+                  width={32}
+                  height={32}
+                  className="rounded-full object-cover"
+                />
+              )}
+
+              {/* Message Bubble */}
+              <div
+                className={`relative px-4 py-3 rounded-2xl max-w-[70%] shadow-sm text-sm
+                ${
+                  isMe
+                    ? 'bg-[#095f48] text-white rounded-br-sm'
+                    : 'bg-gray-100 text-[#003329] rounded-bl-sm'
+                }`}
+              >
+                {/* Text Message */}
+                {msg.message && (
+                  <p className="whitespace-pre-wrap break-words leading-relaxed">
+                    {msg.message}
+                  </p>
+                )}
+
+                {/* Attachments */}
+                {msg.attachments?.length > 0 && (
+                  <div className="mt-2 space-y-2">
+                    {msg.attachments.map(file => {
+                      const isImage =
+                        file.type?.includes('image') ||
+                        file.file_url?.match(/\.(jpeg|jpg|png|gif|webp)$/i);
+
+                      const isAudio =
+                        file.type?.includes('audio') ||
+                        file.file_url?.match(/\.(mp3|wav|webm|ogg)$/i);
+
+                      if (isImage) {
+                        return (
+                          <Image
+                            key={file.id}
+                            src={file.file_url}
+                            alt={file.name}
+                            width={280}
+                            height={200}
+                            unoptimized
+                            className="rounded-xl object-cover max-h-[260px] cursor-pointer hover:opacity-90 transition"
+                          />
+                        );
+                      }
+
+                      if (isAudio) {
+                        return (
+                          <AudioBubble key={file.id} src={file.file_url} />
+                        );
+                      }
+
+                      return (
+                        <a
+                          key={file.id}
+                          href={file.file_url}
+                          target="_blank"
+                          className="flex items-center gap-2 text-xs underline hover:text-blue-500"
+                        >
+                          <FileIcon className="w-4 h-4 text-gray-400" />
+                          {file.name}
+                        </a>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Time + Status */}
+                <div className="flex items-center justify-end gap-1 mt-1 text-[10px] opacity-70">
+                  <span>
+                    {new Date(msg.created_at).toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </span>
+
+                  {/* Message Status */}
+                  {isMe && (
+                    <span>
+                      {msg.status === 'SENDING' && '⏳'}
+                      {msg.status === 'SENT' && '✓'}
+                      {msg.status === 'DELIVERED' && '✓✓'}
+                      {msg.status === 'SEEN' && (
+                        <span className="text-blue-400">✓✓</span>
+                      )}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* My avatar (optional) */}
+              {isMe && (
+                <Image
+                  src="/images/dashboard/img008.png"
+                  alt="avatar"
+                  width={32}
+                  height={32}
+                  className="rounded-full object-cover"
+                />
+              )}
+            </div>
+          );
+        })}
 
       <div ref={endRef} />
     </div>

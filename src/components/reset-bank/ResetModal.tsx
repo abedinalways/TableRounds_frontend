@@ -28,7 +28,7 @@ export default function ResetBankModal({
     const handleConfirm = () => {
       onConfirm(); 
       onClose(); 
-      router.push('/dashboard/create-test'); 
+      router.push('/dashboard/user/create-test'); 
     };
   return (
     <Dialog open={open} onOpenChange={onClose}>
