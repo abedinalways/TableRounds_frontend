@@ -74,7 +74,10 @@ export interface QuizOptionUI {
 export interface QuizExplanationUI {
   main: string;
   image?: string | null;
-  whyIncorrect: { option: string; text: string }[];
+  whyIncorrect: {
+    option: string;
+    text: string;
+  }[];
   pinningPoint?: string;
   memoryTrick?: string;
   references: string[];

@@ -75,7 +75,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 
       <CardContent className="space-y-4">
         <RadioGroup
-          value={selectedAnswerId ?? undefined}
+          value={selectedAnswerId ?? ''}
           onValueChange={onAnswerChange}
           className="space-y-4"
         >
@@ -182,7 +182,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 
           <button
             onClick={handleSubmitTest}
-            className="bg-[#b79e6b] text-sm w-full md:w-[164px] h-[50px] text-white font-semibold rounded-md"
+            className="bg-[#b79e6b] cursor-pointer text-sm w-full md:w-[164px] h-[50px] text-white font-semibold rounded-md"
           >
             Submit Test
           </button>

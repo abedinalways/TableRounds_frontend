@@ -1,6 +1,6 @@
 import React from 'react';
 import { Progress } from '@/components/ui/progress';
-import { ArrowRight} from 'lucide-react';
+import { ArrowRight, SkipForward} from 'lucide-react';
 import { TopbarCheckbox } from '../topbarCheckbox';
 
 import Flag from '../reusable/icons/Flag';
@@ -23,6 +23,7 @@ interface QuizTopbarProps {
   onPrevious: () => void;
   onZoomIn: () => void;
   onZoomOut: () => void;
+  onSkip: () => void;
 }
 
 const QuizTopbar: React.FC<QuizTopbarProps> = ({
@@ -36,6 +37,7 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
   onPrevious,
   onZoomIn,
   onZoomOut,
+  onSkip,
 }) => {
   const router = useRouter();
 
@@ -44,9 +46,7 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
       <div className="md:flex items-center space-y-2">
         <div className="md:px-2 px-1 flex flex-col   justify-between ">
           <Progress value={progressValue} className="md:h-5 h-2 bg-white/60" />
-          <div>
-           
-          </div>
+          <div></div>
         </div>
 
         <div className="space-x-3 flex flex-col gap-6 md:items-center mx-5 md:mx-0">
@@ -74,7 +74,7 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
               <Flag
                 className={cn(
                   'size-4 md:size-8',
-                  'cursor-pointer text-yellow-400'
+                  'cursor-pointer text-yellow-400',
                 )}
                 onClick={() => router.push('/dashboard/create-test/mark')}
               />
@@ -104,8 +104,12 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
             Zoom Out
           </button>
 
-          <button className="text-white cursor-pointer p-2 gap-2 flex flex-col items-center">
-            <PauseIcon className="md:size-8 size-4" /> Pause Test
+          <button
+            onClick={onSkip}
+            className="text-white cursor-pointer p-2 gap-2 flex flex-col items-center"
+          >
+            <SkipForward className="md:size-8 size-4" />
+            Skip Test
           </button>
         </div>
       </div>
@@ -116,7 +120,7 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
           disabled={currentQuestion === 1}
           className={cn(
             'bg-[#b79e6b] text-white cursor-pointer rounded-md text-center text-[16px] px-3 py-3',
-            currentQuestion === 1 && 'opacity-50 cursor-not-allowed'
+            currentQuestion === 1 && 'opacity-50 cursor-not-allowed',
           )}
         >
           <span className="flex items-center">Previous</span>
