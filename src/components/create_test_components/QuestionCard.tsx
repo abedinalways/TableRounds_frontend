@@ -108,10 +108,13 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
                     htmlFor={`option-${option.id}`}
                     className={cn(
                       'cursor-pointer text-xs md:text-base',
-                      showExplanation &&
-                        !isCorrect &&
-                        isUserCorrect &&
-                        'opacity-60 line-through',
+                      showExplanation && '', 
+                      isCorrect && !isSelected && 'opacity-100 ',
+                      isSelected && !isCorrect && ' text-black', 
+                      isCorrect && ' text-black ', 
+                      // !isCorrect && 'line-through',
+                      isCorrect && isSelected && 'text-black',
+                      // !isCorrect  && 'line-through',
                     )}
                   >
                     <span className="font-bold mr-2">
@@ -143,7 +146,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
             )}
           >
             <CardContent className="flex items-center justify-between">
-              <div className="font-bold text-lg">
+              <div className="font-bold text-lg ">
                 {isUserCorrect ? (
                   <h4 className="text-[#20AC19] flex items-center gap-2 text-xs md:text-sm">
                     <CorrectIcon /> Correct
@@ -157,10 +160,17 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 
               {!isUserCorrect && (
                 <div className="text-xs md:text-sm text-gray-600">
-                  <p className="flex items-center gap-2 font-semibold text-[#20AC19]">
-                    <CorrectIcon /> Correct Answer:{' '}
-                    {quizDetails.correctAnswerId}
-                  </p>
+                  
+                    <p className="flex items-center gap-2 font-semibold text-[#20AC19]">
+                      <CorrectIcon /> Correct Answer:{' '}
+                      {String.fromCharCode(
+                        65 +
+                          quizDetails.answerOptions.findIndex(
+                            o => o.id === quizDetails.correctAnswerId,
+                          ),
+                      )}
+                    </p>
+                  
                 </div>
               )}
             </CardContent>

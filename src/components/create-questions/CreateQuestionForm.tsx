@@ -52,48 +52,104 @@ export default function CreateQuestionForm() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   
-const onSubmit = async (data: QuestionFormValues) => {
-  try {
-    const formData = new FormData();
+// const onSubmit = async (data: QuestionFormValues) => {
+//   try {
+//     const formData = new FormData();
 
-    formData.append('question_title', data.questionTitle);
-    formData.append('question_steam', data.questionStem);
-    formData.append('explanation', data.explanation || '');
-    formData.append('why_incorrect', data.keyPoints || '');
-    formData.append('pimping_point', data.keepingPoint || '');
-    formData.append('memory_trick', data.memoryTrick || '');
-    formData.append('reference', data.references || '');
-    formData.append('difficulty', data.difficulty);
+//     formData.append('question_title', data.questionTitle);
+//     formData.append('question_steam', data.questionStem);
+//     formData.append('explanation', data.explanation || '');
+//     formData.append('why_incorrect', data.keyPoints || '');
+//     formData.append('pimping_point', data.keepingPoint || '');
+//     formData.append('memory_trick', data.memoryTrick || '');
+//     formData.append('reference', data.references || '');
+//     formData.append('difficulty', data.difficulty);
 
-    formData.append('topic', JSON.stringify([data.topic]));
+//     formData.append('topic', JSON.stringify([data.topic]));
 
-    const answerOptions = data.answers.map(a => ({
-      option_text: a.text,
-      is_correct: a.isCorrect,
-    }));
+//     const answerOptions = data.answers.map(a => ({
+//       option_text: a.text,
+//       is_correct: a.isCorrect,
+//     }));
 
-    formData.append('answerOptions', JSON.stringify(answerOptions));
+//     formData.append('answerOptions', JSON.stringify(answerOptions));
 
-    if (attachedFile) {
-      formData.append('explanation_image', attachedFile);
+//     if (attachedFile) {
+//       formData.append('explanation_image', attachedFile);
+//     }
+
+//     const result = await createQuestion(formData);
+
+//     if ("data" in result) {
+//       toast.success("Question created successfully");
+//       reset();
+//       setEditorKey(prev => prev + 1);
+//       setAttachedFile(null);
+//     } else {
+//       toast.error( "Failed to create question");
+//     }
+
+//   } catch (err) {
+//     console.error(err);
+//     toast.error("Something went wrong");
+//   }
+// };
+  
+  const onSubmit = async (data: QuestionFormValues) => {
+    const hasCorrectAnswer = data.answers.some(a => a.isCorrect);
+
+    if (!hasCorrectAnswer) {
+      toast.error('Please select a correct answer');
+      return;
     }
 
-    const result = await createQuestion(formData);
-
-    if ("data" in result) {
-      toast.success("Question created successfully");
-      reset();
-      setEditorKey(prev => prev + 1);
-      setAttachedFile(null);
-    } else {
-      toast.error( "Failed to create question");
+    if (data.answers.length < 2) {
+      toast.error('At least two answer options required');
+      return;
     }
 
-  } catch (err) {
-    console.error(err);
-    toast.error("Something went wrong");
-  }
-};
+    try {
+      const formData = new FormData();
+
+      formData.append('question_title', data.questionTitle);
+      formData.append('question_steam', data.questionStem);
+      formData.append('explanation', data.explanation || '');
+      formData.append('why_incorrect', data.keyPoints || '');
+      formData.append('pimping_point', data.keepingPoint || '');
+      formData.append('memory_trick', data.memoryTrick || '');
+      formData.append('reference', data.references || '');
+      formData.append('difficulty', data.difficulty);
+
+      formData.append('topic', JSON.stringify([data.topic]));
+
+      const answerOptions = data.answers.map(a => ({
+        option_text: a.text,
+        is_correct: a.isCorrect,
+      }));
+
+      formData.append('answerOptions', JSON.stringify(answerOptions));
+
+      if (attachedFile) {
+        formData.append('explanation_image', attachedFile);
+      }
+
+      const result = await createQuestion(formData);
+
+      if ('data' in result) {
+        toast.success('Question created successfully');
+        reset();
+        setEditorKey(prev => prev + 1);
+        setAttachedFile(null);
+      } else {
+        toast.error('Failed to create question');
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error('Something went wrong');
+    }
+  };
+  
+  
   const handleAttachFileClick = () => {
     fileInputRef.current?.click();
   };

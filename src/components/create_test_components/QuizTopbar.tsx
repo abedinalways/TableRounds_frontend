@@ -49,12 +49,12 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
           <div></div>
         </div>
 
-        <div className="space-x-3 flex flex-col gap-6 md:items-center mx-5 md:mx-0">
-          <div className="text-sm md:text-[16px] text-white font-bold">
+        <div className="space-x-5 flex items-center gap-6  mx-5 md:mx-0">
+          <div className="text-sm md:text-[18px] text-white font-bold flex items-center ">
             {String(currentQuestion).padStart(2, '0')} / {totalQuestions}
           </div>
           <div className="md:text-[14px] flex justify-center text-xs text-white">
-            Question ID:{questionID}
+            {/* Question ID: <span className='text-[10px] text-yellow-500'>{questionID}</span> */}
           </div>
         </div>
 

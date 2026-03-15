@@ -49,10 +49,9 @@ const ExplanationPanel: React.FC<ExplanationPanelProps> = ({
 
       {quizDetails.explanation.image && (
         <div className="my-4">
-          <Image
-            src={quizDetails.explanation.image}
-            width={556}
-            height={318}
+          <img
+            src={quizDetails?.explanation?.image}
+            
             alt="Explanation Image"
             className="rounded-md"
           />
