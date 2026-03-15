@@ -87,9 +87,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
     setSelectedAnswer(value);
   };
 
-  /**
-   * Submit Answer
-   */
+  
   // const handleSubmit = async () => {
   //   if (!selectedAnswerId || showExplanation || isAnswering) return;
 
@@ -141,79 +139,132 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   //     console.error('Submit failed:', error);
   //   }
   // };
-   const handleSubmit = async () => {
-     if (!selectedAnswerId || showExplanation || isAnswering) return;
+  //  const handleSubmit = async () => {
+  //    if (!selectedAnswerId || showExplanation || isAnswering) return;
 
-     try {
-       const res = await answerQuestion({
-         test_id: testId,
-         question_id: questionID,
-         answer_option_id: selectedAnswerId,
-       }).unwrap();
+  //    try {
+  //      const res = await answerQuestion({
+  //        test_id: testId,
+  //        question_id: questionID,
+  //        selected_option_id: selectedAnswerId,
+  //      }).unwrap();
 
-       console.log('ANSWER API RESPONSE:', res);
+  //      if (!res?.success || !res?.data) {
+  //        throw new Error(res?.message || 'Failed to submit answer');
+  //      }
 
-       if (!res?.success || !res?.data) {
-         throw new Error(res?.message || 'Failed to submit answer');
-       }
+  //      const answerOptions = res.data.answerOptions ?? [];
+  //      const correctOption = answerOptions.find((o: any) => o.is_correct);
 
-       const answerOptions = res.data.answerOptions ?? [];
+  //      setSelectedAnswer(res.data.user_answer_id);
 
-       setQuestions(prev => {
-         const copy = [...prev];
-         const idx = currentQuestion - 1;
-         const existing = copy[idx];
+  //      setQuestions(prev => {
+  //        const copy = [...prev];
+  //        const idx = currentQuestion - 1;
+  //        const existing = copy[idx];
 
-         if (!existing) return prev;
+  //        if (!existing) return prev;
 
-         copy[idx] = {
-           ...existing,
-           quizDetails: {
-             ...existing.quizDetails,
+  //        copy[idx] = {
+  //          ...existing,
+  //          quizDetails: {
+  //            ...existing.quizDetails,
 
-             // user answer
-             userAnswerId: res.data.user_answer,
+  //            userAnswerId: res.data.user_answer,
 
-             // correct answer id
-             correctAnswerId: answerOptions.find((opt: any) => opt.is_correct)
-               ?.id,
+  //            // FIX
+  //            correctAnswerId: correctOption?.id ?? null,
 
-             // explanation object mapping
-             explanation: {
-               main: res.data.explanation,
-               image: res.data.explanation_image ?? null,
+  //            explanation: {
+  //              main: res.data.explanation,
+  //              image: res.data.explanation_image ?? null,
+  //              whyIncorrect: res.data.why_incorrect
+  //                ? [{ option: '', text: res.data.why_incorrect }]
+  //                : [],
+  //              pinningPoint: res.data.pimping_point,
+  //              memoryTrick: res.data.memory_trick,
+  //              references: res.data.reference ?? [],
+  //            },
 
-               whyIncorrect: res.data.why_incorrect
-                 ? [
-                     {
-                       option: '',
-                       text: res.data.why_incorrect,
-                     },
-                   ]
-                 : [],
+  //            answerOptions: answerOptions.map((o: any) => ({
+  //              id: o.id,
+  //              option_text: o.option_text,
+  //              is_correct: o.is_correct,
+  //              percentage: o.total_select ?? 0,
+  //            })),
+  //          },
+  //        };
 
-               pinningPoint: res.data.pimping_point,
-               memoryTrick: res.data.memory_trick,
-               references: res.data.reference ?? [],
-             },
+  //        return copy;
+  //      });
 
-             // answer options update
-             answerOptions: answerOptions.map((o: any) => ({
-               id: o.id,
-               option_text: o.option_text,
-               percentage: o.total_select ?? 0,
-             })),
-           },
-         };
+  //      setShowExplanation(true);
+  //    } catch (error) {
+  //      console.error('Submit failed:', error);
+  //    }
+  //  };
 
-         return copy;
-       });
+  const handleSubmit = async () => {
+    // Ensure the selectedAnswerId is valid
+    if (!selectedAnswerId || showExplanation || isAnswering) return;
 
-       setShowExplanation(true);
-     } catch (error) {
-       console.error('Submit failed:', error);
-     }
-   };
+    try {
+      const res = await answerQuestion({
+        test_id: testId,
+        question_id: questionID,
+        // seletecd_option_id: selectedAnswerId,
+        answer_option_id: selectedAnswerId,
+      }).unwrap();
+
+      if (!res?.success || !res?.data) {
+        throw new Error(res?.message || 'Failed to submit answer');
+      }
+
+      const answerOptions = res.data.answerOptions ?? [];
+      const correctOption = answerOptions.find((o: any) => o.is_correct);
+
+      setSelectedAnswer(res.data.selected_option_id);
+
+      setQuestions(prev => {
+        const copy = [...prev];
+        const idx = currentQuestion - 1;
+        const existing = copy[idx];
+
+        if (!existing) return prev;
+
+        copy[idx] = {
+          ...existing,
+          quizDetails: {
+            ...existing.quizDetails,
+            userAnswerId: res.data.selected_option_id,
+            correctAnswerId: correctOption?.id ?? null,
+            explanation: {
+              main: res.data.explanation,
+              image: res.data.explanation_image ?? null,
+              whyIncorrect: res.data.why_incorrect
+                ? [{ option: '', text: res.data.why_incorrect }]
+                : [],
+              pinningPoint: res.data.pimping_point,
+              memoryTrick: res.data.memory_trick,
+              references: res.data.reference ?? [],
+            },
+            answerOptions: answerOptions.map((o: any) => ({
+              id: o.id,
+              option_text: o.option_text,
+              is_correct: o.is_correct,
+              percentage: o.total_select ?? 0,
+            })),
+          },
+        };
+
+        return copy;
+      });
+
+      setShowExplanation(true);
+    } catch (error) {
+      console.error('Submit failed:', error);
+    }
+  };
   /**
    * Toggle Mark
    */
@@ -317,11 +368,14 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
 
   const handleZoomOut = () => setZoomLevel(z => Math.max(z - STEP, MIN_ZOOM));
 
-  const isUserCorrect =
-    quizDetails.correctAnswerId !== null &&
-    selectedAnswerId !== null &&
-    selectedAnswerId === quizDetails.correctAnswerId;
+  // const isUserCorrect =
+  //   quizDetails.correctAnswerId !== null &&
+  //   selectedAnswerId !== null &&
+  //   selectedAnswerId === quizDetails.correctAnswerId;
 
+  const isUserCorrect =
+    quizDetails.userAnswerId === quizDetails.correctAnswerId;
+  // console.log(isUserCorrect, 'who is  correct=================')
   return (
     <div className="flex flex-col space-y-4 font-[manrope]">
       <QuizTopbar

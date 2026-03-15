@@ -209,14 +209,14 @@ export function CreateTestContent() {
             Test Mode
           </h3>
 
-          <div className="flex items-center gap-4">
+          {/* <div className="flex items-center gap-4">
             <Label>Timed</Label>
             <Switch
               checked={testMode === 'Timed'}
               onCheckedChange={v => setTestMode(v ? 'Timed' : 'Untimed')}
             />
             <Label>Untimed</Label>
-          </div>
+          </div> */}
 
           <div className="flex flex-wrap gap-3 pt-4">
             {[
