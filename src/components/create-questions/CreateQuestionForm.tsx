@@ -117,7 +117,7 @@ export default function CreateQuestionForm() {
       formData.append('why_incorrect', data.keyPoints || '');
       formData.append('pimping_point', data.keepingPoint || '');
       formData.append('memory_trick', data.memoryTrick || '');
-      formData.append('reference', data.references || '');
+      formData.append('referance', data.referance || '');
       formData.append('difficulty', data.difficulty);
 
       formData.append('topic', JSON.stringify([data.topic]));
@@ -342,9 +342,9 @@ export default function CreateQuestionForm() {
           References
         </h2>
         <RichTextEditor
-          key={`references-${editorKey}`}
-          value={watch('references') || ''}
-          onChange={v => setValue('references', v)}
+          key={`referance-${editorKey}`}
+          value={watch('referance') || ''}
+          onChange={v => setValue('referance', v)}
         />
 
         <div className="flex items-center justify-center md:w-fit mx-auto">

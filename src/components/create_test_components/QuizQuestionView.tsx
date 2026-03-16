@@ -88,122 +88,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   };
 
   
-  // const handleSubmit = async () => {
-  //   if (!selectedAnswerId || showExplanation || isAnswering) return;
-
-  //   try {
-  //     await answerQuestion({
-  //       test_id: testId,
-  //       question_id: questionID,
-  //       answer_option_id: selectedAnswerId,
-  //     }).unwrap();
-
-  //     // const res = await getResultTrigger({
-  //     //   test_id: testId,
-  //     //   question_id: questionID,
-  //     // }).unwrap();
-
-  //     if (!res?.success || !res?.data) {
-  //       throw new Error(res?.message || 'Failed to fetch result');
-  //     }
-
-  //     setQuestions(prev => {
-  //       const copy = [...prev];
-  //       const idx = currentQuestion - 1;
-  //       const existing = copy[idx];
-
-  //       if (!existing) return prev;
-
-  //       const percentages = res.data.answer_percentages ?? {};
-
-  //       copy[idx] = {
-  //         ...existing,
-  //         quizDetails: {
-  //           ...existing.quizDetails,
-  //           userAnswerId: res.data.user_answer_id,
-  //           correctAnswerId: res.data.correct_answer_id,
-  //           explanation: res.data.explanation,
-  //           answerOptions: existing.quizDetails.answerOptions.map(o => ({
-  //             ...o,
-  //             percentage:
-  //               typeof percentages[o.id] === 'number' ? percentages[o.id] : 0,
-  //           })),
-  //         },
-  //       };
-
-  //       return copy;
-  //     });
-
-  //     setShowExplanation(true);
-  //   } catch (error) {
-  //     console.error('Submit failed:', error);
-  //   }
-  // };
-  //  const handleSubmit = async () => {
-  //    if (!selectedAnswerId || showExplanation || isAnswering) return;
-
-  //    try {
-  //      const res = await answerQuestion({
-  //        test_id: testId,
-  //        question_id: questionID,
-  //        selected_option_id: selectedAnswerId,
-  //      }).unwrap();
-
-  //      if (!res?.success || !res?.data) {
-  //        throw new Error(res?.message || 'Failed to submit answer');
-  //      }
-
-  //      const answerOptions = res.data.answerOptions ?? [];
-  //      const correctOption = answerOptions.find((o: any) => o.is_correct);
-
-  //      setSelectedAnswer(res.data.user_answer_id);
-
-  //      setQuestions(prev => {
-  //        const copy = [...prev];
-  //        const idx = currentQuestion - 1;
-  //        const existing = copy[idx];
-
-  //        if (!existing) return prev;
-
-  //        copy[idx] = {
-  //          ...existing,
-  //          quizDetails: {
-  //            ...existing.quizDetails,
-
-  //            userAnswerId: res.data.user_answer,
-
-  //            // FIX
-  //            correctAnswerId: correctOption?.id ?? null,
-
-  //            explanation: {
-  //              main: res.data.explanation,
-  //              image: res.data.explanation_image ?? null,
-  //              whyIncorrect: res.data.why_incorrect
-  //                ? [{ option: '', text: res.data.why_incorrect }]
-  //                : [],
-  //              pinningPoint: res.data.pimping_point,
-  //              memoryTrick: res.data.memory_trick,
-  //              references: res.data.reference ?? [],
-  //            },
-
-  //            answerOptions: answerOptions.map((o: any) => ({
-  //              id: o.id,
-  //              option_text: o.option_text,
-  //              is_correct: o.is_correct,
-  //              percentage: o.total_select ?? 0,
-  //            })),
-  //          },
-  //        };
-
-  //        return copy;
-  //      });
-
-  //      setShowExplanation(true);
-  //    } catch (error) {
-  //      console.error('Submit failed:', error);
-  //    }
-  //  };
-
+  
   const handleSubmit = async () => {
     // Ensure the selectedAnswerId is valid
     if (!selectedAnswerId || showExplanation || isAnswering) return;
@@ -236,17 +121,26 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
           ...existing,
           quizDetails: {
             ...existing.quizDetails,
+
             userAnswerId: res.data.selected_option_id,
             correctAnswerId: correctOption?.id ?? null,
             explanation: {
               main: res.data.explanation,
-              image: res.data.explanation_image ?? null,
+              image: res.data.explanation_image_url
+                ? res.data.explanation_image_url
+                : res.data.explanation_image
+                  ? `https://backend.tablerounds.ai/public/storage/question/${res.data.explanation_image}`
+                  : null,
               whyIncorrect: res.data.why_incorrect
                 ? [{ option: '', text: res.data.why_incorrect }]
                 : [],
               pinningPoint: res.data.pimping_point,
               memoryTrick: res.data.memory_trick,
-              references: res.data.reference ?? [],
+              referance: res.data.referance
+                ? Array.isArray(res.data.referance)
+                  ? res.data.referance
+                  : [res.data.referance]
+                : [],
             },
             answerOptions: answerOptions.map((o: any) => ({
               id: o.id,
@@ -259,7 +153,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
 
         return copy;
       });
-
+     console.log(quizDetails, 'llllll=======================');
       setShowExplanation(true);
     } catch (error) {
       console.error('Submit failed:', error);

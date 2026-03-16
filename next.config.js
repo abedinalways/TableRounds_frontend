@@ -8,6 +8,17 @@ const nextConfig = {
         port: '4004',
         pathname: '/public/storage/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'backend.tablerounds.ai',
+        pathname: '/public/storage/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '4001',
+        pathname: '/public/storage/**',
+      },
     ],
   },
 };

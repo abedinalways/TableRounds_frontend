@@ -494,7 +494,7 @@ export function RichTextEditor({ value = '', onChange }: RichTextEditorProps) {
           }}
           title="Attach File"
         >
-          <Paperclip className="w-5 h-5 text-white" />
+          <Paperclip className="w-5 h-5 text-white outline" />
         </ToolbarButton>
 
         {/* Code Block */}

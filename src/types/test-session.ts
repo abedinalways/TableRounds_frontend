@@ -58,7 +58,7 @@ export interface TestResultResponse {
       whyIncorrect: { option: string; text: string }[];
       pinningPoint?: string;
       memoryTrick?: string;
-      references: string[];
+      referance: string[];
     };
     // optional
     answer_percentages?: Record<string, number>;
@@ -80,7 +80,7 @@ export interface QuizExplanationUI {
   }[];
   pinningPoint?: string;
   memoryTrick?: string;
-  references: string[];
+  referance: string[];
 }
 
 export interface QuizDetailsUI {

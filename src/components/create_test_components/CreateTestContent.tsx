@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { CustomCheckbox } from '../ui/CustomCheckbox';
-import { Switch } from '../ui/CustomSwitch';
+
 
 import { useStartTestMutation } from '@/app/redux/api/startTestApi';
 
@@ -69,56 +69,7 @@ export function CreateTestContent() {
     setSelectedDifficulty(level);
   };
 
-  // const handleStartTest = async () => {
-  //   try {
-  //     if (!numQuestions || selectedTopics.length === 0) return;
-
-  //     const payload = {
-  //       total_questions: Number(numQuestions),
-  //       test_mode: selectedStatus
-  //         .filter(s => s === 'Used' || s === 'Unused')
-  //         .map(s => s.toLowerCase()),
-  //       difficulty: selectedDifficulty,
-  //       topic: selectedTopics,
-  //     };
-
-  //     const res = await startTest(payload).unwrap();
-
-  //     const testSession = {
-  //       id: res.data.id,
-  //       total_questions: res.data.total_questions,
-  //       questions: res.data.questions.map((q, index) => ({
-  //         testProgress: {
-  //           questionID: q.id,
-  //           totalQuestions: res.data.total_questions,
-  //           currentQuestion: index + 1,
-  //         },
-  //         quizDetails: {
-  //           question_title: q.question_title,
-  //           question_steam: q.question_steam,
-  //           answerOptions: q.answerOptions.map(opt => ({
-  //             id: opt.id,
-  //             option_text: opt.option_text,
-  //             percentage: 0,
-  //           })),
-  //           correctAnswerId: null,
-  //           userAnswerId: null,
-  //           explanation: null,
-  //         },
-  //       })),
-  //     };
-
-  //     sessionStorage.setItem(
-  //       `TEST_SESSION_${res.data.id}`,
-  //       JSON.stringify(testSession),
-  //     );
-
-  //     router.push(`/dashboard/user/create-test/${res.data.id}`);
-  //   } catch (error) {
-  //     console.error('Failed to start test', error);
-  //   }
-  // };
-  
+ 
  const handleStartTest = async () => {
    try {
      if (!numQuestions || selectedTopics.length === 0) return;

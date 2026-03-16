@@ -19,5 +19,5 @@ export interface QuestionFormValues {
   keepingPoint: string;
   hasMemoryTrick: boolean;
   memoryTrick: string;
-  references: string;
+  referance: string;
 }

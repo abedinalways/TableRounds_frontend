@@ -1,17 +1,40 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
+import {
+  useCompleteTestMutation,
+  useGetTestResultQuery,
+} from '@/app/redux/api/testSessionApi';
+
 import DifficultyTopic from './DifficultyTopic';
 import { ResultSummary } from './ResultSummary';
 import { TopicResultCard } from './TopicResultCard';
-import { useGetTestResultQuery } from '@/app/redux/api/startTestApi';
 
 export default function TestResult({ testId }: { testId: string }) {
-  const { data, isLoading } = useGetTestResultQuery(testId);
+  const [isCompleted, setIsCompleted] = useState(false);
+
+  const [completeTest] = useCompleteTestMutation();
+
+  const { data, isLoading } = useGetTestResultQuery(testId, {
+    skip: !isCompleted,
+  });
+
+  useEffect(() => {
+    const finishTest = async () => {
+      if (!testId) return;
+
+      await completeTest(testId);
+      setIsCompleted(true);
+    };
+
+    finishTest();
+  }, [testId]);
 
   if (isLoading) return <div>Loading result...</div>;
 
   const result = data?.data;
-
+  console.log(result, 'reslut========================')
   const topics = result?.topic_wise_stats ?? [];
 
   return (
@@ -26,7 +49,7 @@ export default function TestResult({ testId }: { testId: string }) {
       />
 
       <div className="font-[manrope]">
-        <h1 className="mb-2 text-[20px] md:text-[24px] font-bold text-[#444950]">
+        <h1 className="mb-2 text-[24px] font-bold text-[#444950]">
           How You Did by Topic
         </h1>
 
@@ -51,11 +74,11 @@ export default function TestResult({ testId }: { testId: string }) {
         </div>
 
         <div className="mt-10">
-          <h1 className="mb-2 text-[20px] md:text-[24px] font-bold text-[#444950]">
+          <h1 className="mb-2 text-[24px] font-bold text-[#444950]">
             How You Did by Difficulty
           </h1>
 
-          <DifficultyTopic />
+          <DifficultyTopic result={result} />
         </div>
       </div>
     </div>
