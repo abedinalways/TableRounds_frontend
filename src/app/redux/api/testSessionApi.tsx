@@ -107,10 +107,10 @@ export const testSessionApi = baseApi.injectEndpoints({
     }),
 
     completeTest: builder.mutation({
-      query: body => ({
-        url: '/test/complete',
+      query: (testId: string) => ({
+        url: `/test/complete`,
         method: 'PATCH',
-        body,
+        params: { test_id: testId },
       }),
     }),
 

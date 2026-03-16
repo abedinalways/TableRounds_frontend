@@ -1,23 +1,24 @@
+'use client';
+
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+
 import { Input } from '@/components/ui/input';
 import { useState, useMemo } from 'react';
 import Image from 'next/image';
-import { toast } from 'sonner';
 import { Colleague, TestCardData } from './ResultSummary';
-import { useRouter } from 'next/navigation';
-import { ColleagueSkeleton } from './ColleagueSkeleton'; // Import ColleagueSkeleton
+import { ColleagueSkeleton } from './ColleagueSkeleton';
 
 interface ShareModalProps {
   open: boolean;
   onClose: () => void;
   loading: boolean;
   colleagues: Colleague[];
-  testCardData: TestCardData | null; // Ensure proper typing
+  testCardData: TestCardData | null;
   onSendTestCard: (selectedUser: Colleague, testCardData: TestCardData) => void;
 }
 
@@ -29,46 +30,30 @@ export function ShareModal({
   testCardData,
   onSendTestCard,
 }: ShareModalProps) {
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const router = useRouter();
 
-  // Filter colleagues based on the search term
   const filteredColleagues = useMemo(() => {
-    const term = searchTerm.trim().toLowerCase();
+    const term = searchTerm.toLowerCase();
+
     if (!term) return colleagues;
 
-    return colleagues.filter(c => {
-      const name = c.name?.toLowerCase() || '';
-      const title = c.title?.toLowerCase() || '';
-      const university = c.university?.toLowerCase() || '';
-      return (
-        name.includes(term) || title.includes(term) || university.includes(term)
-      );
-    });
+    return colleagues.filter(c => c.name.toLowerCase().includes(term));
   }, [colleagues, searchTerm]);
 
   const handleSend = () => {
-    if (!selectedId) return;
+    if (!selectedId || !testCardData) return;
 
     const selectedUser = colleagues.find(c => c.id === selectedId);
+
     if (!selectedUser) return;
 
-    // Send the TestCard data to the selected user
-    if (testCardData) {
-      onSendTestCard(selectedUser, testCardData);
-    }
-
-    setTimeout(() => {
-      toast(`Result sent to ${selectedUser.name}`);
-      onClose();
-      router.push('/dashboard/messages');
-    }, 100);
+    onSendTestCard(selectedUser, testCardData);
   };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="font-[manrope] max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Suggested Colleagues</DialogTitle>
         </DialogHeader>
@@ -76,19 +61,18 @@ export function ShareModal({
         <Input
           value={searchTerm}
           onChange={e => setSearchTerm(e.target.value)}
-          placeholder="Search..."
-          className="w-full"
+          placeholder="Search colleague..."
         />
+
         <div className="max-h-[300px] overflow-y-auto mt-3">
-          <div className="grid sm:grid-cols-3 gap-1 font-[manrope]">
+          <div className="grid sm:grid-cols-3 gap-2">
             {loading ? (
-              // Show skeleton loaders while loading
               Array.from({ length: 6 }).map((_, i) => (
                 <ColleagueSkeleton key={i} />
               ))
             ) : filteredColleagues.length === 0 ? (
-              <div className="sm:col-span-3 text-sm text-muted-foreground py-6 text-center">
-                No colleagues found.
+              <div className="sm:col-span-3 text-center text-sm py-6">
+                No colleagues found
               </div>
             ) : (
               filteredColleagues.map(item => (
@@ -96,25 +80,29 @@ export function ShareModal({
                   key={item.id}
                   onClick={() => setSelectedId(item.id)}
                   className={`border rounded-xl p-3 flex gap-2 cursor-pointer transition
-                    ${
-                      selectedId === item.id
-                        ? 'border-[#01503b] bg-[#01503b]/5'
-                        : 'border-gray-200 hover:border-[#01503b]'
-                    }`}
+                  ${
+                    selectedId === item.id
+                      ? 'border-[#01503b] bg-[#01503b]/5'
+                      : 'border-gray-200'
+                  }`}
                 >
+                  <Image
+                    src={
+                      item.avatar
+                        ? `http://localhost:4001/public/storage/avatars/${item.avatar}`
+                        : '/images/default-avatar.png'
+                    }
+                    alt={item.name}
+                    width={40}
+                    height={40}
+                    className="rounded-full"
+                  />
+
                   <div>
-                    <Image
-                      src={item.avatar}
-                      alt={item.name}
-                      width={40}
-                      height={40}
-                      className="rounded-full mx-auto"
-                    />
-                  </div>
-                  <div className="flex flex-col items-start gap-1">
                     <p className="text-sm font-semibold">{item.name}</p>
+
                     <p className="text-xs text-muted-foreground">
-                      {item.title}
+                      {item.training_practice || '—'}
                     </p>
                   </div>
                 </div>
@@ -124,9 +112,9 @@ export function ShareModal({
         </div>
 
         <button
-          className="cursor-pointer text-white text-[14px] mt-4 outline max-w-lg w-[66px] h-[30px] rounded-[8px] bg-[#01503b] disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={!selectedId}
           onClick={handleSend}
+          className="mt-4 w-[80px] h-[34px] rounded-[8px] bg-[#01503b] text-white disabled:opacity-50"
         >
           Send
         </button>

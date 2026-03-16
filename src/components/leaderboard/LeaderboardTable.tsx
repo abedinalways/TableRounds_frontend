@@ -257,7 +257,7 @@ export function LeaderboardTable() {
                   <td className="p-3">{getRankWithBadge(Number(row?.rank))}</td>
                   <td className="p-3">
                     <div className="flex items-center gap-3">
-                      {row.user.avatar && (
+                      {row?.user?.avatar && (
                         <Image
                           src={row.user.avatar}
                           alt={row.user.name}
