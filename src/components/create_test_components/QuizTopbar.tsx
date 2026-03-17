@@ -18,6 +18,7 @@ interface QuizTopbarProps {
   totalQuestions: number;
   questionID: string;
   isMarked: boolean;
+  testId: string;
   onToggleMark: () => void;
   onNext: () => void;
   onPrevious: () => void;
@@ -36,6 +37,7 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
   onNext,
   onPrevious,
   onZoomIn,
+  testId,
   onZoomOut,
   onSkip,
 }) => {
@@ -76,7 +78,9 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
                   'size-4 md:size-8',
                   'cursor-pointer text-yellow-400',
                 )}
-                onClick={() => router.push('/dashboard/create-test/mark')}
+                onClick={() =>
+                  router.push(`/dashboard/user/create-test/mark/${testId}`)
+                }
               />
             </span>
             <div className="text-white flex items-center justify-center">

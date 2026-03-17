@@ -162,19 +162,40 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   /**
    * Toggle Mark
    */
-  const handleToggleMark = async () => {
-    try {
-      onToggleMark();
+ const handleToggleMark = async () => {
+   try {
+     
+     const saved = localStorage.getItem('MARKED_QUESTIONS');
+     let parsed = saved ? JSON.parse(saved) : [];
 
-      await toggleMarkApi({
-        test_id: testId,
-        question_id: questionID,
-        is_marked: !isMarked,
-      }).unwrap();
-    } catch (error) {
-      console.error('Mark toggle failed:', error);
-    }
-  };
+     if (isMarked) {
+       // remove
+       parsed = parsed.filter((q: any) => q.index !== currentQuestion);
+     } else {
+       // add
+       parsed.push({
+         index: currentQuestion,
+         questionId: questionID,
+         title: quizDetails.question_title,
+         question: quizDetails.question_steam,
+       });
+     }
+
+     localStorage.setItem('MARKED_QUESTIONS', JSON.stringify(parsed));
+
+     // ✅ 2. Update UI instantly
+     onToggleMark();
+
+     // ✅ 3. Call API (background)
+     await toggleMarkApi({
+       test_id: testId,
+       question_id: questionID,
+       is_marked: !isMarked,
+     }).unwrap();
+   } catch (error) {
+     console.error('Mark toggle failed:', error);
+   }
+ };
 
   /**
    * Next Question
