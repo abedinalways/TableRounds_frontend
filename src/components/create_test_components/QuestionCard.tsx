@@ -39,7 +39,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 
   const handleSubmitTest = async () => {
     try {
-      await completeTest({ test_id: testId }).unwrap();
+      await completeTest(testId ).unwrap();
       router.push(`/dashboard/user/test-complete/${testId}`);
     } catch (err) {
       console.error('Submit test failed', err);

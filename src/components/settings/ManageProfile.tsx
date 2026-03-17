@@ -58,7 +58,8 @@ const followingData = [
 ];
 
 export default function ManageProfile({ user }: ProfileHeaderProps) {
-  const [preview, setPreview] = useState('/images/dashboard/doctor.png');
+  const [preview, setPreview] = useState();
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [isPublic, setIsPublic] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'followers' | 'following'>(
@@ -90,16 +91,41 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
     }
   }, [user, reset]);
 
-  const onSubmit = (data: ProfileFormData) => {
-    console.log(data);
-    toast.success('Profile updated successfully');
+  const onSubmit = async (data: ProfileFormData) => {
+    try {
+      const formData = new FormData();
+
+      // append text fields
+      Object.entries(data).forEach(([key, value]) => {
+        formData.append(key, value as string);
+      });
+
+      // append image
+      if (imageFile) {
+        formData.append('avatar', imageFile);
+      }
+
+      // call your API here
+      // await updateProfile(formData)
+
+      toast.success('Profile updated successfully');
+    } catch (err) {
+      console.error(err);
+      toast.error('Update failed');
+    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setPreview(URL.createObjectURL(file));
+
+    setImageFile(file);
+    setPreview(URL.createObjectURL(file)); 
   };
+  const avatar =
+    user?.avatar && user.avatar.startsWith('http')
+      ? new URL(user.avatar).href
+      : '/images/dashboard/doctor.png';
 
   return (
     <>
@@ -107,16 +133,16 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
         {/* Header */}
         <Card className="bg-white w-full rounded-2xl md:p-6 p-2 mb-10">
           <div className="md:flex justify-between items-start mb-8 gap-4">
-            <div className="relative w-[213px]">
+            <div className="relative w-[213px] ">
               <Image
-                src={preview || '/images/dashboard/doctor.png'}
-                alt=""
+                src={preview || avatar || '/images/dashboard/doctor.png'}
+                alt="avatar"
                 width={213}
                 height={255}
                 priority
                 quality={100}
-                
-                className="rounded-md object-cover"
+                unoptimized
+                className="rounded-full object-cover aspect-square"
               />
 
               <label className="absolute -bottom-5 -right-3 border-4 border-white bg-[#01503b] p-2 rounded-full md:w-[66px] md:h-[66px] w-[50px] h-[50px]">

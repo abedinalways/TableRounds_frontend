@@ -87,7 +87,7 @@ export const WelcomeBanner = () => {
   
   const { data: user, error } = useMeQuery(); 
   
-  
+  console.log(user, 'my user kjefheofw=====')
   const textRef = useRef<HTMLHeadingElement | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'followers' | 'following'>(
@@ -119,7 +119,7 @@ export const WelcomeBanner = () => {
 
   const avatar =
     user?.avatar && user.avatar.startsWith('http')
-      ? user.avatar.replace(/([^:]\/)\/+/g, '$1')
+      ? new URL(user.avatar).href
       : '/images/dashboard/doctor.png';
   return (
     <>
@@ -129,10 +129,11 @@ export const WelcomeBanner = () => {
             <div className="rounded-full border-4 border-[#B79E6B] w-fit">
               <Image
                 src={avatar}
-                width={182}
-                height={182}
+                width={120}
+                height={120}
                 alt=""
-                className=""
+                className="rounded-full w-full h-full aspect-square object-cover"
+                unoptimized
               />
             </div>
           </div>
@@ -141,7 +142,7 @@ export const WelcomeBanner = () => {
           <div className=" flex items-center justify-center">
             <div className="flex flex-col  gap-2 justify-center">
               <h2 ref={textRef} className="md:text-4xl text-lg font-bold">
-                Welcome, {user?.name}! 
+                Welcome, {user?.name}!
               </h2>
 
               <p className="md:text-[18px] text-xs">

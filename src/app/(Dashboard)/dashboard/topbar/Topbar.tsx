@@ -7,6 +7,7 @@ import { useMeQuery } from '@/app/redux/api/authApi';
 import { useNotificationSocket } from '@/app/socket/useNotificationSocket';
 import { useGetUserNotificationsQuery } from '@/app/redux/api/notificationApi';
 import { useChatSocket } from '@/app/redux/api/chat/useChatSocket';
+import Link from 'next/link';
 
 interface TopbarProps {
   onMenuClick?: () => void;
@@ -21,6 +22,10 @@ export default function Topbar({ onMenuClick }: TopbarProps = {}) {
   console.log(user, 'user data=====================')
 
   console.log('TOPBAR USER:', user);
+  const avatar =
+    user?.avatar && user.avatar.startsWith('http')
+      ? new URL(user.avatar).href
+      : '/images/dashboard/doctor.png';
 
   return (
     <header className="sticky top-0 z-1000 bg-white border-b flex items-center justify-between gap-3 px-4 sm:px-6 h-15">
@@ -35,16 +40,22 @@ export default function Topbar({ onMenuClick }: TopbarProps = {}) {
 
       <div className="flex items-center gap-3 ml-auto">
         <NotificationButton />
-        <Image
-          src={user?.avatar || '/images/dashboard/Admin/admin.png'}
-          width={36}
-          height={36}
-          alt=""
-          className="rounded-full"
-        />
-        <span className="hidden sm:block font-semibold text-gray-700">
-           Dr. {user?.name}
-        </span>
+        <Link
+          href="/dashboard/user/my-profile "
+          className="cursor-pointer flex gap-2 items-center justify-between "
+        >
+          <Image
+            src={avatar}
+            width={32}
+            height={32}
+            alt=""
+            className="rounded-full aspect-square object-cover"
+            unoptimized
+          />
+          <span className="hidden sm:block font-semibold text-gray-700">
+            Dr. {user?.name}
+          </span>
+        </Link>
       </div>
     </header>
   );
