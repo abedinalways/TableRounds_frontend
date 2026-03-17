@@ -34,7 +34,7 @@ export default function TestResult({ testId }: { testId: string }) {
   if (isLoading) return <div>Loading result...</div>;
 
   const result = data?.data;
-  console.log(result, 'reslut========================')
+  console.log(result, 'result========================')
   const topics = result?.topic_wise_stats ?? [];
 
   return (
@@ -46,6 +46,9 @@ export default function TestResult({ testId }: { testId: string }) {
         incorrect={result?.total_incorrect}
         used={result?.used_questions}
         unused={result?.unused_questions}
+        difficulty={result?.difficulty}
+        testId={result?.test_id}
+        topics={result?.topic_wise_stats ?? []}
       />
 
       <div className="font-[manrope]">

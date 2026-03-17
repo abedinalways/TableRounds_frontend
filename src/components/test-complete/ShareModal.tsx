@@ -12,6 +12,7 @@ import { useState, useMemo } from 'react';
 import Image from 'next/image';
 import { Colleague, TestCardData } from './ResultSummary';
 import { ColleagueSkeleton } from './ColleagueSkeleton';
+import { Avatar, AvatarImage } from '../ui/avatar';
 
 interface ShareModalProps {
   open: boolean;
@@ -53,7 +54,7 @@ export function ShareModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-h-[80vh] overflow-y-auto font-[manrope]">
         <DialogHeader>
           <DialogTitle>Suggested Colleagues</DialogTitle>
         </DialogHeader>
@@ -86,18 +87,9 @@ export function ShareModal({
                       : 'border-gray-200'
                   }`}
                 >
-                  <Image
-                    src={
-                      item.avatar
-                        ? `http://localhost:4001/public/storage/avatars/${item.avatar}`
-                        : '/images/default-avatar.png'
-                    }
-                    alt={item.name}
-                    width={40}
-                    height={40}
-                    className="rounded-full"
-                  />
-
+                  <Avatar className="h-14 w-14">
+              <AvatarImage src={item.avatar} />
+                   </Avatar>
                   <div>
                     <p className="text-sm font-semibold">{item.name}</p>
 
@@ -114,7 +106,7 @@ export function ShareModal({
         <button
           disabled={!selectedId}
           onClick={handleSend}
-          className="mt-4 w-[80px] h-[34px] rounded-[8px] bg-[#01503b] text-white disabled:opacity-50"
+          className="mt-4 w-[80px] h-[44px] cursor-pointer rounded-[8px] bg-[#01503b] text-white disabled:opacity-50"
         >
           Send
         </button>

@@ -5,6 +5,12 @@ const nextConfig = {
       {
         protocol: 'http',
         hostname: '192.168.7.42',
+        port: '4001',
+        pathname: '/public/storage/**',
+      },
+      {
+        protocol: 'http',
+        hostname: '192.168.7.42',
         port: '4004',
         pathname: '/public/storage/**',
       },
