@@ -30,6 +30,9 @@ export default function MarkPage() {
     };
 
     loadMarks();
+
+    window.addEventListener('focus', loadMarks);
+    return () => window.removeEventListener('focus', loadMarks);
   }, []);
   
 

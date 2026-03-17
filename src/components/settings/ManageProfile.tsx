@@ -58,7 +58,7 @@ const followingData = [
 ];
 
 export default function ManageProfile({ user }: ProfileHeaderProps) {
-  const [preview, setPreview] = useState();
+  const [preview, setPreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isPublic, setIsPublic] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
