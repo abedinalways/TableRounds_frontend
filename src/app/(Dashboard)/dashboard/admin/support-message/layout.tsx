@@ -17,8 +17,8 @@ export default function ChatLayout({ children }: React.PropsWithChildren) {
           {!activeConversationId ? (
             <div className="flex items-center justify-center h-full text-gray-400">
               <div className="text-center space-y-2">
-                <p className="text-2xl font-bold text-green-900  p-6 w-full h-full">
-                  Select a chat to start messaging
+                <p className="text-5xl font-bold text-green-900  p-6 w-full h-full">
+                  Support Message
                 </p>
               </div>
             </div>

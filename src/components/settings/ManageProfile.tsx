@@ -20,6 +20,7 @@ import CalendarIconForProfile from '../reusable/icons/CalendarIconForProfile';
 import { Card } from '../ui/card';
 import FollowersFollowingModal from '../my-profile/FollowersFollowingModal';
 import { Switch } from '../ui/CustomSwitch';
+import { useGetConnectionsQuery } from '@/app/redux/api/connectionApi';
 
 type ProfileFormData = {
   name: string;
@@ -39,23 +40,7 @@ interface ProfileHeaderProps {
   user: UserProfile;
 }
 
-const followersData = [
-  {
-    id: '1',
-    name: 'John Doe',
-    username: 'john_doe',
-    avatar: '/images/dashboard/message/doctor.png',
-  },
-];
 
-const followingData = [
-  {
-    id: '1',
-    name: 'Alex Carter',
-    username: 'alex_carter',
-    avatar: '/images/dashboard/message/doctor.png',
-  },
-];
 
 export default function ManageProfile({ user }: ProfileHeaderProps) {
   const [preview, setPreview] = useState<string | null>(null);
@@ -126,6 +111,24 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
     user?.avatar && user.avatar.startsWith('http')
       ? new URL(user.avatar).href
       : '/images/dashboard/doctor.png';
+  
+  // followers following 
+  const { data: connectionsData, isLoading } = useGetConnectionsQuery(
+    {
+      type: modalType === 'followers' ? 'follower' : 'following',
+    },
+    {
+      skip: !modalOpen,
+    },
+  );
+
+  const formattedData =
+    connectionsData?.data?.map(user => ({
+      id: user.id,
+      name: user.name,
+      avatar: user.avatar,
+      username: user?.name,
+    })) || [];
 
   return (
     <>
@@ -397,7 +400,8 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
         open={modalOpen}
         onClose={setModalOpen}
         type={modalType}
-        data={modalType === 'followers' ? followersData : followingData}
+        data={formattedData}
+        loading={isLoading}
       />
     </>
   );
