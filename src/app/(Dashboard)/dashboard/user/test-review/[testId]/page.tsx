@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useGetTestDetailsQuery } from '@/app/redux/api/testSessionApi';
 
 export default function TestReviewPage() {
@@ -13,10 +13,18 @@ export default function TestReviewPage() {
   }
 
   const test = data?.data;
-
+  const router = useRouter();
   return (
     <div className="p-6 space-y-6  font-[manrope]">
+      <div className='flex justify-between items-center'>
         <h2 className="text-5xl font-bold">Test Review</h2>
+        <button
+          onClick={() => router.back()}
+          className="px-6 py-2 bg-gray-800 text-white rounded-md cursor-pointer"
+        >
+          Go Back
+        </button>
+      </div>
       {/* Header */}
       <div className="bg-[#0f5132] text-white p-4 flex text-3xl flex-col justify-center items-center rounded-xl">
         <p>Score: {test?.score}%</p>
