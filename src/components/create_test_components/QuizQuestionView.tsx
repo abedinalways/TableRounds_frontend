@@ -305,6 +305,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
         onPrevious={handlePrevious}
         onZoomIn={handleZoomIn}
         onZoomOut={handleZoomOut}
+        testId={testId}
       />
 
       <div className="background rounded-md grid grid-cols-1 md:grid-cols-12">
