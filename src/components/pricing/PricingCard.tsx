@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
+import Link from 'next/link';
 
 const PricingCard: React.FC = () => {
   const features = [
@@ -26,9 +27,11 @@ const PricingCard: React.FC = () => {
           </div>
 
           {/* CTA Button */}
-          <Button className="w-full bg-[#B79E6B] hover:[bg-[#B79E6B] text-white font-semibold py-6 text-base mb-6 rounded-md shadow-sm cursor-pointer">
-            Create Free Account
-          </Button>
+          <Link href="/register">
+            <Button className="w-full bg-[#B79E6B] hover:[bg-[#B79E6B] text-white font-semibold py-6 text-base mb-6 rounded-md shadow-sm cursor-pointer">
+              Create Free Account
+            </Button>
+          </Link>
 
           {/* Features List */}
           <div className="space-y-3">

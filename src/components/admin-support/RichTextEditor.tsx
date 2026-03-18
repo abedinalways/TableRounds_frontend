@@ -1,6 +1,6 @@
 'use client';
 
-import { useEditor, EditorContent } from '@tiptap/react';
+import { useEditor, EditorContent, Extension } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Link from '@tiptap/extension-link';
@@ -23,6 +23,7 @@ import {
   ChevronDown,
   Highlighter,
   Wallpaper,
+  Palette,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -67,18 +68,44 @@ interface RichTextEditorProps {
 export function RichTextEditor({ value = '', onChange }: RichTextEditorProps) {
   const [fontSize, setFontSize] = useState('16px');
 
+  const FontSize = Extension.create({
+    name: 'fontSize',
+
+    addGlobalAttributes() {
+      return [
+        {
+          types: ['textStyle'],
+          attributes: {
+            fontSize: {
+              default: null,
+              parseHTML: element => element.style.fontSize,
+              renderHTML: attributes => {
+                if (!attributes.fontSize) return {};
+                return {
+                  style: `font-size: ${attributes.fontSize}`,
+                };
+              },
+            },
+          },
+        },
+      ];
+    },
+  });
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
         blockquote: {
           HTMLAttributes: {
-            class: 'bg-[#f5f1e8] border-l-2 border-[#e3dacb] rounded-lg p-4 my-4',
+            class:
+              'bg-[#f5f1e8] border-l-2 border-[#e3dacb] rounded-lg p-4 my-4',
           },
         },
       }),
       Underline,
       Color,
       TextStyle,
+      FontSize,
       Highlight.configure({ multicolor: true }),
       Image.configure({
         inline: true,
@@ -224,6 +251,62 @@ export function RichTextEditor({ value = '', onChange }: RichTextEditorProps) {
 
         <ToolbarDivider />
 
+        {/* Text Color */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              className="h-8 px-2 flex items-center justify-center hover:bg-white/10 rounded transition-colors"
+              title="Text Color"
+            >
+              <Palette className="w-5 h-5 text-white" />
+            </button>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent>
+            {/* Color Picker */}
+            <div className="px-2 py-2">
+              <input
+                type="color"
+                onChange={e =>
+                  editor.chain().focus().setColor(e.target.value).run()
+                }
+                className="w-full h-8 cursor-pointer"
+              />
+            </div>
+
+            <DropdownMenuItem
+              onClick={() => editor.chain().focus().setColor('#ef4444').run()}
+            >
+              Red
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={() => editor.chain().focus().setColor('#22c55e').run()}
+            >
+              Green
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={() => editor.chain().focus().setColor('#3b82f6').run()}
+            >
+              Blue
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={() => editor.chain().focus().setColor('#7c3f00').run()}
+            >
+              Brown (Notice)
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={() => editor.chain().focus().unsetColor().run()}
+            >
+              Remove Color
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         {/* Bold */}
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBold().run()}
@@ -248,7 +331,7 @@ export function RichTextEditor({ value = '', onChange }: RichTextEditorProps) {
           isActive={editor.isActive('blockquote')}
           title="Notice Box"
         >
-          <Wallpaper color='white'/>
+          <Wallpaper color="white" />
         </ToolbarButton>
 
         {/* Underline */}
@@ -436,7 +519,7 @@ export function RichTextEditor({ value = '', onChange }: RichTextEditorProps) {
         <EditorContent
           editor={editor}
           className="focus:outline-none [&_.ProseMirror]:focus:outline-none [&_.ProseMirror]:outline-none"
-          style={{ fontSize }}
+          // style={{ fontSize }}
         />
       </div>
     </div>

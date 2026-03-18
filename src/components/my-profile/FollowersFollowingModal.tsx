@@ -24,6 +24,7 @@ interface FollowersFollowingModalProps {
   onClose: (open: boolean) => void;
   type: 'followers' | 'following';
   data: UserItem[];
+  loading?: boolean;
 }
 
 export default function FollowersFollowingModal({
@@ -31,6 +32,7 @@ export default function FollowersFollowingModal({
   onClose,
   type,
   data,
+  loading,
 }: FollowersFollowingModalProps) {
     const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
 
@@ -56,7 +58,9 @@ export default function FollowersFollowingModal({
 
         <ScrollArea className="h-[400px] px-6 py-4">
           <div className="space-y-4">
-            {data.length === 0 ? (
+            {loading ? (
+              <p className="text-center text-sm">Loading...</p>
+            ) : data.length === 0 ? (
               <p className="text-center text-[#6b7280] text-sm">
                 No {type} found.
               </p>
