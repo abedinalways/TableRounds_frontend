@@ -124,6 +124,7 @@ export default function CreateTestPage() {
               questionId: current?.testProgress?.questionID ?? '',
               title: current?.quizDetails?.question_title ?? '',
               question: current?.quizDetails?.question_steam ?? '',
+              fullData: current,
             },
           ];
 

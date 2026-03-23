@@ -178,6 +178,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
          questionId: questionID,
          title: quizDetails.question_title,
          question: quizDetails.question_steam,
+         fullData:data,
        });
      }
 
@@ -186,11 +187,12 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
      // ✅ 2. Update UI instantly
      onToggleMark();
 
-     // ✅ 3. Call API (background)
+    
      await toggleMarkApi({
        test_id: testId,
        question_id: questionID,
        is_marked: !isMarked,
+
      }).unwrap();
    } catch (error) {
      console.error('Mark toggle failed:', error);
