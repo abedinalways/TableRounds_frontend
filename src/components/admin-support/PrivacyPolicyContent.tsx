@@ -28,7 +28,7 @@ export default function PrivacyPolicyContent() {
           privacy_policy: content,
         },
       }).unwrap();
-
+      console.log('upsdatweew=========================')
       toast.success('Privacy policy updated successfully');
     } catch {
       toast.error('Failed to update privacy policy');
