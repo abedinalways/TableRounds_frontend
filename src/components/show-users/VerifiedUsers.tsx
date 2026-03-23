@@ -18,9 +18,20 @@ import Link from 'next/link';
 type Props = {
   users: VerifiedUser[];
   onDelete: (id: string) => void;
+  page: number;
+  total?: number;
+  limit: number;
+  onPageChange: (page: number) => void;
 };
 
-export function VerifiedUsers({ users, onDelete }: Props) {
+export function VerifiedUsers({
+  users,
+  onDelete,
+  page,
+  total,
+  limit,
+  onPageChange,
+}: Props) {
   return (
     <div className="bg-white rounded-lg shadow p-[18px] font-[manrope]">
       <div className="mb-4 text-[#01281e] text-[20px] font-bold leading-[150%]">
@@ -78,14 +89,14 @@ export function VerifiedUsers({ users, onDelete }: Props) {
                   </div>
                 </td>
                 <td className="p-4">
-                  <Link href="/dashboard/profile">
+                  <Link href={`/dashboard/user/profile/${user.id}`}>
                     <button className="bg-[#cdebe3] text-[#01503b] cursor-pointer rounded-[4px] py-1 px-3 flex items-center gap-2">
                       <EyeIcon /> View
                     </button>
                   </Link>
                 </td>
                 <td className="p-4">
-                  <Link href="/dashboard/profile">
+                  <Link href={`/dashboard/user/profile/${user.id}`}>
                     <button className="bg-[#cdebe3] text-[#01503b] cursor-pointer rounded-[4px] py-1 px-3 flex items-center gap-2">
                       <EyeIcon /> Profile
                     </button>
@@ -100,10 +111,14 @@ export function VerifiedUsers({ users, onDelete }: Props) {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                       <DropdownMenuItem>
-                        <Link href="/dashboard/profile">View profile</Link>
+                        <Link href={`/dashboard/user/profile/${user.id}`}>
+                          View profile
+                        </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem>
-                        <Link href="/dashboard/support-message">Contact user</Link>
+                        <Link href="/dashboard/user/message/${user.id}">
+                          Contact user
+                        </Link>
                       </DropdownMenuItem>
                       {/* implement delete user functionality */}
                       <DropdownMenuItem
@@ -119,6 +134,27 @@ export function VerifiedUsers({ users, onDelete }: Props) {
             ))}
           </tbody>
         </table>
+
+        {/* Pagination */}
+        <div className="flex justify-end items-center gap-2 mt-4">
+          <button
+            onClick={() => onPageChange(page - 1)}
+            disabled={page === 1}
+            className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
+          >
+            Prev
+          </button>
+
+          <span className="text-sm">Page {page}</span>
+
+          <button
+            onClick={() => onPageChange(page + 1)}
+            disabled={total ? page * limit >= total : false}
+            className="px-3 py-1 border rounded cursor-pointer"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

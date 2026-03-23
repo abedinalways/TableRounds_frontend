@@ -19,8 +19,14 @@ export interface AdminUser {
 }
 
 export interface AdminUserResponse {
+ 
   success: boolean;
   data: AdminUser[];
+  meta?: {
+    page: number;
+    limit: number;
+    total: number;
+  };
 }
 
 export interface ReportUserInfo {
@@ -47,12 +53,12 @@ export const userStatusApi = baseApi.injectEndpoints({
     /* ---------- GET USERS ---------- */
     getUserStatus: builder.query<
       AdminUserResponse,
-      { status: 'pending' | 'approved' | 'rejected' }
+      { status: 'pending' | 'approved' | 'rejected' , page: number , limit: number }
     >({
-      query: ({ status }) => ({
+      query: ({ status, page= 1, limit=10 }) => ({
         url: '/admin/user',
         method: 'GET',
-        params: { status },
+        params: { status, page, limit },
       }),
       providesTags: ['UserStatus'],
     }),
