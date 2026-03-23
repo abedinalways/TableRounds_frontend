@@ -16,6 +16,8 @@ import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 export default function AdminDashboardPage() {
   const { data, isLoading } = useGetUserStatusQuery({
     status: 'pending',
+    page: 1,
+    limit: 10,
   });
 
   const [approveUser, { isLoading: approving }] = useApproveUserMutation();
