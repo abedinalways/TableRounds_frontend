@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   useGetQuestionsQuery,
   useDeleteQuestionMutation,
@@ -16,16 +16,21 @@ import { toast } from 'sonner';
 
 export default function QuestionManagerPage() {
   const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
   const [editingQuestion, setEditingQuestion] = useState<TableQuestion | null>(
     null,
   );
 
   const { data, isLoading } = useGetQuestionsQuery({
-    page: 1,
+    page,
     limit: 10,
     search,
   });
+  
 
+  useEffect(() => {
+    setPage(1);
+  }, [search]);
   const [deleteQuestion] = useDeleteQuestionMutation();
   const [updateQuestion] = useUpdateQuestionMutation();
 
@@ -125,6 +130,9 @@ export default function QuestionManagerPage() {
         setSearch={setSearch}
         onDelete={handleDelete}
         onEdit={handleEdit}
+        page={page}
+        setPage={setPage}
+        meta={data?.meta}
       />
 
       {/* EDIT MODAL */}

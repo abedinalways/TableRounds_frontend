@@ -3,14 +3,27 @@ import { PendingUser } from '@/types/admin';
 
 import Image from 'next/image';
 import EyeIcon from '../reusable/icons/EyeIcon';
+import Link from 'next/link';
 
 type Props = {
   users: PendingUser[];
   onApprove: (user: PendingUser) => void;
-  onReject: (id: string) => void; 
+  onReject: (id: string) => void;
+  page: number;
+  total?: number;
+  limit: number;
+  onPageChange: (page: number) => void;
 };
 
-export function PendingUsers({ users, onApprove, onReject }: Props) {
+export function PendingUsers({
+  users,
+  onApprove,
+  onReject,
+  page,
+  total,
+  limit,
+  onPageChange,
+}: Props) {
   return (
     <div className="bg-white rounded-lg shadow p-[18px] font-[manrope]">
       <div className="mb-4 text-[#01281e] text-[20px] font-bold leading-[150%]">
@@ -45,14 +58,19 @@ export function PendingUsers({ users, onApprove, onReject }: Props) {
                 <td className='p-4 align-middle"'>{user.email}</td>
                 <td className="truncate max-w-[200px]">{user.location}</td>
                 <td className="p-4 align-middle">
+                  <Link href={`/dashboard/user/profile/${user.id}`}>
+                  
                   <button className="bg-[#cdebe3] text-[#01503b] cursor-pointer rounded-[4px] py-1 px-2 flex items-center gap-2">
                     <EyeIcon /> View
                   </button>
+                  </Link>
                 </td>
                 <td className="p-4 align-middle">
-                  <button className="bg-[#cdebe3] text-[#01503b] cursor-pointer rounded-[4px] py-1 px-2 flex items-center gap-2">
-                    <EyeIcon /> Profile
-                  </button>
+                  <Link href={`/dashboard/user/profile/${user.id}`}>
+                    <button className="bg-[#cdebe3] text-[#01503b] cursor-pointer rounded-[4px] py-1 px-2 flex items-center gap-2">
+                      <EyeIcon /> Profile
+                    </button>
+                  </Link>
                 </td>
                 <td className="p-4 align-middle">
                   <div className="flex gap-2">
@@ -74,6 +92,27 @@ export function PendingUsers({ users, onApprove, onReject }: Props) {
             ))}
           </tbody>
         </table>
+
+        {/* Pagination */}
+        <div className="flex justify-end items-center gap-2 mt-4">
+          <button
+            onClick={() => onPageChange(page - 1)}
+            disabled={page === 1}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            Prev
+          </button>
+
+          <span className="text-sm">Page {page}</span>
+
+          <button
+            onClick={() => onPageChange(page + 1)}
+            disabled={total ? page * limit >= total : false}
+            className="px-3 py-1 border rounded"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

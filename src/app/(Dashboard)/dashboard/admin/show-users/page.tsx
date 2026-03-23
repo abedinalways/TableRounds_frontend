@@ -18,13 +18,21 @@ import {
 
 export default function ShowUsersPage() {
  
+  const [pendingPage, setPendingPage] = useState(1);
+  const [verifiedPage, setVerifiedPage] = useState(1);
 
+  const LIMIT = 10;
   const { data: pendingData, isLoading } = useGetUserStatusQuery({
     status: 'pending',
+    page: pendingPage,
+    limit: LIMIT,
   });
+  console.log(pendingData, 'pending===========================')
 
   const { data: approvedData } = useGetUserStatusQuery({
     status: 'approved',
+    page: verifiedPage,
+    limit: LIMIT,
   });
 
   const { data: reportedData } = useGetReportedUsersQuery();
@@ -115,7 +123,7 @@ export default function ShowUsersPage() {
     }
   };
 
-  /* ================= RENDER ================= */
+ 
 
   if (isLoading) {
     return <p className="p-6">Loading...</p>;
@@ -174,6 +182,10 @@ export default function ShowUsersPage() {
             users={pendingUsers}
             onApprove={handleApproveUser}
             onReject={handleRejectUser}
+            page={pendingPage}
+            limit={LIMIT}
+            total={pendingData?.meta?.total}
+            onPageChange={setPendingPage}
           />
         )}
 
@@ -181,6 +193,10 @@ export default function ShowUsersPage() {
           <VerifiedUsers
             users={verifiedUsers}
             onDelete={handleDeleteVerifiedUser}
+            page={verifiedPage}
+            limit={LIMIT}
+            total={approvedData?.meta?.total}
+            onPageChange={setVerifiedPage}
           />
         )}
 
