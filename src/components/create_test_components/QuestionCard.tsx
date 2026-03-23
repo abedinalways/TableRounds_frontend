@@ -21,6 +21,9 @@ interface QuestionCardProps {
   onSubmit: () => void;
   onToggleHide: () => void;
   isQuestionHidden: boolean;
+  hideActions?: boolean; // Submit buttons hide
+  hideToggleButton?: boolean;
+  hideResult?: boolean;
 }
 
 const QuestionCard: React.FC<QuestionCardProps> = ({
@@ -33,6 +36,10 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   onSubmit,
   onToggleHide,
   isQuestionHidden,
+  hideActions = false,
+  hideToggleButton = false,
+  hideResult = false,
+  
 }) => {
   const [completeTest] = useCompleteTestMutation();
   const router = useRouter();
@@ -48,7 +55,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 
   return (
     <div className="w-full bg-[#f9f9f5] md:my-8 md:p-[32px] rounded-[16px]">
-      {showExplanation && (
+      {showExplanation && !hideToggleButton && (
         <div className="mb-4">
           <Btn
             text={isQuestionHidden ? 'Show Question' : 'Hide Question'}
@@ -108,10 +115,10 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
                     htmlFor={`option-${option.id}`}
                     className={cn(
                       'cursor-pointer text-xs md:text-base',
-                      showExplanation && '', 
+                      showExplanation && '',
                       isCorrect && !isSelected && 'opacity-100 ',
-                      isSelected && !isCorrect && ' text-black', 
-                      isCorrect && ' text-black ', 
+                      isSelected && !isCorrect && ' text-black',
+                      isCorrect && ' text-black ',
                       // !isCorrect && 'line-through',
                       isCorrect && isSelected && 'text-black',
                       // !isCorrect  && 'line-through',
@@ -136,7 +143,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
           })}
         </RadioGroup>
 
-        {showExplanation && (
+        {showExplanation && !hideResult && (
           <div
             className={cn(
               'mt-6 border-l-[4px] p-[16px] rounded-[12px]',
@@ -160,43 +167,42 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 
               {!isUserCorrect && (
                 <div className="text-xs md:text-sm text-gray-600">
-                  
-                    <p className="flex items-center gap-2 font-semibold text-[#20AC19]">
-                      <CorrectIcon /> Correct Answer:{' '}
-                      {String.fromCharCode(
-                        65 +
-                          quizDetails.answerOptions.findIndex(
-                            o => o.id === quizDetails.correctAnswerId,
-                          ),
-                      )}
-                    </p>
-                  
+                  <p className="flex items-center gap-2 font-semibold text-[#20AC19]">
+                    <CorrectIcon /> Correct Answer:{' '}
+                    {String.fromCharCode(
+                      65 +
+                        quizDetails.answerOptions.findIndex(
+                          o => o.id === quizDetails.correctAnswerId,
+                        ),
+                    )}
+                  </p>
                 </div>
               )}
             </CardContent>
           </div>
         )}
+        {!hideActions && (
+          <div className="md:flex justify-between items-center space-y-2 md:space-y-0">
+            <Btn
+              text="Submit Answer"
+              onClick={onSubmit}
+              disabled={!selectedAnswerId || showExplanation}
+              className={cn(
+                'bg-[#01281e] text-white w-full md:w-[164px] h-[50px] text-md font-semibold',
+                showExplanation
+                  ? 'cursor-not-allowed opacity-60'
+                  : 'cursor-pointer',
+              )}
+            />
 
-        <div className="md:flex justify-between items-center space-y-2 md:space-y-0">
-          <Btn
-            text="Submit Answer"
-            onClick={onSubmit}
-            disabled={!selectedAnswerId || showExplanation}
-            className={cn(
-              'bg-[#01281e] text-white w-full md:w-[164px] h-[50px] text-md font-semibold',
-              showExplanation
-                ? 'cursor-not-allowed opacity-60'
-                : 'cursor-pointer',
-            )}
-          />
-
-          <button
-            onClick={handleSubmitTest}
-            className="bg-[#b79e6b] cursor-pointer text-sm w-full md:w-[164px] h-[50px] text-white font-semibold rounded-md"
-          >
-            Submit Test
-          </button>
-        </div>
+            <button
+              onClick={handleSubmitTest}
+              className="bg-[#b79e6b] cursor-pointer text-sm w-full md:w-[164px] h-[50px] text-white font-semibold rounded-md"
+            >
+              Submit Test
+            </button>
+          </div>
+        )}
       </CardContent>
     </div>
   );
