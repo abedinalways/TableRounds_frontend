@@ -2,8 +2,9 @@
 
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/redux/hook';
-import { setAuth, Role } from '@/app/redux/authSlice';
+import { setAuth, Role, setUser } from '@/app/redux/authSlice';
 import Cookies from 'js-cookie';
+import { useMeQuery } from './redux/api/authApi';
 
 function useInitiateAuthState() {
   const dispatch = useAppDispatch();
@@ -22,6 +23,17 @@ function useInitiateAuthState() {
       }),
     );
   }, [dispatch]);
+
+  const { data, isSuccess } = useMeQuery(undefined, {
+    skip: !token,
+  });
+
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      dispatch(setUser(data));
+    }
+  }, [isSuccess, data, dispatch]);
 
   return { isAppLoading };
 }

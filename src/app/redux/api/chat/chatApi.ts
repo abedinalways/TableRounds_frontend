@@ -189,6 +189,16 @@ export const chatApi = baseApi.injectEndpoints({
         body,
       }),
     }),
+    createAdminConversation: builder.mutation<
+      ApiResponse<Conversation>,
+      { user_id: string }
+    >({
+      query: body => ({
+        url: '/chat/conversation/admin',
+        method: 'POST',
+        body,
+      }),
+    }),
   }),
 });
 
@@ -197,4 +207,5 @@ export const {
   useCreateConversationMutation,
   useGetMessagesQuery,
   useSendMessageMutation,
+  useCreateAdminConversationMutation,
 } = chatApi;

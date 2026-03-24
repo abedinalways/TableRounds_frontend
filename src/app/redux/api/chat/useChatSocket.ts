@@ -292,6 +292,33 @@ export function useChatSocket() {
         ),
       );
 
+
+      dispatch(
+        chatApi.util.updateQueryData('getConversations', undefined, draft => {
+          if (!draft?.data) return;
+
+          const conv = draft.data.find(c => c.id === msg.conversation_id);
+
+          if (!conv) return;
+
+          const newMsg = {
+            id: msg.message_id,
+            message: msg.body_text,
+            created_at: msg.created_at,
+          };
+
+          if (!conv.messages) conv.messages = [];
+
+          conv.messages.push(newMsg);
+
+          // only keep last message (optional)
+          conv.messages = conv.messages.slice(-1);
+
+          // update time for sorting
+          conv.updated_at = msg.created_at;
+        }),
+      );
+
       // notification
       if (me?.id !== msg.from) {
         dispatch(

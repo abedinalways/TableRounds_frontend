@@ -533,7 +533,7 @@ export default function MessageSection() {
   const { messages } = useChat();
   const endRef = useRef<HTMLDivElement>(null);
   const me = useMeQuery();
-
+  // console.log(me, 'kkkkkkkkkkkk')
   const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001';
 
   useEffect(() => {
@@ -568,7 +568,8 @@ export default function MessageSection() {
         )
         .map(msg => {
           const isMe = msg?.sender?.id === me.data?.id;
-
+          console.log(msg?.sender?.id, 'sender id');
+          console.log(me.data?.id, 'me id===============');
           return (
             <div
               key={msg.id}
