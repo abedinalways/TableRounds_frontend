@@ -10,6 +10,8 @@ import ZoomOutIcon from '../reusable/icons/ZoomOutIcon';
 import PauseIcon from '../reusable/icons/PauseIcon';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
+import { useCreateAdminConversationMutation } from '@/app/redux/api/chat/chatApi';
+import { useAppSelector } from '@/app/redux/hook';
 
 
 interface QuizTopbarProps {
@@ -41,7 +43,29 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
   onZoomOut,
   onSkip,
 }) => {
+  const [createAdminConversation] = useCreateAdminConversationMutation();
+  const currentUser = useAppSelector(state => state.auth.user);
+  console.log('USER FROM REDUX:', currentUser);
   const router = useRouter();
+  const handleFeedback = async () => {
+     console.log('CLICKED'); 
+    if (!currentUser) {
+      console.log('NO USER');
+      return;
+    }
+
+    try {
+      const res = await createAdminConversation({
+        user_id: currentUser.id,
+      }).unwrap();
+
+      const conversationId = res.data.id;
+      console.log('conversationId', conversationId);
+      router.push(`/dashboard/admin/support-message/${conversationId}`);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="md:flex items-center md:justify-between gap-4 rounded-[12px] xl:text-[18px] md:text-sm text-xs border question-bg py-4">
@@ -88,7 +112,10 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
             </div>
           </div>
 
-          <button className="text-white cursor-pointer p-2 gap-2 flex flex-col items-center">
+          <button
+            className="text-white cursor-pointer p-2 gap-2 flex flex-col items-center"
+            onClick={handleFeedback}
+          >
             <ChatBubble className="md:size-8 size-4" /> Feedback
           </button>
 
