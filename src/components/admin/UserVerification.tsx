@@ -60,7 +60,7 @@ export function UserVerification({ users, onAction, loading }: Props) {
 
                   {/* Profile Button */}
                   <td className="truncate max-w-[200px]">
-                    <Link href={`/dashboard/profile/${user.id}`}>
+                    <Link href={`/dashboard/user/profile/${user.id}`}>
                       <button className="bg-[#cdebe3] text-[#01503b] rounded-[4px] cursor-pointer py-1 px-2 flex items-center gap-2">
                         <EyeIcon /> Profile
                       </button>
@@ -69,16 +69,18 @@ export function UserVerification({ users, onAction, loading }: Props) {
 
                   {/* Document Button */}
                   <td className="p-4 align-middle">
-                    <button
-                      onClick={() =>
-                        setPreviewImage(
-                          user.verification_doc ?? '/images/doc.png',
-                        )
-                      }
+                    <Link href={`/dashboard/user/profile/${user.id}`}>
+                      <button
+                      // onClick={() =>
+                      //   setPreviewImage(
+                      //     user.verification_doc ?? '/images/doc.png',
+                      //   )
+                      // }
                       className="bg-[#cdebe3] text-[#01503b] rounded-[4px] cursor-pointer py-1 px-2 flex items-center gap-2"
                     >
                       <EyeIcon /> View
-                    </button>
+                      </button>
+                      </Link>
                   </td>
 
                   {/* Approve / Reject */}
