@@ -82,8 +82,8 @@ export function TestHistory({ search }: Props) {
                 <TableCell>
                   <CircularProgressPercentage
                     showLabel
-                    value={test.score ?? 0}
-                    className="text-xs font-normal"
+                    value={test?.score ?? 0}
+                    className="text-[10px]! font-normal "
                   />
                 </TableCell>
 

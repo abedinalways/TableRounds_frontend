@@ -134,7 +134,8 @@ const Footer = () => {
         {/* Copyright */}
         <div className="mt-17 py-10  border border-t-[#e9e9ea]">
           <p className="text-center text-sm text-gray-700">
-            Copyright © 2025 TableRounds. All rights reserved.
+            Copyright © {new Date().getFullYear()} TableRounds. All rights
+            reserved.
           </p>
         </div>
       </div>

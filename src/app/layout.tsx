@@ -46,8 +46,8 @@ const garamond = EB_Garamond({
   subsets: ['latin'],
 });
 export const metadata: Metadata = {
-  title: 'Amrounds',
-  description: 'Doctors App',
+  title: 'Tablerounds',
+  description: 'Where healthcare providers come to learn and collaborate',
 };
 
 export default function RootLayout({
