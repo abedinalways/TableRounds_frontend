@@ -1,9 +1,42 @@
-import React from 'react';
+'use client';
+import React, { useState } from 'react';
 import { Instagram, Mail, Phone } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
+type EmailProvider =
+  | 'mailto'
+  | 'gmail'
+  | 'outlook'
+  | 'yahoo'
+  | 'protonmail'
+  | 'aol'
+  | 'icloud'
+  | 'zoho';
+
 const Footer = () => {
+  const email = 'michaeljcimba@gmail.com';
+  const [showOptions, setShowOptions] = useState(false);
+
+  const emailProviders: Record<Exclude<EmailProvider, 'mailto'>, string> = {
+    gmail: `https://mail.google.com/mail/u/0/#inbox?compose=new&to=${encodeURIComponent(email)}`,
+    outlook: `https://outlook.live.com/mail/0/deeplink/compose?to=${encodeURIComponent(email)}`,
+    yahoo: `https://mail.yahoo.com/d/compose?to=${encodeURIComponent(email)}`,
+    protonmail: `https://mail.proton.me/u/0/compose?to=${encodeURIComponent(email)}`,
+    aol: `https://mail.aol.com/webmail-std/en-us/compose?to=${encodeURIComponent(email)}`,
+    icloud: `https://www.icloud.com/mail/compose?to=${encodeURIComponent(email)}`,
+    zoho: `https://mail.zoho.com/zm/compose?to=${encodeURIComponent(email)}`,
+  };
+
+  const openEmailClient = (provider: EmailProvider) => {
+    if (provider === 'mailto') {
+      window.location.href = `mailto:${email}`;
+    } else {
+      window.open(emailProviders[provider], '_blank');
+    }
+    setShowOptions(false);
+  };
+
   return (
     <footer
       className="relative w-full bg-[#f5f1e8] pt-30 font-[manrope]"
@@ -42,13 +75,62 @@ const Footer = () => {
               >
                 <Instagram className="w-5 h-5" />
               </a>
-              <a
-                href="#"
-                className="text-gray-700 hover:text-[#1e5a4f] transition-colors"
-                aria-label="Email"
-              >
-                <Mail className="w-5 h-5" />
-              </a>
+              <div className="relative mt-1">
+                <button
+                  onClick={() => setShowOptions(!showOptions)}
+                  className="text-gray-700 hover:text-[#1e5a4f] transition-colors cursor-pointer"
+                  aria-label="Email"
+                >
+                  <Mail className="w-6 h-6" />
+                </button>
+
+                {showOptions && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-10"
+                      onClick={() => setShowOptions(false)}
+                    />
+                    <div className="absolute bottom-full mb-2 right-0 bg-white shadow-lg rounded-lg overflow-hidden z-20 min-w-[180px]">
+                      <button
+                        onClick={() => openEmailClient('mailto')}
+                        className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm transition-colors"
+                      >
+                        📧 Default Email App
+                      </button>
+                      <button
+                        onClick={() => openEmailClient('gmail')}
+                        className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm transition-colors"
+                      >
+                        🔴 Gmail
+                      </button>
+                      <button
+                        onClick={() => openEmailClient('outlook')}
+                        className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm transition-colors"
+                      >
+                        📘 Outlook
+                      </button>
+                      <button
+                        onClick={() => openEmailClient('yahoo')}
+                        className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm transition-colors"
+                      >
+                        🟣 Yahoo Mail
+                      </button>
+                      <button
+                        onClick={() => openEmailClient('protonmail')}
+                        className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm transition-colors"
+                      >
+                        🔒 Proton Mail
+                      </button>
+                      <button
+                        onClick={() => openEmailClient('icloud')}
+                        className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm transition-colors"
+                      >
+                        🍎 iCloud Mail
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           </div>
 
@@ -58,13 +140,13 @@ const Footer = () => {
               Quick Links
             </h3>
             <a
-              href="#"
+              href="/pricing"
               className="text-sm text-[#4a4c5] hover:text-[#1e5a4f] transition-colors"
             >
               Question Bank
             </a>
             <a
-              href="#"
+              href="#how-it-works"
               className="text-sm text-gray-700 hover:text-[#1e5a4f] transition-colors"
             >
               How It Works
@@ -81,19 +163,19 @@ const Footer = () => {
           <div className="flex flex-col space-y-4">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Legal</h3>
             <a
-              href="#"
+              href="/disclaimer"
               className="text-sm text-gray-700 hover:text-[#1e5a4f] transition-colors"
             >
               Disclaimer
             </a>
             <a
-              href="#"
+              href="/privacy-policy"
               className="text-sm text-gray-700 hover:text-[#1e5a4f] transition-colors"
             >
               Privacy Policy
             </a>
             <a
-              href="#"
+              href="/terms-conditions"
               className="text-sm text-gray-700 hover:text-[#1e5a4f] transition-colors"
             >
               Terms & Conditions
@@ -106,18 +188,12 @@ const Footer = () => {
               Contact Us
             </h3>
             <p className="text-sm text-gray-700">We&apos;re Here to Help</p>
-            <Link
-              href="https://contact@tablerounds.ai"
+            <a
+              href="mailto:contact@tablerounds.ai"
               className="flex items-center space-x-2 text-sm text-gray-700 hover:text-[#1e5a4f] transition-colors"
             >
-              <span className=" cursor-pointer">contact@tablerounds.ai</span>
-            </Link>
-            <a
-              href="https://contact@tablerounds.ai"
-              className="flex items-center space-x-2 text-sm text-gray-700 hover:text-[#1e5a4f] transition-colors underline"
-            >
               <Mail className="w-4 h-4" />
-              <span>tableround@email.com</span>
+              <span>contact@tablerounds.ai</span>
             </a>
           </div>
         </div>
@@ -127,12 +203,12 @@ const Footer = () => {
             src="/images/footer-logo.png"
             width={244}
             height={244}
-            alt=""
+            alt="Footer logo"
             className="absolute md:-bottom-24 bottom-28 -right-7 md:left-0"
           />
         </div>
         {/* Copyright */}
-        <div className="mt-17 py-10  border border-t-[#e9e9ea]">
+        <div className="mt-17 py-10 border-t border-[#e9e9ea]">
           <p className="text-center text-sm text-gray-700">
             Copyright © {new Date().getFullYear()} TableRounds. All rights
             reserved.

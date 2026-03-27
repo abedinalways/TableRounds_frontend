@@ -21,7 +21,7 @@ export default function AccountSettings() {
 
   const { register, handleSubmit, reset } = useForm<FormData>({
     defaultValues: {
-      email: profile?.email || '',
+      email: profile?.email ,
     },
   });
 
@@ -44,6 +44,7 @@ export default function AccountSettings() {
       reset({
         currentPassword: '',
         newPassword: '',
+        email: profile?.email ,
         confirmPassword: '',
       });
     } catch (err: unknown) {

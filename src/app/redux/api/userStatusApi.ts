@@ -14,7 +14,7 @@ export interface AdminUser {
   rejected: boolean;
   created_at: string;
   updated_at: string;
-  avatar?: string | null;
+  avatar_url?: string | null;
   verification_doc?: string | null;
 }
 
@@ -73,6 +73,8 @@ export const userStatusApi = baseApi.injectEndpoints({
     }),
 
     /* ---------- APPROVE ---------- */
+
+
     approveUser: builder.mutation<
       { success: boolean; message: string },
       string

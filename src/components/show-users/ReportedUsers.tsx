@@ -5,12 +5,12 @@ type ReportedUser = {
   id: string; 
   reportingUser: {
     name: string;
-    image?: string;
+    avatar_url?: string;
     email: string;
   };
   reportedUser: {
     name: string;
-    image?: string;
+    avatar_url?: string;
     email: string;
   };
 };
@@ -46,7 +46,7 @@ export function ReportedUsers({ users }: Props) {
               >
                 <td className="p-4 flex items-center gap-2 font-medium cursor-pointer">
                   <Image
-                    src={item.reportingUser.image ?? '/images/doc.png'}
+                    src={item.reportingUser.avatar_url ?? '/images/doc.png'}
                     alt={item.reportingUser.name}
                     width={32}
                     height={32}
@@ -59,7 +59,7 @@ export function ReportedUsers({ users }: Props) {
 
                 <td className="p-4 cursor-pointer flex items-center gap-2 font-medium">
                   <Image
-                    src={item.reportedUser.image ?? '/images/doc.png'}
+                    src={item.reportedUser.avatar_url ?? '/images/doc.png'}
                     alt={item.reportedUser.name}
                     width={32}
                     height={32}

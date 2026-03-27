@@ -27,7 +27,7 @@ export default function ShowUsersPage() {
     page: pendingPage,
     limit: LIMIT,
   });
-  console.log(pendingData, 'pending===========================')
+  console.log(pendingData, 'pending===========================++++++++++++')
 
   const { data: approvedData } = useGetUserStatusQuery({
     status: 'approved',
@@ -62,7 +62,7 @@ export default function ShowUsersPage() {
     pendingData?.data.map(user => ({
       id: user.id,
       name: user.name,
-      image: user.avatar ?? '/images/doc.png',
+      image: user.avatar_url ?? '/images/doc.png',
       email: user.email,
       location: user.address ?? 'Unknown',
       document: 'View',
@@ -72,13 +72,13 @@ export default function ShowUsersPage() {
     approvedData?.data.map(user => ({
       id: user.id,
       name: user.name,
-      image: user.avatar ?? '/images/doc.png',
+      image: user.avatar_url ?? '/images/doc.png',
       email: user.email,
       location: user.address ?? 'Unknown',
       document: 'View',
       socialMedia: 'active',
     })) ?? [];
-
+   console.log(verifiedUsers, '{{{{{{{{{{{{{{{{{{{{')
   const reportedUsers =
     reportedData?.data.map(item => ({
       id: item.id,

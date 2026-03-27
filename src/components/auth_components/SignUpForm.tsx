@@ -137,10 +137,10 @@ export default function SignUpForm({
       return false;
     }
 
-    if (!verificationDoc) {
-      toast.error('Verification document is required');
-      return false;
-    }
+    // if (!verificationDoc) {
+    //   toast.error('Verification document is required');
+    //   return false;
+    // }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -210,7 +210,7 @@ opacity-xl font-[manrope]"
                 </Label>
                 <Input
                   id="credentials"
-                  placeholder="i.e. DDS, DMD, MD, Student"
+                  placeholder="i.e. DDS, DMD, MD, DO, MS1-4, D1-4, etc"
                   value={formData.credentials}
                   onChange={e =>
                     handleInputChange('credentials', e.target.value)
@@ -301,15 +301,62 @@ opacity-xl font-[manrope]"
                   Year in Training/Practice
                   <span className="text-red-600">*</span>
                 </Label>
-                <Input
-                  id="yearInTraining"
-                  placeholder="Student, PGY, Attending"
+                <Select
                   value={formData.yearInTraining}
-                  onChange={e =>
-                    handleInputChange('yearInTraining', e.target.value)
-                  }
-                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
-                />
+                  onValueChange={value => handleInputChange('specialty', value)}
+                >
+                  <SelectTrigger
+                    size="xl"
+                    className="mt-2  bg-[#1C765E] border-none md:p-4 rounded-[8px] cursor-pointer text-white text-[18px]! [&>span]:text-white [&_[data-placeholder]]:text-white [&_svg]:opacity-100 placeholder:text-[18px] rounded-[8px] md:w-[644px] w-[225px]"
+                  >
+                    <SelectValue placeholder="Student, PGY, Attending" />
+                  </SelectTrigger>
+
+                  <SelectContent className="bg-[#1C765E] border-none text-white">
+                    <SelectItem
+                      className="text-white"
+                      value="Medical Student"
+                    >
+                     Medical Student
+                    </SelectItem>
+                    <SelectItem className="text-white" value="Dental Student">
+                      Dental Student
+                    </SelectItem>
+                    <SelectItem
+                      className="text-white"
+                      value="PGY-1"
+                    >
+                     PGY-1
+                    </SelectItem>
+                    <SelectItem className="text-white" value="PGY-2">
+                      PGY-2
+                    </SelectItem>
+                    <SelectItem className="text-white" value="PGY-3">
+                      PGY-3
+                    </SelectItem>
+                    <SelectItem className="text-white" value="PGY-4">
+                      PGY-4
+                    </SelectItem>
+                    <SelectItem className="text-white" value="PGY-5">
+                      PGY-5
+                    </SelectItem>
+                    <SelectItem className="text-white" value="PGY-6">
+                      PGY-6
+                    </SelectItem>
+                    <SelectItem className="text-white" value="PGY-7">
+                      PGY-7
+                    </SelectItem>
+                    <SelectItem className="text-white" value="Attending">
+                      Attending
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {errors.specialty && (
+                  <p className="text-red-300 text-xs mt-1">
+                    {errors.specialty}
+                  </p>
+                )}
               </div>
 
               {/* specialty */}

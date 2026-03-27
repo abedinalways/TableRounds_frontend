@@ -94,7 +94,7 @@ export default function QuestionsTable({
               >
                 Question ID
               </th>
-              <th className="px-4 py-3">Question Stem</th>
+              {/* <th className="px-4 py-3">Question Stem</th> */}
               <th className="px-4 py-3">Topic</th>
               <th
                 className="px-4 py-3 cursor-pointer"
@@ -114,7 +114,7 @@ export default function QuestionsTable({
                 <td className="px-4 py-4 text-center">
                   {question.question_id}
                 </td>
-                <td className="px-4 py-4 text-center">{question.text}</td>
+                {/* <td className="px-4 py-4 text-center">{question.text}</td> */}
                 <td className="px-4 py-4 text-center">
                   {question.topic.join(', ')}
                 </td>

@@ -60,7 +60,7 @@ export function VerifiedUsers({
               >
                 <td className="p-4 font-medium flex gap-2 items-center">
                   <Image
-                    src={user.image ?? '/images/doc.png'}
+                    src={user.avatar_url ?? '/images/doc.png'}
                     alt={user.name}
                     width={32}
                     height={32}
@@ -116,7 +116,7 @@ export function VerifiedUsers({
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem>
-                        <Link href="/dashboard/user/message/${user.id}">
+                        <Link href="/dashboard/admin/support-message/${user.id}">
                           Contact user
                         </Link>
                       </DropdownMenuItem>

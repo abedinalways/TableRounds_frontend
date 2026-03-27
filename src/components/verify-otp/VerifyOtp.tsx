@@ -134,7 +134,7 @@ const VerifyOtp = () => {
         <div className="mb-6 flex justify-center">
           <div className="w-full md:w-[644px]">
             <label className="block text-white text-sm font-medium mb-2">
-              New Password
+              New Password <span className="text-red-600">*</span>
             </label>
 
             <input
@@ -160,7 +160,7 @@ const VerifyOtp = () => {
         <div className="mb-6 flex justify-center">
           <div className="w-full md:w-[644px]">
             <label className="block text-white text-sm font-medium mb-2">
-              Confirm Password
+              Confirm Password <span className="text-red-600">*</span>
             </label>
 
             <input

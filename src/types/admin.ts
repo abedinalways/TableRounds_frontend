@@ -4,7 +4,7 @@ export type VerificationUser = {
   email: string;
   location: string;
   document: string;
-  image?: string;
+  avatar_url?: string;
   
 };
 export type PendingUser = {
@@ -13,7 +13,7 @@ export type PendingUser = {
   email: string;
   location: string;
   document: string;
-  image?: string;
+  avatar_url?: string;
   profile?: string;
 };
 
@@ -31,7 +31,7 @@ export type VerifiedUser = {
   email: string;
   location: string;
   document: string;
-  image?: string;
+  avatar_url?: string;
   currentPractice?: string;
   socialMedia?: string;
   action?: string;
@@ -41,12 +41,12 @@ export type ReportedUser = {
   id: string;
   reportingUser: {
     name: string;
-    image?: string;
+    avatar_url?: string;
     email: string;
   };
   reportedUser: {
     name: string;
-    image?: string;
+    avatar_url?: string;
     email: string;
   };
 };
