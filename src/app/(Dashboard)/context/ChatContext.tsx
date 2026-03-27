@@ -1,3 +1,175 @@
+// 'use client';
+
+// import React, { createContext, useContext, useEffect } from 'react';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { type AppDispatch, type RootState } from '@/app/redux/store';
+// import { useChatSocket } from '@/app/redux/api/chat/useChatSocket';
+// import {
+//   useGetConversationsQuery,
+//   useGetMessagesQuery,
+//   useSendMessageMutation,
+//   useSendAdminMessageMutation, // ✅ NEW
+//   useCreateConversationMutation,
+//   useCreateAdminConversationMutation,
+//   Conversation,
+//   Message,
+// } from '@/app/redux/api/chat/chatApi';
+// import {
+//   setActiveConversation,
+//   setTyping,
+// } from '@/app/redux/api/chat/chatSlice';
+// import { skipToken } from '@reduxjs/toolkit/query';
+// import { useParams } from 'next/navigation';
+
+// interface ChatContextType {
+//   conversations: Conversation[];
+//   messages: Message[];
+//   activeConversationId: string | null;
+//   selectConversation: (id: string) => void;
+//   sendMessage: (text: string, attachments?: File[]) => Promise<void>;
+//   startConversation: (targetUserId: string) => Promise<string>;
+//   isTyping: boolean;
+//   setTyping: (v: boolean) => void;
+// }
+
+// const ChatContext = createContext<ChatContextType | null>(null);
+
+// export const useChat = () => {
+//   const ctx = useContext(ChatContext);
+//   if (!ctx) throw new Error('useChat must be used inside ChatProvider');
+//   return ctx;
+// };
+
+// export function ChatProvider({ children }: { children: React.ReactNode }) {
+//   const params = useParams();
+//   const conversationIdFromUrl = params?.id as string | undefined;
+//   const dispatch = useDispatch<AppDispatch>();
+
+//   const { user: currentUser, auth } = useSelector(
+//     (state: RootState) => state.auth,
+//   );
+
+//   const { activeConversationId, typing } = useSelector(
+//     (state: RootState) => state.chat,
+//   );
+
+//   // ✅ Check both Credential.role and AuthUser.role as fallback
+//   // auth.role may be undefined if setAuth was called without a role payload
+//   const isAdmin = auth?.role === 'admin' || currentUser?.role === 'admin';
+
+//   // API Hooks
+//   const { joinConversation } = useChatSocket();
+//   const { data: conversationsData } = useGetConversationsQuery();
+//   const [sendMessageApi] = useSendMessageMutation();
+//   const [sendAdminMessageApi] = useSendAdminMessageMutation(); // ✅ NEW
+//   const [createAdminChat] = useCreateAdminConversationMutation();
+//   const [createUserChat] = useCreateConversationMutation();
+
+//   const conversationId = activeConversationId ?? conversationIdFromUrl;
+
+//   const { data: messagesData } = useGetMessagesQuery(
+//     conversationId ? { conversationId, limit: 20 } : skipToken,
+//   );
+
+//   // debugging
+//   useEffect(() => {
+//     console.log('Chat Context User:', currentUser);
+//   }, [currentUser]);
+
+//   // Restore active chat from URL
+//   useEffect(() => {
+//     if (!conversationIdFromUrl) return;
+//     if (conversationIdFromUrl !== activeConversationId) {
+//       dispatch(setActiveConversation(conversationIdFromUrl));
+//     }
+//   }, [conversationIdFromUrl, activeConversationId, dispatch]);
+
+//   // Join socket
+//   useEffect(() => {
+//     if (!conversationId) return;
+//     joinConversation(conversationId);
+//   }, [conversationId, joinConversation]);
+
+//   /**
+//    * Start Conversation Logic
+//    */
+//   async function startConversation(targetUserId: string): Promise<string> {
+//     const existingConv = conversationsData?.data?.find(
+//       c => c.creator_id === targetUserId || c.participant_id === targetUserId,
+//     );
+
+//     if (existingConv) {
+//       dispatch(setActiveConversation(existingConv.id));
+//       return existingConv.id;
+//     }
+
+//     try {
+//       console.log('Initiating chat as:', isAdmin ? 'ADMIN' : 'USER');
+
+//       let response;
+//       if (isAdmin) {
+//         response = await createAdminChat({ id: targetUserId }).unwrap();
+//       } else {
+//         response = await createUserChat({
+//           participant_id: targetUserId,
+//         }).unwrap();
+//       }
+
+//       const newConversationId = response.data.id;
+//       dispatch(setActiveConversation(newConversationId));
+//       return newConversationId;
+//     } catch (error: any) {
+//       console.error('Start Conversation Error:', error);
+//       throw error;
+//     }
+//   }
+
+//   /**
+//    * Send Message Logic
+//    * ✅ Routes to /chat/message/admin for admins, /chat/message for regular users
+//    */
+//   async function sendMessage(text: string, attachments: File[] = []) {
+//     if (!conversationId) return;
+
+//     const conv = conversationsData?.data?.find(c => c.id === conversationId);
+//     if (!conv) return;
+
+//     const meId = currentUser?.id;
+//     const receiverId =
+//       conv.creator_id === meId ? conv.participant_id : conv.creator_id;
+
+//     const payload = {
+//       conversationId,
+//       receiverId,
+//       message: text,
+//       attachments,
+//     };
+
+//     if (isAdmin) {
+//       await sendAdminMessageApi(payload).unwrap(); // ✅ POST /chat/message/admin
+//     } else {
+//       await sendMessageApi(payload).unwrap(); // POST /chat/message
+//     }
+//   }
+
+//   return (
+//     <ChatContext.Provider
+//       value={{
+//         conversations: conversationsData?.data ?? [],
+//         messages: messagesData?.data ?? [],
+//         activeConversationId: conversationId ?? null,
+//         selectConversation: id => dispatch(setActiveConversation(id)),
+//         sendMessage,
+//         startConversation,
+//         isTyping: typing,
+//         setTyping: v => dispatch(setTyping(v)),
+//       }}
+//     >
+//       {children}
+//     </ChatContext.Provider>
+//   );
+// }
+
 'use client';
 
 import React, { createContext, useContext, useEffect } from 'react';
@@ -8,6 +180,7 @@ import {
   useGetConversationsQuery,
   useGetMessagesQuery,
   useSendMessageMutation,
+  useSendAdminMessageMutation,
   useCreateConversationMutation,
   useCreateAdminConversationMutation,
   Conversation,
@@ -18,7 +191,7 @@ import {
   setTyping,
 } from '@/app/redux/api/chat/chatSlice';
 import { skipToken } from '@reduxjs/toolkit/query';
-import { useParams, usePathname } from 'next/navigation';
+import { useParams } from 'next/navigation';
 
 interface ChatContextType {
   conversations: Conversation[];
@@ -41,21 +214,24 @@ export const useChat = () => {
 
 export function ChatProvider({ children }: { children: React.ReactNode }) {
   const params = useParams();
-  const pathname = usePathname();
   const conversationIdFromUrl = params?.id as string | undefined;
   const dispatch = useDispatch<AppDispatch>();
 
-  const auth = useSelector((state: RootState) => state.auth);
-  const currentUser = auth?.user || (auth as any)?.data?.user;
-
-  const { activeConversationId, typing } = useSelector(
+  const { user: currentUser, auth } = useSelector(
+    (state: RootState) => state.auth,
+  );
+  const { activeConversationId, typing, adminConversationIds } = useSelector(
     (state: RootState) => state.chat,
   );
+
+  // ✅ Sender is admin (for startConversation routing)
+  const isAdmin = auth?.role === 'admin' || currentUser?.role === 'admin';
 
   // API Hooks
   const { joinConversation } = useChatSocket();
   const { data: conversationsData } = useGetConversationsQuery();
   const [sendMessageApi] = useSendMessageMutation();
+  const [sendAdminMessageApi] = useSendAdminMessageMutation(); // ✅ NEW
   const [createAdminChat] = useCreateAdminConversationMutation();
   const [createUserChat] = useCreateConversationMutation();
 
@@ -98,18 +274,11 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
-      const isAdminPath = pathname.includes('/admin/');
-      const userRole = currentUser?.role?.toString().toLowerCase();
-      const userType = (currentUser as any)?.type?.toString().toLowerCase();
-
-      const isAdmin =
-        isAdminPath || userRole === 'admin' || userType === 'admin';
-
       console.log('Initiating chat as:', isAdmin ? 'ADMIN' : 'USER');
 
       let response;
       if (isAdmin) {
-        response = await createAdminChat({ user_id: targetUserId }).unwrap();
+        response = await createAdminChat({ id: targetUserId }).unwrap();
       } else {
         response = await createUserChat({
           participant_id: targetUserId,
@@ -125,6 +294,10 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  /**
+   * Send Message Logic
+   * ✅ Routes to /chat/message/admin for admins, /chat/message for regular users
+   */
   async function sendMessage(text: string, attachments: File[] = []) {
     if (!conversationId) return;
 
@@ -135,12 +308,23 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     const receiverId =
       conv.creator_id === meId ? conv.participant_id : conv.creator_id;
 
-    await sendMessageApi({
+    const payload = {
       conversationId,
       receiverId,
       message: text,
       attachments,
-    }).unwrap();
+    };
+
+    // ✅ Route by conversation type, NOT sender role
+    // adminConversationIds covers: admin sender + user sending feedback to admin
+    const isAdminConversation =
+      isAdmin || adminConversationIds.includes(conversationId);
+
+    if (isAdminConversation) {
+      await sendAdminMessageApi(payload).unwrap(); // POST /chat/message/admin
+    } else {
+      await sendMessageApi(payload).unwrap(); // POST /chat/message
+    }
   }
 
   return (

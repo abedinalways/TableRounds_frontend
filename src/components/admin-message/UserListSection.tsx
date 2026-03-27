@@ -28,7 +28,7 @@ export default function UserListSection() {
     try {
       
       const response = await createConversation({
-        user_id: participantId,
+        id: participantId,
       }).unwrap();
 
       console.log('response', response);

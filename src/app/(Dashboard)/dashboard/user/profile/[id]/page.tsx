@@ -61,7 +61,7 @@ export default function ProfilePage({
      practiceName: apiData.current_practice ?? '',
    },
 
-   // ✅ FIXED
+   
    education: (apiData.educations ?? []).map((edu: any) => ({
      title: edu.degree,
      institute: edu.institute,
@@ -69,7 +69,7 @@ export default function ProfilePage({
      year: edu.year,
    })),
 
-   // ✅ FIXED
+   
    experience: (apiData.experiences ?? []).map((exp: any) => ({
      role: exp.position,
      hospital: exp.company,
@@ -78,7 +78,7 @@ export default function ProfilePage({
      specialty: exp.specialty ?? '',
    })),
 
-   // ✅ FIXED
+   
    publications: (apiData.publications ?? []).map((pub: any) => ({
      title: pub.title,
      year: pub.year,

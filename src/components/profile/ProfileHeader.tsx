@@ -51,7 +51,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
     console.log('ff', user.id);
     try {
       const res = await createConversation({
-        // participant_id: 'cmkp321990000o4kg64e4jage',
+        
         participant_id: user.id,
       }).unwrap();
 

@@ -23,7 +23,7 @@ export default function Header() {
   if (!activeConversation) return null;
 
   return (
-    <div className="md:px-4 px-2 pt-2 md:pt-0 background md:h-[100px] text-white rounded-lg shadow-lg md:relative overflow-hidden font-[manrope] flex md:items-center max-w-full">
+    <div className="md:px-4 px-2 pt-2 md:pt-0 background md:h-[100px] text-white rounded-lg shadow-lg overflow-hidden font-[manrope] flex md:items-center max-w-full ">
       <div className="flex items-center justify-between w-full">
         {/* Left Section */}
         <div className="flex items-center gap-4">

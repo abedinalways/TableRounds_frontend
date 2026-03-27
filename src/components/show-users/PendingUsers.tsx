@@ -58,7 +58,7 @@ export function PendingUsers({
                 <td className='p-4 align-middle"'>{user.email}</td>
                 <td className="truncate max-w-[200px]">{user.location}</td>
                 <td className="p-4 align-middle">
-                  <Link href={`/dashboard/user/profile/${user.id}`}>
+                  <Link href={`/dashboard/admin/user-profile/${user.id}`}>
                   
                   <button className="bg-[#cdebe3] text-[#01503b] cursor-pointer rounded-[4px] py-1 px-2 flex items-center gap-2">
                     <EyeIcon /> View
@@ -66,7 +66,7 @@ export function PendingUsers({
                   </Link>
                 </td>
                 <td className="p-4 align-middle">
-                  <Link href={`/dashboard/user/profile/${user.id}`}>
+                  <Link href={`/dashboard/admin/user-profile/${user.id}`}>
                     <button className="bg-[#cdebe3] text-[#01503b] cursor-pointer rounded-[4px] py-1 px-2 flex items-center gap-2">
                       <EyeIcon /> Profile
                     </button>

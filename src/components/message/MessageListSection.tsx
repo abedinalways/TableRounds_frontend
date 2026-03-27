@@ -77,7 +77,7 @@ import { useAppSelector } from '@/app/redux/hook';
 export default function MessageListSection() {
   const { conversations, selectConversation, activeConversationId } = useChat();
   const router = useRouter();
-
+  console.log(conversations, 'poewfiweopf================')
   const currentUser = useAppSelector(state => state.auth.user);
 
   return (
@@ -87,7 +87,7 @@ export default function MessageListSection() {
       <div className="space-y-3">
         {conversations.map(conv => {
           const otherUser =
-            currentUser?.id === conv.participant.id
+            currentUser?.id === conv.id
               ? conv.creator
               : conv.participant;
 

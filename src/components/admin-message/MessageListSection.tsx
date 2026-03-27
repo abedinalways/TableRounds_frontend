@@ -20,7 +20,7 @@ export default function MessageListSection() {
         {conversations.map(conv => {
           // 1. Identify the 'other user' (the person the admin is talking to)
           const otherUser =
-            adminData?.id === conv.participant.id
+            adminData?.id === conv.id
               ? conv.creator
               : conv.participant;
 
