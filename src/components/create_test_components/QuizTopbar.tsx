@@ -182,7 +182,7 @@ import Flag from '../reusable/icons/Flag';
 import ChatBubble from '../reusable/icons/ChatBubble';
 import ZoomInIcon from '../reusable/icons/ZoomInIcon';
 import ZoomOutIcon from '../reusable/icons/ZoomOutIcon';
-import PauseIcon from '../reusable/icons/PauseIcon';
+
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { useCreateAdminConversationMutation } from '@/app/redux/api/chat/chatApi';
@@ -228,10 +228,10 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
     if (!currentUser || isStartingChat) return;
 
     try {
-      const res = await createAdminConversation({ id: null }).unwrap();
+      const res = await createAdminConversation({ participant_id: null }).unwrap();
       const conversationId = res.data.id;
 
-      // ✅ Mark this conversation so ChatContext routes to /chat/message/admin
+      
       dispatch(addAdminConversationId(conversationId));
 
       router.push(`/dashboard/admin/support-message/${conversationId}`);

@@ -53,7 +53,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
     try {
       const res = await createConversation({
         
-        id: user.id,
+        participant_id: user.id,
 
       }).unwrap();
 

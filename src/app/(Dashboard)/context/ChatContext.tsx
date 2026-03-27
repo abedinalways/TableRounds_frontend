@@ -278,7 +278,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
       let response;
       if (isAdmin) {
-        response = await createAdminChat({ id: targetUserId }).unwrap();
+        response = await createAdminChat({ participant_id: targetUserId }).unwrap();
       } else {
         response = await createUserChat({
           participant_id: targetUserId,
