@@ -303,7 +303,7 @@ opacity-xl font-[manrope]"
                 </Label>
                 <Select
                   value={formData.yearInTraining}
-                  onValueChange={value => handleInputChange('specialty', value)}
+                  onValueChange={value => handleInputChange('yearInTraining', value)}
                 >
                   <SelectTrigger
                     size="xl"

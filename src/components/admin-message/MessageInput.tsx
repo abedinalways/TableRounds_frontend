@@ -104,7 +104,7 @@ export default function MessageInput() {
  };
 
   return (
-    <div className="relative">
+    <div className="h-[70px]">
       {/* Attachment preview */}
       {attachments.length > 0 && (
         <div className="pb-2 flex gap-2 flex-wrap absolute top-0 -translate-y-full left-0">

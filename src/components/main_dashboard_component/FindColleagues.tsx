@@ -14,7 +14,7 @@ import { useDiscoverProfilesQuery } from '@/app/redux/api/discoverApi';
 import { useCreateConversationMutation } from '@/app/redux/api/chat/chatApi';
 import { useToggleFollowMutation } from '@/app/redux/api/followApi';
 
-// Define prop types for the colleague card to avoid using `any`
+
 interface Colleague {
   id: string;
   name: string;

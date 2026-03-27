@@ -51,13 +51,21 @@ export interface Message {
   id: string;
   message: string | null;
   created_at: string;
-  status: string; // "SENDING" | "SENT" etc
+  status: string;
   sender: ChatUser;
   receiver: ChatUser;
   attachments: ChatAttachment[];
 }
 
 export interface SendMessagePayload {
+  conversationId: string;
+  receiverId: string;
+  message?: string;
+  attachments?: File[];
+}
+
+// ✅ Payload for admin message — mirrors SendMessagePayload
+export interface SendAdminMessagePayload {
   conversationId: string;
   receiverId: string;
   message?: string;
@@ -86,10 +94,7 @@ export const chatApi = baseApi.injectEndpoints({
           limit,
         },
       }),
-
-      // ✅ IMPORTANT: cache key = conversationId ONLY
       serializeQueryArgs: ({ queryArgs }) => queryArgs.conversationId,
-
       providesTags: (result, error, arg) => [
         { type: 'Chat', id: arg.conversationId },
       ],
@@ -105,7 +110,6 @@ export const chatApi = baseApi.injectEndpoints({
         if (message?.trim()) formData.append('message', message);
 
         attachments?.forEach(file => {
-          // ✅ backend expects "files"
           formData.append('files', file);
         });
 
@@ -115,68 +119,36 @@ export const chatApi = baseApi.injectEndpoints({
           body: formData,
         };
       },
+    }),
 
-      // async onQueryStarted(arg, { dispatch, queryFulfilled, getState }) {
-      //   const state: any = getState();
-      //   const me = state.auth?.user || state.auth?.auth?.user;
+ 
+    sendAdminMessage: builder.mutation<
+      ApiResponse<Message>,
+      SendAdminMessagePayload
+    >({
+      query: ({ conversationId, receiverId, message, attachments }) => {
+        const formData = new FormData();
 
-      //   const tempId = `temp-${Date.now()}`;
+        formData.append('conversation_id', conversationId);
+        formData.append('receiver_id', receiverId);
 
-      //   // ✅ Pass object with conversationId AND limit
-      //   const patch = dispatch(
-      //     chatApi.util.updateQueryData(
-      //       'getMessages',
-      //       { conversationId: arg.conversationId, limit: 50 },
-      //       draft => {
-      //         if (!draft?.data) draft.data = [];
+        if (message?.trim()) formData.append('message', message);
 
-      //         draft.data.push({
-      //           id: tempId,
-      //           message: arg.message ?? null,
-      //           created_at: new Date().toISOString(),
-      //           status: 'SENDING',
-      //           sender: {
-      //             id: me?.id ?? 'me',
-      //             name: me?.name ?? 'Me',
-      //             avatar_url: me?.avatar_url,
-      //           },
-      //           receiver: {
-      //             id: arg.receiverId,
-      //             name: '',
-      //           },
-      //           attachments: [],
-      //         });
-      //       },
-      //     ),
-      //   );
+        // Backend expects the field name "files" (same as regular message)
+        attachments?.forEach(file => {
+          formData.append('files', file);
+        });
 
-      //   try {
-      //     const { data } = await queryFulfilled;
-
-      //     dispatch(
-      //       chatApi.util.updateQueryData(
-      //         'getMessages',
-      //         { conversationId: arg.conversationId, limit: 50 },
-      //         draft => {
-      //           if (!draft?.data) return;
-
-      //           const idx = draft.data.findIndex(m => m.id === tempId);
-      //           if (idx !== -1) {
-      //             draft.data[idx] = data.data;
-      //           } else {
-      //             draft.data.push(data.data);
-      //           }
-      //         },
-      //       ),
-      //     );
-      //   } catch (e) {
-      //     patch.undo();
-      //   }
-      // },
-
-      // invalidatesTags: (result, error, arg) => [
-      //   { type: 'Chat', id: arg.conversationId },
-      // ],
+        return {
+          url: '/chat/message/admin',
+          method: 'POST',
+          body: formData,
+        };
+      },
+      // Invalidate the specific conversation cache so messages refresh
+      invalidatesTags: (result, error, arg) => [
+        { type: 'Chat', id: arg.conversationId },
+      ],
     }),
 
     createConversation: builder.mutation<
@@ -189,15 +161,18 @@ export const chatApi = baseApi.injectEndpoints({
         body,
       }),
     }),
+
     createAdminConversation: builder.mutation<
       ApiResponse<Conversation>,
-      { user_id: string }
+      { id: string | null }
     >({
       query: body => ({
         url: '/chat/conversation/admin',
         method: 'POST',
         body,
+
       }),
+      invalidatesTags: ['Chat'],
     }),
   }),
 });
@@ -207,5 +182,6 @@ export const {
   useCreateConversationMutation,
   useGetMessagesQuery,
   useSendMessageMutation,
+  useSendAdminMessageMutation,
   useCreateAdminConversationMutation,
 } = chatApi;

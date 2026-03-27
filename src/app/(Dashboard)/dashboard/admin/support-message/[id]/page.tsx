@@ -6,8 +6,10 @@ import { useDispatch } from 'react-redux';
 import { setActiveConversation } from '@/app/redux/api/chat/chatSlice';
 
 import Header from '@/components/message/Header';
-import MessageSection from '@/components/message/MessageSection';
-import MessageInput from '@/components/message/MessageInput';
+
+
+import MessageInput from '@/components/admin-message/MessageInput';
+import MessageSection from '@/components/admin-message/MessageSection';
 
 export default function ChatPage() {
   const params = useParams();
@@ -24,8 +26,8 @@ export default function ChatPage() {
   return (
     <>
       <Header />
-      <MessageSection />
-      <MessageInput />
+      <MessageSection/>
+      <MessageInput/>
     </>
   );
 }

@@ -6,7 +6,7 @@ import type { RootState } from '@/app/redux/store';
 
 import { ChatProvider } from '@/app/(Dashboard)/context/ChatContext';
 import MessageListSection from '@/components/admin-message/MessageListSection';
-import UserListSection from '@/components/admin-message/UserListSection'; // Ensure this is created
+import UserListSection from '@/components/admin-message/UserListSection'; 
 import { MessageSquare, Users } from 'lucide-react';
 
 export default function ChatLayout({ children }: React.PropsWithChildren) {
