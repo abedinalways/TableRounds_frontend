@@ -43,13 +43,13 @@ export function UserVerification({ users, onAction, loading }: Props) {
                   {/* Name + Avatar */}
                   <td className="p-4 font-medium flex gap-2 items-center">
                     <Image
-                      src={user.avatar ?? '/images/doc.png'}
+                      src={user.avatar_url ?? '/images/doc.png'}
                       alt={user.name}
                       width={32}
                       height={32}
                       className="rounded-full cursor-pointer"
                       onClick={() =>
-                        setPreviewImage(user.avatar ?? '/images/doc.png')
+                        setPreviewImage(user.avatar_url ?? '/images/doc.png')
                       }
                     />
                     {user.name}
@@ -71,16 +71,16 @@ export function UserVerification({ users, onAction, loading }: Props) {
                   <td className="p-4 align-middle">
                     <Link href={`/dashboard/user/profile/${user.id}`}>
                       <button
-                      // onClick={() =>
-                      //   setPreviewImage(
-                      //     user.verification_doc ?? '/images/doc.png',
-                      //   )
-                      // }
-                      className="bg-[#cdebe3] text-[#01503b] rounded-[4px] cursor-pointer py-1 px-2 flex items-center gap-2"
-                    >
-                      <EyeIcon /> View
+                        // onClick={() =>
+                        //   setPreviewImage(
+                        //     user.verification_doc ?? '/images/doc.png',
+                        //   )
+                        // }
+                        className="bg-[#cdebe3] text-[#01503b] rounded-[4px] cursor-pointer py-1 px-2 flex items-center gap-2"
+                      >
+                        <EyeIcon /> View
                       </button>
-                      </Link>
+                    </Link>
                   </td>
 
                   {/* Approve / Reject */}

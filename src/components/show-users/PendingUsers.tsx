@@ -47,7 +47,7 @@ export function PendingUsers({
               <tr key={user.id} className="mx-auto last:border-b">
                 <td className="p-4 font-medium flex gap-2 items-center ">
                   <Image
-                    src={user.image ?? '/images/doc.png'}
+                    src={user.avatar_url ?? '/images/doc.png'}
                     alt={user.name}
                     width={32}
                     height={32}

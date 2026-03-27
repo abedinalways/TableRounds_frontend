@@ -51,18 +51,22 @@ export default function Welcome() {
         </h2>
         <p className="md:text-[18px] text-xs text-gray-600 mt-6 md:mt-0 text-center md:text-start font-light leading-[160%] ">
           Watch the short overview video to see how it fits into your training
-          and day-to-<br />day practice.
+          and day-to-
+          <br />
+          day practice.
         </p>
       </div>
       {/* intro video */}
-      <div className="px-4 relative md:px-0 mx-auto  custom-container z-20 trailer-video ">
-        <Image
-          src="/images/welcome.png"
-          alt="trailer poster"
-          width={1320}
-          height={547}
-          className=""
-        />
+      <div className="px-4 relative md:px-0 mx-auto custom-container z-20 trailer-video ">
+        <div className='flex justify-center'>
+          <Image
+            src="/images/TR.png"
+            width={451}
+            height={453}
+            alt=""
+            className="flex items-center justify-center "
+          />
+        </div>
         <VideoModal />
         {/* <video
           loop
@@ -75,13 +79,13 @@ export default function Welcome() {
       </div>
 
       <div className="relative -z-15">
-        <Image
+        {/* <Image
           src="/images/TR.png"
           width={451}
           height={453}
           alt=""
           className="absolute md:-top-160 -top-78 md:left-26  left-14 md:opacity-70 opacity-50 md:w-fit w-1/2"
-        />
+        /> */}
       </div>
     </div>
   );

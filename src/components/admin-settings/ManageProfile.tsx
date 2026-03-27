@@ -14,6 +14,7 @@ import { useMeQuery, useUpdateUserMutation } from '@/app/redux/api/authApi';
 type ProfileFormData = {
   name: string;
   join_date: string;
+  
   instagram: string;
   linkedin: string;
   twitter_x: string;
@@ -36,6 +37,7 @@ export default function ManageProfile() {
     reset({
       name: profile.name || '',
       instagram: profile.instagram || '',
+     
       linkedin: profile.linkedin || '',
       twitter_x: profile.twitter_x || '',
       facebook: profile.facebook || '',
@@ -44,12 +46,18 @@ export default function ManageProfile() {
     });
   }, [profile, reset]);
 
-  const preview =
-    localPreview ||
-    (profile?.avatar
-      ? `${process.env.NEXT_PUBLIC_API_ENDPOINT}${profile.avatar}`
-      : '/images/dashboard/Admin/admin.png');
+  const getImageUrl = (path?: string) => {
+    if (!path) return '/images/dashboard/Admin/admin.png';
 
+    if (path.startsWith('http')) return path;
+
+    return `${process.env.NEXT_PUBLIC_API_ENDPOINT}/${path}`;
+  };
+
+  const preview = localPreview || getImageUrl(profile?.avatar);
+  
+  console.log('avatar:', profile?.avatar);
+  console.log('preview:', preview);
   const onSubmit = async (data: ProfileFormData) => {
     try {
       const formData = new FormData();
@@ -88,11 +96,13 @@ export default function ManageProfile() {
         <div className="flex justify-between items-start mb-8 gap-4">
           <div className="relative w-[213px]">
             <Image
-              src='/images/dashboard/Admin/admin.png'
-              alt="Profile image"
+              src={preview}
+              alt="Profile"
               width={213}
               height={255}
               className="rounded-md object-cover"
+              priority
+              unoptimized
             />
 
             <label className="absolute -bottom-5 -right-3 border-4 border-white bg-[#01503b] p-2 rounded-full md:w-[66px] md:h-[66px] w-[50px] h-[50px]">

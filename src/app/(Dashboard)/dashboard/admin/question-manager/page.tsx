@@ -46,8 +46,9 @@ export default function QuestionManagerPage() {
       total_attempts: q.total_attempts,
       correct_percentage: q.correct_percentage,
     })) ?? [];
-
-  /* ================= DELETE (SONNER V2) ================= */
+   
+  // console.log(questions, '----------------------------------+++++++++++')
+  
 
   const handleDelete = (q: TableQuestion) => {
     toast.custom(
