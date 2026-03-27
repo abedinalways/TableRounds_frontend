@@ -121,7 +121,6 @@ export const chatApi = baseApi.injectEndpoints({
       },
     }),
 
- 
     sendAdminMessage: builder.mutation<
       ApiResponse<Message>,
       SendAdminMessagePayload
@@ -164,13 +163,12 @@ export const chatApi = baseApi.injectEndpoints({
 
     createAdminConversation: builder.mutation<
       ApiResponse<Conversation>,
-      { id: string | null }
+      { participant_id: string | null }
     >({
       query: body => ({
         url: '/chat/conversation/admin',
         method: 'POST',
         body,
-
       }),
       invalidatesTags: ['Chat'],
     }),

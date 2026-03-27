@@ -7,14 +7,13 @@ import { useGetUserStatusQuery } from '@/app/redux/api/userStatusApi';
 import { useCreateAdminConversationMutation } from '@/app/redux/api/chat/chatApi';
 
 export default function UserListSection() {
-  // Fetching users with 'approved' status from your userStatusApi
   const { data: usersResponse, isLoading } = useGetUserStatusQuery({
     status: 'approved',
     page: 1,
     limit: 20,
   });
 
-  const { startConversation, selectConversation } = useChat();
+  const { selectConversation } = useChat();
   const [createConversation] = useCreateAdminConversationMutation();
   const router = useRouter();
 
@@ -24,27 +23,27 @@ export default function UserListSection() {
     );
   }
 
-  const handleMessageClick = async (participantId: string) => {
+  const handleMessageClick = async (userId: string) => {
     try {
-      
+    
       const response = await createConversation({
-        id: participantId,
+        participant_id: userId,
       }).unwrap();
 
-      console.log('response', response);
+      console.log('Conversation created successfully:', response);
+
       const conversationId = response.data.id;
 
       if (conversationId) {
         selectConversation(conversationId);
+       
         router.push(`/dashboard/admin/support-message/${conversationId}`);
       }
     } catch (error) {
-      
-      console.error('Conversation create failed:', error);
+      console.error('Conversation creation failed:', error);
     }
   };
 
-  
   const users = usersResponse?.data || [];
 
   return (
@@ -59,16 +58,17 @@ export default function UserListSection() {
         users.map(user => (
           <div
             key={user.id}
+            
             onClick={() => handleMessageClick(user.id)}
             className="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-green-50 border border-transparent hover:border-green-100 transition-all group"
           >
             <div className="relative w-10 h-10 flex-shrink-0">
               <Image
-                // Fallback logic for avatars based on your AdminUser type
                 src={user.avatar_url || '/images/img008.png'}
                 alt={user.name}
                 fill
                 className="rounded-full object-cover border border-gray-100"
+                unoptimized
               />
             </div>
 
