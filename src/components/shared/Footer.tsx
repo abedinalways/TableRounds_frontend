@@ -69,13 +69,15 @@ const Footer = () => {
             <div className="flex items-center space-x-3 pt-2 ml-5">
               <span className="text-sm text-gray-700">Social:</span>
               <a
-                href="#"
+                href="https://instagram.com/TableRounds.ai"
                 className="text-gray-700 hover:text-[#1e5a4f] transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Instagram"
               >
                 <Instagram className="w-5 h-5" />
               </a>
-              <div className="relative mt-1">
+              {/* <div className="relative mt-1">
                 <button
                   onClick={() => setShowOptions(!showOptions)}
                   className="text-gray-700 hover:text-[#1e5a4f] transition-colors cursor-pointer"
@@ -130,7 +132,7 @@ const Footer = () => {
                     </div>
                   </>
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
 

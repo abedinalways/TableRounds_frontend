@@ -28,12 +28,12 @@ export default function Header() {
         {/* Left Section */}
         <div className="flex items-center gap-4">
           <Image
-            src={activeConversation?.avatar_url ?? '/images/dashboard/main_dashboard/doctor.png'
-            }
+            src={activeConversation?.participant?.avatar_url}
             width={90}
             height={90}
             alt="doctor"
-            className="md:w-[90px] md:h-[90px] w-[35px] h-[35px] rounded-full object-cover"
+            className="md:w-[90px] md:h-[90px] w-[35px] h-[35px] rounded-full aspect-square object-cover"
+            unoptimized
           />
 
           <div className="space-y-1">

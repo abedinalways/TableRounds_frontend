@@ -79,7 +79,8 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
               alt="Profile image"
               width={213}
               height={255}
-              className="rounded-sm "
+              className="rounded-sm aspect-square object-cover"
+              unoptimized
             />
           </div>
 

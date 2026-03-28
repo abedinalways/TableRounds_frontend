@@ -30,6 +30,7 @@ export function VerifiedUsers({
   page,
   total,
   limit,
+
   onPageChange,
 }: Props) {
   return (
@@ -60,11 +61,12 @@ export function VerifiedUsers({
               >
                 <td className="p-4 font-medium flex gap-2 items-center">
                   <Image
-                    src={user.avatar_url ?? '/images/doc.png'}
-                    alt={user.name}
+                    src={user?.image ?? '/images/doc.png'}
+                    alt=''
                     width={32}
                     height={32}
-                    className="rounded-full"
+                    className="rounded-full aspect-square object-cover"
+                    unoptimized
                   />
                   {user.name}
                 </td>
