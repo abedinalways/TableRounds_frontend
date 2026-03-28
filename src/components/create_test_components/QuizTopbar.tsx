@@ -234,7 +234,7 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
       
       dispatch(addAdminConversationId(conversationId));
 
-      router.push(`/dashboard/admin/support-message/${conversationId}`);
+      router.push(`/dashboard/user/messages/${conversationId}`);
     } catch (err) {
       console.error('Failed to open feedback chat:', err);
     }

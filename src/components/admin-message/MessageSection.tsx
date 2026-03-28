@@ -51,9 +51,9 @@ export default function MessageSection() {
                 <Image
                   src="/images/dashboard/img008.png"
                   alt="avatar"
-                  width={32}
-                  height={32}
-                  className="rounded-full object-cover"
+                  width={16}
+                  height={16}
+                  className="rounded-full object-cover aspect-square"
                 />
               )}
 

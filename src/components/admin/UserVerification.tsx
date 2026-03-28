@@ -47,10 +47,11 @@ export function UserVerification({ users, onAction, loading }: Props) {
                       alt={user.name}
                       width={32}
                       height={32}
-                      className="rounded-full cursor-pointer"
-                      onClick={() =>
-                        setPreviewImage(user.avatar_url ?? '/images/doc.png')
-                      }
+                      className="rounded-full cursor-pointer aspect-square object-cover"
+                      // onClick={() =>
+                      //   setPreviewImage(user?.image?? '/images/doc.png')
+                      // }
+                      unoptimized
                     />
                     {user.name}
                   </td>

@@ -62,17 +62,18 @@ export default function ShowUsersPage() {
     pendingData?.data.map(user => ({
       id: user.id,
       name: user.name,
-      image: user.avatar_url ?? '/images/doc.png',
+      image: user.avatar_url,
       email: user.email,
       location: user.address ?? 'Unknown',
       document: 'View',
     })) ?? [];
 
+  console.log(pendingData, '&&&&&&&&&&&&&&&&&&&&&========================')
   const verifiedUsers =
     approvedData?.data.map(user => ({
       id: user.id,
       name: user.name,
-      image: user.avatar_url ?? '/images/doc.png',
+      image: user.avatar_url,
       email: user.email,
       location: user.address ?? 'Unknown',
       document: 'View',

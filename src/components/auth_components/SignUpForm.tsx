@@ -210,7 +210,7 @@ opacity-xl font-[manrope]"
                 </Label>
                 <Input
                   id="credentials"
-                  placeholder="i.e. DDS, DMD, MD, DO, MS1-4, D1-4, etc"
+                  placeholder="i.e. DDS, DMD, MD, DO, MS1-4, D1-4, etc.(with a period)"
                   value={formData.credentials}
                   onChange={e =>
                     handleInputChange('credentials', e.target.value)

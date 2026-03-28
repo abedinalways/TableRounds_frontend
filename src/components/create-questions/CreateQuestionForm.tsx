@@ -18,18 +18,19 @@ import { toast } from 'sonner';
 import { Label } from '../ui/label';
 import { useCreateQuestionMutation } from '@/app/redux/api/createQuestionsApi';
 
+// Define topics with display names
 const TOPICS = [
-  'Anesthesia_Medicine',
-  'Cancer',
-  'Cleft_Craniofacial',
-  'Cosmetics',
-  'Dentoalveolar',
-  'Implants',
-  'Orthognathic',
-  'Pathology',
-  'Reconstruction',
-  'TMJ',
-  'Trauma',
+  { value: 'Anesthesia_Medicine', label: 'Anesthesia Medicine' },
+  { value: 'Cancer', label: 'Cancer' },
+  { value: 'Cleft_Craniofacial', label: 'Cleft Craniofacial' },
+  { value: 'Cosmetics', label: 'Cosmetics' },
+  { value: 'Dentoalveolar', label: 'Dentoalveolar' },
+  { value: 'Implants', label: 'Implants' },
+  { value: 'Orthognathic', label: 'Orthognathic' },
+  { value: 'Pathology', label: 'Pathology' },
+  { value: 'Reconstruction', label: 'Reconstruction' },
+  { value: 'TMJ', label: 'TMJ' },
+  { value: 'Trauma', label: 'Trauma' },
 ];
 const DIFFICULTIES: Difficulty[] = ['Intern', 'Senior', 'Board'];
 
@@ -42,7 +43,7 @@ type AnswerOption = {
 };
 
 type SingleQuestionValues = {
-  questionTitle: string;
+  // questionTitle: string;
   questionStem: string;
   explanation: string;
   keyPoints: string;
@@ -62,7 +63,7 @@ type ScenarioFormValues = {
 // ─── Default blank question ───────────────────────────────────────────────────
 
 const blankQuestion = (): SingleQuestionValues => ({
-  questionTitle: '',
+  // questionTitle: '',
   questionStem: '',
   explanation: '',
   keyPoints: '',
@@ -101,7 +102,7 @@ function QuestionBlock({
   fileInputRef,
   onFileChange,
 }: QuestionBlockProps) {
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: `questions.${index}.answers` as `questions.${number}.answers`,
   });
@@ -119,7 +120,7 @@ function QuestionBlock({
       )}
 
       {/* Question Title */}
-      <div className="space-y-2">
+      {/* <div className="space-y-2">
         <Label className="text-md font-bold">Question Title</Label>
         <Input
           {...register(`questions.${index}.questionTitle` as const, {
@@ -127,7 +128,7 @@ function QuestionBlock({
           })}
           placeholder="Enter question title"
         />
-      </div>
+      </div> */}
 
       {/* Question Stem */}
       <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
@@ -184,8 +185,30 @@ function QuestionBlock({
             <Input
               {...register(`questions.${index}.answers.${aIdx}.text` as const)}
               placeholder="Enter choice text"
-              className="border-none shadow-none focus-visible:ring-0"
+              className="border-none shadow-none focus-visible:ring-0 flex-1"
             />
+
+            {fields.length > 2 && (
+              <button
+                type="button"
+                onClick={() => remove(aIdx)}
+                className="text-red-500 hover:text-red-700 p-1"
+                aria-label="Delete option"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
+            )}
           </div>
         ))}
       </div>
@@ -343,7 +366,7 @@ export default function CreateQuestionForm() {
     try {
       for (const q of data.questions) {
         const formData = new FormData();
-        formData.append('question_title', q.questionTitle);
+        // formData.append('question_title', q.questionTitle);
         formData.append('question_steam', q.questionStem);
         formData.append('explanation', q.explanation ?? '');
         formData.append('why_incorrect', q.keyPoints ?? '');
@@ -410,9 +433,12 @@ export default function CreateQuestionForm() {
       />
       <TagSelector
         label="Topic"
-        options={TOPICS}
-        selected={watch('topic')}
-        onChange={(val: string) => setValue('topic', val)}
+        options={TOPICS.map(t => t.label)} 
+        selected={TOPICS.find(t => t.value === watch('topic'))?.label || ''}
+        onChange={(selectedLabel: string) => {
+          const topic = TOPICS.find(t => t.label === selectedLabel);
+          setValue('topic', topic?.value || '');
+        }}
       />
 
       <div className="flex justify-between items-center">

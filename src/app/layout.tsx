@@ -46,7 +46,7 @@ const garamond = EB_Garamond({
   subsets: ['latin'],
 });
 export const metadata: Metadata = {
-  title: 'Tablerounds',
+  title: 'TableRounds',
   description: 'Where healthcare providers come to learn and collaborate',
 };
 

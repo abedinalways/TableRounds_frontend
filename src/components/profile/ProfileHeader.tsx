@@ -78,6 +78,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
               width={213}
               height={255}
               className="rounded-sm "
+              unoptimized
             />
           </div>
 

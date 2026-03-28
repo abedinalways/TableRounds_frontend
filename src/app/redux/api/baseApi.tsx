@@ -24,6 +24,7 @@ export const baseApi = createApi({
     'UserStatus',
     'Chat',
     'allQuestions',
+    'SingleQuestion',
     'help',
     'notification',
     'Connections',

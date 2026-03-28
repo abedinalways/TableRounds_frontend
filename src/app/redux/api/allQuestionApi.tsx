@@ -36,6 +36,45 @@ export interface GetQuestionsParams {
   search?: string;
 }
 
+export interface AnswerOption {
+  id: string;
+  option_text: string;
+  is_correct: boolean;
+}
+
+export interface SingleQuestionResponse {
+  success: boolean;
+  message: string;
+  data: {
+    id: string;
+    question_id: string;
+    question_stem: string;
+    question_title: string;
+    difficulty: Difficulty;
+    topic: string[];
+    answerOptions: AnswerOption[];
+    explanation: string;
+    explanation_image: string | null;
+    why_incorrect: string;
+    jumping_points: string;
+    memory_trick: string;
+    reference: string;
+    explanation_image_url: string | null;
+  };
+}
+
+export interface UpdateQuestionData {
+  question_stem?: string;
+  difficulty?: Difficulty;
+  topic?: string[];
+  answerOptions?: AnswerOption[];
+  explanation?: string;
+  why_incorrect?: string;
+  jumping_points?: string;
+  memory_trick?: string;
+  reference?: string;
+}
+
 /* ================= API ================= */
 
 export const allQuestionApi = baseApi.injectEndpoints({
@@ -50,6 +89,14 @@ export const allQuestionApi = baseApi.injectEndpoints({
         params,
       }),
       providesTags: ['allQuestions'],
+    }),
+
+    getSingleQuestion: builder.query({
+      query: id => ({
+        url: `/admin/questions/${id}`,
+        method: 'GET',
+      }),
+      providesTags: (result, error, id) => [{ type: 'SingleQuestion', id }],
     }),
 
     deleteQuestion: builder.mutation<
@@ -79,6 +126,7 @@ export const allQuestionApi = baseApi.injectEndpoints({
 
 export const {
   useGetQuestionsQuery,
+  useGetSingleQuestionQuery,
   useDeleteQuestionMutation,
   useUpdateQuestionMutation,
 } = allQuestionApi;
