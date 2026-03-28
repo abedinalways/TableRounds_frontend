@@ -20,9 +20,9 @@ import { useCreateQuestionMutation } from '@/app/redux/api/createQuestionsApi';
 
 // Define topics with display names
 const TOPICS = [
-  { value: 'Anesthesia_Medicine', label: 'Anesthesia Medicine' },
+  { value: 'Anesthesia_Medicine', label: 'Anesthesia / Medicine' },
   { value: 'Cancer', label: 'Cancer' },
-  { value: 'Cleft_Craniofacial', label: 'Cleft Craniofacial' },
+  { value: 'Cleft_Craniofacial', label: 'Cleft / Craniofacial' },
   { value: 'Cosmetics', label: 'Cosmetics' },
   { value: 'Dentoalveolar', label: 'Dentoalveolar' },
   { value: 'Implants', label: 'Implants' },
