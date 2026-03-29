@@ -10,9 +10,10 @@ export type PendingUser = {
   id: string;
   name: string;
   email: string;
-  location: string;
+  address: string;
   document: string;
   avatar_url?: string | null;
+  verifiy_document_url?: string | null;
   profile?: string;
   image?: string | null;
 };
@@ -35,6 +36,7 @@ export type VerifiedUser = {
   currentPractice?: string;
   socialMedia?: string;
   action?: string;
+  verifiy_document_url?: string | null;
   image?: string | null;
 };
 

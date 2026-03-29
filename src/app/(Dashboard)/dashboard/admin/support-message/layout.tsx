@@ -45,7 +45,7 @@ export default function ChatLayout({ children }: React.PropsWithChildren) {
             <div className="flex bg-gray-100 p-1 rounded-xl mb-4">
               <button
                 onClick={() => setSidebarView('chats')}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-semibold rounded-lg transition-all ${
+                className={`flex-1 flex items-center cursor-pointer justify-center gap-2 py-2 text-xs font-semibold rounded-lg transition-all ${
                   sidebarView === 'chats'
                     ? 'bg-white text-green-900 shadow-sm'
                     : 'text-gray-500 hover:text-gray-700'
@@ -56,7 +56,7 @@ export default function ChatLayout({ children }: React.PropsWithChildren) {
               </button>
               <button
                 onClick={() => setSidebarView('users')}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-semibold rounded-lg transition-all ${
+                className={`flex-1 flex items-center justify-center gap-2 cursor-pointer py-2 text-xs font-semibold rounded-lg transition-all ${
                   sidebarView === 'users'
                     ? 'bg-white text-green-900 shadow-sm'
                     : 'text-gray-500 hover:text-gray-700'

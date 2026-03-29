@@ -8,7 +8,7 @@ import TextAlign from '@tiptap/extension-text-align';
 import { TextStyle } from '@tiptap/extension-text-style';
 import Highlight from '@tiptap/extension-highlight';
 import Image from '@tiptap/extension-image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Bold,
   Italic,
@@ -97,6 +97,12 @@ export function RichTextEditor({ value = '', onChange }: RichTextEditorProps) {
       onChange(editor.getHTML());
     },
   });
+
+  useEffect(() => {
+    if (editor && value !== editor.getHTML()) {
+      editor.commands.setContent(value || '');
+    }
+  }, [value, editor]);
 
   // Handle file upload
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

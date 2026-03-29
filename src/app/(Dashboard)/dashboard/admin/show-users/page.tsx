@@ -1,6 +1,6 @@
 'use client';
 
-import { PendingUsers } from '@/components/show-users/PendingUsers';
+
 import { VerifiedUsers } from '@/components/show-users/VerifiedUsers';
 import { ReportedUsers } from '@/components/show-users/ReportedUsers';
 
@@ -15,6 +15,7 @@ import {
   useGetReportedUsersQuery,
   useDeleteUserMutation,
 } from '@/app/redux/api/userStatusApi';
+import { PendingUsers } from '@/components/show-users/PendingUsers';
 
 export default function ShowUsersPage() {
  
@@ -36,7 +37,7 @@ export default function ShowUsersPage() {
   });
 
   const { data: reportedData } = useGetReportedUsersQuery();
-
+  console.log(reportedData, 'reported===========================++++++++++++')
   const [approveUser] = useApproveUserMutation();
   const [rejectUser] = useRejectUserMutation();
   const [deleteUser] = useDeleteUserMutation();
@@ -64,8 +65,9 @@ export default function ShowUsersPage() {
       name: user.name,
       image: user.avatar_url,
       email: user.email,
-      location: user.address ?? 'Unknown',
+      address: user.address ?? 'Unknown',
       document: 'View',
+      verifiy_document_url: user.verifiy_document_url,
     })) ?? [];
 
   console.log(pendingData, '&&&&&&&&&&&&&&&&&&&&&========================')
@@ -77,6 +79,7 @@ export default function ShowUsersPage() {
       email: user.email,
       location: user.address ?? 'Unknown',
       document: 'View',
+      verifiy_document_url: user.verifiy_document_url,
       socialMedia: 'active',
     })) ?? [];
    console.log(verifiedUsers, '{{{{{{{{{{{{{{{{{{{{')
@@ -84,16 +87,17 @@ export default function ShowUsersPage() {
     reportedData?.data.map(item => ({
       id: item.id,
       reportingUser: {
-        name: item.reporting_user?.name,
-        image: item.reporting_user.avatar ?? undefined,
-        email: item.reporting_user?.email,
+        name: item?.reporter.name,
+        image: item?.reporter.avatar_url ?? undefined,
+        email: item?.reporter.email,
       },
       reportedUser: {
-        name: item.reported_user?.name,
-        image: item.reporting_user.avatar ?? undefined,
-        email: item.reported_user?.email,
+        name: item.reported?.name,
+        image: item.reported?.avatar_url ?? undefined,
+        email: item.reported?.email,
       },
     })) ?? [];
+  console.log(reportedUsers, '00000000000000000000=========')
 
   /* ================= ACTION HANDLERS ================= */
 
