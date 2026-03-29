@@ -18,6 +18,7 @@ import QuestionsTable, {
 import StatsCard from '@/components/question-manager/StatsCard';
 import { toast } from 'sonner';
 import { RichTextEditor } from '@/components/create-questions/RichTextEditor';
+import { X } from 'lucide-react';
 
 // Define the error type
 interface ApiError {
@@ -55,6 +56,7 @@ export default function QuestionManagerPage() {
 
   // Form state for editing
   const [editFormData, setEditFormData] = useState<UpdateQuestionData>({});
+  console.log(editFormData, '{{{{{{{{{{{{{{{{{{{{{{{')
   const [answerOptions, setAnswerOptions] = useState<AnswerOption[]>([]);
 
   // Populate form when single question data is loaded
@@ -62,15 +64,15 @@ export default function QuestionManagerPage() {
     if (singleQuestionData?.data) {
       const q = singleQuestionData.data;
       setEditFormData({
-        question_stem: q.question_stem,
+        question_steam: q.question_steam,
         difficulty: q.difficulty,
         topic: q.topic,
         explanation: q.explanation,
         why_incorrect: q.why_incorrect,
-        jumping_points: q.jumping_points,
+        pimping_point: q.pimping_point,
         memory_trick: q.memory_trick,
-        reference: q.reference,
-        answerOptions: q.answerOptions, // Add this to the form data
+        referance: q.referance,
+        answerOptions: q.answerOptions,
       });
       setAnswerOptions(q.answerOptions || []);
     }
@@ -216,7 +218,19 @@ export default function QuestionManagerPage() {
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 overflow-y-auto py-8">
           <div className="bg-white p-6 rounded-lg w-[800px] max-h-[90vh] overflow-y-auto space-y-4">
-            <h3 className="text-xl font-bold mb-4">Edit Question</h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold">Edit Question</h3>
+
+              <button
+                onClick={() => {
+                  setIsModalOpen(false);
+                  setEditingQuestionId(null);
+                }}
+                className="p-1 rounded hover:bg-gray-100 transition cursor-pointer text-red-800"
+              >
+                <X size={20} />
+              </button>
+            </div>
 
             {isLoadingSingle ? (
               <div className="py-8 text-center">Loading question data...</div>
@@ -240,9 +254,10 @@ export default function QuestionManagerPage() {
                     Question Stem
                   </label>
                   <RichTextEditor
-                    value={editFormData.question_stem || ''}
+                    key={editingQuestionId}
+                    value={editFormData.question_steam || ''}
                     onChange={(val: string) =>
-                      setEditFormData({ ...editFormData, question_stem: val })
+                      setEditFormData({ ...editFormData, question_steam: val })
                     }
                   />
                 </div>
@@ -348,6 +363,7 @@ export default function QuestionManagerPage() {
                     Explanation
                   </label>
                   <RichTextEditor
+                    key={editingQuestionId}
                     value={editFormData.explanation || ''}
                     onChange={(val: string) =>
                       setEditFormData({ ...editFormData, explanation: val })
@@ -361,6 +377,7 @@ export default function QuestionManagerPage() {
                     Why The Other Options Are Incorrect
                   </label>
                   <RichTextEditor
+                    key={editingQuestionId}
                     value={editFormData.why_incorrect || ''}
                     onChange={(val: string) =>
                       setEditFormData({ ...editFormData, why_incorrect: val })
@@ -374,9 +391,10 @@ export default function QuestionManagerPage() {
                     Pimping Point
                   </label>
                   <RichTextEditor
-                    value={editFormData.jumping_points || ''}
+                    key={editingQuestionId}
+                    value={editFormData.pimping_point || ''}
                     onChange={(val: string) =>
-                      setEditFormData({ ...editFormData, jumping_points: val })
+                      setEditFormData({ ...editFormData, pimping_point: val })
                     }
                   />
                 </div>
@@ -387,6 +405,7 @@ export default function QuestionManagerPage() {
                     Memory Trick
                   </label>
                   <RichTextEditor
+                    key={editingQuestionId}
                     value={editFormData.memory_trick || ''}
                     onChange={(val: string) =>
                       setEditFormData({ ...editFormData, memory_trick: val })
@@ -400,9 +419,10 @@ export default function QuestionManagerPage() {
                     Reference
                   </label>
                   <RichTextEditor
-                    value={editFormData.reference || ''}
+                    key={editingQuestionId}
+                    value={editFormData.referance || ''}
                     onChange={(val: string) =>
-                      setEditFormData({ ...editFormData, reference: val })
+                      setEditFormData({ ...editFormData, referance: val })
                     }
                   />
                 </div>

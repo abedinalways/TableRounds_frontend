@@ -5,11 +5,12 @@ import { useParams } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { setActiveConversation } from '@/app/redux/api/chat/chatSlice';
 
-import Header from '@/components/message/Header';
+
 
 
 import MessageInput from '@/components/admin-message/MessageInput';
 import MessageSection from '@/components/admin-message/MessageSection';
+import Header from '@/components/admin-message/Header';
 
 export default function ChatPage() {
   const params = useParams();

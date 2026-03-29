@@ -6,11 +6,13 @@ type ReportedUser = {
   reportingUser: {
     name: string;
     avatar_url?: string;
+    image?: string;
     email: string;
   };
   reportedUser: {
     name: string;
     avatar_url?: string;
+    image?: string;
     email: string;
   };
 };
@@ -46,11 +48,12 @@ export function ReportedUsers({ users }: Props) {
               >
                 <td className="p-4 flex items-center gap-2 font-medium cursor-pointer">
                   <Image
-                    src={item.reportingUser.avatar_url ?? '/images/doc.png'}
+                    src={item.reportingUser.image ?? '/images/doc.png'}
                     alt={item.reportingUser.name}
                     width={32}
                     height={32}
-                    className="rounded-full"
+                    className="rounded-full aspect-square object-cover"
+                    unoptimized
                   />
                   {item.reportingUser.name}
                 </td>
@@ -59,11 +62,12 @@ export function ReportedUsers({ users }: Props) {
 
                 <td className="p-4 cursor-pointer flex items-center gap-2 font-medium">
                   <Image
-                    src={item.reportedUser.avatar_url ?? '/images/doc.png'}
+                    src={item.reportedUser.image ?? '/images/doc.png'}
                     alt={item.reportedUser.name}
                     width={32}
                     height={32}
-                    className="rounded-full"
+                    className="rounded-full aspect-square object-cover"
+                    unoptimized
                   />
                   {item.reportedUser.name}
                 </td>

@@ -48,9 +48,9 @@ export function UserVerification({ users, onAction, loading }: Props) {
                       width={32}
                       height={32}
                       className="rounded-full cursor-pointer aspect-square object-cover"
-                      // onClick={() =>
-                      //   setPreviewImage(user?.image?? '/images/doc.png')
-                      // }
+                      onClick={() =>
+                        setPreviewImage(user?.avatar_url ?? '/images/doc.png')
+                      }
                       unoptimized
                     />
                     {user.name}
@@ -70,18 +70,16 @@ export function UserVerification({ users, onAction, loading }: Props) {
 
                   {/* Document Button */}
                   <td className="p-4 align-middle">
-                    <Link href={`/dashboard/user/profile/${user.id}`}>
-                      <button
-                        // onClick={() =>
-                        //   setPreviewImage(
-                        //     user.verification_doc ?? '/images/doc.png',
-                        //   )
-                        // }
-                        className="bg-[#cdebe3] text-[#01503b] rounded-[4px] cursor-pointer py-1 px-2 flex items-center gap-2"
-                      >
-                        <EyeIcon /> View
-                      </button>
-                    </Link>
+                    <button
+                      onClick={() =>
+                        setPreviewImage(
+                          user.verifiy_document_url ?? '/images/doc.png',
+                        )
+                      }
+                      className="bg-[#cdebe3] text-[#01503b] rounded-[4px] cursor-pointer py-1 px-2 flex items-center gap-2"
+                    >
+                      <EyeIcon /> View
+                    </button>
                   </td>
 
                   {/* Approve / Reject */}
@@ -118,20 +116,38 @@ export function UserVerification({ users, onAction, loading }: Props) {
           onClick={() => setPreviewImage(null)}
         >
           <div
-            className="relative bg-white rounded-lg p-4 max-w-[90vw] max-h-[90vh]"
+            className="relative bg-white rounded-lg p-6 max-w-[90vw] max-h-[90vh] flex flex-col items-center"
             onClick={e => e.stopPropagation()}
           >
-            <Image
-              src={previewImage}
-              alt="Preview"
-              width={400}
-              height={400}
-              className="object-contain rounded-lg"
-            />
+            {previewImage.toLowerCase().endsWith('.pdf') ? (
+              <div className="flex flex-col items-center gap-4">
+                <p className="text-gray-700 font-medium">
+                  PDF Preview not available
+                </p>
+
+                <a
+                  href={previewImage}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-[#01503b] text-white px-4 py-2 rounded-md hover:bg-[#013e2f] transition"
+                >
+                  Open PDF Document
+                </a>
+              </div>
+            ) : (
+              <Image
+                src={previewImage}
+                alt="Verification Document"
+                width={700}
+                height={700}
+                className="object-contain rounded-lg max-h-[80vh]"
+                unoptimized
+              />
+            )}
 
             <button
               onClick={() => setPreviewImage(null)}
-              className="absolute top-2 right-2 bg-black text-white rounded-full w-7 h-7 flex items-center justify-center cursor-pointer"
+              className="absolute top-2 right-2 bg-black text-white rounded-full w-7 h-7 flex items-center justify-center hover:bg-gray-800"
             >
               ✕
             </button>

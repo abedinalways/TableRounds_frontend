@@ -15,7 +15,7 @@ import { TagSelector } from './TagSelector';
 import { Difficulty } from '@/types/question';
 import { RichTextEditor } from './RichTextEditor';
 import { toast } from 'sonner';
-import { Label } from '../ui/label';
+
 import { useCreateQuestionMutation } from '@/app/redux/api/createQuestionsApi';
 
 // Define topics with display names
@@ -50,7 +50,7 @@ type SingleQuestionValues = {
   keepingPoint: string;
   memoryTrick: string;
   referance: string;
-  hasMemoryTrick: boolean;
+  
   answers: AnswerOption[];
 };
 
@@ -70,7 +70,7 @@ const blankQuestion = (): SingleQuestionValues => ({
   keepingPoint: '',
   memoryTrick: '',
   referance: '',
-  hasMemoryTrick: false,
+  
   answers: [
     { id: '1', text: '', isCorrect: false },
     { id: '2', text: '', isCorrect: true },
@@ -250,36 +250,17 @@ function QuestionBlock({
       />
 
       {/* Memory Trick */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
-          Memory Trick
-        </h2>
-        <label className="flex items-center gap-2 cursor-pointer">
-          <span className="text-sm font-semibold text-gray-600">Enable</span>
-          <input
-            type="checkbox"
-            checked={watch(`questions.${index}.hasMemoryTrick` as const)}
-            onChange={e => {
-              setValue(
-                `questions.${index}.hasMemoryTrick` as const,
-                e.target.checked,
-              );
-              if (!e.target.checked)
-                setValue(`questions.${index}.memoryTrick` as const, '');
-            }}
-            className="w-5 h-5 accent-[#01503b] cursor-pointer"
-          />
-        </label>
-      </div>
-      {watch(`questions.${index}.hasMemoryTrick` as const) && (
-        <RichTextEditor
-          key={`qs-mem-${index}-${editorKey}`}
-          value={watch(`questions.${index}.memoryTrick` as const)}
-          onChange={(v: string) =>
-            setValue(`questions.${index}.memoryTrick` as const, v)
-          }
-        />
-      )}
+      <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
+        Memory Trick
+      </h2>
+
+      <RichTextEditor
+        key={`qs-mem-${index}-${editorKey}`}
+        value={watch(`questions.${index}.memoryTrick` as const)}
+        onChange={(v: string) =>
+          setValue(`questions.${index}.memoryTrick` as const, v)
+        }
+      />
 
       {/* References */}
       <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
@@ -465,13 +446,13 @@ export default function CreateQuestionForm() {
 
       {/* Add More Questions For The Same Scenario */}
       <div className="flex items-center justify-center">
-        <button
+        {/* <button
           type="button"
           onClick={() => appendQuestion(blankQuestion())}
           className="cursor-pointer md:px-6 px-3 py-2 md:py-4 rounded-[8px] border border-[#01503b] text-[#01503b] md:text-[20px] text-sm font-semibold hover:bg-[#01503b]/5 transition-colors"
         >
           + Add More Questions For The Same Scenario
-        </button>
+        </button> */}
       </div>
 
       {/* Submit */}

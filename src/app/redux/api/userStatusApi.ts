@@ -15,7 +15,8 @@ export interface AdminUser {
   created_at: string;
   updated_at: string;
   avatar_url?: string | null;
-  verification_doc?: string | null;
+  verifiy_document_url?: string | null;
+  verifiy_document?: string | null;
 }
 
 export interface AdminUserResponse {
@@ -33,13 +34,13 @@ export interface ReportUserInfo {
   id: string;
   name: string;
   email: string;
-  avatar?: string | null;
+  avatar_url?: string | null;
 }
 
 export interface ReportedUserItem {
   id: string;
-  reporting_user: ReportUserInfo;
-  reported_user: ReportUserInfo;
+  reporter: ReportUserInfo;
+  reported: ReportUserInfo;
 }
 
 export interface ReportedUserResponse {
@@ -69,7 +70,7 @@ export const userStatusApi = baseApi.injectEndpoints({
         url: '/admin/user/reports',
         method: 'GET',
       }),
-      providesTags: ['UserStatus'],
+      providesTags: ['UserReports'],
     }),
 
     /* ---------- APPROVE ---------- */

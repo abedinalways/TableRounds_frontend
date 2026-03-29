@@ -48,7 +48,7 @@ export interface SingleQuestionResponse {
   data: {
     id: string;
     question_id: string;
-    question_stem: string;
+    question_steam: string;
     question_title: string;
     difficulty: Difficulty;
     topic: string[];
@@ -56,23 +56,23 @@ export interface SingleQuestionResponse {
     explanation: string;
     explanation_image: string | null;
     why_incorrect: string;
-    jumping_points: string;
+    pimping_point: string;
     memory_trick: string;
-    reference: string;
+    referance: string;
     explanation_image_url: string | null;
   };
 }
 
 export interface UpdateQuestionData {
-  question_stem?: string;
+  question_steam?: string;
   difficulty?: Difficulty;
   topic?: string[];
   answerOptions?: AnswerOption[];
   explanation?: string;
   why_incorrect?: string;
-  jumping_points?: string;
+  pimping_point?: string;
   memory_trick?: string;
-  reference?: string;
+  referance?: string;
 }
 
 /* ================= API ================= */

@@ -1,7 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import React, { useRef } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
+import { toast } from 'sonner';
 
 import {
   DropdownMenu,
@@ -11,24 +12,102 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { useChat } from '@/app/(Dashboard)/context/ChatContext';
+import { useReportUserMutation } from '@/app/redux/api/reportApi';
+import { useToggleFollowMutation } from '@/app/redux/api/followApi';
 
 export default function Header() {
   const { conversations, activeConversationId } = useChat();
   const textRef = useRef<HTMLHeadingElement | null>(null);
 
+  const [reportUser, { isLoading: isReporting }] = useReportUserMutation();
+  const [toggleFollow, { isLoading: isFollowLoading }] =
+    useToggleFollowMutation();
+
   const activeConversation = conversations.find(
     conv => conv.id === activeConversationId,
   );
-  console.log(activeConversation, 'llllllllldscdsasdaaaaaa============')
+
+  // local follow state by participant id
+  const [followState, setFollowState] = useState<Record<string, boolean>>({});
+
+  const participantId = activeConversation?.participant?.id;
+
+  const isFollowing = useMemo(() => {
+    if (!participantId) return false;
+    return followState[participantId] ?? false;
+  }, [followState, participantId]);
+
   if (!activeConversation) return null;
 
+  const handleReportUser = async () => {
+    try {
+      const userId = activeConversation.participant?.id;
+
+      if (!userId) {
+        toast.error('User id not found');
+        return;
+      }
+
+      const res = await reportUser({
+        userId,
+        data: {
+          reason: 'Spam',
+          message: 'Reported from chat header',
+        },
+      }).unwrap();
+
+      toast.success(res?.message || 'User reported successfully');
+    } catch (error: any) {
+      toast.error(error?.data?.message || 'Failed to report user');
+      console.error(error);
+    }
+  };
+
+  const handleToggleFollow = async () => {
+    try {
+      const userId = activeConversation.participant?.id;
+
+      if (!userId) {
+        toast.error('User id not found');
+        return;
+      }
+
+      const nextState = !isFollowing;
+
+      // optimistic local update
+      setFollowState(prev => ({
+        ...prev,
+        [userId]: nextState,
+      }));
+
+      const res = await toggleFollow({ userId }).unwrap();
+
+      toast.success(
+        res?.message ||
+          (nextState ? 'Followed successfully' : 'Unfollowed successfully'),
+      );
+    } catch (error: any) {
+      // rollback on failure
+      if (participantId) {
+        setFollowState(prev => ({
+          ...prev,
+          [participantId]: !isFollowing,
+        }));
+      }
+
+      toast.error(error?.data?.message || 'Failed to update follow status');
+      console.error(error);
+    }
+  };
+
   return (
-    <div className="md:px-4 px-2 pt-2 md:pt-0 background md:h-[100px] text-white rounded-lg shadow-lg overflow-hidden font-[manrope] flex md:items-center max-w-full ">
+    <div className="md:px-4 px-2 pt-2 md:pt-0 background md:h-[100px] text-white rounded-lg shadow-lg overflow-hidden font-[manrope] flex md:items-center max-w-full">
       <div className="flex items-center justify-between w-full">
-        {/* Left Section */}
         <div className="flex items-center gap-4">
           <Image
-            src={activeConversation?.participant?.avatar_url}
+            src={
+              activeConversation.participant?.avatar_url || '/images/doc.png'
+            }
             width={90}
             height={90}
             alt="doctor"
@@ -38,28 +117,15 @@ export default function Header() {
 
           <div className="space-y-1">
             <h2 ref={textRef} className="md:text-2xl text-sm font-bold">
-              Dr. {activeConversation?.participant?.name}
+              Dr. {activeConversation.participant?.name}
             </h2>
 
             <p className="md:text-sm text-xs opacity-90">
               Chat with your colleague
             </p>
-
-            {/* <div className="flex md:space-x-4 space-x-2 text-[#b79e6b]">
-              <span className="md:text-lg text-xs font-semibold">
-                333 Followers
-              </span>
-
-              <span className="opacity-60">|</span>
-
-              <span className="md:text-lg text-xs font-semibold">
-                666 Following
-              </span>
-            </div> */}
           </div>
         </div>
 
-        {/* Dropdown Menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="text-xl rotate-90 cursor-pointer focus:outline-none">
@@ -69,14 +135,26 @@ export default function Header() {
 
           <DropdownMenuContent
             align="end"
-            className="w-40 bg-background text-foreground"
+            className="w-44 bg-background text-foreground"
           >
-            <DropdownMenuItem className="cursor-pointer">
-              Report User
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={handleReportUser}
+              disabled={isReporting}
+            >
+              {isReporting ? 'Reporting...' : 'Report User'}
             </DropdownMenuItem>
 
-            <DropdownMenuItem className="cursor-pointer">
-              Unfollow User
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={handleToggleFollow}
+              disabled={isFollowLoading}
+            >
+              {isFollowLoading
+                ? 'Updating...'
+                : isFollowing
+                  ? 'Unfollow User'
+                  : 'Follow User'}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

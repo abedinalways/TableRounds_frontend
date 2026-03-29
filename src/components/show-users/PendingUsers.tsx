@@ -1,9 +1,10 @@
-
+'use client';
 import { PendingUser } from '@/types/admin';
 
 import Image from 'next/image';
 import EyeIcon from '../reusable/icons/EyeIcon';
 import Link from 'next/link';
+import { useState } from 'react';
 
 type Props = {
   users: PendingUser[];
@@ -24,97 +25,149 @@ export function PendingUsers({
   limit,
   onPageChange,
 }: Props) {
+
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   return (
-    <div className="bg-white rounded-lg shadow p-[18px] font-[manrope]">
-      <div className="mb-4 text-[#01281e] text-[20px] font-bold leading-[150%]">
-        Users Pending
-      </div>
-      <div className="rounded-t-[8px]  overflow-x-auto">
-        <table className="w-full text-sm min-w-[700px]">
-          <thead className=" bg-[#01503b] h-[89px] text-white ">
-            <tr className="text-left text-white">
-              <th className="p-3 text-left">Name</th>
-              <th className="p-3 text-left">Email</th>
-              <th className="p-3 text-left">Location</th>
-              <th className="p-3 text-left">Document</th>
-              <th className="p-3 text-left">Profile</th>
-              <th className="p-3 text-left">Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {users.map(user => (
-              <tr key={user.id} className="mx-auto last:border-b">
-                <td className="p-4 font-medium flex gap-2 items-center ">
-                  <Image
-                    src={user?.image ?? '/images/doc.png'}
-                    alt=''
-                    width={32}
-                    height={32}
-                    className="rounded-full aspect-square object-cover"
-                    unoptimized
-                  />
-                  {user.name}
-                </td>
-                <td className='p-4 align-middle"'>{user.email}</td>
-                <td className="truncate max-w-[200px]">{user.location}</td>
-                <td className="p-4 align-middle">
-                  <Link href={`/dashboard/admin/user-profile/${user.id}`}>
-                  
-                  <button className="bg-[#cdebe3] text-[#01503b] cursor-pointer rounded-[4px] py-1 px-2 flex items-center gap-2">
-                    <EyeIcon /> View
-                  </button>
-                  </Link>
-                </td>
-                <td className="p-4 align-middle">
-                  <Link href={`/dashboard/admin/user-profile/${user.id}`}>
-                    <button className="bg-[#cdebe3] text-[#01503b] cursor-pointer rounded-[4px] py-1 px-2 flex items-center gap-2">
-                      <EyeIcon /> Profile
-                    </button>
-                  </Link>
-                </td>
-                <td className="p-4 align-middle">
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => onApprove(user)}
-                      className="bg-[#01503b] rounded-[4px] cursor-pointer py-1 px-2 text-white"
-                    >
-                      Approve
-                    </button>
-                    <button
-                      onClick={() => onReject(user.id)}
-                      className="bg-white rounded-[4px] cursor-pointer py-1 px-2 text-[#01503b] border border-[#01503b]"
-                    >
-                      Reject
-                    </button>
-                  </div>
-                </td>
+    <>
+      <div className="bg-white rounded-lg shadow p-[18px] font-[manrope]">
+        <div className="mb-4 text-[#01281e] text-[20px] font-bold leading-[150%]">
+          Users Pending
+        </div>
+        <div className="rounded-t-[8px]  overflow-x-auto">
+          <table className="w-full text-sm min-w-[700px]">
+            <thead className=" bg-[#01503b] h-[89px] text-white ">
+              <tr className="text-left text-white">
+                <th className="p-3 text-left">Name</th>
+                <th className="p-3 text-left">Email</th>
+                <th className="p-3 text-left">Location</th>
+                <th className="p-3 text-left">Document</th>
+                <th className="p-3 text-left">Profile</th>
+                <th className="p-3 text-left">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
 
-        {/* Pagination */}
-        <div className="flex justify-end items-center gap-2 mt-4">
-          <button
-            onClick={() => onPageChange(page - 1)}
-            disabled={page === 1}
-            className="px-3 py-1 border rounded disabled:opacity-50"
-          >
-            Prev
-          </button>
+            <tbody>
+              {users.map(user => (
+                <tr key={user.id} className="mx-auto last:border-b">
+                  <td className="p-4 font-medium flex gap-2 items-center ">
+                    <Image
+                      src={user?.image ?? '/images/doc.png'}
+                      alt=""
+                      width={32}
+                      height={32}
+                      className="rounded-full aspect-square object-cover"
+                      unoptimized
+                    />
+                    {user.name}
+                  </td>
+                  <td className='p-4 align-middle"'>{user.email}</td>
+                  <td className="truncate max-w-[200px]">{user.address}</td>
+                  <td className="p-4 align-middle">
+                    <button
+                      onClick={() =>
+                        setPreviewImage(
+                          user.verifiy_document_url ?? '/images/doc.png',
+                        )
+                      }
+                      className="bg-[#cdebe3] text-[#01503b] rounded-[4px] cursor-pointer py-1 px-2 flex items-center gap-2"
+                    >
+                      <EyeIcon /> View
+                    </button>
+                  </td>
+                  <td className="p-4 align-middle">
+                    <Link href={`/dashboard/admin/user-profile/${user.id}`}>
+                      <button className="bg-[#cdebe3] text-[#01503b] cursor-pointer rounded-[4px] py-1 px-2 flex items-center gap-2">
+                        <EyeIcon /> Profile
+                      </button>
+                    </Link>
+                  </td>
+                  <td className="p-4 align-middle">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => onApprove(user)}
+                        className="bg-[#01503b] rounded-[4px] cursor-pointer py-1 px-2 text-white"
+                      >
+                        Approve
+                      </button>
+                      <button
+                        onClick={() => onReject(user.id)}
+                        className="bg-white rounded-[4px] cursor-pointer py-1 px-2 text-[#01503b] border border-[#01503b]"
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
-          <span className="text-sm">Page {page}</span>
+          {/* Pagination */}
+          <div className="flex justify-end items-center gap-2 mt-4">
+            <button
+              onClick={() => onPageChange(page - 1)}
+              disabled={page === 1}
+              className="px-3 py-1 border rounded disabled:opacity-50"
+            >
+              Prev
+            </button>
 
-          <button
-            onClick={() => onPageChange(page + 1)}
-            disabled={total ? page * limit >= total : false}
-            className="px-3 py-1 border rounded"
-          >
-            Next
-          </button>
+            <span className="text-sm">Page {page}</span>
+
+            <button
+              onClick={() => onPageChange(page + 1)}
+              disabled={total ? page * limit >= total : false}
+              className="px-3 py-1 border rounded"
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+      {previewImage && (
+        <div
+          className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center"
+          onClick={() => setPreviewImage(null)}
+        >
+          <div
+            className="relative bg-white rounded-lg p-6 max-w-[90vw] max-h-[90vh] flex flex-col items-center"
+            onClick={e => e.stopPropagation()}
+          >
+            {previewImage.toLowerCase().endsWith('.pdf') ? (
+              <div className="flex flex-col items-center gap-4">
+                <p className="text-gray-700 font-medium">
+                  PDF Preview not available
+                </p>
+
+                <a
+                  href={previewImage}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-[#01503b] text-white px-4 py-2 rounded-md hover:bg-[#013e2f] transition"
+                >
+                  Open PDF Document
+                </a>
+              </div>
+            ) : (
+              <Image
+                src={previewImage}
+                alt="Verification Document"
+                width={700}
+                height={700}
+                className="object-contain rounded-lg max-h-[80vh]"
+                unoptimized
+              />
+            )}
+
+            <button
+              onClick={() => setPreviewImage(null)}
+              className="absolute top-2 right-2 bg-black text-white rounded-full w-7 h-7 flex items-center justify-center hover:bg-gray-800"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
