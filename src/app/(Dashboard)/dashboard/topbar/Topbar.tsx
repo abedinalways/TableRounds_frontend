@@ -84,6 +84,11 @@ export default function Topbar({ onMenuClick }: TopbarProps = {}) {
   useGetUserNotificationsQuery();
 
   const { data: user } = useMeQuery();
+  console.log(
+    user,
+    'user data=====================++++++++++++++++',
+  );
+  console.log(user?.credentials, 'credentials=====================++++++++++++++++',);
 
   // ✅ role from redux (fallback from API)
   const role = useAppSelector(state => state.auth.auth.role) || user?.type;
@@ -133,7 +138,10 @@ export default function Topbar({ onMenuClick }: TopbarProps = {}) {
           />
 
           <span className="hidden sm:block font-semibold text-gray-700">
-            {role === 'admin' ? '' : 'Dr.'} {user?.name}
+            <span className="text-green-900 font-semibold uppercase">
+              {role === 'admin' ? 'Admin' : `${user?.credentials}`}
+            </span>{' '}
+            {user?.name}
           </span>
         </Link>
       </div>
