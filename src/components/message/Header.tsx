@@ -26,6 +26,7 @@ export default function Header() {
   const activeConversation = conversations.find(
     conv => conv.id === activeConversationId,
   );
+  console.log(activeConversation, 'activeConversation=====================++++++++++++++++',);
 
   // local follow state by participant id
   const [followState, setFollowState] = useState<Record<string, boolean>>({});
@@ -117,11 +118,12 @@ export default function Header() {
 
           <div className="space-y-1">
             <h2 ref={textRef} className="md:text-2xl text-sm font-bold">
-              Dr. {activeConversation.participant?.name}
+              
+              {activeConversation.participant?.name}
             </h2>
 
             <p className="md:text-sm text-xs opacity-90">
-              Chat with your colleague
+              Chat with your colleague 
             </p>
           </div>
         </div>

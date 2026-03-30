@@ -161,7 +161,7 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
 
             <div className="flex-1 space-y-3">
               <h2 className="text-[28px] text-[#0f172b] font-semibold">
-                {user.name}
+               <span className="text-green-900 font-semibold uppercase">{user.credentials}</span> {user.name}
               </h2>
 
               <p className="text-[18px] text-[#047857]">{user.title}</p>

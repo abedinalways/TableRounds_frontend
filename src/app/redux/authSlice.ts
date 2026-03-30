@@ -13,6 +13,7 @@ export interface AuthUser {
   followings: string;
   instagram: string;
   linkedin: string;
+  credentials: string;
   twitter_x: string;
   facebook: string;
   bio: string;
