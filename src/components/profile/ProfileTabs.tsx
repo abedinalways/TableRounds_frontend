@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import gsap from 'gsap';
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -17,21 +17,51 @@ import EduIcon from '../reusable/icons/EduIcon';
 import ExperienceIcon from '../reusable/icons/ExperienceIcon';
 import ActivityIcon from '../reusable/icons/ActivityIcon';
 import QuestionBankSolved from './ActivityCard';
+import { useGetStatisticsQuery } from '@/app/redux/api/statisticsForSpecificApi';
+
 
 interface ProfileTabsProps {
   activeTab: ProfileTab;
   setActiveTab: (tab: ProfileTab) => void;
   data: ProfileData;
+  profileUserId: string;
 }
 
 export default function ProfileTabs({
   activeTab,
   setActiveTab,
   data,
+  profileUserId,
 }: ProfileTabsProps) {
   const contentRef = useRef<HTMLDivElement | null>(null);
 
-  // GSAP animation on tab change
+  const { data: statisticsData, isLoading: statisticsLoading } =
+    useGetStatisticsQuery(profileUserId);
+
+  const questionBankStats = useMemo(() => {
+    const stats = statisticsData?.data;
+
+    if (!stats) {
+      return {
+        completion: 0,
+        ranking: '-',
+        correctRate: 0,
+        bestTopic: 'N/A',
+      };
+    }
+
+    const bestTopicItem = [...(stats.performance_by_topic ?? [])].sort(
+      (a, b) => b.correct_percentage - a.correct_percentage,
+    )[0];
+
+    return {
+      completion: Math.round(stats.question_bank?.progress_percentage ?? 0),
+      ranking: bestTopicItem?.percentile_rank ?? '-',
+      correctRate: Math.round(stats.performance?.correct_percentage_avg ?? 0),
+      bestTopic: bestTopicItem?.topic ?? 'N/A',
+    };
+  }, [statisticsData]);
+
   useEffect(() => {
     if (!contentRef.current) return;
 
@@ -55,10 +85,9 @@ export default function ProfileTabs({
     <Tabs
       value={activeTab}
       onValueChange={value => setActiveTab(value as ProfileTab)}
-      className="mt-6 "
+      className="mt-6"
     >
-      {/* Tabs Header */}
-      <TabsList className="flex flex-wrap justify-center gap-4 md:gap-6 max-w-full rounded-2xl md:p-4 xl:p-6 p-3  bg-white mb-20 md:mb-4 h-fit">
+      <TabsList className="flex flex-wrap justify-center gap-4 md:gap-6 max-w-full rounded-2xl md:p-4 xl:p-6 p-3 bg-white mb-20 md:mb-4 h-fit">
         <TabsTrigger value="overview">
           <PeopleIcon /> Overview
         </TabsTrigger>
@@ -76,7 +105,6 @@ export default function ProfileTabs({
         </TabsTrigger>
       </TabsList>
 
-      {/* Animated Content Wrapper */}
       <div ref={contentRef} className="mt-6">
         <TabsContent
           value="overview"
@@ -85,7 +113,14 @@ export default function ProfileTabs({
           <div className="space-y-6">
             <EducationCard data={data.education} />
             <ExperienceCard data={data.experience} />
-            <QuestionBankSolved data={data.questionBank} />
+
+            {statisticsLoading ? (
+              <div className="p-6 rounded-2xl border bg-white">
+                Loading question bank statistics...
+              </div>
+            ) : (
+              <QuestionBankSolved data={questionBankStats} />
+            )}
           </div>
 
           <div className="space-y-6">
@@ -108,9 +143,14 @@ export default function ProfileTabs({
         </TabsContent>
 
         <TabsContent value="activity">
-          {/* here questionbank card placed */}
           <div className="max-w-xl">
-            <QuestionBankSolved data={data.questionBank} />
+            {statisticsLoading ? (
+              <div className="p-6 rounded-2xl border bg-white">
+                Loading question bank statistics...
+              </div>
+            ) : (
+              <QuestionBankSolved data={questionBankStats} />
+            )}
           </div>
         </TabsContent>
       </div>

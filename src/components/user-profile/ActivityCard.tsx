@@ -1,9 +1,10 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
-import { ProfileData } from '@/types/profile';
+
 import { Trophy } from 'lucide-react';
 import BagIcon from '../reusable/icons/BagIcon';
+import { ProfileData } from '@/types/myProfile';
 
 interface Props {
   data: ProfileData['questionBank'];

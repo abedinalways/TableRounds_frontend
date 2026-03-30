@@ -1,8 +1,9 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { ExperienceItem } from '@/types/profile';
+
 import BagIcon from '../reusable/icons/BagIcon';
 import ScholarIcon from '../reusable/icons/ScholarIcon';
 import LocationIcon from '../ui/LocationIcon';
+import { ExperienceItem } from '@/types/myProfile';
 
 interface ExperienceCardProps {
   data: ExperienceItem[];

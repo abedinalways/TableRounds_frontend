@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { ProfileData, ProfileTab } from '@/types/profile';
+
 
 import EducationCard from './EducationCard';
 import SkillBadges from './SkillBadges';
@@ -17,6 +17,7 @@ import EduIcon from '../reusable/icons/EduIcon';
 import ExperienceIcon from '../reusable/icons/ExperienceIcon';
 import ActivityIcon from '../reusable/icons/ActivityIcon';
 import QuestionBankSolved from './ActivityCard';
+import { ProfileData, ProfileTab } from '@/types/myProfile';
 
 interface ProfileTabsProps {
   activeTab: ProfileTab;

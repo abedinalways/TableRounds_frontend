@@ -1,12 +1,17 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
-import { ProfileData } from '@/types/myProfile';
-
 import BagIcon from '../reusable/icons/BagIcon';
 
+interface QuestionBankStats {
+  completion: number;
+  ranking: number | string;
+  correctRate: number;
+  bestTopic: string;
+}
+
 interface Props {
-  data: ProfileData['questionBank'];
+  data: QuestionBankStats;
 }
 
 export default function QuestionBankSolved({ data }: Props) {
@@ -18,12 +23,10 @@ export default function QuestionBankSolved({ data }: Props) {
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (completion / 100) * circumference;
 
-  // ✅ unique gradient id (important if component renders multiple times)
   const gradientId = `progressGradient-${completion}`;
 
   return (
     <Card className="p-6 rounded-2xl border border-[#4444441A] font-[manrope]">
-      {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <div className="bg-emerald-100 p-2 rounded-lg">
           <BagIcon />
@@ -34,7 +37,6 @@ export default function QuestionBankSolved({ data }: Props) {
       </div>
 
       <div className="flex flex-col md:flex-row items-center gap-6">
-        {/* Circular Progress */}
         <div className="relative w-[251px] h-[251px]">
           <svg
             viewBox={`0 0 ${size} ${size}`}
@@ -55,7 +57,6 @@ export default function QuestionBankSolved({ data }: Props) {
               </linearGradient>
             </defs>
 
-            {/* Background Circle */}
             <circle
               cx={center}
               cy={center}
@@ -65,7 +66,6 @@ export default function QuestionBankSolved({ data }: Props) {
               fill="none"
             />
 
-            {/* Gradient Progress Circle */}
             <circle
               cx={center}
               cy={center}
@@ -79,18 +79,16 @@ export default function QuestionBankSolved({ data }: Props) {
             />
           </svg>
 
-          {/* Center Text */}
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span className="text-[32px] md:text-[48px] leading-[130%] font-bold text-[#01503b]">
               {completion}%
             </span>
-            <span className="text-sm md:text-[20px]  text-[#01281e]">
+            <span className="text-sm md:text-[20px] text-[#01281e]">
               Complete
             </span>
           </div>
         </div>
 
-        {/* Stats */}
         <div className="flex-1 w-full space-y-3">
           <StatRow label="Ranking" value={ranking} />
           <StatRow label="Correct" value={`${correctRate}%`} />
@@ -104,10 +102,10 @@ export default function QuestionBankSolved({ data }: Props) {
 function StatRow({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="flex justify-between items-center bg-[#ecfdf5] px-4 py-3 rounded-lg">
-      <span className="text-sm md:text-[16px] text-[#01281e] font-[500px]">
+      <span className="text-sm md:text-[16px] text-[#01281e] font-medium">
         {label}
       </span>
-      <span className="text-md md:text-[20px] text-[#01503b] font-[500px]">
+      <span className="text-md md:text-[20px] text-[#01503b] font-medium">
         {value}
       </span>
     </div>

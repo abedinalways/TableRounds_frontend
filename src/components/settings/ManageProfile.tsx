@@ -21,6 +21,7 @@ import { Card } from '../ui/card';
 import FollowersFollowingModal from '../my-profile/FollowersFollowingModal';
 import { Switch } from '../ui/CustomSwitch';
 import { useGetConnectionsQuery } from '@/app/redux/api/connectionApi';
+import Link from 'next/link';
 
 type ProfileFormData = {
   name: string;
@@ -129,6 +130,14 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
       avatar: user.avatar,
       username: user?.name,
     })) || [];
+  
+  const normalizeUrl = (url?: string) => {
+    if (!url) return '';
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+    return `https://${url}`;
+  };
 
   return (
     <>
@@ -161,7 +170,10 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
 
             <div className="flex-1 space-y-3">
               <h2 className="text-[28px] text-[#0f172b] font-semibold">
-               <span className="text-green-900 font-semibold uppercase">{user.credentials}</span> {user.name}
+                <span className="text-green-900 font-semibold uppercase">
+                  {user.credentials}
+                </span>{' '}
+                {user.name}
               </h2>
 
               <p className="text-[18px] text-[#047857]">{user.title}</p>
@@ -197,7 +209,7 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
                   }}
                   className="flex flex-col cursor-pointer hover:opacity-80 transition"
                 >
-                  <strong>{user.followers}</strong>
+                  <strong>{user.following}</strong>
                   <span className="font-normal text-[18px] text-[#62748e]">
                     Followers
                   </span>
@@ -211,7 +223,7 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
                   }}
                   className="flex flex-col cursor-pointer hover:opacity-80 transition"
                 >
-                  <strong>{user.following}</strong>
+                  <strong>{user.followers}</strong>
                   <span className="font-normal text-[18px] text-[#62748e]">
                     Following
                   </span>
@@ -247,21 +259,45 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
           <div className="flex flex-wrap items-center gap-4 md:gap-[24px] text-[#01281e] mt-[24px]">
             <h2 className="font-bold text-[16px] md:text-[20px]">Contact</h2>
 
-            <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
-              <Linkedin size="24" />
-            </button>
+            <Link
+              href={normalizeUrl(user.linkedin)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer ">
+                <Linkedin size="24" />
+              </button>
+            </Link>
 
-            <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer ">
-              <Instagram size="24" />
-            </button>
+            <Link
+              href={normalizeUrl(user.instagram)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer ">
+                <Instagram size="24" />
+              </button>
+            </Link>
 
-            <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer ">
-              <Facebook size="24" />
-            </button>
+            <Link
+              href={normalizeUrl(user.facebook)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer ">
+                <Facebook size="24" />
+              </button>
+            </Link>
 
-            <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer ">
-              <FaXTwitter size="24" />
-            </button>
+            <Link
+              href={normalizeUrl(user.twitter)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer ">
+                <FaXTwitter size="24" />
+              </button>
+            </Link>
           </div>
         </Card>
 

@@ -16,6 +16,7 @@ import {
   useDeleteUserMutation,
 } from '@/app/redux/api/userStatusApi';
 import { PendingUsers } from '@/components/show-users/PendingUsers';
+import { ChatProvider } from '@/app/(Dashboard)/context/ChatContext';
 
 export default function ShowUsersPage() {
  
@@ -79,10 +80,14 @@ export default function ShowUsersPage() {
       email: user.email,
       location: user.address ?? 'Unknown',
       document: 'View',
+      facebook: user.facebook,
+      linkedin: user.linkedin,
+      twitter_x: user.twitter_x,
+      instagram: user.instagram,
       verifiy_document_url: user.verifiy_document_url,
       socialMedia: 'active',
     })) ?? [];
-   console.log(verifiedUsers, '{{{{{{{{{{{{{{{{{{{{')
+   console.log(verifiedUsers, '{{{{{{{{{{{{{{{{{{{{----------------------++++++++')
   const reportedUsers =
     reportedData?.data.map(item => ({
       id: item.id,
@@ -135,6 +140,8 @@ export default function ShowUsersPage() {
   }
 
   return (
+    <ChatProvider>
+
     <div className="font-[manrope]">
       <div className="mb-8">
         <h2 className="text-[#01281e] text-[32px] md:text-[48px] font-bold leading-[130%] ">
@@ -151,10 +158,10 @@ export default function ShowUsersPage() {
           onClick={() => setTab('pending')}
           className={`md:px-6 px-4 md:py-4 py-2 rounded-[4px] font-semibold cursor-pointer ${
             tab === 'pending'
-              ? 'bg-[#01503b] text-white'
+            ? 'bg-[#01503b] text-white'
               : 'bg-white text-[#01503b] border border-[#01503b]'
-          }`}
-        >
+            }`}
+            >
           Verifications Pending
         </button>
 
@@ -162,8 +169,8 @@ export default function ShowUsersPage() {
           onClick={() => setTab('verified')}
           className={`md:px-6 px-4 md:py-4 py-2 rounded-[4px] font-semibold cursor-pointer ${
             tab === 'verified'
-              ? 'bg-[#01503b] text-white'
-              : 'bg-white text-[#01503b] border border-[#01503b]'
+            ? 'bg-[#01503b] text-white'
+            : 'bg-white text-[#01503b] border border-[#01503b]'
           }`}
         >
           Verified Users
@@ -173,8 +180,8 @@ export default function ShowUsersPage() {
           onClick={() => setTab('reported')}
           className={`md:px-6 px-4 md:py-4 py-2 rounded-[4px] font-semibold cursor-pointer ${
             tab === 'reported'
-              ? 'bg-[#01503b] text-white'
-              : 'bg-white text-[#01503b] border border-[#01503b]'
+            ? 'bg-[#01503b] text-white'
+            : 'bg-white text-[#01503b] border border-[#01503b]'
           }`}
         >
           Report Users
@@ -184,13 +191,13 @@ export default function ShowUsersPage() {
       <div ref={boxRef}>
         {tab === 'pending' && (
           <PendingUsers
-            users={pendingUsers}
-            onApprove={handleApproveUser}
-            onReject={handleRejectUser}
-            page={pendingPage}
-            limit={LIMIT}
-            total={pendingData?.meta?.total}
-            onPageChange={setPendingPage}
+          users={pendingUsers}
+          onApprove={handleApproveUser}
+          onReject={handleRejectUser}
+          page={pendingPage}
+          limit={LIMIT}
+          total={pendingData?.meta?.total}
+          onPageChange={setPendingPage}
           />
         )}
 
@@ -202,11 +209,12 @@ export default function ShowUsersPage() {
             limit={LIMIT}
             total={approvedData?.meta?.total}
             onPageChange={setVerifiedPage}
-          />
-        )}
+            />
+          )}
 
         {tab === 'reported' && <ReportedUsers users={reportedUsers} />}
       </div>
     </div>
+          </ChatProvider>
   );
 }
