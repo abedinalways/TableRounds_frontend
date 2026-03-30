@@ -31,6 +31,7 @@ export interface ExperienceItem {
   location: string;
   period: string;
   description?: string;
+  specialty?: string;
 }
 
 export interface PublicationItem {

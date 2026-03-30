@@ -2,58 +2,32 @@
 
 import Image from 'next/image';
 import React, { useRef } from 'react';
-import { toast } from 'sonner';
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 
 import { useChat } from '@/app/(Dashboard)/context/ChatContext';
-import { useReportUserMutation } from '@/app/redux/api/reportApi';
+import Link from 'next/link';
+
 
 export default function Header() {
   const { conversations, activeConversationId } = useChat();
   const textRef = useRef<HTMLHeadingElement | null>(null);
 
-  const [reportUser, { isLoading }] = useReportUserMutation();
+ 
 
   const activeConversation = conversations.find(
     conv => conv.id === activeConversationId,
   );
+  console.log(activeConversation, 'activeConversation=====================++++++++++++++++',);
 
   if (!activeConversation) return null;
 
-  const handleReportUser = async () => {
-    try {
-      const userId = activeConversation?.participant?.id;
-
-      if (!userId) {
-        toast.error('User id not found');
-        return;
-      }
-
-      const res = await reportUser({
-        userId,
-        data: {
-          reason: 'Spam',
-          message: 'Reported from chat header',
-        },
-      }).unwrap();
-
-      toast.success(res?.message || 'User reported successfully');
-    } catch (error: any) {
-      toast.error(error?.data?.message || 'Failed to report user');
-      console.error(error);
-    }
-  };
+  
 
   return (
     <div className="md:px-4 px-2 pt-2 md:pt-0 background md:h-[100px] text-white rounded-lg shadow-lg overflow-hidden font-[manrope] flex md:items-center max-w-full">
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-4">
+          <Link href={`/dashboard/admin/user-profile/${activeConversation?.participant?.id}`} className='cursor-pointer'>
           <Image
             src={activeConversation?.participant?.avatar_url}
             width={90}
@@ -61,7 +35,8 @@ export default function Header() {
             alt="doctor"
             className="md:w-[90px] md:h-[90px] w-[35px] h-[35px] rounded-full aspect-square object-cover"
             unoptimized
-          />
+            />
+            </Link>
 
           <div className="space-y-1">
             <h2 ref={textRef} className="md:text-2xl text-sm font-bold">

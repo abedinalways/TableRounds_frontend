@@ -33,6 +33,10 @@ export type VerifiedUser = {
   location: string;
   document: string;
   avatar_url?: string | null;
+  facebook: string;
+  linkedin: string;
+  twitter_x: string;
+  instagram: string;
   currentPractice?: string;
   socialMedia?: string;
   action?: string;

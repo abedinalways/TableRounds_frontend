@@ -12,6 +12,10 @@ export interface AdminUser {
   approved_at: string | null;
   approved: boolean;
   rejected: boolean;
+  facebook: string;
+  linkedin: string;
+  twitter_x: string;
+  instagram: string;
   created_at: string;
   updated_at: string;
   avatar_url?: string | null;
@@ -60,6 +64,14 @@ export const userStatusApi = baseApi.injectEndpoints({
         url: '/admin/user',
         method: 'GET',
         params: { status, page, limit },
+      }),
+      providesTags: ['UserStatus'],
+    }),
+
+    getAllUsers: builder.query<AdminUserResponse, void>({
+      query: () => ({
+        url: '/admin/user',
+        method: 'GET',
       }),
       providesTags: ['UserStatus'],
     }),
@@ -113,6 +125,7 @@ export const userStatusApi = baseApi.injectEndpoints({
 
 export const {
   useGetUserStatusQuery,
+  useGetAllUsersQuery,
   useGetReportedUsersQuery,
   useApproveUserMutation,
   useRejectUserMutation,

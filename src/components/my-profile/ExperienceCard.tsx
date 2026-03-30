@@ -9,6 +9,7 @@ import LocationIcon from '../ui/LocationIcon';
 import Image from 'next/image';
 import { EditIcon } from '../reusable/icons/EditIcon';
 import gsap from 'gsap';
+import { toast } from 'sonner';
 
 import {
   Dialog,
@@ -21,6 +22,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Btn from '../reusable/button/Btn';
+import { useCreateExperienceMutation } from '@/app/redux/api/profileSectionsApi';
 
 interface ExperienceCardProps {
   data: ExperienceItem[];
@@ -28,25 +30,39 @@ interface ExperienceCardProps {
 
 type Mode = 'editAll' | 'edit' | 'add';
 
+type ExperienceFormState = {
+  role: string;
+  hospital: string;
+  location: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+};
+
 export default function ExperienceCard({ data }: ExperienceCardProps) {
   const [experienceList, setExperienceList] = useState<ExperienceItem[]>(data);
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<Mode>('add');
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [createExperience, { isLoading }] = useCreateExperienceMutation();
 
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const emptyForm: ExperienceItem = {
+  const emptyForm: ExperienceFormState = {
     role: '',
     hospital: '',
     location: '',
     description: '',
-    period: '',
+    startDate: '',
+    endDate: '',
   };
 
-  const [formData, setFormData] = useState<ExperienceItem>(emptyForm);
+  const [formData, setFormData] = useState<ExperienceFormState>(emptyForm);
 
-  /* ---------------- Animation ---------------- */
+  useEffect(() => {
+    setExperienceList(data);
+  }, [data]);
+
   useEffect(() => {
     if (!open || !modalRef.current) return;
 
@@ -54,17 +70,15 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
       gsap.fromTo(
         modalRef.current,
         { opacity: 0, scale: 0.95 },
-        { opacity: 1, scale: 1, duration: 0.3, ease: 'power2.out' }
+        { opacity: 1, scale: 1, duration: 0.3, ease: 'power2.out' },
       );
     });
 
     return () => ctx.revert();
   }, [open]);
 
-  /* ---------------- Helpers ---------------- */
   const isFullModal = mode === 'editAll' || mode === 'edit';
 
-  /* ---------------- Handlers ---------------- */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -85,35 +99,86 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
   };
 
   const handleEdit = (index: number) => {
+    const item = experienceList[index];
+    const [startDate = '', endDate = ''] = item.period
+      ? item.period.split(' - ')
+      : ['', ''];
+
     setMode('edit');
     setActiveIndex(index);
-    setFormData(experienceList[index]);
+    setFormData({
+      role: item.role,
+      hospital: item.hospital,
+      location: item.location,
+      description: item.description ?? '',
+      startDate,
+      endDate,
+    });
+    setOpen(true);
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.role || !formData.hospital) return;
-
-    if (mode === 'add') {
-      setExperienceList(prev => [...prev, formData]);
+    if (
+      !formData.role ||
+      !formData.hospital ||
+      !formData.location ||
+      !formData.startDate ||
+      !formData.endDate
+    ) {
+      toast.error('Please fill all required fields');
+      return;
     }
 
-    if (mode === 'edit' && activeIndex !== null) {
-      setExperienceList(prev =>
-        prev.map((item, i) => (i === activeIndex ? formData : item))
-      );
-    }
+    try {
+      if (mode === 'add') {
+        const response = await createExperience({
+          company: formData.hospital,
+          position: formData.role,
+          location: formData.location,
+          start_date: formData.startDate,
+          end_date: formData.endDate,
+        }).unwrap();
 
-    setOpen(false);
-    setFormData(emptyForm);
-    setActiveIndex(null);
+        const newItem: ExperienceItem = {
+          role: response.data.position,
+          hospital: response.data.company,
+          location: response.data.location,
+          description: formData.description,
+          period: `${response.data.start_date} - ${response.data.end_date}`,
+        };
+
+        setExperienceList(prev => [...prev, newItem]);
+        toast.success(response.message || 'Experience added successfully');
+      }
+
+      if (mode === 'edit' && activeIndex !== null) {
+        const updatedItem: ExperienceItem = {
+          role: formData.role,
+          hospital: formData.hospital,
+          location: formData.location,
+          description: formData.description,
+          period: `${formData.startDate} - ${formData.endDate}`,
+        };
+
+        setExperienceList(prev =>
+          prev.map((item, i) => (i === activeIndex ? updatedItem : item)),
+        );
+        toast.success('Experience updated locally');
+      }
+
+      setOpen(false);
+      setFormData(emptyForm);
+      setActiveIndex(null);
+    } catch (error: any) {
+      toast.error(error?.data?.message || 'Failed to save experience');
+    }
   };
 
   return (
     <Card className="font-[manrope]">
       <CardContent className="p-3 space-y-4">
-        {/* Header */}
         <div className="flex justify-between items-center">
           <h3 className="font-semibold text-[#01503b] flex items-center gap-2">
             <span className="w-[40px] h-[40px] rounded-[10px] bg-[#d1fae5] flex justify-center items-center">
@@ -131,10 +196,9 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
           </div>
         </div>
 
-        {/* List */}
         {experienceList.map((item, index) => (
           <div
-            key={index}
+            key={`${item.role}-${index}`}
             className="bg-[#f9f9f5] p-4 rounded-[12px] flex justify-between"
           >
             <div className="flex gap-3">
@@ -158,7 +222,6 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
           </div>
         ))}
 
-        {/* Add New */}
         <div
           onClick={handleAddNew}
           className="bg-[#f9f9f5] rounded-[12px] p-3 cursor-pointer"
@@ -174,9 +237,11 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
           </p>
         </div>
 
-        {/* Modal */}
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogContent ref={modalRef} className="z-1000 h-144 overflow-y-auto overflow-x-hidden">
+          <DialogContent
+            ref={modalRef}
+            className="z-1000 h-144 overflow-y-auto overflow-x-hidden"
+          >
             <form onSubmit={handleSave}>
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
@@ -190,7 +255,7 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
                   {isFullModal &&
                     experienceList.map((item, index) => (
                       <div
-                        key={index}
+                        key={`${item.role}-${index}`}
                         className={`bg-[#f9f9f5] p-3 rounded-[12px] flex justify-between ${
                           activeIndex === index ? 'ring-1 ring-[#b79e6b]' : ''
                         }`}
@@ -210,7 +275,6 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
                       </div>
                     ))}
 
-                  {/* Form */}
                   <div className="bg-[#f9f9f5] p-3 rounded-[10px] space-y-2">
                     <div className="flex flex-col gap-2">
                       <Label>
@@ -248,13 +312,26 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
                         className="border border-[#4444441A] rounded-sm py-[22px] w-full"
                       />
                     </div>
+
                     <div className="flex flex-col gap-2">
                       <Label>
-                        Years<span className="text-red-600">*</span>
+                        Start Date<span className="text-red-600">*</span>
                       </Label>
                       <Input
-                        name="period"
-                        value={formData.period}
+                        name="startDate"
+                        value={formData.startDate}
+                        onChange={handleChange}
+                        className="border border-[#4444441A] rounded-sm py-[22px] w-full"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <Label>
+                        End Date<span className="text-red-600">*</span>
+                      </Label>
+                      <Input
+                        name="endDate"
+                        value={formData.endDate}
                         onChange={handleChange}
                         className="border border-[#4444441A] rounded-sm py-[22px] w-full"
                       />
@@ -270,18 +347,13 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
                       />
                     </div>
 
-                    {isFullModal ? (
-                      <Btn className="bg-[#b79e6b] text-white md:px-6 md:py-3 rounded-[10px] w-full md:w-fit py-2 mt-2">
-                        Save
-                      </Btn>
-                    ) : (
-                      <Btn
-                        type="submit"
-                        className="bg-[#b79e6b] text-white rounded-[12px] px-3 mt-4  cursor-pointer  w-[102px] h-[54px] w-full  py-2 mt-2"
-                      >
-                        Save
-                      </Btn>
-                    )}
+                    <Btn
+                      type="submit"
+                      disabled={isLoading}
+                      className="bg-[#b79e6b] text-white md:px-6 md:py-3 rounded-[10px] w-full md:w-fit py-2 mt-2"
+                    >
+                      {isLoading ? 'Saving...' : 'Save'}
+                    </Btn>
                   </div>
                 </DialogDescription>
               </DialogHeader>

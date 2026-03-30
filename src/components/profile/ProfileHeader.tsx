@@ -73,11 +73,11 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
         <div className=" flex flex-col md:flex-row gap-6 font-[manrope]">
           <div>
             <Image
-              src={user.avatar}
+              src={user.avatar ?? '/images/settings/img01.png'}
               alt="Profile image"
               width={213}
               height={255}
-              className="rounded-sm "
+              className="rounded-sm object-cover aspect-square"
               unoptimized
             />
           </div>
@@ -112,10 +112,10 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
             <div className="flex gap-6 mt-3 text-md text-[32px] text-center">
               <button
                 type="button"
-                onClick={() => {
-                  setModalType('followers');
-                  setModalOpen(true);
-                }}
+                // onClick={() => {
+                //   setModalType('followers');
+                //   setModalOpen(true);
+                // }}
                 className="flex flex-col cursor-pointer"
               >
                 <strong>{user.followers}</strong>
@@ -126,10 +126,10 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
 
               <button
                 type="button"
-                onClick={() => {
-                  setModalType('following');
-                  setModalOpen(true);
-                }}
+                // onClick={() => {
+                //   setModalType('following');
+                //   setModalOpen(true);
+                // }}
                 className="flex flex-col cursor-pointer"
               >
                 <strong>{user.following}</strong>

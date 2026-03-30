@@ -82,7 +82,7 @@ export const WelcomeBanner = () => {
                   className="hover:opacity-80"
                 >
                   <span className="md:text-lg text-xs font-semibold">
-                    {user?.followers} Follower
+                    {user?.followers} Following
                   </span>
                 </button>
 
@@ -97,7 +97,7 @@ export const WelcomeBanner = () => {
                   className="hover:opacity-80"
                 >
                   <span className="md:text-lg text-xs font-semibold">
-                    {user?.followings} Following
+                    {user?.followings} Followers
                   </span>
                 </button>
               </div>
