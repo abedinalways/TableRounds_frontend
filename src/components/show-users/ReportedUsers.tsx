@@ -1,16 +1,20 @@
 import Image from "next/image";
+import Link from "next/link";
+import EyeIcon from "../reusable/icons/EyeIcon";
 
 
 type ReportedUser = {
   id: string; 
   reportingUser: {
     name: string;
+    id: string;
     avatar_url?: string;
     image?: string;
     email: string;
   };
   reportedUser: {
     name: string;
+    id: string;
     avatar_url?: string;
     image?: string;
     email: string;
@@ -35,8 +39,10 @@ export function ReportedUsers({ users }: Props) {
             <tr className="text-left">
               <th className="p-4">Reporting User</th>
               <th className="p-4">Reporting User Email</th>
+              <th className="p-4">Profile</th>
               <th className="p-4">Reported User</th>
               <th className="p-4">Reported User Email</th>
+              <th className="p-4">Profile</th>
             </tr>
           </thead>
 
@@ -60,6 +66,16 @@ export function ReportedUsers({ users }: Props) {
 
                 <td className="p-4">{item.reportingUser.email}</td>
 
+                <td className="p-4 align-middle">
+                  <Link
+                    href={`/dashboard/admin/user-profile/${item.reportingUser.id}`}
+                  >
+                    <button className="bg-[#cdebe3] text-[#01503b] cursor-pointer rounded-[4px] py-1 px-2 flex items-center gap-2">
+                      <EyeIcon /> Profile
+                    </button>
+                  </Link>
+                </td>
+
                 <td className="p-4 cursor-pointer flex items-center gap-2 font-medium">
                   <Image
                     src={item.reportedUser.image ?? '/images/doc.png'}
@@ -73,6 +89,15 @@ export function ReportedUsers({ users }: Props) {
                 </td>
 
                 <td className="p-4">{item.reportedUser.email}</td>
+                <td className="p-4 align-middle">
+                  <Link
+                    href={`/dashboard/admin/user-profile/${item.reportedUser.id}`}
+                  >
+                    <button className="bg-[#cdebe3] text-[#01503b] cursor-pointer rounded-[4px] py-1 px-2 flex items-center gap-2">
+                      <EyeIcon /> Profile
+                    </button>
+                  </Link>
+                </td>
               </tr>
             ))}
           </tbody>

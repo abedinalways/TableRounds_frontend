@@ -239,8 +239,8 @@ export function useChatSocket() {
 
     socket.on('message', ({ data }: SocketMessage) => {
       const msg = data.message;
-      const state = store.getState();
 
+      const state = store.getState();
       const me = authApi.endpoints.me.select()(state)?.data;
       const conversations =
         chatApi.endpoints.getConversations.select()(state)?.data?.data || [];
@@ -291,7 +291,6 @@ export function useChatSocket() {
           },
         ),
       );
-
 
       dispatch(
         chatApi.util.updateQueryData('getConversations', undefined, draft => {

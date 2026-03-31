@@ -2,6 +2,7 @@
 
 
 import AuthProvider from '@/app/AuthProvider';
+import { ChatProvider } from '../context/ChatContext';
 
 export default function DashboardLayout({
   children,
@@ -9,5 +10,11 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
 
-  return <AuthProvider>{children}</AuthProvider>;
+  return (
+    <AuthProvider>
+      <ChatProvider>
+        {children}
+      </ChatProvider>
+    </AuthProvider>
+  )
 }
