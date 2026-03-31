@@ -1,13 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 
-
-import Topbar from '../topbar/Topbar';
-// import Sidebar from '../sidebar/Sidebar';
 
 import Sidebar from '../sidebar/Sidebar';
+import Topbar from './admin-topbar/Topbar';
+import { ChatProvider } from '../../context/ChatContext';
 
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -18,6 +16,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
 
   return (
+    // <ChatProvider>
+
     <div className="min-h-screen flex">
       <aside className="hidden lg:block w-55 fixed inset-y-0 left-0 ">
         <Sidebar />
@@ -30,5 +30,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <main className="p-6">{children}</main>
       </div>
     </div>
+    // </ChatProvider>
   );
 }

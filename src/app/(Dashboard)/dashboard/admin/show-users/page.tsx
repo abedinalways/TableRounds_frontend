@@ -17,11 +17,13 @@ import {
 } from '@/app/redux/api/userStatusApi';
 import { PendingUsers } from '@/components/show-users/PendingUsers';
 import { ChatProvider } from '@/app/(Dashboard)/context/ChatContext';
+import { RejectedUsers } from '@/components/show-users/RejectedUsers';
 
 export default function ShowUsersPage() {
  
   const [pendingPage, setPendingPage] = useState(1);
   const [verifiedPage, setVerifiedPage] = useState(1);
+  const [rejectedPage, setRejectedPage] = useState(1);
 
   const LIMIT = 10;
   const { data: pendingData, isLoading } = useGetUserStatusQuery({
@@ -37,6 +39,13 @@ export default function ShowUsersPage() {
     limit: LIMIT,
   });
 
+  const { data: rejectedData } = useGetUserStatusQuery({
+    status: 'rejected',
+    page: rejectedPage,
+    limit: LIMIT,
+  });
+  console.log(rejectedData, 'rejected===========================++++++++++++')
+
   const { data: reportedData } = useGetReportedUsersQuery();
   console.log(reportedData, 'reported===========================++++++++++++')
   const [approveUser] = useApproveUserMutation();
@@ -45,9 +54,9 @@ export default function ShowUsersPage() {
 
   
 
-  const [tab, setTab] = useState<'pending' | 'verified' | 'reported'>(
-    'pending',
-  );
+ const [tab, setTab] = useState<
+   'pending' | 'verified' | 'rejected' | 'reported'
+ >('pending');
   const boxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -71,7 +80,7 @@ export default function ShowUsersPage() {
       verifiy_document_url: user.verifiy_document_url,
     })) ?? [];
 
-  console.log(pendingData, '&&&&&&&&&&&&&&&&&&&&&========================')
+ 
   const verifiedUsers =
     approvedData?.data.map(user => ({
       id: user.id,
@@ -87,22 +96,35 @@ export default function ShowUsersPage() {
       verifiy_document_url: user.verifiy_document_url,
       socialMedia: 'active',
     })) ?? [];
-   console.log(verifiedUsers, '{{{{{{{{{{{{{{{{{{{{----------------------++++++++')
+  
+  const rejectedUsers =
+    rejectedData?.data.map(user => ({
+      id: user.id,
+      name: user.name,
+      image: user.avatar_url,
+      email: user.email,
+      location: user.address ?? 'Unknown',
+      document: 'View',
+      verifiy_document_url: user.verifiy_document_url,
+    })) ?? [];
+   
   const reportedUsers =
     reportedData?.data.map(item => ({
       id: item.id,
       reportingUser: {
+        id: item?.reporter.id,
         name: item?.reporter.name,
         image: item?.reporter.avatar_url ?? undefined,
         email: item?.reporter.email,
       },
       reportedUser: {
+        id: item?.reported.id,
         name: item.reported?.name,
         image: item.reported?.avatar_url ?? undefined,
         email: item.reported?.email,
       },
     })) ?? [];
-  console.log(reportedUsers, '00000000000000000000=========')
+ 
 
   /* ================= ACTION HANDLERS ================= */
 
@@ -133,6 +155,15 @@ export default function ShowUsersPage() {
     }
   };
 
+  const handleApproveRejectedUser = async (id: string) => {
+    try {
+      await approveUser(id).unwrap();
+      toast.success('Rejected user approved successfully');
+    } catch {
+      toast.error('Failed to approve rejected user');
+    }
+  };
+
  
 
   if (isLoading) {
@@ -141,80 +172,102 @@ export default function ShowUsersPage() {
 
   return (
     <ChatProvider>
+      <div className="font-[manrope]">
+        <div className="mb-8">
+          <h2 className="text-[#01281e] text-[32px] md:text-[48px] font-bold leading-[130%] ">
+            Users
+          </h2>
+          <p className="text-[#6b7280] text-[14px] md:text-[18px] font-normal leading-[130%] ">
+            Manage user access and verification requests
+          </p>
+        </div>
 
-    <div className="font-[manrope]">
-      <div className="mb-8">
-        <h2 className="text-[#01281e] text-[32px] md:text-[48px] font-bold leading-[130%] ">
-          Users
-        </h2>
-        <p className="text-[#6b7280] text-[14px] md:text-[18px] font-normal leading-[130%] ">
-          Manage user access and verification requests
-        </p>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex gap-2 mb-4">
-        <button
-          onClick={() => setTab('pending')}
-          className={`md:px-6 px-4 md:py-4 py-2 rounded-[4px] font-semibold cursor-pointer ${
-            tab === 'pending'
-            ? 'bg-[#01503b] text-white'
-              : 'bg-white text-[#01503b] border border-[#01503b]'
+        {/* Tabs */}
+        <div className="flex gap-2 mb-4">
+          <button
+            onClick={() => setTab('pending')}
+            className={`md:px-6 px-4 md:py-4 py-2 rounded-[4px] font-semibold cursor-pointer ${
+              tab === 'pending'
+                ? 'bg-[#01503b] text-white'
+                : 'bg-white text-[#01503b] border border-[#01503b]'
             }`}
-            >
-          Verifications Pending
-        </button>
+          >
+            Verifications Pending
+          </button>
 
-        <button
-          onClick={() => setTab('verified')}
-          className={`md:px-6 px-4 md:py-4 py-2 rounded-[4px] font-semibold cursor-pointer ${
-            tab === 'verified'
-            ? 'bg-[#01503b] text-white'
-            : 'bg-white text-[#01503b] border border-[#01503b]'
-          }`}
-        >
-          Verified Users
-        </button>
+          <button
+            onClick={() => setTab('verified')}
+            className={`md:px-6 px-4 md:py-4 py-2 rounded-[4px] font-semibold cursor-pointer ${
+              tab === 'verified'
+                ? 'bg-[#01503b] text-white'
+                : 'bg-white text-[#01503b] border border-[#01503b]'
+            }`}
+          >
+            Verified Users
+          </button>
 
-        <button
-          onClick={() => setTab('reported')}
-          className={`md:px-6 px-4 md:py-4 py-2 rounded-[4px] font-semibold cursor-pointer ${
-            tab === 'reported'
-            ? 'bg-[#01503b] text-white'
-            : 'bg-white text-[#01503b] border border-[#01503b]'
-          }`}
-        >
-          Report Users
-        </button>
-      </div>
+          <button
+            onClick={() => setTab('reported')}
+            className={`md:px-6 px-4 md:py-4 py-2 rounded-[4px] font-semibold cursor-pointer ${
+              tab === 'reported'
+                ? 'bg-[#01503b] text-white'
+                : 'bg-white text-[#01503b] border border-[#01503b]'
+            }`}
+          >
+            Reported Users
+          </button>
 
-      <div ref={boxRef}>
-        {tab === 'pending' && (
-          <PendingUsers
-          users={pendingUsers}
-          onApprove={handleApproveUser}
-          onReject={handleRejectUser}
-          page={pendingPage}
-          limit={LIMIT}
-          total={pendingData?.meta?.total}
-          onPageChange={setPendingPage}
-          />
-        )}
+          <button
+            onClick={() => setTab('rejected')}
+            className={`md:px-6 px-4 md:py-4 py-2 rounded-[4px] font-semibold cursor-pointer ${
+              tab === 'rejected'
+                ? 'bg-[#01503b] text-white'
+                : 'bg-white text-[#01503b] border border-[#01503b]'
+            }`}
+          >
+            Rejected Users
+          </button>
+        </div>
 
-        {tab === 'verified' && (
-          <VerifiedUsers
-            users={verifiedUsers}
-            onDelete={handleDeleteVerifiedUser}
-            page={verifiedPage}
-            limit={LIMIT}
-            total={approvedData?.meta?.total}
-            onPageChange={setVerifiedPage}
+        <div ref={boxRef}>
+          {tab === 'pending' && (
+            <PendingUsers
+              users={pendingUsers}
+              onApprove={handleApproveUser}
+              onReject={handleRejectUser}
+              page={pendingPage}
+              limit={LIMIT}
+              total={pendingData?.meta?.total}
+              onPageChange={setPendingPage}
             />
           )}
 
-        {tab === 'reported' && <ReportedUsers users={reportedUsers} />}
+          {tab === 'verified' && (
+            <VerifiedUsers
+              users={verifiedUsers}
+              onDelete={handleDeleteVerifiedUser}
+              page={verifiedPage}
+              limit={LIMIT}
+              total={approvedData?.meta?.total}
+              onPageChange={setVerifiedPage}
+            />
+          )}
+
+          {tab === 'reported' && <ReportedUsers users={reportedUsers} />}
+
+          {tab === 'rejected' && (
+            <RejectedUsers
+              users={rejectedUsers}
+              onApprove={handleApproveUser}
+              onDelete={handleDeleteVerifiedUser}
+              page={rejectedPage}
+              limit={LIMIT}
+              total={rejectedData?.meta?.total}
+              onPageChange={setRejectedPage}
+            />
+          )}
+        </div>
       </div>
-    </div>
-          </ChatProvider>
+    </ChatProvider>
   );
 }

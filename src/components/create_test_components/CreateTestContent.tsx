@@ -15,6 +15,7 @@ import { CustomCheckbox } from '../ui/CustomCheckbox';
 
 
 import { useStartTestMutation } from '@/app/redux/api/startTestApi';
+import { useGetQuestionCountQuery } from '@/app/redux/api/testSessionApi';
 
 const TOPICS = [
   { label: 'Anesthesia/Medicine', value: 'Anesthesia_Medicine' },
@@ -44,10 +45,13 @@ export function CreateTestContent() {
   const [selectedDifficulty, setSelectedDifficulty] =
     useState<DifficultyLevel>('Intern');
 
-  const [selectedStatus, setSelectedStatus] = useState<string[]>(['Used']);
+  const [selectedStatus, setSelectedStatus] = useState<string[]>(['Unused']);
   const [numQuestions, setNumQuestions] = useState<string>('');
 
   const [startTest, { isLoading }] = useStartTestMutation();
+
+  const { data: questionCountData, isLoading: isQuestionCountLoading } =
+    useGetQuestionCountQuery();
 
   const handleTopicToggle = (topicValue: string, checked: boolean) => {
     setSelectedTopics(prev =>
@@ -56,6 +60,15 @@ export function CreateTestContent() {
           ? prev
           : [...prev, topicValue]
         : prev.filter(t => t !== topicValue),
+    );
+  };
+
+  //Select all topic
+  const allTopicsSelected = selectedTopics.length === TOPICS.length;
+
+  const handleToggleAllTopics = () => {
+    setSelectedTopics(
+      allTopicsSelected ? [] : TOPICS.map(topic => topic.value),
     );
   };
 
@@ -69,7 +82,14 @@ export function CreateTestContent() {
     setSelectedDifficulty(level);
   };
 
- 
+ const questionCounts = {
+   Used: questionCountData?.data?.used_questions ?? 0,
+   Unused: questionCountData?.data?.unused_questions ?? 0,
+   Correct: questionCountData?.data?.correct_count ?? 0,
+   Incorrect: questionCountData?.data?.incorrect_count ?? 0,
+   Marked: questionCountData?.data?.mark_count ?? 0,
+ };
+
  const handleStartTest = async () => {
    try {
      if (!numQuestions || selectedTopics.length === 0) return;
@@ -171,11 +191,11 @@ export function CreateTestContent() {
 
           <div className="flex flex-wrap gap-3 pt-4">
             {[
-              'Used',
               'Unused',
+              'Used',
               'Correct',
               'Incorrect',
-              'Omitted',
+              // 'Omitted',
               'Marked',
             ].map(status => (
               <div
@@ -186,7 +206,14 @@ export function CreateTestContent() {
                   checked={selectedStatus.includes(status)}
                   onCheckedChange={c => handleStatusToggle(status, Boolean(c))}
                 />
+
                 <Label>{status}</Label>
+
+                <span className="min-w-[30px] h-[22px] px-2 rounded-[6px] border border-[#00B977] text-[#00B977] text-xs font-medium flex items-center justify-center bg-white">
+                  {isQuestionCountLoading
+                    ? '...'
+                    : questionCounts[status as keyof typeof questionCounts]}
+                </span>
               </div>
             ))}
           </div>
@@ -216,9 +243,19 @@ export function CreateTestContent() {
         </div>
 
         <div className="space-y-4 bg-white p-4 rounded-[12px] border border-[#e9e9e9] custom-shadow">
-          <h3 className="text-xl md:text-[24px] font-bold text-[#444950]">
-            Topic
-          </h3>
+          <div className="flex items-center gap-3 flex-wrap">
+            <h3 className="text-xl md:text-[24px] font-bold text-[#444950]">
+              Topic
+            </h3>
+
+            <button
+              type="button"
+              onClick={handleToggleAllTopics}
+              className="text-[#01503b] border border-[#01503b] px-3 py-1.5 rounded-[8px] text-sm font-medium cursor-pointer hover:bg-[#01503b] hover:text-white transition"
+            >
+              {allTopicsSelected ? 'Deselect All' : 'Select All'}
+            </button>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {TOPICS.map(topic => {

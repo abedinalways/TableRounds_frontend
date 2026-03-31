@@ -80,6 +80,21 @@
 
 import { baseApi } from './baseApi';
 
+interface QuestionCountData {
+  total_questions: number;
+  used_questions: number;
+  unused_questions: number;
+  correct_count: number;
+  incorrect_count: number;
+  mark_count: number;
+}
+
+interface QuestionCountResponse {
+  success: boolean;
+  message: string;
+  data: QuestionCountData;
+}
+
 export const testSessionApi = baseApi.injectEndpoints({
   endpoints: builder => ({
     answerQuestion: builder.mutation({
@@ -128,6 +143,13 @@ export const testSessionApi = baseApi.injectEndpoints({
         method: 'GET',
       }),
     }),
+
+    getQuestionCount: builder.query<QuestionCountResponse, void>({
+      query: () => ({
+        url: '/test/question-count',
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -138,4 +160,5 @@ export const {
   useCompleteTestMutation,
   useGetTestResultQuery,
   useGetTestDetailsQuery,
+  useGetQuestionCountQuery,
 } = testSessionApi;

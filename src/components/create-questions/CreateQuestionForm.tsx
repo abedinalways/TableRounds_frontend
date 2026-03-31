@@ -275,7 +275,7 @@ function QuestionBlock({
       />
 
       {/* File attachment on first question only */}
-      {index === 0 && (
+      {/* {index === 0 && (
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -297,7 +297,7 @@ function QuestionBlock({
             onChange={onFileChange}
           />
         </div>
-      )}
+      )} */}
     </div>
   );
 }

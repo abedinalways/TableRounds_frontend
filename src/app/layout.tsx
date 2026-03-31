@@ -14,6 +14,7 @@ import { Toaster } from 'sonner';
 
 import { Providers } from './Providers';
 import AuthProvider from './AuthProvider'
+import { ChatProvider } from './(Dashboard)/context/ChatContext';
 
 
 const manrope = Manrope({
@@ -60,17 +61,19 @@ export default function RootLayout({
       <body
         className={`${manrope.variable} ${outfit.variable} ${inter.variable} ${outfit.variable} ${garamond.variable} ${roboto.variable} ${jakarta.variable} antialiased`}
       >
-        <Providers>
-          <Toaster
-            position="top-center"
-            richColors
-            closeButton
-            toastOptions={{
-              duration: 4000,
-            }}
-          />
-      {children}
-        </Providers>
+          <Providers>
+        
+            <Toaster
+              position="top-center"
+              richColors
+              closeButton
+              toastOptions={{
+                duration: 4000,
+              }}
+            />
+            {children}
+        
+          </Providers>
       </body>
     </html>
   );

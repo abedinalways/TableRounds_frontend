@@ -104,7 +104,7 @@ const FindColleagues = () => {
 
   const { data, isLoading, isFetching } = useDiscoverProfilesQuery({
     page: 1,
-    limit: showAll ? 20 : 6,
+    limit: showAll ? 200 : 6,
     search: searchQuery,
   });
 
@@ -141,7 +141,7 @@ const FindColleagues = () => {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto bg-white border rounded-xl shadow-sm p-4 font-[manrope]">
+    <div className="w-full  mx-auto bg-white border rounded-xl shadow-sm p-4 font-[manrope]">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <h2 className="text-2xl font-semibold text-gray-900">
           Find Colleagues
