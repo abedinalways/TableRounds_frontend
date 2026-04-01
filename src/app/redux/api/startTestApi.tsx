@@ -3,7 +3,7 @@ import { baseApi } from './baseApi';
 export interface StartTestPayload {
   total_questions: number;
   test_mode: string[];
-  difficulty: string;
+  difficulty: string[];
   topic: string[];
 }
 
@@ -68,4 +68,8 @@ export const startTestApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useStartTestMutation, useAnswerQuestionMutation, useGetTestResultQuery } = startTestApi;
+export const {
+  useStartTestMutation,
+  useAnswerQuestionMutation,
+  useGetTestResultQuery,
+} = startTestApi;
