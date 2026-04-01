@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useRef } from 'react';
 import {
   useForm,
@@ -32,10 +30,10 @@ const TOPICS = [
   { value: 'TMJ', label: 'TMJ' },
   { value: 'Trauma', label: 'Trauma' },
 ];
+
 const DIFFICULTIES: Difficulty[] = ['Intern', 'Senior', 'Board'];
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-
 type AnswerOption = {
   id: string;
   text: string;
@@ -43,272 +41,43 @@ type AnswerOption = {
 };
 
 type SingleQuestionValues = {
-  // questionTitle: string;
   questionStem: string;
   explanation: string;
   keyPoints: string;
   keepingPoint: string;
   memoryTrick: string;
   referance: string;
-  
+
   answers: AnswerOption[];
 };
 
 type ScenarioFormValues = {
-  difficulty: Difficulty;
+  difficulty: Difficulty; // difficulty should be an array of selected difficulties
   topic: string;
   questions: SingleQuestionValues[];
 };
 
 // ─── Default blank question ───────────────────────────────────────────────────
-
 const blankQuestion = (): SingleQuestionValues => ({
-  // questionTitle: '',
   questionStem: '',
   explanation: '',
   keyPoints: '',
   keepingPoint: '',
   memoryTrick: '',
   referance: '',
-  
+
   answers: [
     { id: '1', text: '', isCorrect: false },
     { id: '2', text: '', isCorrect: true },
   ],
 });
 
-// ─── Single Question Block ────────────────────────────────────────────────────
-
-type QuestionBlockProps = {
-  index: number;
-  control: Control<ScenarioFormValues>;
-  register: UseFormRegister<ScenarioFormValues>;
-  watch: UseFormWatch<ScenarioFormValues>;
-  setValue: UseFormSetValue<ScenarioFormValues>;
-  editorKey: number;
-  attachedFile: File | null;
-  fileInputRef: React.RefObject<HTMLInputElement | null>;
-  onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-};
-
-function QuestionBlock({
-  index,
-  control,
-  register,
-  watch,
-  setValue,
-  editorKey,
-  attachedFile,
-  fileInputRef,
-  onFileChange,
-}: QuestionBlockProps) {
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: `questions.${index}.answers` as `questions.${number}.answers`,
-  });
-
-  return (
-    <div className="bg-white p-6 rounded-lg border space-y-6">
-      {/* Question number badge */}
-      {index > 0 && (
-        <div className="flex items-center gap-3">
-          <span className="bg-[#01503b] text-white text-sm font-bold px-3 py-1 rounded-full">
-            Question {index + 1}
-          </span>
-          <div className="flex-1 h-px bg-gray-200" />
-        </div>
-      )}
-
-      {/* Question Title */}
-      {/* <div className="space-y-2">
-        <Label className="text-md font-bold">Question Title</Label>
-        <Input
-          {...register(`questions.${index}.questionTitle` as const, {
-            required: true,
-          })}
-          placeholder="Enter question title"
-        />
-      </div> */}
-
-      {/* Question Stem */}
-      <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
-        Question Stem
-      </h2>
-      <RichTextEditor
-        key={`qs-stem-${index}-${editorKey}`}
-        value={watch(`questions.${index}.questionStem` as const)}
-        onChange={(val: string) =>
-          setValue(`questions.${index}.questionStem` as const, val)
-        }
-      />
-
-      {/* Answer Choices */}
-      <div className="space-y-4">
-        <div className="flex justify-between items-center">
-          <label className="font-bold">Answer Choices</label>
-          <Button
-            variant="outline"
-            className="border-none font-bold bg-white font-[manrope] text-[#01503b] hover:bg-white hover:border-none cursor-pointer"
-            type="button"
-            onClick={() =>
-              append({ id: Date.now().toString(), text: '', isCorrect: false })
-            }
-          >
-            Add Option
-          </Button>
-        </div>
-
-        {fields.map((field, aIdx) => (
-          <div
-            key={field.id}
-            className="flex items-center gap-3 p-3 border rounded-lg bg-white"
-          >
-            <input
-              type="radio"
-              name={`correctAnswer-${index}`}
-              checked={watch(
-                `questions.${index}.answers.${aIdx}.isCorrect` as const,
-              )}
-              onChange={() => {
-                fields.forEach((_, i) =>
-                  setValue(
-                    `questions.${index}.answers.${i}.isCorrect` as const,
-                    i === aIdx,
-                  ),
-                );
-              }}
-              className="w-4 h-4 accent-[#01503b]"
-            />
-            <span className="text-gray-400">
-              {String.fromCharCode(65 + aIdx)}.
-            </span>
-            <Input
-              {...register(`questions.${index}.answers.${aIdx}.text` as const)}
-              placeholder="Enter choice text"
-              className="border-none shadow-none focus-visible:ring-0 flex-1"
-            />
-
-            {fields.length > 2 && (
-              <button
-                type="button"
-                onClick={() => remove(aIdx)}
-                className="text-red-500 hover:text-red-700 p-1"
-                aria-label="Delete option"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Explanation */}
-      <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
-        Explanation
-      </h2>
-      <RichTextEditor
-        key={`qs-exp-${index}-${editorKey}`}
-        value={watch(`questions.${index}.explanation` as const)}
-        onChange={(v: string) =>
-          setValue(`questions.${index}.explanation` as const, v)
-        }
-      />
-
-      {/* Why Incorrect */}
-      <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
-        Why The Other Options Are Incorrect
-      </h2>
-      <RichTextEditor
-        key={`qs-key-${index}-${editorKey}`}
-        value={watch(`questions.${index}.keyPoints` as const)}
-        onChange={(v: string) =>
-          setValue(`questions.${index}.keyPoints` as const, v)
-        }
-      />
-
-      {/* Pimping Point */}
-      <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
-        Pimping Point
-      </h2>
-      <RichTextEditor
-        key={`qs-pimp-${index}-${editorKey}`}
-        value={watch(`questions.${index}.keepingPoint` as const)}
-        onChange={(v: string) =>
-          setValue(`questions.${index}.keepingPoint` as const, v)
-        }
-      />
-
-      {/* Memory Trick */}
-      <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
-        Memory Trick
-      </h2>
-
-      <RichTextEditor
-        key={`qs-mem-${index}-${editorKey}`}
-        value={watch(`questions.${index}.memoryTrick` as const)}
-        onChange={(v: string) =>
-          setValue(`questions.${index}.memoryTrick` as const, v)
-        }
-      />
-
-      {/* References */}
-      <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
-        References
-      </h2>
-      <RichTextEditor
-        key={`qs-ref-${index}-${editorKey}`}
-        value={watch(`questions.${index}.referance` as const) ?? ''}
-        onChange={(v: string) =>
-          setValue(`questions.${index}.referance` as const, v)
-        }
-      />
-
-      {/* File attachment on first question only */}
-      {/* {index === 0 && (
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            className="cursor-pointer md:px-6 px-3 py-2 md:py-4 rounded-[8px] border border-[#01503b] text-[#01503b] md:text-[20px] text-sm font-semibold"
-          >
-            Attach Explanation Image
-          </button>
-          {attachedFile && (
-            <span className="text-green-600 text-sm font-medium">
-              Attached: {attachedFile.name}
-            </span>
-          )}
-          <input
-            type="file"
-            accept="image/*,.pdf,.doc,.docx"
-            ref={fileInputRef}
-            className="hidden"
-            onChange={onFileChange}
-          />
-        </div>
-      )} */}
-    </div>
-  );
-}
-
 // ─── Main Form ────────────────────────────────────────────────────────────────
-
 export default function CreateQuestionForm() {
   const { register, control, handleSubmit, watch, setValue, reset } =
     useForm<ScenarioFormValues>({
       defaultValues: {
-        difficulty: 'Intern',
+        difficulty: ['Intern'], // default as an array
         topic: 'Anesthesia_Medicine',
         questions: [blankQuestion()],
       },
@@ -332,6 +101,13 @@ export default function CreateQuestionForm() {
   };
 
   const onSubmit = async (data: ScenarioFormValues) => {
+    // Check if there is at least one difficulty selected
+    if (data.difficulty.length === 0) {
+      toast.error('Please select at least one difficulty');
+      return;
+    }
+
+    // Validate questions and answers
     for (let i = 0; i < data.questions.length; i++) {
       const q = data.questions[i];
       if (!q.answers.some(a => a.isCorrect)) {
@@ -345,16 +121,16 @@ export default function CreateQuestionForm() {
     }
 
     try {
+      // Create questions
       for (const q of data.questions) {
         const formData = new FormData();
-        // formData.append('question_title', q.questionTitle);
         formData.append('question_steam', q.questionStem);
         formData.append('explanation', q.explanation ?? '');
         formData.append('why_incorrect', q.keyPoints ?? '');
         formData.append('pimping_point', q.keepingPoint ?? '');
         formData.append('memory_trick', q.memoryTrick ?? '');
         formData.append('referance', q.referance ?? '');
-        formData.append('difficulty', data.difficulty);
+        formData.append('difficulty', data.difficulty.join(', ')); // Pass difficulty as a comma-separated string
         formData.append('topic', JSON.stringify([data.topic]));
         formData.append(
           'answerOptions',
@@ -378,7 +154,7 @@ export default function CreateQuestionForm() {
         `${data.questions.length} question(s) created successfully!`,
       );
       reset({
-        difficulty: 'Intern',
+        difficulty: ['Intern'], // Reset to default difficulty
         topic: 'Anesthesia_Medicine',
         questions: [blankQuestion()],
       });
@@ -405,27 +181,25 @@ export default function CreateQuestionForm() {
         </p>
       </div>
 
-      {/* Shared Difficulty & Topic */}
-      <TagSelector
-        label="Difficulty"
-        options={DIFFICULTIES}
-        selected={watch('difficulty')}
-        onChange={(val: string) => setValue('difficulty', val as Difficulty)}
-      />
-      <TagSelector
-        label="Topic"
-        options={TOPICS.map(t => t.label)} 
-        selected={TOPICS.find(t => t.value === watch('topic'))?.label || ''}
-        onChange={(selectedLabel: string) => {
-          const topic = TOPICS.find(t => t.label === selectedLabel);
-          setValue('topic', topic?.value || '');
-        }}
-      />
-
-      <div className="flex justify-between items-center">
-        <h2 className="text-lg md:text-[24px] leading-[130%] text-[#01281e] font-bold">
-          Write Questions
-        </h2>
+      {/* Difficulty & Topic Section */}
+      <div className="space-y-4">
+        <TagSelector
+          label="Difficulty"
+          options={DIFFICULTIES}
+          selected={watch('difficulty')}
+          onChange={(val: string) =>
+            setValue('difficulty', [val as Difficulty])
+          }
+        />
+        <TagSelector
+          label="Topic"
+          options={TOPICS.map(t => t.label)}
+          selected={TOPICS.find(t => t.value === watch('topic'))?.label || ''}
+          onChange={(selectedLabel: string) => {
+            const topic = TOPICS.find(t => t.label === selectedLabel);
+            setValue('topic', topic?.value || '');
+          }}
+        />
       </div>
 
       {/* Render all scenario questions */}
@@ -443,17 +217,6 @@ export default function CreateQuestionForm() {
           onFileChange={handleFileChange}
         />
       ))}
-
-      {/* Add More Questions For The Same Scenario */}
-      <div className="flex items-center justify-center">
-        {/* <button
-          type="button"
-          onClick={() => appendQuestion(blankQuestion())}
-          className="cursor-pointer md:px-6 px-3 py-2 md:py-4 rounded-[8px] border border-[#01503b] text-[#01503b] md:text-[20px] text-sm font-semibold hover:bg-[#01503b]/5 transition-colors"
-        >
-          + Add More Questions For The Same Scenario
-        </button> */}
-      </div>
 
       {/* Submit */}
       <button

@@ -44,7 +44,6 @@ export function CreateTestContent() {
     DifficultyLevel[]
   >(['Intern']);
 
-  // Handle difficulty selection toggle
   const handleDifficultyToggle = (level: DifficultyLevel, checked: boolean) => {
     setSelectedDifficulty(prev =>
       checked ? [...prev, level] : prev.filter(d => d !== level),
@@ -69,7 +68,6 @@ export function CreateTestContent() {
     );
   };
 
-  // Select all topic
   const allTopicsSelected = selectedTopics.length === TOPICS.length;
 
   const handleToggleAllTopics = () => {
@@ -261,7 +259,10 @@ export function CreateTestContent() {
                   onClick={() => handleDifficultySelect(level)}
                 >
                   <CustomCheckbox checked={isSelected} />
-                  <span>{level}</span>
+                  <span>
+                    {level} ({difficultyCounts[level]})
+                  </span>{' '}
+                  {/* Display the count beside the difficulty */}
                 </div>
               );
             })}
@@ -298,7 +299,10 @@ export function CreateTestContent() {
                   onClick={() => handleTopicToggle(topic.value, !isSelected)}
                 >
                   <CustomCheckbox checked={isSelected} />
-                  <Label>{topic.label}</Label>
+                  <Label>
+                    {topic.label} ({topicCounts[topic.value]})
+                  </Label>{' '}
+                  {/* Display the count beside the topic */}
                 </div>
               );
             })}
