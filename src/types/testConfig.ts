@@ -5,7 +5,7 @@ export type Topic = {
 
 export type TestConfig = {
   questionsPerBlock: number | 'all';
-  testMode: 'Tutor' | 'Timed';
+  
   testStatus: (
     | 'Used'
     | 'Unused'
@@ -14,6 +14,6 @@ export type TestConfig = {
     | 'Omitted'
     | 'Marked'
   )[];
-  difficulty: 'Intern' | 'Senior' | 'Boards';
+  difficulty: ['Intern' | 'Senior' | 'Boards'];
   selectedTopics: string[]; 
 };

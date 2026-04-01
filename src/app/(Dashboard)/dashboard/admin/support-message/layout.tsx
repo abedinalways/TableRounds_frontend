@@ -10,7 +10,7 @@ import UserListSection from '@/components/admin-message/UserListSection';
 import { MessageSquare, Users } from 'lucide-react';
 
 export default function ChatLayout({ children }: React.PropsWithChildren) {
-  // State to toggle between 'chats' (recent messages) and 'users' (approved users list)
+ 
   const [sidebarView, setSidebarView] = useState<'chats' | 'users'>('chats');
 
   const activeConversationId = useSelector(

@@ -111,6 +111,7 @@ export default function ShowUsersPage() {
   const reportedUsers =
     reportedData?.data.map(item => ({
       id: item.id,
+      
       reportingUser: {
         id: item?.reporter.id,
         name: item?.reporter.name,
@@ -124,7 +125,8 @@ export default function ShowUsersPage() {
         email: item.reported?.email,
       },
     })) ?? [];
- 
+    
+   console.log(reportedData, 'khfweroifherwfgoi werufgoiwer==================')
 
   /* ================= ACTION HANDLERS ================= */
 

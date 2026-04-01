@@ -14,11 +14,13 @@ import {
 import { useChat } from '@/app/(Dashboard)/context/ChatContext';
 import { useReportUserMutation } from '@/app/redux/api/reportApi';
 import { useToggleFollowMutation } from '@/app/redux/api/followApi';
+import { useMeQuery } from '@/app/redux/api/authApi';
+import { useGetMessagesQuery } from '@/app/redux/api/chat/chatApi';
 
 export default function Header() {
   const { conversations, activeConversationId } = useChat();
   const textRef = useRef<HTMLHeadingElement | null>(null);
-
+  
   const [reportUser, { isLoading: isReporting }] = useReportUserMutation();
   const [toggleFollow, { isLoading: isFollowLoading }] =
     useToggleFollowMutation();
@@ -27,6 +29,18 @@ export default function Header() {
     conv => conv.id === activeConversationId,
   );
   console.log(activeConversation, 'activeConversation=====================++++++++++++++++',);
+
+  // const { data: chatData, error } = useGetMessagesQuery({
+  //   conversationId: activeConversationId as string, // Type assertion
+  //   limit: 20,
+  // });
+  
+
+  const { data: chatData, error } = useGetMessagesQuery({
+    conversationId: activeConversationId as string, // Type assertion
+    limit: 20,
+  });
+    console.log(chatData, 'chatData=====================++++++++++++++++',);
 
   // local follow state by participant id
   const [followState, setFollowState] = useState<Record<string, boolean>>({});
@@ -107,7 +121,7 @@ export default function Header() {
         <div className="flex items-center gap-4">
           <Image
             src={
-              activeConversation.participant?.avatar_url || '/images/doc.png'
+              activeConversation?.participant?.avatar_url || '/images/doc.png'
             }
             width={90}
             height={90}
@@ -119,7 +133,7 @@ export default function Header() {
           <div className="space-y-1">
             <h2 ref={textRef} className="md:text-2xl text-sm font-bold">
               
-              {activeConversation.participant?.name}
+              {activeConversation?.participant?.name}
             </h2>
 
             <p className="md:text-sm text-xs opacity-90">
