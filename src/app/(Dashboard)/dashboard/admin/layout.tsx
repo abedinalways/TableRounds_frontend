@@ -16,7 +16,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
 
   return (
-    // <ChatProvider>
+    <ChatProvider>
 
     <div className="min-h-screen flex">
       <aside className="hidden lg:block w-55 fixed inset-y-0 left-0 ">
@@ -30,6 +30,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <main className="p-6">{children}</main>
       </div>
     </div>
-    // </ChatProvider>
+    </ChatProvider>
   );
 }

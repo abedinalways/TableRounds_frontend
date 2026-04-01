@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -12,7 +11,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { CustomCheckbox } from '../ui/CustomCheckbox';
-
 
 import { useStartTestMutation } from '@/app/redux/api/startTestApi';
 import { useGetQuestionCountQuery } from '@/app/redux/api/testSessionApi';
@@ -41,9 +39,17 @@ export function CreateTestContent() {
   const [selectedTopics, setSelectedTopics] = useState<string[]>(
     TOPICS.map(topic => topic.value),
   );
-  const [testMode, setTestMode] = useState<'Timed' | 'Untimed'>('Untimed');
-  const [selectedDifficulty, setSelectedDifficulty] =
-    useState<DifficultyLevel>('Intern');
+
+  const [selectedDifficulty, setSelectedDifficulty] = useState<
+    DifficultyLevel[]
+  >(['Intern']);
+
+  // Handle difficulty selection toggle
+  const handleDifficultyToggle = (level: DifficultyLevel, checked: boolean) => {
+    setSelectedDifficulty(prev =>
+      checked ? [...prev, level] : prev.filter(d => d !== level),
+    );
+  };
 
   const [selectedStatus, setSelectedStatus] = useState<string[]>(['Unused']);
   const [numQuestions, setNumQuestions] = useState<string>('');
@@ -63,7 +69,7 @@ export function CreateTestContent() {
     );
   };
 
-  //Select all topic
+  // Select all topic
   const allTopicsSelected = selectedTopics.length === TOPICS.length;
 
   const handleToggleAllTopics = () => {
@@ -79,70 +85,102 @@ export function CreateTestContent() {
   };
 
   const handleDifficultySelect = (level: DifficultyLevel) => {
-    setSelectedDifficulty(level);
+    setSelectedDifficulty(prev =>
+      prev.includes(level) ? prev.filter(d => d !== level) : [...prev, level],
+    );
   };
 
- const questionCounts = {
-   Used: questionCountData?.data?.used_questions ?? 0,
-   Unused: questionCountData?.data?.unused_questions ?? 0,
-   Correct: questionCountData?.data?.correct_count ?? 0,
-   Incorrect: questionCountData?.data?.incorrect_count ?? 0,
-   Marked: questionCountData?.data?.mark_count ?? 0,
- };
+  const questionCounts = {
+    Used: questionCountData?.data?.used_questions ?? 0,
+    Unused: questionCountData?.data?.unused_questions ?? 0,
+    Correct: questionCountData?.data?.correct_count ?? 0,
+    Incorrect: questionCountData?.data?.incorrect_count ?? 0,
+    Marked: questionCountData?.data?.mark_count ?? 0,
+  };
 
- const handleStartTest = async () => {
-   try {
-     if (!numQuestions || selectedTopics.length === 0) return;
+  const difficultyCounts = {
+    Intern:
+      questionCountData?.data?.difficulty_wise_count.find(
+        d => d.name === 'Intern',
+      )?.count ?? 0,
+    Senior:
+      questionCountData?.data?.difficulty_wise_count.find(
+        d => d.name === 'Senior',
+      )?.count ?? 0,
+    Board:
+      questionCountData?.data?.difficulty_wise_count.find(
+        d => d.name === 'Board',
+      )?.count ?? 0,
+  };
 
-     const payload = {
-       total_questions: Number(numQuestions),
-       test_mode: selectedStatus
-         .filter(s => s === 'Used' || s === 'Unused')
-         .map(s => s.toLowerCase()),
-       difficulty: selectedDifficulty,
-       topic: selectedTopics,
-     };
+  const topicCounts = TOPICS.reduce(
+    (acc, topic) => {
+      const count =
+        questionCountData?.data?.topic_wise_count.find(
+          t => t.name === topic.value,
+        )?.count ?? 0;
+      acc[topic.value] = count;
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
 
-     const res = await startTest(payload).unwrap();
+  const handleStartTest = async () => {
+    if (!numQuestions || selectedTopics.length === 0) {
+      alert('Please select Question Count');
+      return;
+    }
 
-     if (!res.success || !res.data) {
-       throw new Error(res.message || 'Failed to create test');
-     }
+    const payload = {
+      total_questions: Number(numQuestions),
+      test_mode: selectedStatus
+        .filter(s => s === 'Used' || s === 'Unused')
+        .map(s => s.toLowerCase()),
+      difficulty: selectedDifficulty,
+      topic: selectedTopics,
+    };
 
-     const testSession = {
-       id: res.data.id,
-       total_questions: res.data.total_questions,
-       questions: res.data.questions.map((q, index) => ({
-         testProgress: {
-           questionID: q.id,
-           totalQuestions: res?.data?.total_questions,
-           currentQuestion: index + 1,
-         },
-         quizDetails: {
-           question_title: q.question_title,
-           question_steam: q.question_steam,
-           answerOptions: q.answerOptions.map(opt => ({
-             id: opt.id,
-             option_text: opt.option_text,
-             percentage: 0,
-           })),
-           correctAnswerId: null,
-           userAnswerId: null,
-           explanation: null,
-         },
-       })),
-     };
+    try {
+      const res = await startTest(payload).unwrap();
+      if (!res.success || !res.data) {
+        throw new Error(res.message || 'Failed to create test');
+      }
 
-     sessionStorage.setItem(
-       `TEST_SESSION_${res.data.id}`,
-       JSON.stringify(testSession),
-     );
+      const testSession = {
+        id: res.data.id,
+        total_questions: res.data.total_questions,
+        questions: res.data.questions.map((q, index) => ({
+          testProgress: {
+            questionID: q.id,
+            totalQuestions: res?.data?.total_questions,
+            currentQuestion: index + 1,
+          },
+          quizDetails: {
+            question_title: q.question_title,
+            question_steam: q.question_steam,
+            answerOptions: q.answerOptions.map(opt => ({
+              id: opt.id,
+              option_text: opt.option_text,
+              percentage: 0,
+            })),
+            correctAnswerId: null,
+            userAnswerId: null,
+            explanation: null,
+          },
+        })),
+      };
 
-     router.push(`/dashboard/user/create-test/${res.data.id}`);
-   } catch (error) {
-     console.error('Start test failed:', error);
-   }
- };
+      sessionStorage.setItem(
+        `TEST_SESSION_${res.data.id}`,
+        JSON.stringify(testSession),
+      );
+
+      router.push(`/dashboard/user/create-test/${res.data.id}`);
+    } catch (error) {
+      console.error('Start test failed:', error);
+    }
+  };
+
   return (
     <div className="flex-1 max-w-5xl space-y-4 pt-2 test-container text-[#4b5563]">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-2">
@@ -180,42 +218,30 @@ export function CreateTestContent() {
             Test Mode
           </h3>
 
-          {/* <div className="flex items-center gap-4">
-            <Label>Timed</Label>
-            <Switch
-              checked={testMode === 'Timed'}
-              onCheckedChange={v => setTestMode(v ? 'Timed' : 'Untimed')}
-            />
-            <Label>Untimed</Label>
-          </div> */}
-
           <div className="flex flex-wrap gap-3 pt-4">
-            {[
-              'Unused',
-              'Used',
-              'Correct',
-              'Incorrect',
-              // 'Omitted',
-              'Marked',
-            ].map(status => (
-              <div
-                key={status}
-                className="flex items-center space-x-2 bg-[#f8f8f4] px-4 py-2 rounded-[8px]"
-              >
-                <CustomCheckbox
-                  checked={selectedStatus.includes(status)}
-                  onCheckedChange={c => handleStatusToggle(status, Boolean(c))}
-                />
+            {['Unused', 'Used', 'Correct', 'Incorrect', 'Marked'].map(
+              status => (
+                <div
+                  key={status}
+                  className="flex items-center space-x-2 bg-[#f8f8f4] px-4 py-2 rounded-[8px]"
+                >
+                  <CustomCheckbox
+                    checked={selectedStatus.includes(status)}
+                    onCheckedChange={c =>
+                      handleStatusToggle(status, Boolean(c))
+                    }
+                  />
 
-                <Label>{status}</Label>
+                  <Label>{status}</Label>
 
-                <span className="min-w-[30px] h-[22px] px-2 rounded-[6px] border border-[#00B977] text-[#00B977] text-xs font-medium flex items-center justify-center bg-white">
-                  {isQuestionCountLoading
-                    ? '...'
-                    : questionCounts[status as keyof typeof questionCounts]}
-                </span>
-              </div>
-            ))}
+                  <span className="min-w-[30px] h-[22px] px-2 rounded-[6px] border border-[#00B977] text-[#00B977] text-xs font-medium flex items-center justify-center bg-white">
+                    {isQuestionCountLoading
+                      ? '...'
+                      : questionCounts[status as keyof typeof questionCounts]}
+                  </span>
+                </div>
+              ),
+            )}
           </div>
         </div>
 
@@ -226,7 +252,7 @@ export function CreateTestContent() {
 
           <div className="flex flex-wrap gap-4">
             {DIFFICULTY_LEVELS.map(level => {
-              const isSelected = selectedDifficulty === level;
+              const isSelected = selectedDifficulty.includes(level);
 
               return (
                 <div

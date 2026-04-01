@@ -1,7 +1,7 @@
 export interface StartTestPayload {
   total_questions: number;
   test_mode: string[];
-  difficulty: string;
+  difficulty: ('Intern' | 'Senior' | 'Board')[]; 
   topic: string[];
 }
 

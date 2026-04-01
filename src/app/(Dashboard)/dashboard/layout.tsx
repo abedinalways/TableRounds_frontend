@@ -12,9 +12,9 @@ export default function DashboardLayout({
 
   return (
     <AuthProvider>
-      <ChatProvider>
+      
         {children}
-      </ChatProvider>
+      
     </AuthProvider>
   )
 }
