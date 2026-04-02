@@ -107,7 +107,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
             </div>
 
             <p className="text-sm md:text-[18px] leading-[160%]">
-              {user.details}
+              {user.bio}
             </p>
 
             {/* ✅ Clickable Followers / Following (no design change) */}

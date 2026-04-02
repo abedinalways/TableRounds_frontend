@@ -99,7 +99,8 @@ export default function PublicationCard({ data }: PublicationCardProps) {
     try {
       if (mode === 'add') {
         const response = await createPublication({
-          topic: formData.title,
+          title: formData.title,
+          topic: formData.author,
           link: formData.articleLink,
           year: formData.year,
         }).unwrap();
@@ -107,8 +108,8 @@ export default function PublicationCard({ data }: PublicationCardProps) {
         const newItem: PublicationItem = {
           title: response.data.topic,
           author: formData.author,
-          year: response.data.year,
           articleLink: response.data.link,
+          year: response.data.year,
         };
 
         setPublicationList(prev => [...prev, newItem]);

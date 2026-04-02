@@ -9,11 +9,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { FaXTwitter } from 'react-icons/fa6';
-
 import { Facebook, Instagram, Linkedin } from 'lucide-react';
-
 import AttachImageIcon from '../reusable/icons/AttachImageIcon';
-
 import LocationIcon from '../ui/LocationIcon';
 import BagIcon from '../reusable/icons/BagIcon';
 import CalendarIconForProfile from '../reusable/icons/CalendarIconForProfile';
@@ -21,6 +18,7 @@ import { Card } from '../ui/card';
 import FollowersFollowingModal from '../my-profile/FollowersFollowingModal';
 import { Switch } from '../ui/CustomSwitch';
 import { useGetConnectionsQuery } from '@/app/redux/api/connectionApi';
+import { useUpdateUserMutation } from '@/app/redux/api/authApi';
 import Link from 'next/link';
 
 type ProfileFormData = {
@@ -33,7 +31,7 @@ type ProfileFormData = {
   linkedin: string;
   twitter: string;
   facebook: string;
-  description: string;
+  bio: string;
   practiceName: string;
 };
 
@@ -41,10 +39,8 @@ interface ProfileHeaderProps {
   user: UserProfile;
 }
 
-
-
 export default function ManageProfile({ user }: ProfileHeaderProps) {
-  const [preview, setPreview] = useState<string | null>(null);
+  
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isPublic, setIsPublic] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -52,9 +48,26 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
     'followers',
   );
 
-  const { register, handleSubmit, reset } = useForm<ProfileFormData>();
+  const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
 
-  /* ✅ Populate form when user loads */
+  const { register, handleSubmit, reset } = useForm<ProfileFormData>({
+    defaultValues: {
+      name: '',
+      credentials: '',
+      location: '',
+      year: '',
+      joiningDate: '',
+      instagram: '',
+      linkedin: '',
+      twitter: '',
+      facebook: '',
+      bio: '',
+      practiceName: '',
+    },
+  });
+
+ 
+
   useEffect(() => {
     if (!user) return;
 
@@ -68,52 +81,60 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
       linkedin: user.linkedin || '',
       twitter: user.twitter || '',
       facebook: user.facebook || '',
-      description: user.details || '',
+      bio: user.bio || '',
       practiceName: user.practiceName || '',
     });
 
-    if (user.avatar) {
-     
-    }
+    
   }, [user, reset]);
 
   const onSubmit = async (data: ProfileFormData) => {
     try {
       const formData = new FormData();
 
-      // append text fields
-      Object.entries(data).forEach(([key, value]) => {
-        formData.append(key, value as string);
-      });
+      formData.append('name', data.name);
+      formData.append('credentials', data.credentials);
+      formData.append('location', data.location);
+      formData.append('year', data.year);
+      formData.append('joiningDate', data.joiningDate);
+      formData.append('instagram', data.instagram);
+      formData.append('linkedin', data.linkedin);
+      formData.append('twitter', data.twitter);
+      formData.append('facebook', data.facebook);
+      formData.append('bio', data.bio);
+      formData.append('practiceName', data.practiceName);
 
-      // append image
+     
+      formData.append('is_public', String(isPublic));
+
       if (imageFile) {
         formData.append('avatar', imageFile);
       }
 
-      // call your API here
-      // await updateProfile(formData)
+      const res = await updateUser(formData).unwrap();
 
-      toast.success('Profile updated successfully');
-    } catch (err) {
-      console.error(err);
-      toast.error('Update failed');
+      toast.success(res?.message || 'Profile updated successfully');
+    } catch (err: any) {
+      console.error('Profile update failed:', err);
+      toast.error(err?.data?.message || 'Update failed');
     }
   };
+
+  const avatar = imageFile
+    ? URL.createObjectURL(imageFile)
+    : user?.avatar && user.avatar.startsWith('http')
+      ? user.avatar
+      : '/images/dashboard/doctor.png';
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setImageFile(file);
-    setPreview(URL.createObjectURL(file)); 
   };
-  const avatar =
-    user?.avatar && user.avatar.startsWith('http')
-      ? new URL(user.avatar).href
-      : '/images/dashboard/doctor.png';
-  
-  // followers following 
+
+ 
+
   const { data: connectionsData, isLoading } = useGetConnectionsQuery(
     {
       type: modalType === 'followers' ? 'follower' : 'following',
@@ -130,9 +151,9 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
       avatar: user.avatar,
       username: user?.name,
     })) || [];
-  
+
   const normalizeUrl = (url?: string) => {
-    if (!url) return '';
+    if (!url) return '#';
     if (url.startsWith('http://') || url.startsWith('https://')) {
       return url;
     }
@@ -142,12 +163,11 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
   return (
     <>
       <div className="bg-white rounded-2xl p-6 shadow-sm font-[manrope]">
-        {/* Header */}
         <Card className="bg-white w-full rounded-2xl md:p-6 p-2 mb-10">
           <div className="md:flex justify-between items-start mb-8 gap-4">
             <div className="relative w-[213px] ">
               <Image
-                src={preview || avatar || '/images/dashboard/doctor.png'}
+                src={avatar}
                 alt="avatar"
                 width={213}
                 height={255}
@@ -191,15 +211,14 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
 
                 <h4 className="flex items-center gap-2">
                   <CalendarIconForProfile />
-                  Joined {user.joiningDate}
+                  Joined {user.year}
                 </h4>
               </div>
 
               <p className="text-sm md:text-[18px] leading-[160%]">
-                {user.details}
+                {user.bio}
               </p>
 
-              {/* Followers / Following */}
               <div className="flex gap-6 mt-3 text-md text-[32px] text-center">
                 <button
                   type="button"
@@ -233,10 +252,12 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
 
             <div className="flex flex-col items-center">
               <button
+                type="button"
+                disabled={isUpdating}
                 onClick={handleSubmit(onSubmit)}
-                className="bg-[#01503B] cursor-pointer w-[142px] h-[54px] rounded-[8px] text-white md:text-[16px] text-xs"
+                className="bg-[#01503B] cursor-pointer w-[142px] h-[54px] rounded-[8px] text-white md:text-[16px] text-xs disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Save & Change
+                {isUpdating ? 'Saving...' : 'Save & Change'}
               </button>
 
               <div className="flex md:items-center gap-2 bg-white px-6 py-4 rounded-2xl">
@@ -255,7 +276,6 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
 
           <hr />
 
-          {/* social media */}
           <div className="flex flex-wrap items-center gap-4 md:gap-[24px] text-[#01281e] mt-[24px]">
             <h2 className="font-bold text-[16px] md:text-[20px]">Contact</h2>
 
@@ -301,7 +321,6 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
           </div>
         </Card>
 
-        {/* Contact Details */}
         <h3 className="mb-4 text-[#0f172b] text-16px md:text-[24px] leading-[130%] font-bold">
           Contact Details
         </h3>
@@ -311,7 +330,6 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
             <Label className="font-bold">
               Name <span className="text-red-600">*</span>
             </Label>
-
             <Input
               {...register('name')}
               className="bg-[#f9f9f5] text-black border [border-[rgba(68,68,68,0.1)]]"
@@ -320,7 +338,6 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
 
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">Instagram</Label>
-
             <Input
               placeholder="Personal Link"
               {...register('instagram')}
@@ -332,7 +349,6 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
             <Label className="font-bold">
               Credentials <span className="text-red-600">*</span>
             </Label>
-
             <Input
               {...register('credentials')}
               placeholder="i.e. DDS, DMD, MD, Student"
@@ -342,7 +358,6 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
 
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">LinkedIn</Label>
-
             <Input
               placeholder="Personal Link"
               {...register('linkedin')}
@@ -354,7 +369,6 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
             <Label className="font-bold">
               Location <span className="text-red-600">*</span>
             </Label>
-
             <Input
               placeholder="Enter your city, state, and country"
               {...register('location')}
@@ -364,7 +378,6 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
 
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">Twitter/X</Label>
-
             <Input
               placeholder="Personal Link"
               {...register('twitter')}
@@ -376,9 +389,8 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
             <Label className="font-bold">
               Year in Training/Practice <span className="text-red-600">*</span>
             </Label>
-
             <Input
-              {...register('year')}
+              {...register('joiningDate')}
               placeholder="Student, PGY, or Attending"
               className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
             />
@@ -386,7 +398,6 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
 
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">Facebook</Label>
-
             <Input
               placeholder="Personal Link"
               {...register('facebook')}
@@ -398,7 +409,6 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
             <Label className="font-bold">
               Current Practice <span className="text-red-600">*</span>
             </Label>
-
             <Input
               placeholder="Name of your residency, hospital, or private practice"
               {...register('practiceName')}
@@ -408,7 +418,6 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
 
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">Joining Date</Label>
-
             <Input
               type="date"
               {...register('joiningDate')}
@@ -418,7 +427,6 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
         </div>
       </div>
 
-      {/* Description */}
       <div className="mt-6 bg-white rounded-2xl p-6 shadow-sm font-[manrope] mb-6">
         <Label className="font-bold mb-4 text-[#0f172b] text-16px md:text-[24px] leading-[130%]">
           Descriptions
@@ -426,7 +434,7 @@ export default function ManageProfile({ user }: ProfileHeaderProps) {
 
         <Textarea
           rows={4}
-          {...register('description')}
+          {...register('bio')}
           placeholder="Write something about yourself..."
           className="mt-4 bg-[#f9f9f5]"
         />

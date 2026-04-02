@@ -23,12 +23,14 @@ interface ProfileTabsProps {
   activeTab: ProfileTab;
   setActiveTab: (tab: ProfileTab) => void;
   data: ProfileData;
+  cv: string;
 }
 
 export default function ProfileTabs({
   activeTab,
   setActiveTab,
   data,
+  cv,
 }: ProfileTabsProps) {
   const contentRef = useRef<HTMLDivElement | null>(null);
 
@@ -92,7 +94,7 @@ export default function ProfileTabs({
           <div className="space-y-6">
             <PublicationCard data={data.publications} />
             {/* <SkillBadges skills={data.skills} /> */}
-            <QuickActions />
+            <QuickActions cv={cv} />
           </div>
         </TabsContent>
 

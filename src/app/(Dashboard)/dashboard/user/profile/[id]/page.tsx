@@ -6,6 +6,7 @@ import ProfileHeader from '@/components/profile/ProfileHeader';
 import ProfileTabs from '@/components/profile/ProfileTabs';
 import { useGetProfileDataQuery } from '@/app/redux/api/getProfileApi';
 
+
 export default function ProfilePage({
   params,
 }: {
@@ -16,8 +17,11 @@ export default function ProfilePage({
   const [activeTab, setActiveTab] = useState<ProfileTab>('overview');
 
   const { data, isLoading, error } = useGetProfileDataQuery(id);
+  
+  
 
   const apiData = data;
+  console.log(apiData, '99999999999999999999999999999==========')
 
   if (isLoading) {
     return <div className="p-10 text-center">Loading profile...</div>;
@@ -35,7 +39,7 @@ export default function ProfilePage({
     user: {
       name: apiData.name,
       id: apiData.id,
-
+      cv: apiData.cv ?? '',
       avatar: apiData.avatar
         ? apiData.avatar.startsWith('http')
           ? apiData.avatar
@@ -47,7 +51,7 @@ export default function ProfilePage({
       jobArea: apiData.current_practice || 'General Practice',
       joiningDate: 'March 2025',
 
-      details: apiData.bio || 'No bio available.',
+      bio: apiData.bio || 'No bio available.',
 
       followers: apiData.followers ?? 0,
       following: apiData.followings ?? 0,
@@ -77,7 +81,7 @@ export default function ProfilePage({
     })),
 
     publications: (apiData.publications ?? []).map((pub: any) => ({
-      title: pub.topic,
+      title: pub.title,
       year: pub.year,
       author: pub.topic,
       articleLink: pub.link,
@@ -102,6 +106,7 @@ export default function ProfilePage({
           setActiveTab={setActiveTab}
           data={formattedData}
           profileUserId={id}
+          cv={formattedData.user.cv}
         />
       </div>
     </div>

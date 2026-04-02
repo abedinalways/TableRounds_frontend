@@ -7,7 +7,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { ProfileData, ProfileTab } from '@/types/profile';
 
 import EducationCard from './EducationCard';
-import SkillBadges from './SkillBadges';
+
 import ExperienceCard from './ExperienceCard';
 import PublicationCard from './PublicationCard';
 import QuickActions from './QuickActions';
@@ -25,12 +25,14 @@ interface ProfileTabsProps {
   setActiveTab: (tab: ProfileTab) => void;
   data: ProfileData;
   profileUserId: string;
+  cv: string;
 }
 
 export default function ProfileTabs({
   activeTab,
   setActiveTab,
   data,
+  cv,
   profileUserId,
 }: ProfileTabsProps) {
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -126,7 +128,7 @@ export default function ProfileTabs({
           <div className="space-y-6">
             <PublicationCard data={data.publications} />
             {/* <SkillBadges skills={data.skills} /> */}
-            <QuickActions />
+            <QuickActions cv={cv} />
           </div>
         </TabsContent>
 

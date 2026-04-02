@@ -13,8 +13,9 @@ export function mapProfileToUI(data: ProfileData): ProfileUIData {
   return {
     user: {
       id: data.id,
+      cv: data.cv ?? '',
       name: data.name || '',
-      details: data.bio || '',
+      bio: data.bio || '',
       title: data.credentials || '',
       avatar: data.avatar || '',
       location: data.address || '',

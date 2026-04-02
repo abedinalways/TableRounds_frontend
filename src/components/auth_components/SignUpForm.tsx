@@ -24,11 +24,12 @@ import Link from 'next/link';
 import { Country, State } from 'country-state-city';
 
 import { toast } from 'sonner';
+import { RegisterPayload } from '@/app/redux/api/registerApi';
 
 
 
-interface SignUpFormData {
-  fullName: string;
+export interface SignUpFormData {
+  name: string;
   credentials: string;
   email: string;
   createPassword: string;
@@ -39,7 +40,7 @@ interface SignUpFormData {
   state: string;
   location: string;
   currentPractice: string;
-  briefBio: string;
+  bio: string;
   instagramUrl: string;
   linkedinUrl: string;
   twitterUrl: string;
@@ -48,7 +49,7 @@ interface SignUpFormData {
 }
 
 interface SignUpFormProps {
-  onSubmit?: (data: any) => Promise<void> | void;
+  onSubmit?: (data: RegisterPayload) => Promise<void> | void;
   onCancel?: () => void;
   isLoading?: boolean;
 }
@@ -60,7 +61,7 @@ export default function SignUpForm({
   isLoading = false,
 }: SignUpFormProps) {
   const [formData, setFormData] = useState<SignUpFormData>({
-    fullName: '',
+    name: '',
     credentials: '',
     email: '',
     createPassword: '',
@@ -71,7 +72,7 @@ export default function SignUpForm({
     state: '',
     location: '',
     currentPractice: '',
-    briefBio: '',
+    bio: '',
     instagramUrl: '',
     linkedinUrl: '',
     twitterUrl: '',
@@ -107,7 +108,7 @@ export default function SignUpForm({
   const validateForm = (): boolean => {
     const newErrors: Partial<Record<keyof SignUpFormData, string>> = {};
 
-    if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
+    if (!formData.name.trim()) newErrors.name = 'Name is required';
 
     if (!formData.credentials.trim())
       newErrors.credentials = 'Credentials is required';
@@ -149,15 +150,15 @@ export default function SignUpForm({
  const handleSubmit = async () => {
    if (!validateForm()) return;
 
-   const payload = {
-     name: formData.fullName,
+   const payload: RegisterPayload = {
+     name: formData.name,
      email: formData.email,
      password: formData.createPassword,
      credentials: formData.credentials,
      training_practice: formData.yearInTraining,
      address: formData.location,
      current_practice: formData.currentPractice,
-     bio: formData.briefBio,
+     bio: formData.bio,
      specialty: formData.specialty,
      instagram: formData.instagramUrl || undefined,
      linkedin: formData.linkedinUrl || undefined,
@@ -170,7 +171,7 @@ export default function SignUpForm({
 
    await onSubmit?.(payload);
  };
-  // console.log(handleSubmit, 'mjcsdcsd');
+  
 
   return (
     <div className="z-40  font-[manrope] py-6 mb-12">
@@ -192,12 +193,12 @@ opacity-xl font-[manrope]"
                 <Input
                   id="fullName"
                   placeholder="Enter your full name"
-                  value={formData.fullName}
-                  onChange={e => handleInputChange('fullName', e.target.value)}
+                  value={formData.name}
+                  onChange={e => handleInputChange('name', e.target.value)}
                   className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 rounded-[8px] md:w-[644px] md:h-[61px] placeholder:text-[18px]"
                 />
-                {errors.fullName && (
-                  <p className="text-red-300 text-xs mt-1">{errors.fullName}</p>
+                {errors.name && (
+                  <p className="text-red-300 text-xs mt-1">{errors.name}</p>
                 )}
               </div>
 
@@ -492,8 +493,8 @@ opacity-xl font-[manrope]"
                 <Input
                   id="briefBio"
                   placeholder="Enter a brief bio about yourself"
-                  value={formData.briefBio}
-                  onChange={e => handleInputChange('briefBio', e.target.value)}
+                  value={formData.bio}
+                  onChange={e => handleInputChange('bio', e.target.value)}
                   className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
                 />
               </div>

@@ -33,7 +33,6 @@ export interface ProfileData {
   publications: Publication[];
   followings: number;
   followers: number;
-  
 }
 
 /* ---------- Sub Types ---------- */
@@ -61,6 +60,7 @@ export interface Publication {
   topic: string;
   link: string;
   year: string;
+
 }
 
 export interface Skill {
@@ -77,6 +77,7 @@ export type UpdateProfilePayload = Partial<
     | 'educations'
     | 'experiences'
     | 'skills'
+    | 'bio'
     | 'publications'
     | 'followers'
     | 'followings'

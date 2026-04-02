@@ -60,7 +60,8 @@
 export interface UserProfile {
   name: string;
   id: string;
-  details: string;
+  cv: string;
+  bio: string;
   title: string;
   avatar: string;
   location: string;
