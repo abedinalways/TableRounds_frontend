@@ -1,5 +1,5 @@
 
-export type Difficulty = ('Intern' | 'Senior' | 'Boards')[];
+export type Difficulty = ('Intern' | 'Senior' | 'Board')[];
 
 export interface AnswerChoice {
   id: string;
@@ -17,7 +17,7 @@ export interface QuestionFormValues {
   explanation: string;
   keyPoints: string;
   keepingPoint: string;
-  hasMemoryTrick: boolean;
+  hasMemoryTrick: string;
   memoryTrick: string;
   referance: string;
 }
