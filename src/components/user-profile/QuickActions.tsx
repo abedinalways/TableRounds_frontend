@@ -5,11 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Download, Share2 } from 'lucide-react';
 import { toast } from 'sonner';
 
-export default function QuickActions() {
+export default function QuickActions( { cv }: { cv: string }) {
   const handleDownload = () => {
     const link = document.createElement('a');
-    link.href = '/data/cv.pdf';
-    link.download = 'Doctor.pdf';
+    link.href = cv;
+    
     link.click();
   };
 
@@ -47,13 +47,13 @@ export default function QuickActions() {
           Download CV
         </button>
 
-        <button
+        {/* <button
           onClick={handleShare}
           className="w-full flex justify-start items-center bg-[#059166] hover:bg-emerald-600 text-sm md:text-[20px] rounded-[12px] py-[12px] px-[16px] cursor-pointer "
         >
           <Share2 className="mr-2 h-4 w-4" />
           Share Profile
-        </button>
+        </button> */}
       </CardContent>
     </Card>
   );

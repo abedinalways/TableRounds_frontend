@@ -14,6 +14,7 @@ import { CustomCheckbox } from '../ui/CustomCheckbox';
 
 import { useStartTestMutation } from '@/app/redux/api/startTestApi';
 import { useGetQuestionCountQuery } from '@/app/redux/api/testSessionApi';
+import { toast } from 'sonner';
 
 const TOPICS = [
   { label: 'Anesthesia/Medicine', value: 'Anesthesia_Medicine' },
@@ -125,7 +126,7 @@ export function CreateTestContent() {
 
   const handleStartTest = async () => {
     if (!numQuestions || selectedTopics.length === 0) {
-      alert('Please select Question Count');
+      toast.error('Please select Question Count');
       return;
     }
 

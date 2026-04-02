@@ -1,6 +1,6 @@
 'use client';
 
-import { useRegisterNewUserMutation } from '@/app/redux/api/registerApi';
+import { RegisterPayload, useRegisterNewUserMutation } from '@/app/redux/api/registerApi';
 import SignUpForm from '@/components/auth_components/SignUpForm';
 import Image from 'next/image';
 import React from 'react';
@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 export default function RegisterPage() {
   const [registerUser, { isLoading }] = useRegisterNewUserMutation();
 
-  const handleRegister = async (data: any) => {
+  const handleRegister = async (data: RegisterPayload) => {
     try {
       const res = await registerUser(data).unwrap();
 

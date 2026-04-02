@@ -119,8 +119,19 @@ export const authApi = baseApi.injectEndpoints({
         method: 'GET',
       }),
       transformResponse: (res: { data: AuthUser }) => res.data,
+      providesTags: ['Auth'],
     }),
 
+    updateCv: builder.mutation<{ success: boolean; message: string }, FormData>(
+      {
+        query: body => ({
+          url: '/profile/cv',
+          method: 'PUT',
+          body,
+        }),
+        invalidatesTags: ['Auth'],
+      },
+    ),
     // 🔹 logout
     logout: builder.mutation<void, void>({
       query: () => ({
@@ -140,5 +151,6 @@ export const {
   useResetPasswordMutation,
   useUpdateUserMutation,
   useMeQuery,
+  useUpdateCvMutation,
   useLogoutMutation,
 } = authApi;

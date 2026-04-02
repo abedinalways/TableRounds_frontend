@@ -1,7 +1,8 @@
 export interface UserProfile {
   id : string;
   name: string;
-  details: string;
+  bio: string;
+  cv: string;
   title: string;
   avatar: string;
   location: string;

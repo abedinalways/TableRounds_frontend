@@ -45,7 +45,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
             </h4>
           </div>
           <p className="text-sm md:text-[18px] leading-[160%]">
-            {user.details}
+            {user.bio}
           </p>
 
           <div className="flex gap-6 mt-3 text-md text-[32px] text-center">

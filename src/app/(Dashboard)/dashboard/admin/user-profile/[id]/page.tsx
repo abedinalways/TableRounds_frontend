@@ -36,7 +36,7 @@ export default function ProfilePage({
    user: {
      name: apiData.name,
      id: apiData.id,
-
+     cv: apiData.cv || '',
      avatar: apiData.avatar
        ? apiData.avatar.startsWith('http')
          ? apiData.avatar
@@ -48,7 +48,7 @@ export default function ProfilePage({
      jobArea: apiData.current_practice || 'General Practice',
      joiningDate: 'March 2025',
 
-     details: apiData.bio || 'No bio available.',
+     bio: apiData.bio || 'No bio available.',
 
      followers: apiData.followers ?? 0,
      following: apiData.followings ?? 0,
@@ -112,6 +112,7 @@ export default function ProfilePage({
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           data={formattedData}
+          cv={formattedData.user.cv}
         />
       </div>
     </div>

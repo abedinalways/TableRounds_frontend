@@ -41,6 +41,7 @@ export interface CreateExperienceResponse {
 }
 
 export interface CreatePublicationPayload {
+  title: string;
   topic: string;
   link: string;
   year: string;
