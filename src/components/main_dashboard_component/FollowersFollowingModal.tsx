@@ -17,7 +17,7 @@ type UserItem = {
   name: string;
   username?: string;
   avatar: string;
-  
+  is_following?: boolean;
 };
 
 interface FollowersFollowingModalProps {
@@ -26,8 +26,8 @@ interface FollowersFollowingModalProps {
   type: 'follower' | 'following';
   data: UserItem[];
   loading?: boolean;
+  onFollowToggle: (userId: string) => Promise<void>;
 }
-
 
 export default function FollowersFollowingModal({
   open,
@@ -35,26 +35,36 @@ export default function FollowersFollowingModal({
   type,
   data,
   loading,
+  onFollowToggle,
 }: FollowersFollowingModalProps) {
   const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
 
-  const handleFollowToggle = (userId: string) => {
+  const handleFollowToggle = async (userId: string) => {
     setFollowedUsers(prev => {
-      const newFollowedUsers = new Set(prev);
-      if (newFollowedUsers.has(userId)) {
-        newFollowedUsers.delete(userId); // Unfollow
+      const newSet = new Set(prev);
+
+      if (newSet.has(userId)) {
+        newSet.delete(userId);
       } else {
-        newFollowedUsers.add(userId); // Follow
+        newSet.add(userId);
       }
-      return newFollowedUsers;
+
+      return newSet;
     });
+
+    try {
+      await onFollowToggle(userId);
+    } catch (error) {
+      console.error('Follow toggle failed', error);
+    }
   };
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-[480px] font-[manrope] rounded-2xl p-0 overflow-hidden">
         <DialogHeader className="px-6 pt-6 pb-4 border-b">
           <DialogTitle className="text-[20px] font-bold text-[#0f172b]">
-            {type === 'follower' ? 'Following' : 'Followers'}
+            {type === 'follower' ? 'Followers' : 'Following'}
           </DialogTitle>
         </DialogHeader>
 
@@ -72,6 +82,9 @@ export default function FollowersFollowingModal({
                   user.avatar && user.avatar.startsWith('http')
                     ? user.avatar
                     : '/images/dashboard/message/doctor.png';
+
+                const isFollowing =
+                  followedUsers.has(user.id) || user.is_following;
 
                 return (
                   <div
@@ -92,7 +105,6 @@ export default function FollowersFollowingModal({
                             {user.name}
                           </p>
                           <p className="text-sm text-[#6b7280]">
-                            {' '}
                             @{user.username || user.name}
                           </p>
                         </div>
@@ -104,7 +116,7 @@ export default function FollowersFollowingModal({
                       onClick={() => handleFollowToggle(user.id)}
                       className="rounded-sm"
                     >
-                      {followedUsers.has(user.id) ? 'Unfollow' : 'Follow'}
+                      {isFollowing ? 'Unfollow' : 'Follow'}
                     </Button>
                   </div>
                 );
