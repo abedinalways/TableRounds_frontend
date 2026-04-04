@@ -6,10 +6,15 @@ import TrophyIcon from '../reusable/icons/TrophyIcon';
 import { Loader2 } from 'lucide-react';
 
 import { useGetLeaderboardQuery } from '@/app/redux/api/leaderboardApi';
+import { useMeQuery } from '@/app/redux/api/authApi';
 
 export default function StatCards() {
   const { data, isLoading, isError } = useGetLeaderboardQuery();
-  console.log(data, 'iooooooo');
+  const { data: userData } = useMeQuery();
+  const userId = userData?.id;
+  console.log(userId, '===================UserId')
+  console.log(userData, '===================user data');
+  
   if (isLoading) {
     return (
       <div className="rounded-[12px] p-8 background flex justify-center">
@@ -27,34 +32,38 @@ export default function StatCards() {
   }
 
   const stats = data?.data.leaderboard;
-  console.log(stats, 'pen')
-  console.log(stats[0].rank);
+  console.log(stats, '++++++++++++++++++++++wefyhweoifwefo');
+
+  const userStats = stats.find((stat: any) => stat.user.id === userId);
+  console.log(userStats, '-----------------++++++++++++++++++++++++++')
+  console.log(userStats, 'user stats');
+  
   const cards = [
     {
       id: 'rank',
       title: 'Your Rank',
-      value: String(stats[0].rank),
+      value: String(userStats?.rank || 'N/A'),
       subtitle: 'Overall position',
       icon: '/images/dashboard/statistics/img01.png',
     },
     {
       id: 'accuracy',
       title: 'Accuracy',
-      value: `${stats[0]?.accuracy}%`,
+      value: `${userStats?.accuracy || 'N/A'}%`,
       subtitle: 'Correct answers',
       icon: '/images/dashboard/statistics/img01.png',
     },
     {
       id: 'avg_score',
       title: 'Avg Score',
-      value: `${stats[0].avg_score}%`,
+      value: `${userStats?.avg_score || '0'}%`,
       subtitle: 'Average performance',
       icon: '/images/dashboard/statistics/img01.png',
     },
     {
       id: 'tests',
       title: 'Tests Completed',
-      value: String(stats[0].tests_completed),
+      value: String(userStats?.tests_completed || 'N/A'),
       subtitle: 'Total attempts',
       icon: '/images/dashboard/statistics/img01.png',
     },

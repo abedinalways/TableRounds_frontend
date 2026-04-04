@@ -210,7 +210,7 @@ interface ResultSummaryProps {
   unused: number;
   difficulty: string;
   testId: string;
-  topics: any[];
+  topics: string[];
 }
 
 export interface Colleague {
@@ -252,7 +252,7 @@ export function ResultSummary({
   );
 
   const colleagues = data?.data ?? [];
-  const topic=topics.map((t: any) => t.topic).join(' ');
+  const topic=topics.map((t: string) => t).join(' ');
   const [createConversation] = useCreateConversationMutation();
   const [sendMessage] = useSendMessageMutation();
 
