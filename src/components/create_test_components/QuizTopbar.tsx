@@ -248,7 +248,7 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
           <div></div>
         </div>
 
-        <div className="space-x-5 flex items-center gap-6 mx-5 md:mx-0">
+        <div className="space-x-5 flex items-center gap-6 mx-5">
           <div className="text-sm md:text-[18px] text-white font-bold flex items-center">
             {String(currentQuestion).padStart(2, '0')} / {totalQuestions}
           </div>
@@ -312,13 +312,13 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
             Zoom Out
           </button>
 
-          <button
+          {/* <button
             onClick={onSkip}
             className="text-white cursor-pointer p-2 gap-2 flex flex-col items-center"
           >
             <SkipForward className="md:size-8 size-4" />
             Skip Test
-          </button>
+          </button> */}
         </div>
       </div>
 
