@@ -99,15 +99,15 @@ export function CreateTestContent() {
 
   const difficultyCounts = {
     Intern:
-      questionCountData?.data?.difficulty_wise_count.find(
+      questionCountData?.data?.difficulty_wise_count?.find(
         d => d.name === 'Intern',
       )?.count ?? 0,
     Senior:
-      questionCountData?.data?.difficulty_wise_count.find(
+      questionCountData?.data?.difficulty_wise_count?.find(
         d => d.name === 'Senior',
       )?.count ?? 0,
     Board:
-      questionCountData?.data?.difficulty_wise_count.find(
+      questionCountData?.data?.difficulty_wise_count?.find(
         d => d.name === 'Board',
       )?.count ?? 0,
   };
@@ -115,7 +115,7 @@ export function CreateTestContent() {
   const topicCounts = TOPICS.reduce(
     (acc, topic) => {
       const count =
-        questionCountData?.data?.topic_wise_count.find(
+        questionCountData?.data?.topic_wise_count?.find(
           t => t.name === topic.value,
         )?.count ?? 0;
       acc[topic.value] = count;

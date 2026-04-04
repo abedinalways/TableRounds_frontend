@@ -73,7 +73,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
         )}
 
         <div
-          className="prose prose-sm md:prose-base max-w-none text-gray-700"
+          className="prose prose-sm md:prose-base max-w-none text-gray-700 mb-5"
           dangerouslySetInnerHTML={{
             __html: quizDetails?.question_steam || '',
           }}
