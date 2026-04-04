@@ -14,6 +14,8 @@ import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { useGetPreviousTestHistoryStatsQuery } from '@/app/redux/api/previousTestHistoryApi';
+import { useGetTestDetailsQuery } from '@/app/redux/api/testSessionApi';
+import { id } from 'zod/v4/locales';
 
 interface Props {
   search: string;
@@ -21,22 +23,36 @@ interface Props {
 
 export function TestHistory({ search }: Props) {
   const { data, isLoading, isError } = useGetPreviousTestHistoryStatsQuery();
+ 
+  
+   console.log(data, '+++++++++++++++++++++++++++++')
   const [dropdownIndex, setDropdownIndex] = useState<number | null>(null);
   const router = useRouter();
 
-  const filteredTests = useMemo(() => {
-    if (!data?.data) return [];
+ const filteredTests = useMemo(() => {
+   if (!data?.data) return [];
 
-    const q = search.toLowerCase();
+   const q = search.toLowerCase();
 
-    return data.data.filter(
-      test =>
-        test.difficulty.toLowerCase().includes(q) ||
-        test.topic.some(t => t.toLowerCase().includes(q)) ||
-        test.test_mode.some(m => m.toLowerCase().includes(q)) ||
-        new Date(test.created_at).toLocaleDateString().includes(q),
-    );
-  }, [data, search]);
+   return data.data.filter(test =>
+     
+     Array.isArray(test?.difficulty)
+       ? test.difficulty.some(
+           d => typeof d === 'string' && d.toLowerCase().includes(q),
+         )
+       : (typeof test?.difficulty === 'string' &&
+           test.difficulty.toLowerCase().includes(q)) ||
+         
+         test?.topic?.some(
+           t => typeof t === 'string' && t.toLowerCase().includes(q),
+         ) ||
+         test?.test_mode?.some(
+           m => typeof m === 'string' && m.toLowerCase().includes(q),
+         ) ||
+         // Date matching logic
+         new Date(test?.created_at).toLocaleDateString().includes(q),
+   );
+ }, [data, search]);
 
   if (isLoading) {
     return (
@@ -83,20 +99,66 @@ export function TestHistory({ search }: Props) {
                   <CircularProgressPercentage
                     showLabel
                     value={test?.score ?? 0}
-                    className="text-[10px]! font-normal "
+                    className="text-[8px]! font-normal "
                   />
                 </TableCell>
 
                 <TableCell>
-                  <Badge
-                    className={
-                      test.difficulty === 'Intern'
-                        ? 'bg-[#fde1dc] text-red-400 px-2 rounded-[4px] py-2'
-                        : 'test-background text-[#b79e6b] rounded-[4px] px-2 py-2'
-                    }
-                  >
-                    {test.difficulty}
-                  </Badge>
+                  <div className="flex space-x-2">
+                    {Array.isArray(test.difficulty)
+                      ? test.difficulty.map((level, index) => {
+                          let badgeClass = '';
+                          switch (level) {
+                            case 'Intern':
+                              badgeClass = 'bg-[#fde1dc] text-red-400'; // red for Intern
+                              break;
+                            case 'Senior':
+                              badgeClass = 'bg-[#f0e1dc] text-[#b79e6b]'; // beige for Senior
+                              break;
+                            case 'Boards':
+                              badgeClass = 'bg-[#cdebe3] text-[#01503b]'; // green for Boards
+                              break;
+                            default:
+                              badgeClass = 'bg-[#e1e1e1] text-gray-500'; // gray for other values
+                              break;
+                          }
+
+                          return (
+                            <Badge
+                              key={index}
+                              className={`px-2 rounded-[4px] py-2 ${badgeClass}`}
+                            >
+                              {level}
+                            </Badge>
+                          );
+                        })
+                      : // If difficulty is a single string, render it as a badge
+                        (() => {
+                          let badgeClass = '';
+                          switch (test.difficulty) {
+                            case 'Intern':
+                              badgeClass = 'bg-[#fde1dc] text-red-400'; // red for Intern
+                              break;
+                            case 'Senior':
+                              badgeClass = 'bg-[#f0e1dc] text-[#b79e6b]'; // beige for Senior
+                              break;
+                            case 'Boards':
+                              badgeClass = 'bg-[#cdebe3] text-[#01503b]'; // green for Boards
+                              break;
+                            default:
+                              badgeClass = 'bg-[#e1e1e1] text-gray-500'; // gray for other values
+                              break;
+                          }
+
+                          return (
+                            <Badge
+                              className={`px-2 rounded-[4px] py-2 ${badgeClass}`}
+                            >
+                              {test.difficulty}
+                            </Badge>
+                          );
+                        })()}
+                  </div>
                 </TableCell>
 
                 <TableCell>
@@ -139,20 +201,27 @@ export function TestHistory({ search }: Props) {
 
                   {dropdownIndex === i && (
                     <div className="absolute right-0 mt-2 w-32 bg-white shadow-lg rounded-md border z-20">
-                      <button className="block w-full px-4 py-2 hover:bg-gray-100">
+                      <button
+                        className="block w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        onClick={() =>
+                          router.push(`/dashboard/user/test-review/${test.id}`)
+                        }
+                      >
                         Review
                       </button>
                       <button
                         onClick={() =>
-                          router.push(`/dashboard/preview-test/${test.id}`)
+                          router.push(
+                            `/dashboard/user/test-complete/${test.id}`,
+                          )
                         }
-                        className="block w-full px-4 py-2 hover:bg-gray-100"
+                        className="block w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
                       >
                         Results
                       </button>
-                      <button className="block w-full px-4 py-2 hover:bg-gray-100">
+                      {/* <button className="block w-full px-4 py-2 hover:bg-gray-100">
                         Send
-                      </button>
+                      </button> */}
                     </div>
                   )}
                 </TableCell>

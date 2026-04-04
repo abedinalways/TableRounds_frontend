@@ -85,11 +85,11 @@ export const userMenu: MenuItem[] = [
     href: '/dashboard/user/leaderboard',
     icon: '/images/dashboard/img05.png',
   },
-  {
-    title: 'Reset Bank',
-    href: '/dashboard/user/reset-bank',
-    icon: '/images/dashboard/img06.png',
-  },
+  // {
+  //   title: 'Reset Bank',
+  //   href: '/dashboard/user/reset-bank',
+  //   icon: '/images/dashboard/img06.png',
+  // },
   {
     title: 'Messages',
     href: '/dashboard/user/messages',
