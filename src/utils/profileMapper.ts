@@ -23,6 +23,7 @@ export function mapProfileToUI(data: ProfileData): ProfileUIData {
       joiningDate: data.training_practice || '',
       followers: data.followers || 0,
       following: data.followings || 0,
+      is_public: data.is_public,
       credentials: data.credentials ?? '',
       year: data.educations?.[0]?.year ?? '',
       instagram: data.instagram ?? '',

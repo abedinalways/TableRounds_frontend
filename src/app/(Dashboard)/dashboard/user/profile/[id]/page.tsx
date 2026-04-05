@@ -5,6 +5,7 @@ import { ProfileTab } from '@/types/profile';
 import ProfileHeader from '@/components/profile/ProfileHeader';
 import ProfileTabs from '@/components/profile/ProfileTabs';
 import { useGetProfileDataQuery } from '@/app/redux/api/getProfileApi';
+import { is } from 'zod/v4/locales';
 
 
 export default function ProfilePage({
@@ -50,7 +51,7 @@ export default function ProfilePage({
       location: apiData.address || 'Location not set',
       jobArea: apiData.current_practice || 'General Practice',
       joiningDate: 'March 2025',
-
+      is_public: apiData.is_public,
       bio: apiData.bio || 'No bio available.',
 
       followers: apiData.followers ?? 0,

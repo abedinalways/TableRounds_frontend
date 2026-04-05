@@ -70,6 +70,7 @@ export interface UserProfile {
   followers: number;
   following: number;
   credentials: string;
+  is_public: boolean;
   year: string;
   instagram: string;
   linkedin: string;

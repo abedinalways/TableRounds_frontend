@@ -6,6 +6,7 @@ import { ProfileTab } from '@/types/profile';
 import { useGetProfileDataQuery } from '@/app/redux/api/getProfileApi';
 import ProfileHeader from '@/components/user-profile/ProfileHeader';
 import ProfileTabs from '@/components/user-profile/ProfileTabs';
+import { is } from 'zod/v4/locales';
 
 export default function ProfilePage({
   params,
@@ -42,7 +43,7 @@ export default function ProfilePage({
          ? apiData.avatar
          : `${apiData.avatar}`
        : '/images/settings/img01.png',
-
+     is_public: apiData.is_public,
      title: apiData.training_practice || 'Medical Professional',
      location: apiData.address || 'Location not set',
      jobArea: apiData.current_practice || 'General Practice',
