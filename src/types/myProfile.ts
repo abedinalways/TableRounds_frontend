@@ -5,6 +5,7 @@ export interface UserProfile {
   cv: string;
   title: string;
   avatar: string;
+  is_public: boolean;
   location: string;
   jobArea: string;
   joiningDate: string;
