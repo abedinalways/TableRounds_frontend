@@ -28,6 +28,7 @@ export const baseApi = createApi({
     'SingleQuestion',
     'help',
     'notification',
+    'adminNotification',
     'Connections',
   ],
   endpoints: () => ({}),

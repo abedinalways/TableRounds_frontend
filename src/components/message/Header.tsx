@@ -20,7 +20,9 @@ import { useGetMessagesQuery } from '@/app/redux/api/chat/chatApi';
 export default function Header() {
   const { conversations, activeConversationId } = useChat();
   const textRef = useRef<HTMLHeadingElement | null>(null);
-  
+  const { data: me } = useMeQuery();
+  console.log(me, ':::::::::::::::::::::::::::');
+
   const [reportUser, { isLoading: isReporting }] = useReportUserMutation();
   const [toggleFollow, { isLoading: isFollowLoading }] =
     useToggleFollowMutation();
@@ -30,23 +32,22 @@ export default function Header() {
   );
   console.log(activeConversation, 'activeConversation=====================++++++++++++++++',);
 
-  // const { data: chatData, error } = useGetMessagesQuery({
-  //   conversationId: activeConversationId as string, // Type assertion
-  //   limit: 20,
-  // });
+  
   
 
-  const { data: chatData, error } = useGetMessagesQuery({
-    conversationId: activeConversationId as string, // Type assertion
+  const { data: chatData } = useGetMessagesQuery({
+    conversationId: activeConversationId as string,
     limit: 20,
   });
-    console.log(chatData, 'chatData=====================++++++++++++++++',);
+    console.log(chatData, 'chatData========efweo9wego=============++++++++++++++++',);
 
   // local follow state by participant id
   const [followState, setFollowState] = useState<Record<string, boolean>>({});
 
   const participantId = activeConversation?.participant?.id;
-
+  const participant = activeConversation?.creator?.id == me?.id ? activeConversation?.participant?.name : activeConversation?.creator?.name;
+  
+  const participantAvatar = activeConversation?.creator?.id == me?.id ? activeConversation?.participant?.avatar_url : activeConversation?.creator?.avatar_url;
   const isFollowing = useMemo(() => {
     if (!participantId) return false;
     return followState[participantId] ?? false;
@@ -121,7 +122,7 @@ export default function Header() {
         <div className="flex items-center gap-4">
           <Image
             src={
-              activeConversation?.participant?.avatar_url || '/images/doc.png'
+              participantAvatar || '/images/doc.png'
             }
             width={90}
             height={90}
@@ -133,7 +134,7 @@ export default function Header() {
           <div className="space-y-1">
             <h2 ref={textRef} className="md:text-2xl text-sm font-bold">
               
-              {activeConversation?.participant?.name}
+              {participant || 'Unknown User'}
             </h2>
 
             <p className="md:text-sm text-xs opacity-90">

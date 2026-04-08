@@ -1,4 +1,4 @@
-import { baseApi } from '../../api/baseApi';
+import { baseApi } from '../baseApi';
 
 interface ApiResponse<T> {
   success: boolean;

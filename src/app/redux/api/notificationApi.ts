@@ -45,7 +45,7 @@ export const notificationApi = baseApi.injectEndpoints({
 
     getAdminNotifications: builder.query<GetNotificationsResponse, void>({
       query: () => '/admin/notification',
-      providesTags: ['notification'],
+      providesTags: ['adminNotification'],
     }),
 
     deleteUserNotification: builder.mutation<{ success: boolean }, string>({
@@ -69,7 +69,7 @@ export const notificationApi = baseApi.injectEndpoints({
         url: `/admin/notification/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['notification'],
+      invalidatesTags: ['adminNotification'],
     }),
 
     deleteAllAdminNotifications: builder.mutation<{ success: boolean }, void>({
@@ -77,7 +77,7 @@ export const notificationApi = baseApi.injectEndpoints({
         url: '/admin/notification',
         method: 'DELETE',
       }),
-      invalidatesTags: ['notification'],
+      invalidatesTags: ['adminNotification'],
     }),
   }),
   overrideExisting: false,
