@@ -70,12 +70,21 @@ export function CreateTestContent() {
   };
 
   const allTopicsSelected = selectedTopics.length === TOPICS.length;
-
+  
   const handleToggleAllTopics = () => {
     setSelectedTopics(
       allTopicsSelected ? [] : TOPICS.map(topic => topic.value),
     );
   };
+  
+  const allDifficultiesSelected = selectedDifficulty.length === DIFFICULTY_LEVELS.length;
+  
+  const handleToggleAllDifficulties = () => { 
+    setSelectedDifficulty(
+      allDifficultiesSelected ? [] : [...DIFFICULTY_LEVELS],
+    );
+  };
+
 
   const handleStatusToggle = (status: string, checked: boolean) => {
     setSelectedStatus(prev =>
@@ -245,9 +254,21 @@ export function CreateTestContent() {
         </div>
 
         <div className="space-y-4 bg-white p-4 rounded-[12px] border border-[#e9e9e9] custom-shadow">
+          <div className="flex items-center gap-3 flex-wrap">
+
           <h3 className="text-xl md:text-[24px] font-bold text-[#444950]">
             Difficulty
           </h3>
+
+          <button
+            type="button"
+            onClick={handleToggleAllDifficulties}
+            className="text-[#01503b] border border-[#01503b] px-3 py-1.5 rounded-[8px] text-sm font-medium cursor-pointer hover:bg-[#01503b] hover:text-white transition"
+          >
+            {allDifficultiesSelected ? 'Deselect All' : 'Select All'}
+          </button>
+          </div>
+
 
           <div className="flex flex-wrap gap-4">
             {DIFFICULTY_LEVELS.map(level => {
@@ -260,10 +281,13 @@ export function CreateTestContent() {
                   onClick={() => handleDifficultySelect(level)}
                 >
                   <CustomCheckbox checked={isSelected} />
-                  <span>
-                    {level} ({difficultyCounts[level]})
-                  </span>{' '}
                   {/* Display the count beside the difficulty */}
+                  <span className="flex gap-2 items-center">
+                    {level}{' '}
+                    <span className="min-w-[30px] h-[22px] px-2 rounded-[6px] border border-[#00B977] text-[#00B977] text-xs font-medium flex items-center justify-center bg-white">
+                      {difficultyCounts[level]}
+                    </span>
+                  </span>{' '}
                 </div>
               );
             })}
@@ -300,8 +324,11 @@ export function CreateTestContent() {
                   onClick={() => handleTopicToggle(topic.value, !isSelected)}
                 >
                   <CustomCheckbox checked={isSelected} />
-                  <Label>
-                    {topic.label} ({topicCounts[topic.value]})
+                  <Label className="flex gap-2 items-center">
+                    {topic.label}{' '}
+                    <span className="min-w-[20px] h-[22px] px-2 rounded-[6px] border border-[#00B977] text-[#00B977] text-xs font-medium flex items-center justify-center bg-white">
+                      {topicCounts[topic.value]}
+                    </span>
                   </Label>{' '}
                   {/* Display the count beside the topic */}
                 </div>
