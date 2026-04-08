@@ -32,6 +32,8 @@ interface QuizQuestionViewProps {
   // setQuestions: React.Dispatch<React.SetStateAction<QuizDetailsUI[]>>;
   setQuestions: React.Dispatch<React.SetStateAction<QuizQuestionDataUI[]>>;
   currentQuestion: number;
+  selectedAnswerId: string | null; // Add selectedAnswerId to props
+  setSelectedAnswer: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
@@ -44,12 +46,13 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   onJumpTo,
   setQuestions,
   currentQuestion,
+  selectedAnswerId,
+  setSelectedAnswer,
 }) => {
   const { testProgress, quizDetails } = data;
   const { totalQuestions, questionID } = testProgress;
 
-  
-  const [selectedAnswerId, setSelectedAnswer] = useState<string | null>(null);
+  // const [selectedAnswerId, setSelectedAnswer] = useState<string | null>(null);
   const [showExplanation, setShowExplanation] = useState<boolean>(false);
 
   useEffect(() => {
@@ -68,9 +71,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
     useAnswerQuestionMutation();
   const [toggleMarkApi] = useToggleMarkMutation();
   const [skipQuestionApi] = useSkipQuestionMutation();
- 
 
-  
   useEffect(() => {
     if (questionRef.current && explanationRef.current) {
       gsap.set(questionRef.current, { flex: '1 1 0%', opacity: 1 });
@@ -87,8 +88,6 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
     setSelectedAnswer(value);
   };
 
-  
-  
   const handleSubmit = async () => {
     // Ensure the selectedAnswerId is valid
     if (!selectedAnswerId || showExplanation || isAnswering) return;
@@ -153,7 +152,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
 
         return copy;
       });
-     console.log(quizDetails, 'llllll=======================');
+      console.log(quizDetails, 'llllll=======================');
       setShowExplanation(true);
     } catch (error) {
       console.error('Submit failed:', error);
@@ -162,42 +161,39 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   /**
    * Toggle Mark
    */
- const handleToggleMark = async () => {
-   try {
-     
-     const saved = localStorage.getItem('MARKED_QUESTIONS');
-     let parsed = saved ? JSON.parse(saved) : [];
+  const handleToggleMark = async () => {
+    try {
+      const saved = localStorage.getItem('MARKED_QUESTIONS');
+      let parsed = saved ? JSON.parse(saved) : [];
 
-     if (isMarked) {
-       // remove
-       parsed = parsed.filter((q: any) => q.index !== currentQuestion);
-     } else {
-       // add
-       parsed.push({
-         index: currentQuestion,
-         questionId: questionID,
-         title: quizDetails.question_title,
-         question: quizDetails.question_steam,
-         fullData:data,
-       });
-     }
+      if (isMarked) {
+        // remove
+        parsed = parsed.filter((q: any) => q.index !== currentQuestion);
+      } else {
+        // add
+        parsed.push({
+          index: currentQuestion,
+          questionId: questionID,
+          title: quizDetails.question_title,
+          question: quizDetails.question_steam,
+          fullData: data,
+        });
+      }
 
-     localStorage.setItem('MARKED_QUESTIONS', JSON.stringify(parsed));
+      localStorage.setItem('MARKED_QUESTIONS', JSON.stringify(parsed));
 
-     // ✅ 2. Update UI instantly
-     onToggleMark();
+      // ✅ 2. Update UI instantly
+      onToggleMark();
 
-    
-     await toggleMarkApi({
-       test_id: testId,
-       question_id: questionID,
-       is_marked: !isMarked,
-
-     }).unwrap();
-   } catch (error) {
-     console.error('Mark toggle failed:', error);
-   }
- };
+      await toggleMarkApi({
+        test_id: testId,
+        question_id: questionID,
+        is_marked: !isMarked,
+      }).unwrap();
+    } catch (error) {
+      console.error('Mark toggle failed:', error);
+    }
+  };
 
   /**
    * Next Question

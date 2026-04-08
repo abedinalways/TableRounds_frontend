@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import QuizQuestionView from '@/components/create_test_components/QuizQuestionView';
 
 import type { MarkedQuestion, QuizQuestionDataUI } from '@/types/test-session';
+import { toast } from 'sonner';
 
 const TEST_SESSION_KEY_PREFIX = 'TEST_SESSION_';
 const MARKED_KEY_PREFIX = 'MARKED_QUESTIONS_';
@@ -34,7 +35,7 @@ export default function CreateTestPage() {
   const [markedQuestions, setMarkedQuestions] = useState<MarkedQuestion[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [loading, setLoading] = useState(true);
-
+  const [selectedAnswerId, setSelectedAnswer] = useState<string | null>(null);
 
   useEffect(() => {
     if (!testId || questions.length === 0) return;
@@ -91,16 +92,53 @@ export default function CreateTestPage() {
     );
   };
 
+  // const onJumpTo = (index: number) => {
+  //   if (index < 1 || index > totalQuestions) return;
+  //   setCurrentQuestion(index);
+  // };
+
   const onJumpTo = (index: number) => {
-    if (index < 1 || index > totalQuestions) return;
-    setCurrentQuestion(index);
+    // Access quizDetails from the data prop
+    const quizDetails = data?.quizDetails;
+
+    // Check if the user has selected an answer
+    if (!selectedAnswerId) {
+      toast.error('Please select an answer before proceeding.');
+      return; // Prevent jumping to the next question if no answer is selected
+    }
+
+    // Check if the user has submitted the answer (using quizDetails)
+    if (!quizDetails?.userAnswerId) {
+      toast.error('Please submit your answer before proceeding.');
+      return; // Prevent jumping to the next question if the answer isn't submitted
+    }
+
+    // If no issues, jump to the selected question
+    if (index >= 1 && index <= totalQuestions) {
+      setCurrentQuestion(index);
+    }
   };
 
+  
+
   const onNext = () => {
+     const quizDetails = data?.quizDetails;
+
+    if (!selectedAnswerId) {
+      toast.error('Please submit your answer before proceeding.');
+      return; 
+    }
+     if (!quizDetails.userAnswerId) {
+       toast.error('Please submit your answer before proceeding.');
+       return; // Prevent moving to the next question if the answer isn't submitted
+     }
+
+    // If the user has answered, proceed to the next question
     if (currentQuestion >= totalQuestions) {
       router.push(`/dashboard/user/test-complete/${testId}`);
       return;
     }
+
     setCurrentQuestion(prev => prev + 1);
   };
 
@@ -153,6 +191,8 @@ export default function CreateTestPage() {
       onPrevious={onPrevious}
       currentQuestion={currentQuestion}
       setQuestions={setQuestions}
+      selectedAnswerId={selectedAnswerId} 
+      setSelectedAnswer={setSelectedAnswer}
     />
   );
 }
