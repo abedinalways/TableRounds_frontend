@@ -13,8 +13,7 @@ import { Toaster } from 'sonner';
 
 
 import { Providers } from './Providers';
-import AuthProvider from './AuthProvider'
-import { ChatProvider } from './(Dashboard)/context/ChatContext';
+;
 
 
 const manrope = Manrope({

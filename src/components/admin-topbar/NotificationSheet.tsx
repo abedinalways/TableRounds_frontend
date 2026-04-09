@@ -32,7 +32,10 @@ export function NotificationSheet({ open, onClose }: Props) {
         }
       }}
     >
-      <SheetContent side="right" className="w-full sm:w-96 p-0 z-100">
+      <SheetContent
+        side="right"
+        className="w-full sm:w-96 p-0 z-100 font-[manrope]"
+      >
         <SheetHeader className="p-4 border-b relative">
           <div className="flex items-center justify-between">
             <SheetTitle className="text-base font-semibold">

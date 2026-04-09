@@ -119,10 +119,8 @@ export function NotificationSheet({ open, onClose }: Props) {
         }
       }}
     >
-      <SheetHeader>
-      
-      </SheetHeader>
-      <SheetContent>
+      <SheetHeader></SheetHeader>
+      <SheetContent className="font-[manrope]">
         <ScrollArea className="h-[calc(100vh-8rem)] p-3 mt-16">
           <div className="space-y-1">
             {notifications.length > 0 ? (

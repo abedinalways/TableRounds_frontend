@@ -44,7 +44,7 @@ export default function Topbar({ onMenuClick }: TopbarProps = {}) {
       : '/dashboard/user/my-profile';
 
   return (
-    <header className="sticky top-0 z-1000 bg-white border-b flex items-center justify-between gap-3 px-4 sm:px-6 h-15">
+    <header className="sticky top-0 z-1000 bg-white border-b flex items-center justify-between gap-3 px-4 sm:px-6 h-15 font-[manrope]">
       {/* Mobile menu */}
       {onMenuClick && (
         <button
@@ -72,7 +72,7 @@ export default function Topbar({ onMenuClick }: TopbarProps = {}) {
             unoptimized
           />
 
-          <span className="hidden sm:block font-semibold text-gray-700">
+          <span className="hidden sm:block font-semibold text-gray-700 font-[manrope]">
             {user?.name}{' '}
             <span className="text-green-900 font-semibold uppercase">
               {role === 'admin' ? 'Admin' : `${user?.credentials}`}

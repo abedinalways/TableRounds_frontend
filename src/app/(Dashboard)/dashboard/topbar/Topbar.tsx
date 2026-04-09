@@ -73,8 +73,8 @@ export default function Topbar({ onMenuClick }: TopbarProps = {}) {
             unoptimized
           />
 
-          <span className="hidden sm:block font-semibold text-gray-700">
-            {user?.name} {' '}
+          <span className="hidden sm:block font-semibold text-gray-700 font-[manrope]">
+            {user?.name}{' '}
             <span className="text-green-900 font-semibold uppercase">
               {role === 'admin' ? 'Admin' : `${user?.credentials}`}
             </span>{' '}
