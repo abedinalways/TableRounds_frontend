@@ -22,7 +22,7 @@ export default function ProfilePage({
   
 
   const apiData = data;
-  console.log(apiData, '99999999999999999999999999999==========')
+  // console.log(apiData, '99999999999999999999999999999==========')
 
   if (isLoading) {
     return <div className="p-10 text-center">Loading profile...</div>;

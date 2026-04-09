@@ -59,8 +59,8 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
 
       console.log('conversation response: ========================= ', res);
 
-      router.push(`/dashboard/user/messages/${res.data.id}`);
-       window.location.reload();
+     window.location.href = `/dashboard/user/messages/${res.data.id}`;
+      
     } catch (err: any) {
       console.error('Conversation creation failed', err);
     }
@@ -72,13 +72,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
   const [isLoading, setIsLoading] = useState(false);
   return (
     <>
-      {isLoading ? (
-        <div className="">
-          <Skeleton className="h-12 w-64" />
-          <Skeleton className="h-8 w-48" />
-          <Skeleton className="h-10 w-32" />
-        </div>
-      ) : (
+      
         <div className="bg-white w-full rounded-2xl p-6 font-[manrope]">
           <div className=" flex flex-col md:flex-row gap-6 font-[manrope]">
             <div>
@@ -193,7 +187,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
             </button>
           </div>
         </div>
-      )}
+    
       <FollowersFollowingModal
         open={modalOpen}
         onClose={setModalOpen}

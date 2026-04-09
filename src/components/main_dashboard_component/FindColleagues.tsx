@@ -117,8 +117,7 @@ const FindColleagues = () => {
       const res = await createConversation({
         participant_id: participantId,
       }).unwrap();
-      router.push(`/dashboard/user/messages/${res.data.id}`);
-      window.location.reload();
+      window.location.href = `/dashboard/user/messages/${res.data.id}`;
     } catch (err) {
       console.error(err);
     } finally {
