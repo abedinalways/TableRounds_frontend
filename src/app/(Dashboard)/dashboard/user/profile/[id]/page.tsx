@@ -22,7 +22,7 @@ export default function ProfilePage({
   
 
   const apiData = data;
-  // console.log(apiData, '99999999999999999999999999999==========')
+  console.log(apiData, '99999999999999999999999999999==========')
 
   if (isLoading) {
     return <div className="p-10 text-center">Loading profile...</div>;
@@ -56,7 +56,7 @@ export default function ProfilePage({
 
       followers: apiData.followers ?? 0,
       following: apiData.followings ?? 0,
-
+     
       credentials: apiData.credentials ?? '',
       year: apiData.educations?.[0]?.year ?? '',
       instagram: apiData.instagram ?? '',
@@ -99,7 +99,7 @@ export default function ProfilePage({
 
       <div className="profile-container">
         <div className="-mt-60">
-          <ProfileHeader user={formattedData.user} />
+          <ProfileHeader user={formattedData.user} id={formattedData.user.id} />
         </div>
 
         <ProfileTabs

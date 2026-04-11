@@ -32,6 +32,7 @@ export interface SignUpFormData {
   name: string;
   credentials: string;
   email: string;
+
   createPassword: string;
   confirmPassword: string;
   yearInTraining: string;
@@ -153,6 +154,8 @@ export default function SignUpForm({
    const payload: RegisterPayload = {
      name: formData.name,
      email: formData.email,
+     country: formData.country,
+     state: formData.state,
      password: formData.createPassword,
      credentials: formData.credentials,
      training_practice: formData.yearInTraining,

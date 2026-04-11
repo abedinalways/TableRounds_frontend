@@ -30,6 +30,7 @@ export const baseApi = createApi({
     'notification',
     'adminNotification',
     'Connections',
+    'MapData',
   ],
   endpoints: () => ({}),
 });

@@ -16,6 +16,7 @@ export interface ConnectionsResponse {
     limit: number;
     total: number;
     type: 'follower' | 'following';
+    user_id: string;
   };
 }
 
@@ -28,9 +29,10 @@ export const connectionsApi = baseApi.injectEndpoints({
         page?: number;
         limit?: number;
         search?: string;
+        user_id?: string;
       }
     >({
-      query: ({ type, page = 1, limit = 10, search = '' }) => ({
+      query: ({ type, page = 1, limit = 10, search = '', user_id}) => ({
         url: `/profile/connections`,
         method: 'GET',
         params: {
@@ -38,10 +40,11 @@ export const connectionsApi = baseApi.injectEndpoints({
           page,
           limit,
           search,
+          user_id,
         },
         credentials: 'include',
       }),
-      providesTags: ['Connections'],
+      providesTags: ['Connections', 'Auth', ],
     }),
   }),
 });

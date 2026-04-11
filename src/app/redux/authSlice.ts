@@ -9,8 +9,8 @@ export interface AuthUser {
   email: string;
   role: Role;
   avatar: string;
-  followers: string;
-  followings: string;
+  followers: number;
+  followings: number;
   instagram: string;
   linkedin: string;
   credentials: string;

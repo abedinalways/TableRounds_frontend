@@ -77,6 +77,7 @@ export interface UserProfile {
   twitter: string;
   facebook: string;
   practiceName: string;
+  
 }
 
 export interface EducationItem {

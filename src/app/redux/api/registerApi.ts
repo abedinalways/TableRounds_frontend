@@ -1,3 +1,4 @@
+import { Country } from 'country-state-city';
 import { baseApi } from './baseApi';
 
 export interface RegisterPayload {
@@ -6,6 +7,8 @@ export interface RegisterPayload {
   password: string;
   credentials: string;
   training_practice: string;
+  country: string,
+  state:string,
   address: string;
   current_practice: string;
   bio: string;

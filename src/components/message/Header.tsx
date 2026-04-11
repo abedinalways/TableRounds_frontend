@@ -96,7 +96,7 @@ export default function Header() {
         [userId]: nextState,
       }));
 
-      const res = await toggleFollow({ userId }).unwrap();
+      const res = await toggleFollow({ userId, isFollowing: isFollowing }).unwrap();
 
       toast.success(
         res?.message ||

@@ -13,6 +13,7 @@ import FollowersFollowingModal from '../my-profile/FollowersFollowingModal';
 
 import { useRouter } from 'next/navigation';
 import { useCreateAdminConversationMutation } from '@/app/redux/api/chat/chatApi';
+import { useToggleFollowMutation } from '@/app/redux/api/followApi';
 
 interface ProfileHeaderProps {
   user: UserProfile;
@@ -47,6 +48,16 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
  
   const router = useRouter();
   const [createConversation] = useCreateAdminConversationMutation();
+
+   const [toggleFollow] = useToggleFollowMutation();
+
+   const handleFollowToggle = async (userId: string, isFollowing: boolean) => {
+     try {
+       await toggleFollow({ userId, isFollowing }).unwrap();
+     } catch (error) {
+       console.error('Follow toggle failed', error);
+     }
+   };
 
   const handleMessageClick = async () => {
     console.log('ff', user.id);
@@ -86,7 +97,10 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
 
           <div className="flex-1 space-y-3">
             <h2 className="text-[28px] text-[#0f172b] font-semibold">
-             <span className="text-green-900 font-semibold uppercase">{user.credentials}</span> {user.name}
+              <span className="text-green-900 font-semibold uppercase">
+                {user.credentials}
+              </span>{' '}
+              {user.name}
             </h2>
 
             <p className="text-[18px] text-[#047857]  ">{user.title}</p>
@@ -106,9 +120,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
               </h4>
             </div>
 
-            <p className="text-sm md:text-[18px] leading-[160%]">
-              {user.bio}
-            </p>
+            <p className="text-sm md:text-[18px] leading-[160%]">{user.bio}</p>
 
             {/* ✅ Clickable Followers / Following (no design change) */}
             <div className="flex gap-6 mt-3 text-md text-[32px] text-center">
@@ -185,6 +197,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
 
       {/* ✅ MODAL RENDER */}
       <FollowersFollowingModal
+        onFollowToggle={handleFollowToggle}
         open={modalOpen}
         onClose={setModalOpen}
         type={modalType}

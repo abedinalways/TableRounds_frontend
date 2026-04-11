@@ -7,7 +7,7 @@ import gsap from 'gsap';
 import FollowersFollowingModal from './FollowersFollowingModal';
 import { useMeQuery } from '@/app/redux/api/authApi';
 import { useGetConnectionsQuery } from '@/app/redux/api/connectionApi';
-import { useToggleFollowMutation } from '@/app/redux/api/followApi'; // ✅ added
+import { useToggleFollowMutation } from '@/app/redux/api/followApi';
 
 export const WelcomeBanner = () => {
   const { data: user } = useMeQuery();
@@ -28,9 +28,9 @@ export const WelcomeBanner = () => {
   );
 
   // ✅ follow/unfollow handler
-  const handleFollowToggle = async (userId: string) => {
+  const handleFollowToggle = async (userId: string, isFollowing: boolean) => {
     try {
-      await toggleFollow({ userId }).unwrap();
+      await toggleFollow({ userId, isFollowing }).unwrap();
     } catch (error) {
       console.error('Follow toggle failed', error);
     }
@@ -133,6 +133,7 @@ export const WelcomeBanner = () => {
 
       {/* ✅ Modal */}
       <FollowersFollowingModal
+        
         open={modalOpen}
         onClose={setModalOpen}
         type={modalType}

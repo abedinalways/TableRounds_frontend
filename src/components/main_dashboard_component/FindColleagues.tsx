@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, memo } from 'react';
+import React, { useState, memo, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -27,19 +27,28 @@ interface ColleagueCardProps {
   colleague: Colleague;
   showAll: boolean;
   onMessage: (id: string) => void;
-  onFollow: (id: string) => Promise<void> | void;
+  onFollow: (id: string, isFollowing: boolean) => Promise<void> | void;
 }
 
 // 1. Extracted Child Component
 const ColleagueCard = memo(
   ({ colleague, showAll, onMessage, onFollow }: ColleagueCardProps) => {
-    // Use local state for immediate UI feedback without hitting the parent
+    
     const [isFollowing, setIsFollowing] = useState(colleague.is_following);
 
+    useEffect(() => {
+      setIsFollowing(colleague.is_following);
+    }, [colleague.is_following]);
+
     const handleFollowClick = async () => {
-      const newState = !isFollowing;
-      setIsFollowing(newState); // Optimistic UI update
-      await onFollow(colleague.id);
+      const prevState = isFollowing;
+      setIsFollowing(!prevState);
+
+      try {
+        await onFollow(colleague.id, prevState);
+      } catch {
+        setIsFollowing(prevState);
+      }
     };
 
     const getInitials = (name: string) => {
@@ -125,13 +134,14 @@ const FindColleagues = () => {
     }
   };
 
-  const handleFollowToggle = async (userId: string) => {
+  const handleFollowToggle = async (userId: string, isFollowing: boolean) => {
     try {
       await toggleFollow({
         userId,
+        isFollowing,
         queryArgs: {
           page: 1,
-          limit: showAll ? 20 : 6,
+          limit: showAll ? 1000 : 6,
           search: searchQuery,
         },
       }).unwrap();

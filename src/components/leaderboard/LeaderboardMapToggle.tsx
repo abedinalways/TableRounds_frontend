@@ -58,7 +58,7 @@ export default function LeaderboardMapToggle() {
           <span
             className={`md:text-lg text-md ${isLeaderboard ? '' : ''}`}
           >
-            Leaderboard
+            Map
           </span>
           <Switch
             checked={isLeaderboard}
@@ -68,7 +68,7 @@ export default function LeaderboardMapToggle() {
           <span
             className={`md:text-lg text-md  ${!isLeaderboard ? '' : ''}`}
           >
-            Map
+            Leaderboard
           </span>
         </div>
       </CardHeader>
