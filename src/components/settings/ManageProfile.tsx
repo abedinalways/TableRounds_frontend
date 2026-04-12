@@ -30,6 +30,8 @@ type ProfileFormData = {
   location: string;
   year: string;
   joiningDate: string;
+  country: string;
+  state: string;
   instagram: string;
   linkedin: string;
   twitter: string;
@@ -57,12 +59,12 @@ export default function ManageProfile({
   const [toggleFollow] = useToggleFollowMutation();
 
   const handleFollowToggle = async (userId: string, isFollowing: boolean) => {
-  try {
-    await toggleFollow({ userId, isFollowing }).unwrap();
-  } catch (error) {
-    console.error('Follow toggle failed', error);
-  }
-};
+    try {
+      await toggleFollow({ userId, isFollowing }).unwrap();
+    } catch (error) {
+      console.error('Follow toggle failed', error);
+    }
+  };
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
 
   const {
@@ -75,6 +77,8 @@ export default function ManageProfile({
       name: '',
       credentials: '',
       location: '',
+      country: '',
+      state: '',
       year: '',
       joiningDate: '',
       instagram: '',
@@ -91,8 +95,10 @@ export default function ManageProfile({
       name: user?.name || '',
       credentials: user?.credentials || '',
       location: user?.location || '',
+      state: user?.state || '',
+      country: user?.country || '',
       year: user?.year || '',
-      joiningDate: user?.joiningDate || '',
+      joiningDate: user?.created_at || '',
       instagram: user?.instagram || '',
       linkedin: user?.linkedin || '',
       twitter: user?.twitter || '',
@@ -122,6 +128,8 @@ export default function ManageProfile({
       formData.append('credentials', data.credentials || '');
       formData.append('location', data.location || '');
       formData.append('year', data.year || '');
+      formData.append('country', data.country || '');
+      formData.append('state', data.state || '');
       formData.append('joiningDate', data.joiningDate || '');
       formData.append('instagram', data.instagram || '');
       formData.append('linkedin', data.linkedin || '');
@@ -174,7 +182,10 @@ export default function ManageProfile({
       name: item.name,
       avatar: item.avatar,
       username: item?.name,
+      country: item?.country,
+      state: item?.state || '',
     })) || [];
+  console.log(formattedData, 'ooooooooo===========================');
 
   const normalizeUrl = (url?: string) => {
     if (!url) return '#';
@@ -183,6 +194,14 @@ export default function ManageProfile({
     }
     return `https://${url}`;
   };
+
+  //normalize date
+  const rawDate = user.created_at;
+  // console.log(rawDate);
+  const date = new Date(rawDate);
+  // console.log(date);
+  const normalizeDate = date.toISOString().split('T')[0];
+  // console.log(normalizeDate);
 
   return (
     <>
@@ -214,28 +233,28 @@ export default function ManageProfile({
 
             <div className="flex-1 space-y-3">
               <h2 className="text-[28px] text-[#0f172b] font-semibold">
+                {user.name}{' '}
                 <span className="text-green-900 font-semibold uppercase">
                   {user.credentials}
-                </span>{' '}
-                {user.name}
+                </span>
               </h2>
 
               <p className="text-[18px] text-[#047857]">{user.title}</p>
 
-              <div className="flex md:gap-[48px] gap-6 items-center text-xs md:text-[16px] font-light text-[#6b7280]">
-                <h4 className="flex items-center gap-2">
+              <div className="flex  gap-4 items-center text-xs md:text-[16px] font-light text-[#6b7280]">
+                <h4 className="flex items-center gap-2 text-sm ">
                   <LocationIcon />
-                  {user.location}
+                  {user.location}, {user.state} , {user.country}.
                 </h4>
 
-                <h4 className="md:flex items-center gap-2">
+                <h4 className="md:flex items-center gap-2 text-sm">
                   <BagIcon />
                   {user.jobArea}
                 </h4>
 
-                <h4 className="flex items-center gap-2">
+                <h4 className="flex items-center gap-2 text-sm">
                   <CalendarIconForProfile />
-                  Joined {user.year}
+                  Joined {normalizeDate}
                 </h4>
               </div>
 
@@ -388,6 +407,7 @@ export default function ManageProfile({
             </Label>
             <Input
               {...register('name')}
+              readOnly
               className="bg-[#f9f9f5] text-black border [border-[rgba(68,68,68,0.1)]]"
             />
           </div>
@@ -437,6 +457,26 @@ export default function ManageProfile({
             <Input
               placeholder="Personal Link"
               {...register('twitter')}
+              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
+            />
+          </div>
+          <div className="flex flex-col gap-[8px]">
+            <Label className="font-bold">
+              Country<span className="text-red-600">*</span>
+            </Label>
+            <Input
+              placeholder="Enter your country"
+              {...register('country')}
+              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
+            />
+          </div>
+          <div className="flex flex-col gap-[8px]">
+            <Label className="font-bold">
+              State<span className="text-red-600">*</span>
+            </Label>
+            <Input
+              placeholder="Enter your state"
+              {...register('state')}
               className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
             />
           </div>

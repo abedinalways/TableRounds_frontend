@@ -5,7 +5,7 @@ import { ProfileTab } from '@/types/profile';
 import ProfileHeader from '@/components/profile/ProfileHeader';
 import ProfileTabs from '@/components/profile/ProfileTabs';
 import { useGetProfileDataQuery } from '@/app/redux/api/getProfileApi';
-import { is } from 'zod/v4/locales';
+// import { is } from 'zod/v4/locales';
 
 
 export default function ProfilePage({
@@ -22,7 +22,7 @@ export default function ProfilePage({
   
 
   const apiData = data;
-  console.log(apiData, '99999999999999999999999999999==========')
+  
 
   if (isLoading) {
     return <div className="p-10 text-center">Loading profile...</div>;
@@ -50,13 +50,13 @@ export default function ProfilePage({
       title: apiData.training_practice || 'Medical Professional',
       location: apiData.address || 'Location not set',
       jobArea: apiData.current_practice || 'General Practice',
-      joiningDate: 'March 2025',
+      created_at: apiData.created_at,
       is_public: apiData.is_public,
       bio: apiData.bio || 'No bio available.',
-
+      country: apiData.country,
+      state: apiData.state,
       followers: apiData.followers ?? 0,
       following: apiData.followings ?? 0,
-     
       credentials: apiData.credentials ?? '',
       year: apiData.educations?.[0]?.year ?? '',
       instagram: apiData.instagram ?? '',
@@ -90,6 +90,13 @@ export default function ProfilePage({
 
     skills: (apiData.skills ?? []).map((skill: any) => skill.name),
 
+    statistics: {
+      complete_percentage: apiData.statistics?.complete_percentage ?? 0,
+      correct_percentage: apiData.statistics?.correct_percentage ?? 0,
+      ranking: apiData.statistics?.ranking ?? 0,
+      best_topic: apiData.statistics?.best_topic ?? null,
+    },
+
     practiceName: apiData.current_practice ?? '',
   };
 
@@ -103,6 +110,7 @@ export default function ProfilePage({
         </div>
 
         <ProfileTabs
+        
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           data={formattedData}

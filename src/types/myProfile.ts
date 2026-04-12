@@ -7,12 +7,15 @@ export interface UserProfile {
   avatar: string;
   is_public: boolean;
   location: string;
+  created_at: string;
   jobArea: string;
   joiningDate: string;
   followers: number;
   following: number;
   credentials: string;
   year: string;
+  country: string;
+  state: string;
   instagram: string;
   linkedin: string;
   twitter: string;
@@ -42,14 +45,24 @@ export interface PublicationItem {
   author: string;
   articleLink: string;
 }
-
+export interface statisticsItems {
+  complete_percentage: number;
+  correct_percentage: number;
+  ranking: number;
+  best_topic: topicItems | null;
+}
+export interface topicItems{
+  name: string;
+  correct_percentage: number;
+}
 export interface ProfileData {
   user: UserProfile;
   education: EducationItem[];
   experience: ExperienceItem[];
   publications: PublicationItem[];
+  statistics: statisticsItems;
   skills: string[];
-  questionBank: QuestionBankStats;
+  // questionBank: QuestionBankStats;
 
 }
 export interface QuestionBankStats {

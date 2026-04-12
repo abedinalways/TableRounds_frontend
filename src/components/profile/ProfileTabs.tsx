@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef } from 'react';
+import { use, useEffect, useMemo, useRef } from 'react';
 import gsap from 'gsap';
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -17,7 +17,10 @@ import EduIcon from '../reusable/icons/EduIcon';
 import ExperienceIcon from '../reusable/icons/ExperienceIcon';
 import ActivityIcon from '../reusable/icons/ActivityIcon';
 import QuestionBankSolved from './ActivityCard';
-import { useGetStatisticsQuery } from '@/app/redux/api/statisticsForSpecificApi';
+
+import SkillBadges from '../user-profile/SkillBadges';
+
+import { useGetProfileDataQuery } from '@/app/redux/api/getProfileApi';
 
 
 interface ProfileTabsProps {
@@ -26,6 +29,7 @@ interface ProfileTabsProps {
   data: ProfileData;
   profileUserId: string;
   cv: string;
+ 
 }
 
 export default function ProfileTabs({
@@ -33,36 +37,45 @@ export default function ProfileTabs({
   setActiveTab,
   data,
   cv,
+  
   profileUserId,
 }: ProfileTabsProps) {
   const contentRef = useRef<HTMLDivElement | null>(null);
+ 
+    const { data: user } = useGetProfileDataQuery(profileUserId);
+    console.log(
+      user?.statistics,
+      'user data===========weweew==========++++++++++++++++',
+    );
+  
+  const profileStatistics = user?.statistics;
+  console.log(profileStatistics, '=====================sefghewkgf=================')
+  // const { data: statisticsData, isLoading: statisticsLoading } =
+  //   useGetStatisticsQuery(profileUserId);
 
-  const { data: statisticsData, isLoading: statisticsLoading } =
-    useGetStatisticsQuery(profileUserId);
+  // const questionBankStats = useMemo(() => {
+  //   const stats = statisticsData?.data;
 
-  const questionBankStats = useMemo(() => {
-    const stats = statisticsData?.data;
+  //   if (!stats) {
+  //     return {
+  //       completion: 0,
+  //       ranking: '-',
+  //       correctRate: 0,
+  //       bestTopic: 'N/A',
+  //     };
+  //   }
 
-    if (!stats) {
-      return {
-        completion: 0,
-        ranking: '-',
-        correctRate: 0,
-        bestTopic: 'N/A',
-      };
-    }
+  //   const bestTopicItem = [...(stats.performance_by_topic ?? [])].sort(
+  //     (a, b) => b.correct_percentage - a.correct_percentage,
+  //   )[0];
 
-    const bestTopicItem = [...(stats.performance_by_topic ?? [])].sort(
-      (a, b) => b.correct_percentage - a.correct_percentage,
-    )[0];
-
-    return {
-      completion: Math.round(stats.question_bank?.progress_percentage ?? 0),
-      ranking: bestTopicItem?.percentile_rank ?? '-',
-      correctRate: Math.round(stats.performance?.correct_percentage_avg ?? 0),
-      bestTopic: bestTopicItem?.topic ?? 'N/A',
-    };
-  }, [statisticsData]);
+  //   return {
+  //     completion: Math.round(stats.question_bank?.progress_percentage ?? 0),
+  //     ranking: bestTopicItem?.percentile_rank ?? '-',
+  //     correctRate: Math.round(stats.performance?.correct_percentage_avg ?? 0),
+  //     bestTopic: bestTopicItem?.topic ?? 'N/A',
+  //   };
+  // }, [statisticsData]);
 
   useEffect(() => {
     if (!contentRef.current) return;
@@ -116,18 +129,15 @@ export default function ProfileTabs({
             <EducationCard data={data.education} />
             <ExperienceCard data={data.experience} />
 
-            {statisticsLoading ? (
-              <div className="p-6 rounded-2xl border bg-white">
-                Loading question bank statistics...
-              </div>
-            ) : (
-              <QuestionBankSolved data={questionBankStats} />
-            )}
+            
+            
+              <QuestionBankSolved data={data.statistics} />
+           
           </div>
 
           <div className="space-y-6">
             <PublicationCard data={data.publications} />
-            {/* <SkillBadges skills={data.skills} /> */}
+            <SkillBadges skills={data.skills} />
             <QuickActions cv={cv} />
           </div>
         </TabsContent>
@@ -146,13 +156,9 @@ export default function ProfileTabs({
 
         <TabsContent value="activity">
           <div className="max-w-xl">
-            {statisticsLoading ? (
-              <div className="p-6 rounded-2xl border bg-white">
-                Loading question bank statistics...
-              </div>
-            ) : (
-              <QuestionBankSolved data={questionBankStats} />
-            )}
+            
+              <QuestionBankSolved data={data.statistics} />
+           
           </div>
         </TabsContent>
       </div>

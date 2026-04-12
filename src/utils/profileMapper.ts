@@ -20,9 +20,11 @@ export function mapProfileToUI(data: ProfileData): ProfileUIData {
       avatar: data.avatar || '',
       location: data.address || '',
       jobArea: data.current_practice || '',
+      country: data.country || '',
+      state: data.state || '',
       joiningDate: data.training_practice || '',
       followers: data.followers || 0,
-      following: data.followings || 0,
+      following: data?.followings || 0,
       is_public: data.is_public,
       credentials: data.credentials ?? '',
       year: data.educations?.[0]?.year ?? '',
@@ -31,9 +33,9 @@ export function mapProfileToUI(data: ProfileData): ProfileUIData {
       twitter: data.twitter_x ?? '',
       facebook: data.facebook ?? '',
       practiceName: data.current_practice ?? '',
+      created_at: data.created_at ?? '',
     },
 
-    // Safely handle potential undefined arrays
     education: (data.educations ?? []).map((edu: Education) => ({
       title: edu.degree,
       institute: edu.institute,
@@ -57,12 +59,18 @@ export function mapProfileToUI(data: ProfileData): ProfileUIData {
     })),
 
     skills: (data.skills ?? []).map((skill: Skill) => skill.name),
-
-    questionBank: {
-      completion: 0,
-      ranking: 0,
-      correctRate: 0,
-      bestTopic: '',
+    statistics: {
+      complete_percentage: data.statistics?.complete_percentage ?? 0,
+      correct_percentage: data.statistics?.correct_percentage ?? 0,
+      ranking: data.statistics?.ranking ?? 0,
+      best_topic: data.statistics?.best_topic ?? null,
     },
+
+    // questionBank: {
+    //   completion: 0,
+    //   ranking: 0,
+    //   correctRate: 0,
+    //   bestTopic: '',
+    // },
   };
 }

@@ -25,6 +25,7 @@ interface ProfileTabsProps {
   activeTab: ProfileTab;
   setActiveTab: (tab: ProfileTab) => void;
   data: ProfileData;
+  cv?: string;
 }
 
 export default function ProfileTabs({
@@ -34,33 +35,39 @@ export default function ProfileTabs({
 }: ProfileTabsProps) {
   const contentRef = useRef<HTMLDivElement | null>(null);
   const { data: user } = useMeQuery();
-  console.log(user, 'user data=====================++++++++++++++++');
-  const { data: statisticsData, isLoading: statisticsLoading } =
-    useGetStatisticsQuery();
+  console.log(
+    user?.statistics,
+    'user data===========weweew==========++++++++++++++++',
+  );
 
-  const questionBankStats = useMemo(() => {
-    const stats = statisticsData?.data;
+  const profileStatistics = user?.statistics;
+  console.log(profileStatistics, 'llllllll');
+  // const { data: statisticsData, isLoading: statisticsLoading } =
+  //   useGetStatisticsQuery();
 
-    if (!stats) {
-      return {
-        completion: 0,
-        ranking: '-',
-        correctRate: 0,
-        bestTopic: 'N/A',
-      };
-    }
+  // const questionBankStats = useMemo(() => {
+  //   const stats = statisticsData?.data;
 
-    const bestTopicItem = [...stats.performance_by_topic].sort(
-      (a, b) => b.correct_percentage - a.correct_percentage,
-    )[0];
+  //   if (!stats) {
+  //     return {
+  //       completion: 0,
+  //       ranking: '-',
+  //       correctRate: 0,
+  //       bestTopic: 'N/A',
+  //     };
+  //   }
 
-    return {
-      completion: Math.round(stats.question_bank.progress_percentage ?? 0),
-      ranking: bestTopicItem?.percentile_rank ?? '-',
-      correctRate: Math.round(stats.performance.correct_percentage_avg ?? 0),
-      bestTopic: bestTopicItem?.topic ?? 'N/A',
-    };
-  }, [statisticsData]);
+  //   const bestTopicItem = [...stats.performance_by_topic].sort(
+  //     (a, b) => b.correct_percentage - a.correct_percentage,
+  //   )[0];
+
+  //   return {
+  //     completion: Math.round(stats.question_bank.progress_percentage ?? 0),
+  //     ranking: bestTopicItem?.percentile_rank ?? '-',
+  //     correctRate: Math.round(stats.performance.correct_percentage_avg ?? 0),
+  //     bestTopic: bestTopicItem?.topic ?? 'N/A',
+  //   };
+  // }, [statisticsData]);
 
   useEffect(() => {
     if (!contentRef.current) return;
@@ -113,13 +120,9 @@ export default function ProfileTabs({
               <EducationCard data={data.education} />
               <ExperienceCard data={data.experience} />
 
-              {statisticsLoading ? (
-                <div className="p-6 rounded-2xl border bg-white">
-                  Loading question bank statistics...
-                </div>
-              ) : (
-                <QuestionBankSolved data={questionBankStats} />
-              )}
+              
+                <QuestionBankSolved data={data?.statistics} />
+            
             </div>
 
             <div className="space-y-6">
@@ -147,13 +150,9 @@ export default function ProfileTabs({
 
         <TabsContent value="activity">
           <div className="max-w-xl">
-            {statisticsLoading ? (
-              <div className="p-6 rounded-2xl border bg-white">
-                Loading question bank statistics...
-              </div>
-            ) : (
-              <QuestionBankSolved data={questionBankStats} />
-            )}
+           
+              <QuestionBankSolved data={data?.statistics} />
+          
           </div>
         </TabsContent>
       </div>

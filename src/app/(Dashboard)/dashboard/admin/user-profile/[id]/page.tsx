@@ -6,7 +6,7 @@ import { ProfileTab } from '@/types/profile';
 import { useGetProfileDataQuery } from '@/app/redux/api/getProfileApi';
 import ProfileHeader from '@/components/user-profile/ProfileHeader';
 import ProfileTabs from '@/components/user-profile/ProfileTabs';
-import { is } from 'zod/v4/locales';
+
 
 export default function ProfilePage({
   params,
@@ -48,12 +48,12 @@ export default function ProfilePage({
      location: apiData.address || 'Location not set',
      jobArea: apiData.current_practice || 'General Practice',
      joiningDate: 'March 2025',
-
      bio: apiData.bio || 'No bio available.',
-
+     created_at: apiData.created_at ?? '',
      followers: apiData.followers ?? 0,
      following: apiData.followings ?? 0,
-
+     country: apiData.country ?? '',
+     state: apiData.state ?? '',
      credentials: apiData.credentials ?? '',
      year: apiData.educations?.[0]?.year ?? '',
      instagram: apiData.instagram ?? '',
@@ -63,7 +63,6 @@ export default function ProfilePage({
      practiceName: apiData.current_practice ?? '',
    },
 
-   
    education: (apiData.educations ?? []).map((edu: any) => ({
      title: edu.degree,
      institute: edu.institute,
@@ -71,7 +70,6 @@ export default function ProfilePage({
      year: edu.year,
    })),
 
-   
    experience: (apiData.experiences ?? []).map((exp: any) => ({
      role: exp.position,
      hospital: exp.company,
@@ -80,7 +78,6 @@ export default function ProfilePage({
      specialty: exp.specialty ?? '',
    })),
 
-   
    publications: (apiData.publications ?? []).map((pub: any) => ({
      title: pub.title,
      year: pub.year,
@@ -90,11 +87,11 @@ export default function ProfilePage({
 
    skills: (apiData.skills ?? []).map((skill: any) => skill.name),
 
-   questionBank: {
-     completion: 0,
-     ranking: 0,
-     correctRate: 0,
-     bestTopic: '',
+   statistics: {
+     complete_percentage: apiData.statistics?.complete_percentage ?? 0,
+     correct_percentage: apiData.statistics?.correct_percentage ?? 0,
+     ranking: apiData.statistics?.ranking ?? 0,
+     best_topic: apiData.statistics?.best_topic ?? null,
    },
 
    practiceName: apiData.current_practice ?? '',

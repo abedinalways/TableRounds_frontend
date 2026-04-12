@@ -16,6 +16,8 @@ export interface ProfileData {
   credentials: string;
   training_practice: string;
   address: string;
+  country: string;
+  state: string;
   current_practice: string;
   bio: string;
   instagram: string;
@@ -25,12 +27,14 @@ export interface ProfileData {
   type: string;
   cv: string | null;
   is_public: boolean;
+  created_at: string;
   email_notification: boolean;
   website_notification: boolean;
   educations: Education[];
   experiences: Experience[];
   skills: Skill[];
   publications: Publication[];
+  statistics: statisticsItems;
   followings: number;
   followers: number;
 }
@@ -52,6 +56,17 @@ export interface Experience {
   location: string;
   start_date: string;
   end_date: string;
+}
+
+export interface statisticsItems{
+  complete_percentage: number;
+  correct_percentage: number;
+  ranking: number;
+  best_topic: topicItems | null;
+}
+export interface topicItems {
+  name: string;
+  correct_percentage: number;
 }
 
 export interface Publication {

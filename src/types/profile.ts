@@ -1,3 +1,5 @@
+import { Education, Publication } from './../app/redux/api/getProfileApi';
+
 // export interface UserProfile {
 //   name: string;
 //   id: string;
@@ -66,7 +68,9 @@ export interface UserProfile {
   avatar: string;
   location: string;
   jobArea: string;
-  joiningDate: string;
+  country: string;
+  state: string;
+  created_at: string;
   followers: number;
   following: number;
   credentials: string;
@@ -87,7 +91,7 @@ export interface EducationItem {
   year: string;
 }
 
-export interface ExperienceItem {
+export interface ExperienceItem{
   role: string;
   hospital: string;
   location: string;
@@ -95,7 +99,7 @@ export interface ExperienceItem {
   specialty: string;
 }
 
-export interface PublicationItem {
+export interface PublicationItem{
   title: string;
   year: string;
   author: string;
@@ -109,11 +113,24 @@ export interface QuestionBankStats {
   bestTopic: string;
 }
 
+export interface statisticsItems {
+  complete_percentage: number;
+  correct_percentage: number;
+  ranking: number;
+  best_topic: topicItems | null;
+}
+
+
+export interface topicItems {
+  name: string;
+  correct_percentage: number;
+}
 export interface ProfileData {
   user: UserProfile;
   education: EducationItem[];
   experience: ExperienceItem[];
   publications: PublicationItem[];
+  statistics: statisticsItems;
   skills: string[];
   practiceName: string;
 }

@@ -24,6 +24,7 @@ interface ProfileTabsProps {
   setActiveTab: (tab: ProfileTab) => void;
   data: ProfileData;
   cv: string;
+
 }
 
 export default function ProfileTabs({
@@ -88,7 +89,7 @@ export default function ProfileTabs({
           <div className="space-y-6">
             <EducationCard data={data.education} />
             <ExperienceCard data={data.experience} />
-            <QuestionBankSolved data={data.questionBank} />
+            <QuestionBankSolved data={data.statistics} />
           </div>
 
           <div className="space-y-6">
@@ -113,7 +114,7 @@ export default function ProfileTabs({
         <TabsContent value="activity">
           {/* here questionbank card placed */}
           <div className="max-w-xl">
-            <QuestionBankSolved data={data.questionBank} />
+            <QuestionBankSolved data={data.statistics} />
           </div>
         </TabsContent>
       </div>

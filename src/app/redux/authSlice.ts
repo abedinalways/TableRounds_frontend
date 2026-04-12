@@ -13,6 +13,9 @@ export interface AuthUser {
   followings: number;
   instagram: string;
   linkedin: string;
+  statistics: [];
+  country: string;
+  state: string;
   credentials: string;
   twitter_x: string;
   facebook: string;

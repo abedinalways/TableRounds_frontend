@@ -116,7 +116,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
               </h4>
               <h4 className="flex items-center gap-2">
                 <CalendarIconForProfile />
-                Joined {user.joiningDate}{' '}
+                Joined {user.created_at}{' '}
               </h4>
             </div>
 

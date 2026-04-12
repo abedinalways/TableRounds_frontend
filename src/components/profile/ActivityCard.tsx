@@ -2,28 +2,30 @@
 
 import { Card } from '@/components/ui/card';
 import BagIcon from '../reusable/icons/BagIcon';
+import { statisticsItems } from '@/types/profile';
 
-interface QuestionBankStats {
-  completion: number;
-  ranking: number | string;
-  correctRate: number;
-  bestTopic: string;
-}
+// interface QuestionBankStats {
+//   completion: number;
+//   ranking: number | string;
+//   correctRate: number;
+//   bestTopic: string;
+// }
 
 interface Props {
-  data: QuestionBankStats;
+  data: statisticsItems;
 }
 
 export default function QuestionBankSolved({ data }: Props) {
-  const { completion, ranking, correctRate, bestTopic } = data;
+  const { complete_percentage, correct_percentage, ranking, best_topic } =
+    data || {};
 
   const radius = 110;
   const size = 251;
   const center = size / 2;
   const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (completion / 100) * circumference;
+  const offset = circumference - complete_percentage * circumference;
 
-  const gradientId = `progressGradient-${completion}`;
+  const gradientId = `progressGradient-${complete_percentage}`;
 
   return (
     <Card className="p-6 rounded-2xl border border-[#4444441A] font-[manrope]">
@@ -81,7 +83,7 @@ export default function QuestionBankSolved({ data }: Props) {
 
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span className="text-[32px] md:text-[48px] leading-[130%] font-bold text-[#01503b]">
-              {completion || 0}%
+              {complete_percentage}%
             </span>
             <span className="text-sm md:text-[20px] text-[#01281e]">
               Complete
@@ -90,16 +92,16 @@ export default function QuestionBankSolved({ data }: Props) {
         </div>
 
         <div className="flex-1 w-full space-y-3">
-          <StatRow label="Ranking" value={ranking || 0} />
-          <StatRow label="Correct" value={`${correctRate || 0}%`} />
-          <StatRow label="Best Topic" value={bestTopic || 'None'} />
+          <StatRow label="Ranking" value={ranking} />
+          <StatRow label="Complete" value={`${complete_percentage}%`} />
+          <StatRow label="Best Topic" value={best_topic?.name} />
         </div>
       </div>
     </Card>
   );
 }
 
-function StatRow({ label, value }: { label: string; value: string | number }) {
+function StatRow({ label, value }: { label: string; value: string | number | undefined }) {
   return (
     <div className="flex justify-between items-center bg-[#ecfdf5] px-4 py-3 rounded-lg">
       <span className="text-sm md:text-[16px] text-[#01281e] font-medium">

@@ -302,6 +302,14 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
     }
   };
 
+  //normalize date
+  const rawDate = user.created_at;
+  // console.log(rawDate);
+  const date = new Date(rawDate);
+  // console.log(date);
+  const normalizeDate = date.toISOString().split("T")[0];
+  // console.log(normalizeDate);
+
   return (
     <>
       <div className="bg-white w-full rounded-2xl p-6 font-[manrope]">
@@ -319,10 +327,10 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
 
           <div className="flex-1 space-y-3">
             <h2 className="text-[28px] text-[#0f172b] font-semibold">
+              {user.name}{' '}
               <span className="text-green-900 font-semibold uppercase">
                 {user.credentials}
-              </span>{' '}
-              {user.name}
+              </span>
             </h2>
 
             <p className="text-[18px] text-[#047857]">{user.title}</p>
@@ -330,7 +338,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
             <div className="flex md:gap-[48px] gap-6 items-center text-xs md:text-[16px] font-light text-[#6b7280]">
               <h4 className="flex items-center gap-2">
                 <LocationIcon />
-                {user.location}
+                {user.location} {user.state}, {user.country}
               </h4>
               <h4 className="flex items-center gap-2">
                 <BagIcon />
@@ -338,7 +346,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
               </h4>
               <h4 className="flex items-center gap-2">
                 <CalendarIconForProfile />
-                Joined {user.joiningDate}
+                <span className='font-semibold'>Joined</span> {normalizeDate}
               </h4>
             </div>
 
