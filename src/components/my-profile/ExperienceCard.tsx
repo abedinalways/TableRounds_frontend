@@ -22,7 +22,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Btn from '../reusable/button/Btn';
-import { useCreateExperienceMutation } from '@/app/redux/api/profileSectionsApi';
+import { useUpsertExperienceMutation } from '@/app/redux/api/profileSectionsApi';
+
+
 
 interface ExperienceCardProps {
   data: ExperienceItem[];
@@ -44,7 +46,7 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<Mode>('add');
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [createExperience, { isLoading }] = useCreateExperienceMutation();
+ const [upsertExperience, { isLoading }] = useUpsertExperienceMutation();
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -133,15 +135,18 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
 
     try {
       if (mode === 'add') {
-        const response = await createExperience({
-          company: formData.hospital,
-          position: formData.role,
-          location: formData.location,
-          start_date: formData.startDate,
-          end_date: formData.endDate,
+        const response = await upsertExperience({
+          data: {
+            company: formData.hospital,
+            position: formData.role,
+            location: formData.location,
+            start_date: formData.startDate,
+            end_date: formData.endDate,
+          },
         }).unwrap();
 
         const newItem: ExperienceItem = {
+          id: response.data.id,
           role: response.data.position,
           hospital: response.data.company,
           location: response.data.location,
@@ -154,18 +159,35 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
       }
 
       if (mode === 'edit' && activeIndex !== null) {
+        const item = experienceList[activeIndex];
+
+        const response = await upsertExperience({
+          id: item.id,
+          data: {
+            company: formData.hospital,
+            position: formData.role,
+            location: formData.location,
+            start_date: formData.startDate,
+            end_date: formData.endDate,
+          },
+        }).unwrap();
+
         const updatedItem: ExperienceItem = {
-          role: formData.role,
-          hospital: formData.hospital,
-          location: formData.location,
+          id: response.data.id,
+          role: response.data.position,
+          hospital: response.data.company,
+          location: response.data.location,
           description: formData.description,
-          period: `${formData.startDate} - ${formData.endDate}`,
+          period: `${response.data.start_date} - ${response.data.end_date}`,
         };
+
+      
 
         setExperienceList(prev =>
           prev.map((item, i) => (i === activeIndex ? updatedItem : item)),
         );
-        toast.success('Experience updated locally');
+
+        toast.success(response.message || 'Experience updated successfully');
       }
 
       setOpen(false);

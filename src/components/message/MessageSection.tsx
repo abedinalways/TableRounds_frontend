@@ -7,17 +7,37 @@ import { AudioBubble } from './AudioBubble';
 import { useMeQuery } from '@/app/redux/api/authApi';
 import { FileIcon, X } from 'lucide-react';
 import TestResultCard from '../test-complete/TestResultCard';
+import { useGetMessagesQuery } from '@/app/redux/api/chat/chatApi';
 
 export default function MessageSection() {
-  const { messages } = useChat();
+  const { messages, conversations, activeConversationId } = useChat();
   const endRef = useRef<HTMLDivElement>(null);
-  const me = useMeQuery();
-  console.log(me.data, 'my datya===============================+++++++++++++++');
-  console.log(messages, 'messages===============================+++++++++++++++===========');
+  const {data:me } = useMeQuery();
+  
   const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001';
 
   const [viewerOpen, setViewerOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const activeConversation = conversations.find(
+      conv => conv.id === activeConversationId,
+    );
+    console.log(activeConversation, 'activeConversation=====================++++++++++++++++',);
+  
+    
+    
+  
+    const { data: chatData } = useGetMessagesQuery({
+      conversationId: activeConversationId as string,
+      limit: 20,
+    });
+  
+  const participantId = activeConversation?.participant?.id;
+  
+
+  const participantAvatar =
+    activeConversation?.creator?.id == me?.id
+      ? activeConversation?.participant?.avatar_url
+      : activeConversation?.creator?.avatar_url;
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -82,7 +102,7 @@ export default function MessageSection() {
               new Date(b.created_at).getTime(),
           )
           .map(msg => {
-            const isMe = msg?.sender?.id === me.data?.id;
+            const isMe = msg?.sender?.id === me?.id;
 
             return (
               <div
@@ -95,7 +115,7 @@ export default function MessageSection() {
                   <Image
                     width="24"
                     height="24"
-                    src={'https://img.icons8.com/color/24/google-contacts.png'}
+                    src={participantAvatar || '/images/doc.png'}
                     alt="google-contacts"
                     className="rounded-full aspect-square object-cover"
                     unoptimized
@@ -194,7 +214,7 @@ export default function MessageSection() {
                     width="24"
                     height="24"
                     src={
-                      me?.data?.avatar ||
+                      me?.avatar ||
                       'https://img.icons8.com/color/24/google-contacts.png'
                     }
                     alt=""

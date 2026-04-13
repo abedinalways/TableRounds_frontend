@@ -66,7 +66,7 @@ export interface UserProfile {
   bio: string;
   title: string;
   avatar: string;
-  location: string;
+  address: string;
   jobArea: string;
   country: string;
   state: string;
@@ -75,13 +75,12 @@ export interface UserProfile {
   following: number;
   credentials: string;
   is_public: boolean;
-  year: string;
+  training_practice: string;
   instagram: string;
   linkedin: string;
   twitter: string;
   facebook: string;
-  practiceName: string;
-  
+  current_practice: string;
 }
 
 export interface EducationItem {

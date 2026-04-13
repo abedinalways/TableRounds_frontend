@@ -1,11 +1,33 @@
 import { baseApi } from './baseApi';
 
+/* ================= TYPES ================= */
+
 export interface CreateEducationPayload {
   degree: string;
-  description: string;
+  description?: string;
   institute: string;
   year: string;
 }
+
+export interface CreateExperiencePayload {
+  company: string;
+  position: string;
+  location: string;
+  start_date: string;
+  end_date: string;
+}
+
+export interface CreatePublicationPayload {
+  topic: string;
+  title: string;
+  link: string;
+  year: string;
+}
+export interface CreateSkillPayload {
+  name: string;
+}
+
+/* ================= RESPONSES ================= */
 
 export interface CreateEducationResponse {
   success: boolean;
@@ -17,14 +39,6 @@ export interface CreateEducationResponse {
     institute: string;
     year: string;
   };
-}
-
-export interface CreateExperiencePayload {
-  company: string;
-  position: string;
-  location: string;
-  start_date: string;
-  end_date: string;
 }
 
 export interface CreateExperienceResponse {
@@ -40,26 +54,16 @@ export interface CreateExperienceResponse {
   };
 }
 
-export interface CreatePublicationPayload {
-  title: string;
-  topic: string;
-  link: string;
-  year: string;
-}
-
 export interface CreatePublicationResponse {
   success: boolean;
   message: string;
   data: {
     id: string;
     topic: string;
+    title: string;
     link: string;
     year: string;
   };
-}
-
-export interface CreateSkillPayload {
-  name: string;
 }
 
 export interface CreateSkillResponse {
@@ -71,63 +75,87 @@ export interface CreateSkillResponse {
   };
 }
 
+/* ================= API ================= */
+
 export const profileSectionsApi = baseApi.injectEndpoints({
   endpoints: builder => ({
-    createEducation: builder.mutation<
+    /* ========= EDUCATION ========= */
+
+    upsertEducation: builder.mutation<
       CreateEducationResponse,
-      CreateEducationPayload
+      { id?: string; data: CreateEducationPayload }
     >({
-      query: body => ({
+      query: ({ id, data }) => ({
         url: '/profile/education',
-        method: 'POST',
-        body,
+        method: 'PUT',
+        body: data,
+        params: {
+          education_id: id,
+        },
         credentials: 'include',
       }),
       invalidatesTags: ['Profile'],
     }),
 
-    createExperience: builder.mutation<
+    /* ========= EXPERIENCE ========= */
+
+    upsertExperience: builder.mutation<
       CreateExperienceResponse,
-      CreateExperiencePayload
+      { id?: string; data: CreateExperiencePayload }
     >({
-      query: body => ({
+      query: ({ id, data }) => ({
         url: '/profile/experience',
-        method: 'POST',
-        body,
+        method: 'PUT',
+        body: data,
+        params: {
+          experience_id: id,
+        },
         credentials: 'include',
       }),
       invalidatesTags: ['Profile'],
     }),
 
-    createPublication: builder.mutation<
+    /* ========= PUBLICATION ========= */
+
+    upsertPublication: builder.mutation<
       CreatePublicationResponse,
-      CreatePublicationPayload
+      { id?: string; data: CreatePublicationPayload }
     >({
-      query: body => ({
+      query: ({ id, data }) => ({
         url: '/profile/publication',
-        method: 'POST',
-        body,
+        method: 'PUT',
+        body: data,
+        params: {
+          publication_id: id,
+        },
         credentials: 'include',
       }),
       invalidatesTags: ['Profile'],
     }),
 
-    createSkill: builder.mutation<CreateSkillResponse, CreateSkillPayload>({
-      query: body => ({
+    /* ========= SKILL ========= */
+
+    upsertSkill: builder.mutation<
+      CreateSkillResponse,
+      { id?: string; data: CreateSkillPayload }
+    >({
+      query: ({ id, data }) => ({
         url: '/profile/skill',
-        method: 'POST',
-        body,
+        method: 'PUT',
+        body: data,
+        params: {
+          skill_id: id,
+        },
         credentials: 'include',
       }),
       invalidatesTags: ['Profile'],
     }),
   }),
-  overrideExisting: false,
 });
 
 export const {
-  useCreateEducationMutation,
-  useCreateExperienceMutation,
-  useCreatePublicationMutation,
-  useCreateSkillMutation,
+  useUpsertEducationMutation,
+  useUpsertExperienceMutation,
+  useUpsertPublicationMutation,
+  useUpsertSkillMutation,
 } = profileSectionsApi;

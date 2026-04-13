@@ -82,11 +82,11 @@ export default function QuestionBankSolved({ data }: Props) {
           </svg>
 
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-[32px] md:text-[48px] leading-[130%] font-bold text-[#01503b]">
-              {complete_percentage}%
+            <span className="text-sm md:text-[36px] leading-[130%] font-bold text-[#01503b]">
+              {correct_percentage}%
             </span>
             <span className="text-sm md:text-[20px] text-[#01281e]">
-              Complete
+              Correct
             </span>
           </div>
         </div>
@@ -107,7 +107,7 @@ function StatRow({ label, value }: { label: string; value: string | number | und
       <span className="text-sm md:text-[16px] text-[#01281e] font-medium">
         {label}
       </span>
-      <span className="text-md md:text-[20px] text-[#01503b] font-medium">
+      <span className="text-md  text-[#01503b] font-medium">
         {value}
       </span>
     </div>

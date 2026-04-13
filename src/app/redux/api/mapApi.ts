@@ -3,7 +3,8 @@ import { baseApi } from './baseApi';
 export interface MapUserLocation {
   id: string;
   name: string;
-  location: string;
+  country: string;
+  count: number;
   lat: number;
   lng: number;
 }

@@ -19,7 +19,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Btn from '../reusable/button/Btn';
-import { useCreateSkillMutation } from '@/app/redux/api/profileSectionsApi';
+import { useUpsertSkillMutation } from '@/app/redux/api/profileSectionsApi';
 
 interface SkillBadgesProps {
   skills: string[];
@@ -27,20 +27,25 @@ interface SkillBadgesProps {
 
 type Mode = 'editAll' | 'edit' | 'add';
 
+// Internal type to carry server id alongside the display name
+type SkillEntry = { id?: string; name: string };
+
 export default function SkillBadges({ skills }: SkillBadgesProps) {
-  const [skillList, setSkillList] = useState<string[]>(skills);
+  const [skillList, setSkillList] = useState<SkillEntry[]>(
+    skills.map(name => ({ name })),
+  );
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<Mode>('add');
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [skillValue, setSkillValue] = useState('');
-  const [createSkill, { isLoading }] = useCreateSkillMutation();
+  const [upsertSkill, { isLoading }] = useUpsertSkillMutation();
 
   const modalRef = useRef<HTMLDivElement>(null);
 
   const isFullModal = mode === 'editAll' || mode === 'edit';
 
   useEffect(() => {
-    setSkillList(skills);
+    setSkillList(skills.map(name => ({ name })));
   }, [skills]);
 
   useEffect(() => {
@@ -74,7 +79,7 @@ export default function SkillBadges({ skills }: SkillBadgesProps) {
   const handleEdit = (index: number) => {
     setMode('edit');
     setActiveIndex(index);
-    setSkillValue(skillList[index]);
+    setSkillValue(skillList[index].name);
     setOpen(true);
   };
 
@@ -96,21 +101,33 @@ export default function SkillBadges({ skills }: SkillBadgesProps) {
 
     try {
       if (mode === 'add') {
-        const response = await createSkill({
-          name: skillValue.trim(),
+        const response = await upsertSkill({
+          data: { name: skillValue.trim() },
         }).unwrap();
 
-        setSkillList(prev => [...prev, response.data.name]);
+        setSkillList(prev => [
+          ...prev,
+          { id: response.data.id, name: response.data.name },
+        ]);
         toast.success(response.message || 'Skill added successfully');
       }
 
       if (mode === 'edit' && activeIndex !== null) {
+        const existing = skillList[activeIndex];
+
+        const response = await upsertSkill({
+          id: existing.id,
+          data: { name: skillValue.trim() },
+        }).unwrap();
+
         setSkillList(prev =>
           prev.map((skill, i) =>
-            i === activeIndex ? skillValue.trim() : skill,
+            i === activeIndex
+              ? { id: response.data.id, name: response.data.name }
+              : skill,
           ),
         );
-        toast.success('Skill updated locally');
+        toast.success(response.message || 'Skill updated successfully');
       }
 
       setSkillValue('');
@@ -143,16 +160,16 @@ export default function SkillBadges({ skills }: SkillBadgesProps) {
       <div className="flex flex-wrap gap-2">
         {skillList.map((skill, index) => (
           <Badge
-            key={`${skill}-${index}`}
+            key={`${skill.name}-${index}`}
             onClick={() => handleEdit(index)}
             className={`cursor-pointer p-3 rounded-full bg-[#d1fae5] text-[#01503b] ${
               activeIndex === index ? 'ring-1 ring-[#b79e6b]' : ''
             }`}
           >
-            {skill}
+            {skill.name}
             <button
               type="button"
-              aria-label={`Delete ${skill}`}
+              aria-label={`Delete ${skill.name}`}
               onClick={e => {
                 e.stopPropagation();
                 handleDeleteSkill(index);
@@ -198,13 +215,13 @@ export default function SkillBadges({ skills }: SkillBadgesProps) {
                   <div className="flex flex-wrap gap-2">
                     {skillList.map((skill, index) => (
                       <Badge
-                        key={`${skill}-${index}`}
+                        key={`${skill.name}-${index}`}
                         onClick={() => handleEdit(index)}
                         className={`cursor-pointer p-3 rounded-full bg-[#d1fae5] text-[#01503b] ${
                           activeIndex === index ? 'ring-1 ring-[#b79e6b]' : ''
                         }`}
                       >
-                        {skill}
+                        {skill.name}
                       </Badge>
                     ))}
                   </div>

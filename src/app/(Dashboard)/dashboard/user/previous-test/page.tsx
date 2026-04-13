@@ -10,7 +10,7 @@ export default function PreviousTestPage() {
   const [search, setSearch] = useState('');
 
   return (
-    <div className="font-[manrope] flex flex-col gap-3 min-h-screen">
+    <div className="font-[manrope] flex flex-col gap-3 ">
       <h2 className="text-[48px] text-[#01281e] font-bold leading-[130%]">
         Test History
       </h2>
@@ -21,7 +21,7 @@ export default function PreviousTestPage() {
 
       <TestStats />
 
-      <div className="rounded-[12px] p-[18px] border border-[#e9e9e9] shadow-lg mt-6">
+      <div className="rounded-[12px] p-[18px] border border-[#e9e9e9] shadow-lg mt-6 overflow-auto">
         <div className="flex items-center justify-between">
           <h2 className="text-[#01281e] font-bold text-[20px]">
             Previous Test List

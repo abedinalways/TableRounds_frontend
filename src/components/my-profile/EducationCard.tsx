@@ -341,7 +341,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Btn from '../reusable/button/Btn';
-import { useCreateEducationMutation } from '@/app/redux/api/profileSectionsApi';
+import { useUpsertEducationMutation } from '@/app/redux/api/profileSectionsApi';
+
 
 interface EducationCardProps {
   data: EducationItem[];
@@ -354,7 +355,7 @@ export default function EducationCard({ data }: EducationCardProps) {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<Mode>('add');
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [createEducation, { isLoading }] = useCreateEducationMutation();
+ const [upsertEducation, { isLoading }] = useUpsertEducationMutation();
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -416,28 +417,33 @@ export default function EducationCard({ data }: EducationCardProps) {
     }
 
     try {
-      if (mode === 'add') {
-        const response = await createEducation({
+      const response = await upsertEducation({
+        id: activeIndex !== null ? educationList[activeIndex]?.id : undefined,
+        data: {
           degree: formData.title,
           description: formData.degree,
           institute: formData.institute,
           year: formData.year,
-        }).unwrap();
+        },
+      }).unwrap();
 
-        const newItem: EducationItem = {
-          title: response.data.degree,
-          institute: response.data.institute,
-          degree: response.data.description,
-          year: response.data.year,
-        };
+      const newItem: EducationItem = {
+        id: response.data.id,
+        title: response.data.degree,
+        institute: response.data.institute,
+        degree: response.data.description,
+        year: response.data.year,
+      };
 
+      if (mode === 'add') {
         setEducationList(prev => [...prev, newItem]);
         toast.success(response.message || 'Education added successfully');
       } else if (mode === 'edit' && activeIndex !== null) {
         setEducationList(prev =>
-          prev.map((item, i) => (i === activeIndex ? formData : item)),
+          prev.map((item, i) => (i === activeIndex ? newItem : item)),
         );
-        toast.success('Education updated locally');
+
+        toast.success(response.message || 'Education updated successfully');
       }
 
       setOpen(false);

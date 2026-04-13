@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default function DifficultyTopic({ result }: Props) {
-  const [activeTopic] = useState<Topic>(result?.difficulty);
+  const [activeTopic] = useState<Topic>(result?.difficulty.join(' , '));
 
   const difficultyData = {
     Intern: result?.difficulty === 'Intern' ? result : null,

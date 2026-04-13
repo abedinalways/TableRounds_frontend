@@ -21,7 +21,7 @@ export default function TestResultCard({
   topic,
   percent,
   percentile,
-  time,
+  
 }: TestResultCardProps) {
   const progressRef = useRef<SVGCircleElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
@@ -58,7 +58,7 @@ export default function TestResultCard({
           <p className="text-sm opacity-80">Difficulty: {difficulty}</p>
         </div>
 
-        <div className="flex items-center gap-2 text-lg font-semibold text-[#01281E]">
+        <div className="flex items-center gap-2 text-md font-semibold text-[#01281E]">
           <span className="text-green-700">◆</span>
           {topic}
         </div>

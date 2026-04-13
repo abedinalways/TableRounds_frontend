@@ -25,10 +25,10 @@ export const CircularProgressPercentage = ({
   labelClassName,
   showLabel = false,
   shape = 'round',
-  size = 48,
+  size = 56,
   strokeWidth,
-  circleStrokeWidth = 3,
-  progressStrokeWidth = 3,
+  circleStrokeWidth = 4,
+  progressStrokeWidth = 4,
 }: CircularProgressProps) => {
   const radius = size / 2 - Math.max(circleStrokeWidth, progressStrokeWidth);
   const circumference = 2 * Math.PI * radius;

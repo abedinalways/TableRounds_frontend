@@ -36,7 +36,7 @@ export default function TestResult({ testId }: { testId: string }) {
   const result = data?.data;
   console.log(result, 'result========================')
   const topics = result?.topic_wise_stats ?? [];
-
+  const difficulty = result?.difficulty.join(' , ');
   return (
     <div className="flex flex-col gap-8">
       <ResultSummary
@@ -46,7 +46,7 @@ export default function TestResult({ testId }: { testId: string }) {
         incorrect={result?.total_incorrect}
         used={result?.used_questions}
         unused={result?.unused_questions}
-        difficulty={result?.difficulty}
+        difficulty={difficulty}
         testId={result?.test_id}
         topics={result?.topic_wise_stats ?? []}
       />

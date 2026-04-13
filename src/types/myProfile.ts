@@ -1,29 +1,30 @@
 export interface UserProfile {
-  id : string;
+  id: string;
   name: string;
   bio: string;
   cv: string;
   title: string;
   avatar: string;
   is_public: boolean;
-  location: string;
+  address: string;
   created_at: string;
   jobArea: string;
-  joiningDate: string;
+  // joiningDate: string;
   followers: number;
   following: number;
   credentials: string;
-  year: string;
+  training_practice: string;
   country: string;
   state: string;
   instagram: string;
   linkedin: string;
   twitter: string;
   facebook: string;
-  practiceName: string;
+  current_practice: string;
 }
 
 export interface EducationItem {
+  id?: string;
   title: string;
   institute: string;
   degree: string;
@@ -37,6 +38,8 @@ export interface ExperienceItem {
   period: string;
   description?: string;
   specialty?: string;
+  id?: string;
+  
 }
 
 export interface PublicationItem {

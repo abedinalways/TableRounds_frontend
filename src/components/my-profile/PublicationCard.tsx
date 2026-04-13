@@ -22,7 +22,8 @@ import { EditIcon } from '../reusable/icons/EditIcon';
 import Btn from '../reusable/button/Btn';
 
 import { PublicationItem } from '@/types/myProfile';
-import { useCreatePublicationMutation } from '@/app/redux/api/profileSectionsApi';
+import { useUpsertPublicationMutation } from '@/app/redux/api/profileSectionsApi';
+import { Button } from '../ui/button';
 
 interface PublicationCardProps {
   data: PublicationItem[];
@@ -40,11 +41,13 @@ const EMPTY_FORM: PublicationItem = {
 export default function PublicationCard({ data }: PublicationCardProps) {
   const [publicationList, setPublicationList] =
     useState<PublicationItem[]>(data);
+
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<Mode>('add');
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [formData, setFormData] = useState<PublicationItem>(EMPTY_FORM);
-  const [createPublication, { isLoading }] = useCreatePublicationMutation();
+
+  const [upsertPublication, { isLoading }] = useUpsertPublicationMutation();
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -64,7 +67,11 @@ export default function PublicationCard({ data }: PublicationCardProps) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const openAddModal = () => {
@@ -97,30 +104,52 @@ export default function PublicationCard({ data }: PublicationCardProps) {
     }
 
     try {
+      const payload = {
+        title: formData.title.trim(),
+        topic: formData.title.trim(),
+        link: formData.articleLink.trim(),
+        year: formData.year.trim(),
+      };
+
+      /* ================= ADD ================= */
       if (mode === 'add') {
-        const response = await createPublication({
-          title: formData.title,
-          topic: formData.author,
-          link: formData.articleLink,
-          year: formData.year,
+        const response = await upsertPublication({
+          data: payload,
         }).unwrap();
 
         const newItem: PublicationItem = {
-          title: response.data.topic,
+          title: response.data?.title,
           author: formData.author,
           articleLink: response.data.link,
           year: response.data.year,
         };
 
         setPublicationList(prev => [...prev, newItem]);
+
         toast.success(response.message || 'Publication added successfully');
       }
 
+      /* ================= EDIT ================= */
       if (mode === 'edit' && activeIndex !== null) {
+        const existing = publicationList[activeIndex];
+
+        const response = await upsertPublication({
+          id: (existing as any)?.id,
+          data: payload,
+        }).unwrap();
+
+        const updatedItem: PublicationItem = {
+          title: response.data.title,
+          author: formData.author,
+          articleLink: response.data.link,
+          year: response.data.year,
+        };
+
         setPublicationList(prev =>
-          prev.map((item, i) => (i === activeIndex ? formData : item)),
+          prev.map((item, i) => (i === activeIndex ? updatedItem : item)),
         );
-        toast.success('Publication updated locally');
+
+        toast.success(response.message || 'Publication updated successfully');
       }
 
       setOpen(false);
@@ -167,9 +196,11 @@ export default function PublicationCard({ data }: PublicationCardProps) {
                 <p className="md:text-[20px] text-[14px] font-semibold text-[#01281e]">
                   {item.title}
                 </p>
+
                 <p className="md:text-[16px] text-[10px] text-[#01503b] font-semibold">
                   {item.author}
                 </p>
+
                 <a
                   href={item.articleLink}
                   target="_blank"
@@ -234,9 +265,11 @@ export default function PublicationCard({ data }: PublicationCardProps) {
                             <p className="font-semibold text-[#01281e]">
                               {item.title}
                             </p>
+
                             <p className="font-semibold text-[#01281e]">
                               {item.articleLink}
                             </p>
+
                             <p className="text-sm text-muted-foreground">
                               {item.author}
                             </p>
@@ -255,55 +288,45 @@ export default function PublicationCard({ data }: PublicationCardProps) {
 
                   <div className="space-y-3 rounded-[10px] bg-[#f9f9f5] p-3">
                     <div className="flex flex-col gap-2">
-                      <Label className="font-semibold">
-                        Title<span className="text-red-600">*</span>
-                      </Label>
+                      <Label>Title*</Label>
                       <Input
                         name="title"
                         value={formData.title}
                         onChange={handleChange}
-                        className="border border-[#4444441A] py-[22px] w-full"
                       />
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <Label className="font-semibold">Authors</Label>
+                      <Label>Authors</Label>
                       <Input
                         name="author"
                         value={formData.author}
                         onChange={handleChange}
-                        className="border border-[#4444441A] py-[22px] w-full"
                       />
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <Label className="font-semibold">
-                        Year<span className="text-red-600">*</span>
-                      </Label>
+                      <Label>Year*</Label>
                       <Input
                         name="year"
                         value={formData.year}
                         onChange={handleChange}
-                        className="border border-[#4444441A] py-[22px] w-full"
                       />
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <Label className="font-semibold">
-                        Link<span className="text-red-600">*</span>
-                      </Label>
+                      <Label>Link*</Label>
                       <Input
                         name="articleLink"
                         value={formData.articleLink}
                         onChange={handleChange}
-                        className="border border-[#4444441A] py-[22px] w-full"
                       />
                     </div>
 
                     <Btn
                       type="submit"
                       disabled={isLoading}
-                      className="rounded-[10px] bg-[#b79e6b] px-6 py-3 text-white w-full mt-2"
+                      className="bg-[#b79e6b] text-white md:px-6 md:py-3 rounded-[10px] w-full md:w-fit py-2 mt-2"
                     >
                       {isLoading ? 'Saving...' : 'Save'}
                     </Btn>

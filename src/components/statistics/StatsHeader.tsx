@@ -9,7 +9,7 @@ export function StatsHeader({ categories }: { categories: string[] }) {
         Track your progress and performance
       </p>
 
-      <div className="mt-3 flex flex-wrap max-w-[787px] gap-2 ">
+      {/* <div className="mt-3 flex flex-wrap max-w-[787px] gap-2 ">
         {categories.map(cat => (
           <Badge
             key={cat}
@@ -19,7 +19,7 @@ export function StatsHeader({ categories }: { categories: string[] }) {
             {cat}
           </Badge>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }

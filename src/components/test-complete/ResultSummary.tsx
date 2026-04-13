@@ -252,7 +252,7 @@ export function ResultSummary({
   );
 
   const colleagues = data?.data ?? [];
-  const topic=topics.map((t: string) => t).join(' ');
+  const topic = topics.map((t: any) => t.topic).join(' , ');
   const [createConversation] = useCreateConversationMutation();
   const [sendMessage] = useSendMessageMutation();
 
@@ -313,7 +313,7 @@ export function ResultSummary({
 
       setOpen(false);
 
-      router.push(`/dashboard/user/messages/${conversationId}`);
+      window.location.href=`/dashboard/user/messages/${conversationId}`;
     } catch (error) {
       console.error(error);
       toast.error('Failed to send result');

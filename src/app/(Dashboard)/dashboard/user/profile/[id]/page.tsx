@@ -48,7 +48,7 @@ export default function ProfilePage({
         : '/images/settings/img01.png',
 
       title: apiData.training_practice || 'Medical Professional',
-      location: apiData.address || 'Location not set',
+      address: apiData.address || 'Location not set',
       jobArea: apiData.current_practice || 'General Practice',
       created_at: apiData.created_at,
       is_public: apiData.is_public,
@@ -58,12 +58,13 @@ export default function ProfilePage({
       followers: apiData.followers ?? 0,
       following: apiData.followings ?? 0,
       credentials: apiData.credentials ?? '',
-      year: apiData.educations?.[0]?.year ?? '',
+      training_practice: apiData.training_practice ?? '',
+      // year: apiData.educations?.[0]?.year ?? '',
       instagram: apiData.instagram ?? '',
       linkedin: apiData.linkedin ?? '',
       twitter: apiData.twitter_x ?? '',
       facebook: apiData.facebook ?? '',
-      practiceName: apiData.current_practice ?? '',
+      current_practice: apiData.current_practice ?? '',
     },
 
     education: (apiData.educations ?? []).map((edu: any) => ({

@@ -27,9 +27,9 @@ import { useToggleFollowMutation } from '@/app/redux/api/followApi';
 type ProfileFormData = {
   name: string;
   credentials: string;
-  location: string;
-  year: string;
-  joiningDate: string;
+  address: string;
+  training_practice: string;
+  created_at: string;
   country: string;
   state: string;
   instagram: string;
@@ -37,7 +37,7 @@ type ProfileFormData = {
   twitter: string;
   facebook: string;
   bio: string;
-  practiceName: string;
+  current_practice: string;
 };
 
 interface ProfileHeaderProps {
@@ -76,17 +76,17 @@ export default function ManageProfile({
     defaultValues: {
       name: '',
       credentials: '',
-      location: '',
+      address: '',
       country: '',
       state: '',
-      year: '',
-      joiningDate: '',
+      training_practice: '',
+      created_at: '',
       instagram: '',
       linkedin: '',
       twitter: '',
       facebook: '',
       bio: '',
-      practiceName: '',
+      current_practice: '',
     },
   });
 
@@ -94,17 +94,17 @@ export default function ManageProfile({
     reset({
       name: user?.name || '',
       credentials: user?.credentials || '',
-      location: user?.location || '',
+      address: user?.address || '',
       state: user?.state || '',
       country: user?.country || '',
-      year: user?.year || '',
-      joiningDate: user?.created_at || '',
+      training_practice: user?.training_practice || '',
+      created_at: user?.created_at || '',
       instagram: user?.instagram || '',
       linkedin: user?.linkedin || '',
       twitter: user?.twitter || '',
       facebook: user?.facebook || '',
       bio: user?.bio || '',
-      practiceName: user?.practiceName || '',
+      current_practice: user?.current_practice || '',
     });
   }, [user, reset]);
 
@@ -126,17 +126,17 @@ export default function ManageProfile({
 
       formData.append('name', data.name || '');
       formData.append('credentials', data.credentials || '');
-      formData.append('location', data.location || '');
-      formData.append('year', data.year || '');
+      formData.append('address', data.address || '');
+      formData.append('training_practice', data.training_practice || '');
       formData.append('country', data.country || '');
       formData.append('state', data.state || '');
-      formData.append('joiningDate', data.joiningDate || '');
+      formData.append('created_at', data.created_at || '');
       formData.append('instagram', data.instagram || '');
       formData.append('linkedin', data.linkedin || '');
       formData.append('twitter', data.twitter || '');
       formData.append('facebook', data.facebook || '');
       formData.append('bio', data.bio || '');
-      formData.append('practiceName', data.practiceName || '');
+      formData.append('current_practice', data.current_practice || '');
       formData.append('is_public', String(isPublic));
 
       if (imageFile) {
@@ -185,7 +185,7 @@ export default function ManageProfile({
       country: item?.country,
       state: item?.state || '',
     })) || [];
-  console.log(formattedData, 'ooooooooo===========================');
+  // console.log(formattedData, 'ooooooooo===========================');
 
   const normalizeUrl = (url?: string) => {
     if (!url) return '#';
@@ -239,12 +239,12 @@ export default function ManageProfile({
                 </span>
               </h2>
 
-              <p className="text-[18px] text-[#047857]">{user.title}</p>
+              <p className="text-[18px] text-[#047857]">{user.training_practice}</p>
 
               <div className="flex  gap-4 items-center text-xs md:text-[16px] font-light text-[#6b7280]">
                 <h4 className="flex items-center gap-2 text-sm ">
                   <LocationIcon />
-                  {user.location}, {user.state} , {user.country}.
+                  {user.address}, {user.state} , {user.country}.
                 </h4>
 
                 <h4 className="md:flex items-center gap-2 text-sm">
@@ -447,7 +447,7 @@ export default function ManageProfile({
             </Label>
             <Input
               placeholder="Enter your city, state, and country"
-              {...register('location')}
+              {...register('address')}
               className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
             />
           </div>
@@ -486,7 +486,7 @@ export default function ManageProfile({
               Year in Training/Practice <span className="text-red-600">*</span>
             </Label>
             <Input
-              {...register('year')}
+              {...register('training_practice')}
               placeholder="Student, PGY, or Attending"
               className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
             />
@@ -507,18 +507,16 @@ export default function ManageProfile({
             </Label>
             <Input
               placeholder="Name of your residency, hospital, or private practice"
-              {...register('practiceName')}
+              {...register('current_practice')}
               className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
             />
           </div>
 
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold">Joining Date</Label>
-            <Input
-              type="date"
-              {...register('joiningDate')}
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
-            />
+            <h3 className=" pl-2 border text-sm flex items-center border-gray-200 bg-[#f9f9f5] h-9 py-1 rounded-md">
+              {normalizeDate}
+            </h3>
           </div>
         </div>
       </div>

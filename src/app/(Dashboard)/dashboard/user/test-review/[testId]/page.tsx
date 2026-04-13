@@ -13,6 +13,7 @@ export default function TestReviewPage() {
   }
 
   const test = data?.data;
+  const diff=test?.difficulty.join(" , ")
   const router = useRouter();
   return (
     <div className="p-6 space-y-6  font-[manrope]">
@@ -29,7 +30,7 @@ export default function TestReviewPage() {
       <div className="bg-[#0f5132] text-white p-4 flex text-3xl flex-col justify-center items-center rounded-xl">
         <p>Score: {test?.score}%</p>
         <p>Total Questions: {test?.total_questions}</p>
-        <p>Difficulty: {test?.difficulty}</p>
+        <p>Difficulty: {diff}</p>
       </div>
 
       {/* Questions */}

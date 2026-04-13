@@ -21,20 +21,20 @@ export default function UserLayout({ children }: UserLayoutProps) {
 
 
   return (
-    // <ChatProvider>
+    
 
     <div className="min-h-screen flex">
-      <aside className="hidden lg:block w-55 fixed inset-y-0 left-0 z-50">
+      <aside className="hidden lg:block w-55  fixed inset-y-0  left-0 z-50">
         <Sidebar />
       </aside>
 
       <Sidebar mobile open={open} setOpen={setOpen} />
 
-      <div className="flex flex-col flex-1 lg:ml-55 w-full">
+      <div className="flex flex-col flex-1 lg:ml-55 min-w-0">
         <Topbar onMenuClick={() => setOpen(true)} />
         <main className="p-4 sm:p-6 overflow-auto flex-1">{children}</main>
       </div>
     </div>
-    // </ChatProvider>
+    
   );
 }
