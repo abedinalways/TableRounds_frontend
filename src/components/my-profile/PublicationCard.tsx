@@ -288,7 +288,9 @@ export default function PublicationCard({ data }: PublicationCardProps) {
 
                   <div className="space-y-3 rounded-[10px] bg-[#f9f9f5] p-3">
                     <div className="flex flex-col gap-2">
-                      <Label>Title*</Label>
+                      <Label>
+                        Title<span className="text-red-600">*</span>
+                      </Label>
                       <Input
                         name="title"
                         value={formData.title}
@@ -306,7 +308,9 @@ export default function PublicationCard({ data }: PublicationCardProps) {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <Label>Year*</Label>
+                      <Label>
+                        Year<span className="text-red-600">*</span>
+                      </Label>
                       <Input
                         name="year"
                         value={formData.year}
@@ -315,7 +319,9 @@ export default function PublicationCard({ data }: PublicationCardProps) {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <Label>Link*</Label>
+                      <Label>
+                        Link<span className="text-red-600">*</span>
+                      </Label>
                       <Input
                         name="articleLink"
                         value={formData.articleLink}

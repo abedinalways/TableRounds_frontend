@@ -55,7 +55,7 @@ export const WelcomeBanner = () => {
   const avatar =
     user?.avatar && user.avatar.startsWith('http')
       ? new URL(user.avatar).href
-      : '/images/dashboard/doctor.png';
+      : '/images/navbar-logo.png';
 
   return (
     <>

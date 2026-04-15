@@ -1,8 +1,6 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-
-import statsData from '../../../public/data/stats.json' assert { type: 'json' };
 import Image from 'next/image';
 import { useGetProfileQuery } from '@/app/redux/api/profileApi';
 
@@ -11,7 +9,7 @@ const StatsCards = () => {
   console.log(value)
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 font-[manrope]">
       <Card className="border rounded-xl shadow-sm p-4 bg-white hover:scale-[1.02] transition-transform duration-300 cursor-pointer">
         <CardContent className="p-0">
           <div className="flex items-center gap-3">
@@ -56,7 +54,7 @@ const StatsCards = () => {
 
           <div className="mt-3">
             <p className="text-3xl font-semibold">
-              {value?.total_completed_test}%
+              {value?.completed_percentage}%
             </p>
             <p className="text-sm text-gray-500">completed</p>
           </div>
@@ -79,8 +77,7 @@ const StatsCards = () => {
 
           <div className="mt-3">
             <p className="text-3xl font-semibold">
-              {value?.total_completed_test}/
-              {value?.total_test}
+              {value?.total_completed_test}/{value?.total_test}
             </p>
             <p className="text-sm text-gray-500">completed</p>
           </div>

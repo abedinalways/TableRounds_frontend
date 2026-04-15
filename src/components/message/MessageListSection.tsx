@@ -73,12 +73,23 @@ import Image from 'next/image';
 import { useChat } from '@/app/(Dashboard)/context/ChatContext';
 import { useRouter } from 'next/navigation';
 import { useAppSelector } from '@/app/redux/hook';
+import { useMeQuery } from '@/app/redux/api/authApi';
 
 export default function MessageListSection() {
   const { conversations, selectConversation, activeConversationId } = useChat();
+  const activeConversation = conversations.find(
+    conv => conv.id === activeConversationId,
+  );
+  console.log(
+    activeConversation,
+    'activeConversation=====================++++++++++++++++',
+  );
+  const { data: me } = useMeQuery();
+ 
   const router = useRouter();
-  console.log(conversations, 'poewfiweopf================')
+  console.log(conversations, 'poiw wqwfo     4333333      qadfqw    qqqqqf================')
   const currentUser = useAppSelector(state => state.auth.user);
+  console.log(currentUser?.id, '+=============09348ty095yn 5yn 5yn 5yn 5yn 5yn 5yn 8===========')
 
   return (
     <>
@@ -90,7 +101,7 @@ export default function MessageListSection() {
             currentUser?.id === conv.id
               ? conv.creator
               : conv.participant;
-
+          console.log(otherUser, '??????????????????????')
           const lastMessage =
             conv.messages && conv.messages.length > 0
               ? conv.messages[conv.messages.length - 1].message
@@ -116,12 +127,12 @@ export default function MessageListSection() {
                 alt="user"
                 width={20}
                 height={20}
-                className="rounded-full"
+                className="rounded-full aspect-square object-cover"
                 unoptimized
               />
 
               <div className="flex-1 truncate">
-                <p className="text-sm font-medium">
+                <p className="text-md font-bold">
                   {otherUser?.name || 'User'}
                 </p>
 
