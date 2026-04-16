@@ -22,7 +22,7 @@ export default function DifficultyTopic({ result }: Props) {
 
   const current = difficultyData[activeTopic];
 
-  const percentage = current?.score ?? 0;
+  const percentage = result?.score ?? 0;
 
   const barRef = useRef<HTMLDivElement>(null);
   const percentRef = useRef<HTMLSpanElement>(null);
@@ -77,21 +77,21 @@ export default function DifficultyTopic({ result }: Props) {
           <div className="flex items-center justify-between bg-[#ecfdf5] px-[24px] py-[12px] rounded-[8px]">
             <span className="text-gray-600">Total Questions</span>
             <span className="font-semibold text-green-700">
-              {current?.total_questions ?? 0}
+              {result?.total_questions ?? 0}
             </span>
           </div>
 
           <div className="flex items-center justify-between bg-[#f9f9f5] px-[24px] py-[12px] rounded-[8px]">
             <span className="text-gray-600">Correct</span>
             <span className="font-semibold text-green-600">
-              {current?.total_correct ?? 0}
+              {result?.total_correct ?? 0}
             </span>
           </div>
 
           <div className="flex items-center justify-between bg-[#fef2f2] px-[24px] py-[12px] rounded-[8px]">
             <span className="text-gray-600">Incorrect</span>
             <span className="font-semibold text-red-600">
-              {current?.total_incorrect ?? 0}
+              {result?.total_incorrect ?? 0}
             </span>
           </div>
         </div>

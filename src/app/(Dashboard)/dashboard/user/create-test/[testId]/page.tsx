@@ -37,6 +37,24 @@ export default function CreateTestPage() {
   const [loading, setLoading] = useState(true);
   const [selectedAnswerId, setSelectedAnswer] = useState<string | null>(null);
 
+  const MARK_KEY = `${MARKED_KEY_PREFIX}${testId}`;
+  const safeSetSession = (key:string, value:any) => {
+     try {
+       sessionStorage.setItem(key, JSON.stringify(value));
+     } catch (e) {
+       console.warn('Session full, cleaning...');
+       sessionStorage.clear();
+     }
+   };
+
+   const safeSetLocal = (key:string, value:any) => {
+     try {
+       localStorage.setItem(key, JSON.stringify(value));
+     } catch (e) {
+       console.warn('LocalStorage full, cleaning...');
+       localStorage.clear();
+     }
+   };
   useEffect(() => {
     if (!testId || questions.length === 0) return;
 
@@ -46,13 +64,16 @@ export default function CreateTestPage() {
 
     if (!existing) return;
 
-    sessionStorage.setItem(
-      `${TEST_SESSION_KEY_PREFIX}${testId}`,
-      JSON.stringify({
-        ...existing,
-        questions,
-      }),
-    );
+   safeSetSession(`${TEST_SESSION_KEY_PREFIX}${testId}`, {
+     ...existing,
+     questions: questions.map(q => ({
+       testProgress: q.testProgress,
+       quizDetails: {
+         userAnswerId: q.quizDetails.userAnswerId,
+         correctAnswerId: q.quizDetails.correctAnswerId,
+       },
+     })),
+   });
   }, [questions, testId]);
 
   useEffect(() => {

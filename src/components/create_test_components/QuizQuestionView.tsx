@@ -163,7 +163,9 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
    */
   const handleToggleMark = async () => {
     try {
-      const saved = localStorage.getItem('MARKED_QUESTIONS');
+      // const saved = localStorage.getItem('MARKED_QUESTIONS');
+      const MARK_KEY = `MARKED_QUESTIONS_${testId}`;
+      const saved = localStorage.getItem(MARK_KEY);
       let parsed = saved ? JSON.parse(saved) : [];
 
       if (isMarked) {
@@ -176,11 +178,12 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
           questionId: questionID,
           title: quizDetails.question_title,
           question: quizDetails.question_steam,
-          fullData: data,
+          // fullData: data,
         });
       }
 
-      localStorage.setItem('MARKED_QUESTIONS', JSON.stringify(parsed));
+      // localStorage.setItem('MARKED_QUESTIONS', JSON.stringify(parsed));
+      localStorage.setItem(MARK_KEY, JSON.stringify(parsed));
 
       // ✅ 2. Update UI instantly
       onToggleMark();
@@ -194,7 +197,9 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
       console.error('Mark toggle failed:', error);
     }
   };
+  
 
+ 
   /**
    * Next Question
    */
