@@ -69,6 +69,7 @@ export interface QuizOptionUI {
   id: string;
   option_text: string;
   percentage?: number;
+  is_correct: boolean;
 }
 
 export interface QuizExplanationUI {

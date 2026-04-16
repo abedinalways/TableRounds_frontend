@@ -25,8 +25,8 @@ export default function MarkPage() {
           const unique = parsed.filter(
             (item, index, self) =>
               index ===
-              self.findIndex(
-                q => q.index === item.index && q.questionId === item.questionId,
+              self?.findIndex(
+                q => q?.index === item?.index && q?.questionId === item?.questionId,
               ),
           );
 
