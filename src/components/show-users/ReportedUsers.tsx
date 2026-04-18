@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import EyeIcon from "../reusable/icons/EyeIcon";
+import { useRouter } from "next/navigation";
+import { useGetReportedUsersQuery } from "@/app/redux/api/userStatusApi";
 
 
 type ReportedUser = {
@@ -18,6 +20,7 @@ type ReportedUser = {
     avatar_url?: string;
     image?: string;
     email: string;
+
   };
 };
 
@@ -27,6 +30,8 @@ type Props = {
 };
 
 export function ReportedUsers({ users }: Props) {
+  const router = useRouter();
+  const { data: reportedData } = useGetReportedUsersQuery();
   return (
     <div className="bg-white rounded-lg shadow p-[18px] font-[manrope]">
       <div className="mb-4 text-[#01281e] text-[20px] font-bold leading-[150%]">
@@ -90,13 +95,18 @@ export function ReportedUsers({ users }: Props) {
 
                 <td className="p-4">{item.reportedUser.email}</td>
                 <td className="p-4 align-middle">
-                  <Link
-                    href={`/dashboard/admin/user-profile/${item.reportedUser.id}`}
+                  <button
+                    onClick={() => {
+                      
+                        router.push(
+                          `/dashboard/reported-conversations/${reportedData?.conversation_id}`,
+                        );
+                      
+                    }}
+                    className="px-4 py-2 bg-[#01503b] text-white rounded-md text-sm font-semibold hover:bg-[#01382a]"
                   >
-                    <button className="bg-[#cdebe3] text-[#01503b] cursor-pointer rounded-[4px] py-1 px-2 flex items-center gap-2">
-                      <EyeIcon /> Profile
-                    </button>
-                  </Link>
+                    View Conversation
+                  </button>
                 </td>
               </tr>
             ))}

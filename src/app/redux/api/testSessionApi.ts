@@ -1,3 +1,89 @@
+// import { baseApi } from './baseApi';
+
+// interface QuestionCountData {
+//   total_questions: number;
+//   used_questions: number;
+//   unused_questions: number;
+//   correct_count: number;
+//   incorrect_count: number;
+//   mark_count: number;
+//   difficulty_wise_count: { name: string; count: number }[];
+//   topic_wise_count: { name: string; count: number }[];
+// }
+
+// interface QuestionCountResponse {
+//   success: boolean;
+//   message: string;
+//   data: QuestionCountData;
+// }
+
+// export const testSessionApi = baseApi.injectEndpoints({
+//   endpoints: builder => ({
+//     answerQuestion: builder.mutation({
+//       query: body => ({
+//         url: '/test/answer',
+//         method: 'POST',
+//         body,
+//       }),
+//     }),
+
+//     skipQuestion: builder.mutation({
+//       query: body => ({
+//         url: '/test/skip',
+//         method: 'POST',
+//         body,
+//       }),
+//     }),
+
+//     toggleMark: builder.mutation({
+//       query: body => ({
+//         url: '/test/mark-toggle',
+//         method: 'POST',
+//         body,
+//       }),
+//     }),
+
+//     completeTest: builder.mutation({
+//       query: (testId: string) => ({
+//         url: `/test/complete`,
+//         method: 'PATCH',
+//         params: { test_id: testId },
+//       }),
+//     }),
+
+//     getTestResult: builder.query({
+//       query: test_id => ({
+//         url: `/test/result`,
+//         method: 'GET',
+//         params: { test_id },
+//       }),
+//     }),
+
+//     getTestDetails: builder.query({
+//       query: test_id => ({
+//         url: `/test/details/${test_id}`,
+//         method: 'GET',
+//       }),
+//     }),
+
+//     getQuestionCount: builder.query<QuestionCountResponse, void>({
+//       query: () => ({
+//         url: '/test/question-count',
+//         method: 'GET',
+//       }),
+//     }),
+//   }),
+// });
+
+// export const {
+//   useAnswerQuestionMutation,
+//   useSkipQuestionMutation,
+//   useToggleMarkMutation,
+//   useCompleteTestMutation,
+//   useGetTestResultQuery,
+//   useGetTestDetailsQuery,
+//   useGetQuestionCountQuery,
+// } = testSessionApi;
 
 import { baseApi } from './baseApi';
 
@@ -8,14 +94,37 @@ interface QuestionCountData {
   correct_count: number;
   incorrect_count: number;
   mark_count: number;
-  difficulty_wise_count: { name: string; count: number }[]; 
-  topic_wise_count: { name: string; count: number }[]; 
+  difficulty_wise_count: { name: string; count: number }[];
+  topic_wise_count: { name: string; count: number }[];
 }
 
 interface QuestionCountResponse {
   success: boolean;
   message: string;
   data: QuestionCountData;
+}
+
+interface MarkedQuestionOption {
+  id: string;
+  option_text: string;
+}
+
+interface MarkedQuestionItem {
+  id: string;
+  created_at: string;
+  test_id: string;
+  is_marked: boolean;
+  question: {
+    id: string;
+    question_steam: string;
+    answerOptions: MarkedQuestionOption[];
+  };
+}
+
+interface GetMarkedQuestionsResponse {
+  success: boolean;
+  message: string;
+  data: MarkedQuestionItem[];
 }
 
 export const testSessionApi = baseApi.injectEndpoints({
@@ -42,6 +151,7 @@ export const testSessionApi = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
+      invalidatesTags: ['MarkedQuestions'],
     }),
 
     completeTest: builder.mutation({
@@ -73,6 +183,14 @@ export const testSessionApi = baseApi.injectEndpoints({
         method: 'GET',
       }),
     }),
+
+    getMarkedQuestions: builder.query<GetMarkedQuestionsResponse, void>({
+      query: () => ({
+        url: '/test/mark-questions',
+        method: 'GET',
+      }),
+      providesTags: ['MarkedQuestions'],
+    }),
   }),
 });
 
@@ -84,4 +202,5 @@ export const {
   useGetTestResultQuery,
   useGetTestDetailsQuery,
   useGetQuestionCountQuery,
+  useGetMarkedQuestionsQuery,
 } = testSessionApi;

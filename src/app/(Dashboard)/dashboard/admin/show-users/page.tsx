@@ -111,7 +111,7 @@ export default function ShowUsersPage() {
   const reportedUsers =
     reportedData?.data.map(item => ({
       id: item.id,
-      
+
       reportingUser: {
         id: item?.reporter.id,
         name: item?.reporter.name,
@@ -124,8 +124,9 @@ export default function ShowUsersPage() {
         image: item.reported?.avatar_url ?? undefined,
         email: item.reported?.email,
       },
+      conversation_id: item?.conversation_id,
     })) ?? [];
-    
+  
    console.log(reportedData, 'khfweroifherwfgoi werufgoiwer==================')
 
   /* ================= ACTION HANDLERS ================= */

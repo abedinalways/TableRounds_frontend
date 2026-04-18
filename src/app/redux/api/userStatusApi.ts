@@ -1,3 +1,4 @@
+import { Conversation } from './chat/chatApi';
 import { baseApi } from './baseApi';
 
 /* ================= TYPES ================= */
@@ -45,11 +46,14 @@ export interface ReportedUserItem {
   id: string;
   reporter: ReportUserInfo;
   reported: ReportUserInfo;
+  conversation_id: string;
 }
 
 export interface ReportedUserResponse {
   success: boolean;
   data: ReportedUserItem[];
+  conversation_id: string;
+  
 }
 
 
