@@ -3,7 +3,7 @@
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/app/redux/store';
 import MessageListSection from '@/components/message/MessageListSection';
-import { ChatProvider } from '@/app/(Dashboard)/context/ChatContext';
+// import { ChatProvider } from '@/app/(Dashboard)/context/ChatContext';
 
 export default function ChatLayout({ children }: React.PropsWithChildren) {
   const activeConversationId = useSelector(

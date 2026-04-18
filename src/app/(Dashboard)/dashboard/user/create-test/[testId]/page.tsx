@@ -456,7 +456,7 @@ function mapTestDataToQuestions(data: TestData): QuizQuestionDataUI[] {
     },
     quizDetails: {
       id: q.id,
-      question_title: q.question_title ?? '', // ✅ null → empty string
+      question_title: q.question_title ?? '',
       question_steam: q.question_steam,
       answerOptions: q.answerOptions.map(opt => ({
         id: opt.id,

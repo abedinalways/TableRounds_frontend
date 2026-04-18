@@ -7,7 +7,7 @@ export default function TestReviewPage() {
   const { testId } = useParams();
 
   const { data, isLoading } = useGetTestDetailsQuery(testId);
-
+  console.log(data, '+++++++++++++++++++++++')
   if (isLoading) {
     return <div className="p-6">Loading...</div>;
   }
@@ -91,6 +91,37 @@ export default function TestReviewPage() {
                     className="mt-2 rounded-lg max-h-[200px]"
                   />
                 )}
+              </div>
+
+              {/* Why Incorrect */}
+              <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
+                <p className="font-semibold mb-1">Why Incorrect:</p>
+
+                <div dangerouslySetInnerHTML={{ __html: q.why_incorrect }} />
+              </div>
+              {/* Memory trick */}
+              <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
+                <p className="font-semibold mb-1">Memory Trick:</p>
+
+                <div dangerouslySetInnerHTML={{ __html: q.memory_trick }} />
+              </div>
+              {/* pimping point*/}
+              <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
+                <p className="font-semibold mb-1">Pimping Point:</p>
+
+                <div dangerouslySetInnerHTML={{ __html: q.pimping_point }} />
+              </div>
+              {/* pimping point*/}
+              <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
+                <p className="font-semibold mb-1">Pimping Point:</p>
+
+                <div dangerouslySetInnerHTML={{ __html: q.pimping_point }} />
+              </div>
+              {/* reference */}
+              <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
+                <p className="font-semibold mb-1">References:</p>
+
+                <div dangerouslySetInnerHTML={{ __html: q.referance }} />
               </div>
             </div>
           );
