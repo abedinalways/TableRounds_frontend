@@ -32,6 +32,11 @@ type Props = {
 export function ReportedUsers({ users }: Props) {
   const router = useRouter();
   const { data: reportedData } = useGetReportedUsersQuery();
+  const conversationId =
+    reportedData?.data?.map(report => ({
+      id: report.conversation_id,
+    }));
+  // console.log(conversationId, 'what is my reported data??????????????????+======================');
   return (
     <div className="bg-white rounded-lg shadow p-[18px] font-[manrope]">
       <div className="mb-4 text-[#01281e] text-[20px] font-bold leading-[150%]">
@@ -98,12 +103,23 @@ export function ReportedUsers({ users }: Props) {
                   <button
                     onClick={() => {
                       
+                      const reportMatch = reportedData?.data?.find(
+                        (report: any) => report.id === item.id, 
+                      );
+
+                      const cId = reportMatch?.conversation_id;
+
+                      if (cId) {
                         router.push(
-                          `/dashboard/reported-conversations/${reportedData?.conversation_id}`,
+                          `/dashboard/admin/reported-conversation/${cId}`,
                         );
-                      
+                      } else {
+                        console.error(
+                          'Conversation ID not found for this user',
+                        );
+                      }
                     }}
-                    className="px-4 py-2 bg-[#01503b] text-white rounded-md text-sm font-semibold hover:bg-[#01382a]"
+                    className="px-4 py-2 bg-[#01503b] text-white rounded-md text-sm font-semibold hover:bg-[#01382a] cursor-pointer"
                   >
                     View Conversation
                   </button>

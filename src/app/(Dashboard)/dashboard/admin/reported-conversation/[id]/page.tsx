@@ -171,7 +171,7 @@ export default function ReportedConversationPage() {
 
   return (
     <ChatProvider>
-      <div className="min-h-screen bg-slate-50 p-6 lg:p-8">
+      <div className="min-h-screen bg-slate-50 p-6 lg:p-8 font-[manrope]">
         <div className="mx-auto max-w-[1600px] space-y-6">
           <div className="rounded-3xl bg-gradient-to-r from-[#0f172a] to-[#134e4a] p-6 text-white shadow-xl lg:p-8">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
@@ -191,7 +191,7 @@ export default function ReportedConversationPage() {
 
               <button
                 onClick={() => router.back()}
-                className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/20"
+                className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/20 cursor-pointer"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back to Reports
