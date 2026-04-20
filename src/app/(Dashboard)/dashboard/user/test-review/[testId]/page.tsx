@@ -6,6 +6,7 @@ import { useGetTestDetailsQuery } from '@/app/redux/api/testSessionApi';
 export default function TestReviewPage() {
   const { testId } = useParams();
 
+  const router = useRouter();
   const { data, isLoading } = useGetTestDetailsQuery(testId);
   console.log(data, '+++++++++++++++++++++++')
   if (isLoading) {
@@ -14,7 +15,6 @@ export default function TestReviewPage() {
 
   const test = data?.data;
   const diff=test?.difficulty.join(" , ")
-  const router = useRouter();
   return (
     <div className="p-6 space-y-6  font-[manrope]">
       <div className='flex justify-between items-center'>
@@ -80,7 +80,7 @@ export default function TestReviewPage() {
 
               {/* Explanation */}
               <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
-                <p className="font-semibold mb-1">Explanation:</p>
+                <p className="font-bold mb-1">Explanation:</p>
 
                 <div dangerouslySetInnerHTML={{ __html: q.explanation }} />
 
@@ -95,31 +95,31 @@ export default function TestReviewPage() {
 
               {/* Why Incorrect */}
               <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
-                <p className="font-semibold mb-1">Why Incorrect:</p>
+                <p className="font-bold mb-1">Why Incorrect:</p>
 
                 <div dangerouslySetInnerHTML={{ __html: q.why_incorrect }} />
               </div>
               {/* Memory trick */}
               <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
-                <p className="font-semibold mb-1">Memory Trick:</p>
+                <p className="font-bold mb-1">Memory Trick:</p>
 
                 <div dangerouslySetInnerHTML={{ __html: q.memory_trick }} />
               </div>
               {/* pimping point*/}
               <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
-                <p className="font-semibold mb-1">Pimping Point:</p>
+                <p className="font-bold mb-1">Pimping Point:</p>
 
                 <div dangerouslySetInnerHTML={{ __html: q.pimping_point }} />
               </div>
               {/* pimping point*/}
-              <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
+              {/* <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
                 <p className="font-semibold mb-1">Pimping Point:</p>
 
                 <div dangerouslySetInnerHTML={{ __html: q.pimping_point }} />
-              </div>
+              </div> */}
               {/* reference */}
               <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
-                <p className="font-semibold mb-1">References:</p>
+                <p className="font-bold mb-1">References:</p>
 
                 <div dangerouslySetInnerHTML={{ __html: q.referance }} />
               </div>
