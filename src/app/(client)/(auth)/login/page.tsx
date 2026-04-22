@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { useLoginMutation } from '@/app/redux/api/authApi';
 import { useAppDispatch } from '@/app/redux/hook';
 import { setAuth } from '@/app/redux/authSlice';
+import LoginSkeleton from '@/components/auth_components/LoginSkeleton';
 
 export default function LoginPage() {
   const [error, setError] = useState('');
@@ -70,7 +71,11 @@ export default function LoginPage() {
         <p className="mb-4 text-sm text-red-500 font-medium z-10">{error}</p>
       )}
 
-      <LoginForm onLogin={handleLogin} isLoading={isLoading} />
+      {isLoading ? (
+        <LoginSkeleton />
+      ) : (
+        <LoginForm onLogin={handleLogin} isLoading={isLoading} />
+      )}
     </div>
   );
 }

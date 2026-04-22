@@ -76,6 +76,11 @@ export const userMenu: MenuItem[] = [
     icon: '/images/dashboard/img03.png',
   },
   {
+    title: 'Incomplete Tests',
+    href: '/dashboard/user/incomplete-test',
+    icon: '/images/dashboard/img06.png',
+  },
+  {
     title: 'Statistics',
     href: '/dashboard/user/statistics',
     icon: '/images/dashboard/img04.png',

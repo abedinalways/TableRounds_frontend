@@ -37,7 +37,7 @@ export interface PerformanceByTopic {
   topic: string;
   correct_percentage: number;
   total_correct: number;
-  percentile_rank: number;
+  rank: number;
   question_bank_progress: number;
 }
 

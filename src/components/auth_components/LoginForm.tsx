@@ -54,7 +54,7 @@ export default function LoginForm({
             value={formData.email}
             onChange={e => handleChange('email', e.target.value)}
             disabled={isLoading}
-            className="input-bg md:w-[644px] md:h-[61px] text-white placeholder:text-white/60 px-4 py-3 rounded-[8px]  outline-none w-fit"
+            className="input-bg md:w-[644px] md:h-[61px] text-white placeholder:text-white/60 px-4 py-3 rounded-xl  outline-none w-fit"
           />
         </div>
       </div>
@@ -71,7 +71,7 @@ export default function LoginForm({
             value={formData.password}
             onChange={e => handleChange('password', e.target.value)}
             disabled={isLoading}
-            className="w-full input-bg md:w-[644px] md:h-[61px] text-white placeholder:text-white/60 px-4 py-3 rounded-[8px]  outline-none "
+            className="w-full input-bg md:w-[644px] md:h-[61px] text-white placeholder:text-white/60 px-4 py-3 rounded-xl  outline-none "
           />
         </div>
       </div>
@@ -82,16 +82,9 @@ export default function LoginForm({
         <button
           type="submit"
           disabled={isDisabled}
-          className="bg-[#B79E6B] text-white text-[16px] hover:bg-[#a08c5f] rounded-[8px] cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed md:w-[126px] w-full h-[54px] font-medium"
+          className="bg-[#B79E6B] text-white text-[16px] hover:bg-[#a08c5f] rounded-xl cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed md:w-[126px] w-full h-[54px] font-medium"
         >
-          {isLoading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Login...
-            </>
-          ) : (
-            'Login'
-          )}
+          Login
         </button>
 
         {/* Forgot Password */}

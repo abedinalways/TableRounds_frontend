@@ -8,6 +8,8 @@ import Image from 'next/image';
 import CircularProgressData from './CircularProgress';
 import TestStatIcon from '../reusable/icons/TestStatIcon';
 import { useGetStatisticsQuery } from '@/app/redux/api/StatisTicsApi';
+import { link } from 'fs';
+import Link from 'next/link';
 
 
 
@@ -20,7 +22,7 @@ const TestStatistics: React.FC = () => {
       <div className="w-full max-w-7xl mx-auto p-6 min-h-screen flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="w-12 h-12 animate-spin text-teal-600" />
-          <p className="text-gray-600">Loading dashboard...</p>
+          <p className="text-gray-600">Loading Statistics...</p>
         </div>
       </div>
     );
@@ -44,6 +46,7 @@ const TestStatistics: React.FC = () => {
       subtitle: 'All tests',
       bgColor: 'bg-[#f0fdf4]',
       textColor: 'text-[#01281e]',
+      link: '#',
     },
     {
       title: 'Completed',
@@ -51,6 +54,7 @@ const TestStatistics: React.FC = () => {
       subtitle: 'Finished tests',
       bgColor: 'bg-[#ecfeff]',
       textColor: 'text-[#01503b]',
+      link: '#',
     },
     {
       title: 'Incomplete',
@@ -58,6 +62,7 @@ const TestStatistics: React.FC = () => {
       subtitle: 'Pending tests',
       bgColor: 'bg-[#fef2f2]',
       textColor: 'text-red-600',
+      link: '/dashboard/user/incomplete-test',
     },
   ];
 
@@ -79,9 +84,16 @@ const TestStatistics: React.FC = () => {
               <h3 className="text-[24px] font-semibold text-[#01281e]">
                 {card.title}
               </h3>
-              <p className={`text-[36px] font-bold ${card.textColor}`}>
-                {String(card.value).padStart(2, '0')}
-              </p>
+              <Link
+                href={card.link}
+                className={`text-[32px] font-bold ${card.textColor}`}
+              >
+                <p
+                  className={`text-[36px] font-bold cursor-pointer ${card.textColor}`}
+                >
+                  {String(card.value).padStart(2, '0')}
+                </p>
+              </Link>
               <p className="text-[18px] text-[#4b5563]">{card.subtitle}</p>
             </CardContent>
           </Card>
@@ -117,21 +129,21 @@ const TestStatistics: React.FC = () => {
                 <div className="flex justify-between bg-[#ecfdf5] px-6 py-3 rounded-[8px]">
                   <span>Total Correct</span>
                   <span className="font-semibold">
-                    {item.correct_percentage}%
+                    {item?.correct_percentage}%
                   </span>
                 </div>
 
                 <div className="flex justify-between bg-[#fef2f2] px-6 py-3 rounded-[8px]">
                   <span>Percentile Rank</span>
                   <span className="font-semibold text-red-500">
-                    {item.percentile_rank}
+                    {item?.rank}
                   </span>
                 </div>
 
                 <div className="flex justify-between card-bg px-6 py-3 rounded-[8px]">
                   <span>Question Bank Progress</span>
                   <span className="font-semibold">
-                    {item.question_bank_progress}%
+                    {item?.question_bank_progress}%
                   </span>
                 </div>
               </div>

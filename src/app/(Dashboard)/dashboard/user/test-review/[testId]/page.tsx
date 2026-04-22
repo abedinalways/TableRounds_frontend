@@ -8,7 +8,7 @@ export default function TestReviewPage() {
 
   const router = useRouter();
   const { data, isLoading } = useGetTestDetailsQuery(testId);
-  console.log(data, '+++++++++++++++++++++++')
+  // console.log(data, '+++++++++++++++++++++++')
   if (isLoading) {
     return <div className="p-6">Loading...</div>;
   }
