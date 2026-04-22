@@ -175,7 +175,7 @@
 
 import React from 'react';
 import { Progress } from '@/components/ui/progress';
-import { ArrowRight, SkipForward } from 'lucide-react';
+import { ArrowRight, Mail, SkipForward } from 'lucide-react';
 import { TopbarCheckbox } from '../topbarCheckbox';
 
 import Flag from '../reusable/icons/Flag';
@@ -224,21 +224,23 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const handleFeedback = async () => {
-    if (!currentUser || isStartingChat) return;
+  // const handleFeedback = async () => {
+  //   if (!currentUser || isStartingChat) return;
 
-    try {
-      const res = await createAdminConversation({ participant_id: null }).unwrap();
-      const conversationId = res.data.id;
+  //   try {
+  //     const res = await createAdminConversation({ participant_id: null }).unwrap();
+  //     const conversationId = res.data.id;
 
       
-      dispatch(addAdminConversationId(conversationId));
+  //     dispatch(addAdminConversationId(conversationId));
 
-      router.push(`/dashboard/user/messages/${conversationId}`);
-    } catch (err) {
-      console.error('Failed to open feedback chat:', err);
-    }
-  };
+  //     router.push(`/dashboard/user/messages/${conversationId}`);
+  //   } catch (err) {
+  //     console.error('Failed to open feedback chat:', err);
+  //   }
+  // };
+
+
 
   return (
     <div className="md:flex items-center md:justify-between gap-4 rounded-[12px] xl:text-[18px] md:text-sm text-xs border question-bg py-4">
@@ -284,7 +286,7 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
           </div>
 
           {/* ✅ Disabled + opacity while creating the conversation */}
-          <button
+          {/* <button
             className={cn(
               'text-white cursor-pointer p-2 gap-2 flex flex-col items-center',
               isStartingChat && 'opacity-50 cursor-not-allowed',
@@ -294,8 +296,23 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
           >
             <ChatBubble className="md:size-8 size-4" />
             {isStartingChat ? 'Opening...' : 'Feedback'}
+          </button> */}
+          <button className='flex items-center justify-center p-4'>
+            <a
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=contact@tablerounds.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Send email via Gmail"
+              className="group  text-sm font-medium text-gray-600 hover:text-[#1e5a4f] transition-all duration-200"
+            >
+              <div className="flex flex-col items-center justify-center my-8">
+                <ChatBubble className="md:size-8 size-4 flex items-center justify-center mt-1" />
+                <span className="text-white cursor-pointer flex flex-col items-center mt-1">
+                  Feedback
+                </span>
+              </div>
+            </a>
           </button>
-
           <button
             onClick={onZoomIn}
             className="text-white cursor-pointer p-2 gap-2 flex flex-col items-center"

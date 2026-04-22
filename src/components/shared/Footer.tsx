@@ -191,11 +191,16 @@ const Footer = () => {
             </h3>
             <p className="text-sm text-gray-700">We&apos;re Here to Help</p>
             <a
-              href="mailto:contact@tablerounds.ai"
-              className="flex items-center space-x-2 text-sm text-gray-700 hover:text-[#1e5a4f] transition-colors"
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=contact@tablerounds.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Send email via Gmail"
+              className="group flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-[#1e5a4f] transition-all duration-200"
             >
-              <Mail className="w-4 h-4" />
-              <span>contact@tablerounds.ai</span>
+              <Mail className="w-4 h-4 text-gray-500 group-hover:text-[#1e5a4f] transition-colors duration-200" />
+              <span className="underline-offset-2 group-hover:underline">
+                contact@tablerounds.ai
+              </span>
             </a>
           </div>
         </div>

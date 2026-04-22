@@ -23,6 +23,14 @@ import { useGetConnectionsQuery } from '@/app/redux/api/connectionApi';
 import { useUpdateUserMutation } from '@/app/redux/api/authApi';
 import Link from 'next/link';
 import { useToggleFollowMutation } from '@/app/redux/api/followApi';
+import { Country, State } from 'country-state-city';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 
 type ProfileFormData = {
   name: string;
@@ -71,6 +79,8 @@ export default function ManageProfile({
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { isDirty },
   } = useForm<ProfileFormData>({
     defaultValues: {
@@ -91,12 +101,21 @@ export default function ManageProfile({
   });
 
   useEffect(() => {
+    const matchedCountry = Country.getAllCountries().find(
+      c => c.name === user?.country || c.isoCode === user?.country,
+    );
+    const isoCode = matchedCountry?.isoCode || '';
+
+    
+    const matchedState = State.getStatesOfCountry(isoCode).find(
+      s => s.name === user?.state || s.isoCode === user?.state,
+    );
     reset({
       name: user?.name || '',
       credentials: user?.credentials || '',
       address: user?.address || '',
-      state: user?.state || '',
-      country: user?.country || '',
+      country: matchedCountry?.isoCode || '',
+      state: matchedState?.name || user?.state || '',
       training_practice: user?.training_practice || '',
       created_at: user?.created_at || '',
       instagram: user?.instagram || '',
@@ -122,13 +141,14 @@ export default function ManageProfile({
 
   const onSubmit = async (data: ProfileFormData) => {
     try {
+      const countryName = Country.getCountryByCode(data.country)?.name || data.country;
       const formData = new FormData();
 
       formData.append('name', data.name || '');
       formData.append('credentials', data.credentials || '');
       formData.append('address', data.address || '');
       formData.append('training_practice', data.training_practice || '');
-      formData.append('country', data.country || '');
+      formData.append('country', countryName);
       formData.append('state', data.state || '');
       formData.append('created_at', data.created_at || '');
       formData.append('instagram', data.instagram || '');
@@ -239,7 +259,9 @@ export default function ManageProfile({
                 </span>
               </h2>
 
-              <p className="text-[18px] text-[#047857]">{user.training_practice}</p>
+              <p className="text-[18px] text-[#047857]">
+                {user.training_practice}
+              </p>
 
               <div className="flex  gap-4 items-center text-xs md:text-[16px] font-light text-[#6b7280]">
                 <h4 className="flex items-center gap-2 text-sm ">
@@ -402,33 +424,33 @@ export default function ManageProfile({
 
         <div className="grid md:grid-cols-2 gap-6 text-[#4b5563]">
           <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold">
+            <Label className="font-bold md:text-lg!">
               Name <span className="text-red-600">*</span>
             </Label>
             <Input
               {...register('name')}
               readOnly
-              className="bg-[#f9f9f5] text-black border [border-[rgba(68,68,68,0.1)]]"
+              className="bg-[#f9f9f5] text-black border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
             />
           </div>
 
           <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold">Instagram</Label>
+            <Label className="font-bold md:text-lg!">Instagram</Label>
             <Input
               placeholder="Personal Link"
               {...register('instagram')}
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
+              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
             />
           </div>
 
           <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold">
+            <Label className="font-bold md:text-lg!">
               Credentials <span className="text-red-600">*</span>
             </Label>
             <Input
               {...register('credentials')}
               placeholder="i.e. DDS, DMD, MD, Student"
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
+              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
             />
           </div>
 
@@ -437,83 +459,131 @@ export default function ManageProfile({
             <Input
               placeholder="Personal Link"
               {...register('linkedin')}
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
+              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
             />
           </div>
 
           <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold">
+            <Label className="font-bold md:text-lg!">
               Location <span className="text-red-600">*</span>
             </Label>
             <Input
               placeholder="Enter your city, state, and country"
               {...register('address')}
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
+              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
             />
           </div>
 
           <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold">Twitter/X</Label>
+            <Label className="font-bold md:text-lg!">Twitter/X</Label>
             <Input
               placeholder="Personal Link"
               {...register('twitter')}
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
+              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
             />
           </div>
           <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold">
+            <Label className="font-bold md:text-lg!">
               Country<span className="text-red-600">*</span>
             </Label>
-            <Input
-              placeholder="Enter your country"
-              {...register('country')}
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
-            />
+            <Select
+              value={watch('country')}
+              onValueChange={value => {
+                setValue('country', value, { shouldDirty: true });
+                setValue('state', '', { shouldDirty: true });
+              }}
+            >
+              <SelectTrigger className="bg-[#f9f9f5] border border-[rgba(68,68,68,0.1)] h-9 md:w-[620px] w-[225px]">
+                <SelectValue placeholder="Select country" />
+              </SelectTrigger>
+              <SelectContent className="max-h-[300px]">
+                {Country.getAllCountries().map(country => (
+                  <SelectItem key={country.isoCode} value={country.isoCode}>
+                    {country.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold">
+          {/* state */}
+          <div className="flex flex-col gap-[8px] ">
+            <Label className="font-bold md:text-lg!">
               State<span className="text-red-600">*</span>
             </Label>
-            <Input
-              placeholder="Enter your state"
-              {...register('state')}
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
-            />
+            <Select
+              value={watch('state')}
+              onValueChange={value =>
+                setValue('state', value, { shouldDirty: true })
+              }
+              disabled={!watch('country')}
+            >
+              <SelectTrigger className="bg-[#f9f9f5] border border-[rgba(68,68,68,0.1)] h-9 md:w-[620px] w-[225px]">
+                <SelectValue placeholder="Select state / province" />
+              </SelectTrigger>
+              <SelectContent className="max-h-[300px]">
+                {State.getStatesOfCountry(watch('country')).map(state => (
+                  <SelectItem key={state.isoCode} value={state.name}>
+                    {state.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
-          <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold">
+          <div className="flex flex-col gap-[8px] w-full ">
+            <Label className="font-bold md:text-lg!">
               Year in Training/Practice <span className="text-red-600">*</span>
             </Label>
-            <Input
-              {...register('training_practice')}
-              placeholder="Student, PGY, or Attending"
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
-            />
+            <div className="w-full">
+              <Select
+                value={watch('training_practice')}
+                onValueChange={value =>
+                  setValue('training_practice', value, { shouldDirty: true })
+                }
+              >
+                <SelectTrigger className="bg-[#f9f9f5] border border-[rgba(68,68,68,0.1)] h-9 md:w-[620px] w-[225px]">
+                  <SelectValue placeholder="Student, PGY, or Attending" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Medical Student">
+                    Medical Student
+                  </SelectItem>
+                  <SelectItem value="Dental Student">Dental Student</SelectItem>
+                  <SelectItem value="PGY-1">PGY-1</SelectItem>
+                  <SelectItem value="PGY-2">PGY-2</SelectItem>
+                  <SelectItem value="PGY-3">PGY-3</SelectItem>
+                  <SelectItem value="PGY-4">PGY-4</SelectItem>
+                  <SelectItem value="PGY-5">PGY-5</SelectItem>
+                  <SelectItem value="PGY-6">PGY-6</SelectItem>
+                  <SelectItem value="PGY-7">PGY-7</SelectItem>
+                  <SelectItem value="Attending">Attending</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold">Facebook</Label>
+            <Label className="font-bold md:text-lg!">Facebook</Label>
             <Input
               placeholder="Personal Link"
               {...register('facebook')}
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
+              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
             />
           </div>
 
           <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold">
+            <Label className="font-bold md:text-lg!">
               Current Practice <span className="text-red-600">*</span>
             </Label>
             <Input
               placeholder="Name of your residency, hospital, or private practice"
               {...register('current_practice')}
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]]"
+              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
             />
           </div>
 
           <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold">Joining Date</Label>
+            <Label className="font-bold md:text-lg!">Joining Date</Label>
             <h3 className=" pl-2 border text-sm flex items-center border-gray-200 bg-[#f9f9f5] h-9 py-1 rounded-md">
               {normalizeDate}
             </h3>
@@ -522,7 +592,7 @@ export default function ManageProfile({
       </div>
 
       <div className="mt-6 bg-white rounded-2xl p-6 shadow-sm font-[manrope] mb-6">
-        <Label className="font-bold mb-4 text-[#0f172b] text-16px md:text-[24px] leading-[130%]">
+        <Label className="font-bold mb-4 text-[#0f172b] text-16px md:text-[24px] leading-[130%] ">
           Descriptions
         </Label>
 
