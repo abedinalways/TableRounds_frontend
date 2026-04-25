@@ -273,6 +273,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   return (
     <div className="flex flex-col space-y-4 font-[manrope]">
       <QuizTopbar
+        quizDetails={quizDetails}
         onSkip={handleSkip}
         progressValue={progressValue}
         currentQuestion={currentQuestion}

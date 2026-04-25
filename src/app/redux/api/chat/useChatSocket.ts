@@ -190,6 +190,7 @@ export type SocketMessage = {
   };
 };
 
+// After ✅
 function createNotification(
   type: 'conversation' | 'approved' | 'rejected' | 'follow' | 'user-registered',
   text: string,
@@ -202,6 +203,7 @@ function createNotification(
     message: text,
     timestamp: new Date().toISOString(),
     isRead: false,
+    isNew: true,          // ✅ marks it as a real-time arrival for the pulse animation
     user: {
       name: userName,
       avatar,

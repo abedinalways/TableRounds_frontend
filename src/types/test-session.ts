@@ -88,6 +88,7 @@ export interface QuizDetailsUI {
   id: string;
   question_title: string;
   question_steam: string;
+  question_id: string;
   answerOptions: QuizOptionUI[];
   userAnswerId: string | null;
   correctAnswerId: string | null;

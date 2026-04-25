@@ -95,6 +95,7 @@ export interface AnswerQuestionPayload {
 export interface TestQuestion {
   id: string;
   question_title: string | null;
+  question_id: string;
   question_steam: string;
   answerOptions: {
     id: string;

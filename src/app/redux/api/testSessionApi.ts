@@ -107,6 +107,7 @@ interface QuestionCountResponse {
 interface MarkedQuestionOption {
   id: string;
   option_text: string;
+ 
 }
 
 interface MarkedQuestionItem {
@@ -118,6 +119,7 @@ interface MarkedQuestionItem {
     id: string;
     question_steam: string;
     answerOptions: MarkedQuestionOption[];
+    question_id: string;
   };
 }
 

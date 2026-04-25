@@ -46,6 +46,7 @@ type ProfileFormData = {
   facebook: string;
   bio: string;
   current_practice: string;
+  is_public: boolean;
 };
 
 interface ProfileHeaderProps {
@@ -59,13 +60,13 @@ export default function ManageProfile({
 }: ProfileHeaderProps) {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [isPublic, setIsPublic] = useState<boolean>(Boolean(user?.is_public));
+  // const [isPublic, setIsPublic] = useState<boolean>(Boolean(user?.is_public));
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'followers' | 'following'>(
     'followers',
   );
   const [toggleFollow] = useToggleFollowMutation();
-
+  
   const handleFollowToggle = async (userId: string, isFollowing: boolean) => {
     try {
       await toggleFollow({ userId, isFollowing }).unwrap();
@@ -97,8 +98,10 @@ export default function ManageProfile({
       facebook: '',
       bio: '',
       current_practice: '',
+      is_public: Boolean(user?.is_public),
     },
   });
+  const isPublicWatch = watch('is_public');
 
   useEffect(() => {
     const matchedCountry = Country.getAllCountries().find(
@@ -124,6 +127,7 @@ export default function ManageProfile({
       facebook: user?.facebook || '',
       bio: user?.bio || '',
       current_practice: user?.current_practice || '',
+      is_public: Boolean(user?.is_public),
     });
   }, [user, reset]);
 
@@ -157,7 +161,7 @@ export default function ManageProfile({
       formData.append('facebook', data.facebook || '');
       formData.append('bio', data.bio || '');
       formData.append('current_practice', data.current_practice || '');
-      formData.append('is_public', String(isPublic));
+      formData.append('is_public', String(data.is_public));
 
       if (imageFile) {
         formData.append('avatar', imageFile);
@@ -332,7 +336,7 @@ export default function ManageProfile({
                       Profile Visibility
                     </h3>
                     <p className="mt-1 text-sm text-[#6B7280] leading-6">
-                      {isPublic
+                      {isPublicWatch
                         ? 'Your profile is visible to other users.'
                         : 'Your profile is hidden from other users.'}
                     </p>
@@ -340,12 +344,12 @@ export default function ManageProfile({
 
                   <span
                     className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
-                      isPublic
+                      isPublicWatch
                         ? 'bg-green-100 text-green-700'
                         : 'bg-slate-200 text-slate-700'
                     }`}
                   >
-                    {isPublic ? 'Public' : 'Private'}
+                    {isPublicWatch ? 'Public' : 'Private'}
                   </span>
                 </div>
 
@@ -355,15 +359,17 @@ export default function ManageProfile({
                       Make profile public
                     </p>
                     <p className="text-xs text-[#6B7280] mt-1">
-                      {isPublic
+                      {isPublicWatch
                         ? 'Turn off to make your profile private.'
                         : 'Turn on to make your profile public.'}
                     </p>
                   </div>
 
                   <Switch
-                    checked={isPublic}
-                    onCheckedChange={setIsPublic}
+                    checked={isPublicWatch}
+                    onCheckedChange={checked => {
+                      setValue('is_public', checked, { shouldDirty: true });
+                    }}
                     className="cursor-pointer"
                   />
                 </div>

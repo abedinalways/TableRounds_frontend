@@ -55,6 +55,7 @@ export function CreateTestContent() {
   const [numQuestions, setNumQuestions] = useState<string>('');
 
   const [startTest, { isLoading }] = useStartTestMutation();
+  // console.log(startTest, "ooooooooooooooooooooooo===========")
 
   const { data: questionCountData, isLoading: isQuestionCountLoading } =
     useGetQuestionCountQuery();
@@ -209,7 +210,7 @@ export function CreateTestContent() {
         throw new Error(res.message || 'Failed to create test');
       }
 
-      // ✅ No more sessionStorage — just redirect, GET API handles data
+     
       router.push(`/dashboard/user/create-test/${res.data.id}`);
     } catch (error) {
       console.error('Start test failed:', error);

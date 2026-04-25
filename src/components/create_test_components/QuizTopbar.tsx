@@ -187,11 +187,13 @@ import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { useCreateAdminConversationMutation } from '@/app/redux/api/chat/chatApi';
 import { useAppSelector, useAppDispatch } from '@/app/redux/hook';
-import { addAdminConversationId } from '@/app/redux/api/chat/chatSlice';
+import { useStartTestMutation } from '@/app/redux/api/startTestApi';
+import { QuizDetailsUI } from '@/types/test-session';
 
 interface QuizTopbarProps {
   progressValue: number;
   currentQuestion: number;
+  quizDetails: QuizDetailsUI;
   totalQuestions: number;
   questionID: string;
   isMarked: boolean;
@@ -210,6 +212,7 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
   totalQuestions,
   questionID,
   isMarked,
+  quizDetails,
   onToggleMark,
   onNext,
   onPrevious,
@@ -231,7 +234,6 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
   //     const res = await createAdminConversation({ participant_id: null }).unwrap();
   //     const conversationId = res.data.id;
 
-      
   //     dispatch(addAdminConversationId(conversationId));
 
   //     router.push(`/dashboard/user/messages/${conversationId}`);
@@ -240,21 +242,24 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
   //   }
   // };
 
-
+ 
 
   return (
     <div className="md:flex items-center md:justify-between gap-4 rounded-[12px] xl:text-[18px] md:text-sm text-xs border question-bg py-4">
       <div className="md:flex items-center space-y-2">
         <div className="md:px-2 px-1 flex flex-col justify-between">
           <Progress value={progressValue} className="md:h-5 h-2 bg-white/60" />
-          <div></div>
         </div>
 
-        <div className="space-x-5 flex items-center gap-6 mx-5">
+        <div className="space-x-5 flex flex-col justify-center items-center  gap-5 mx-5 ">
           <div className="text-sm md:text-[18px] text-white font-bold flex items-center">
             {String(currentQuestion).padStart(2, '0')} / {totalQuestions}
           </div>
-          <div className="md:text-[14px] flex justify-center text-xs text-white"></div>
+          <div className="md:text-[14px] flex justify-center text-xs text-white">
+            <div className="text-xs">
+              Question ID: <span className="text-xs">{quizDetails?.question_id}</span>
+            </div>
+          </div>
         </div>
 
         <div className="flex flex-wrap md:flex-nowrap items-center gap-3 md:gap-3 xl:gap-3 md:text-[14px] text-xs">
@@ -297,7 +302,7 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
             <ChatBubble className="md:size-8 size-4" />
             {isStartingChat ? 'Opening...' : 'Feedback'}
           </button> */}
-          <button className='flex items-center justify-center p-4'>
+          <button className="flex items-center justify-center p-4">
             <a
               href="https://mail.google.com/mail/?view=cm&fs=1&to=contact@tablerounds.ai"
               target="_blank"

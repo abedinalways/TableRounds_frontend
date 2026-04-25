@@ -34,6 +34,7 @@ function mapTestDataToQuestions(data: TestData): QuizQuestionDataUI[] {
       id: q.id,
       question_title: q.question_title ?? '',
       question_steam: q.question_steam,
+      question_id: q.question_id,
       answerOptions: q.answerOptions.map(opt => ({
         id: opt.id,
         option_text: opt.option_text,
@@ -170,14 +171,14 @@ export default function CreateTestPage() {
     setMarkedQuestions(prev => {
       const exists = prev.some(q => q.index === currentQuestion);
       const current = questions[currentQuestion - 1];
-
+      console.log(current, "lllllllllllll==========")
       const updated: MarkedQuestion[] = exists
         ? prev.filter(q => q.index !== currentQuestion)
         : [
             ...prev,
             {
               index: currentQuestion,
-              questionId: current?.testProgress?.questionID ?? '',
+              questionId: current?.quizDetails.question_id ?? '',
               title: current?.quizDetails?.question_title ?? '',
               question: current?.quizDetails?.question_steam ?? '',
               fullData: current,

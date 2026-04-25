@@ -248,6 +248,7 @@ export default function MarkPage() {
                   testId={item.test_id}
                   quizDetails={{
                     id: item.question.id,
+                    question_id: item?.question?.question_id,
                     question_title: '',
                     question_steam: item.question.question_steam,
                     answerOptions: item.question.answerOptions.map(option => ({

@@ -1,85 +1,463 @@
+// 'use client';
+
+// import { Button } from '@/components/ui/button';
+// import { ScrollArea } from '@/components/ui/scroll-area';
+
+// import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
+// import { X } from 'lucide-react';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { RootState } from '../../app/redux/store';
+// import { markAllAsRead } from '../../store/NotificationSlice';
+// import { NotificationItem } from './NotificationItem';
+
+// interface Props {
+//   open: boolean;
+//   onClose: () => void;
+// }
+
+// export function NotificationSheet({ open, onClose }: Props) {
+//   const dispatch = useDispatch();
+
+//   const notifications = useSelector(
+//     (state: RootState) => state.notifications.notifications,
+//   );
+
+//   return (
+//     <Sheet
+//       open={open}
+//       onOpenChange={value => {
+//         if (!value) {
+//           dispatch(markAllAsRead());
+//           onClose();
+//         }
+//       }}
+//     >
+//       <SheetContent
+//         side="right"
+//         className="w-full sm:w-96 p-0 z-100 font-[manrope]"
+//       >
+//         <SheetHeader className="p-4 border-b relative">
+//           <div className="flex items-center justify-between">
+//             <SheetTitle className="text-base font-semibold">
+//               Notifications
+//             </SheetTitle>
+//             <Button
+//               size="icon"
+//               variant="ghost"
+//               onClick={() => {
+//                 dispatch(markAllAsRead());
+//                 onClose();
+//               }}
+//               className="absolute top-4 right-2 z-20 cursor-pointer"
+//             >
+//               <X className="w-4 h-4" />
+//             </Button>
+//           </div>
+//         </SheetHeader>
+
+//         <ScrollArea className="h-[calc(100vh-8rem)] p-3">
+//           <div className="space-y-1">
+//             {notifications.length > 0 ? (
+//               notifications.map(notification => (
+//                 <NotificationItem
+//                   key={notification.id}
+//                   notification={notification}
+//                 />
+//               ))
+//             ) : (
+//               <div className="text-center text-sm text-gray-500 py-10">
+//                 No notifications found
+//               </div>
+//             )}
+//           </div>
+//         </ScrollArea>
+
+//         <div className="border-t p-3">
+//           <Button
+//             variant="ghost"
+//             className="w-full text-teal-600 hover:bg-teal-50 cursor-pointer"
+//           >
+//             View All
+//           </Button>
+//         </div>
+//       </SheetContent>
+//     </Sheet>
+//   );
+// }
+
+// 'use client';
+
+// import { useCallback } from 'react';
+// import { BellOff, CheckCheck, Trash2, X } from 'lucide-react';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { Button } from '@/components/ui/button';
+// import { ScrollArea } from '@/components/ui/scroll-area';
+// import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
+// import { RootState } from '../../app/redux/store';
+// import { clearNewFlag, markAllAsRead } from '../../store/NotificationSlice';
+// import {
+
+//   useDeleteAdminNotificationMutation,
+//   useDeleteAllAdminNotificationsMutation,
+// } from '../../app/redux/api/notificationApi';
+// import { NotificationItem } from './NotificationItem';
+// import { cn } from '@/lib/utils';
+
+// interface Props {
+//   open: boolean;
+//   onClose: () => void;
+
+//   role?: 'admin' | 'user';
+// }
+
+// export function NotificationSheet({ open, onClose, role = 'user' }: Props) {
+//   const dispatch = useDispatch();
+//   const notifications = useSelector(
+//     (state: RootState) => state.notifications.notifications,
+//   );
+//   const unreadCount = useSelector(
+//     (state: RootState) => state.notifications.unreadCount,
+//   );
+
+//   // ── API mutations ──────────────────────────────────────────────────────────
+
+//   const [deleteAdminNotification, { isLoading: deletingAdmin }] =
+//     useDeleteAdminNotificationMutation();
+
+//   const [deleteAllAdmin, { isLoading: clearingAdmin }] =
+//     useDeleteAllAdminNotificationsMutation();
+
+//   const isDeleting =deletingAdmin;
+//   const isClearing =clearingAdmin;
+
+//   // ── Handlers ───────────────────────────────────────────────────────────────
+//   const handleDelete = useCallback(
+//     (id: string) => {
+//       if (role === 'admin') {
+//         deleteAdminNotification(id);
+//       } else {
+//         deleteAdminNotification(id);
+//       }
+//     },
+//     [role, deleteAdminNotification],
+//   );
+
+//   const handleClearAll = useCallback(() => {
+//     if (role === 'admin') {
+//       deleteAllAdmin();
+//     } else {
+
+//     }
+//   }, [role, deleteAllAdmin]);
+
+//   const handleClose = useCallback(() => {
+//     dispatch(markAllAsRead());
+//     // Clear animation flags
+//     notifications.forEach(n => {
+//       if (n.isNew) dispatch(clearNewFlag(n.id));
+//     });
+//     onClose();
+//   }, [dispatch, notifications, onClose]);
+
+//   // ── Render ─────────────────────────────────────────────────────────────────
+//   return (
+//     <Sheet
+//       open={open}
+//       onOpenChange={value => {
+//         if (!value) handleClose();
+//       }}
+//     >
+//       <SheetContent
+//         side="right"
+//         className="w-full sm:w-[400px] p-0 z-[100] font-[manrope] flex flex-col"
+//       >
+//         {/* Header */}
+//         <SheetHeader className="px-4 py-3 border-b bg-white shrink-0">
+//           <div className="flex items-center justify-between gap-2">
+//             <div className="flex items-center gap-2">
+//               <SheetTitle className="text-base font-semibold text-gray-900">
+//                 Notifications
+//               </SheetTitle>
+//               {unreadCount > 0 && (
+//                 <span className="text-xs font-semibold bg-teal-100 text-teal-700 px-2 py-0.5 rounded-full">
+//                   {unreadCount} new
+//                 </span>
+//               )}
+//             </div>
+
+//             <div className="flex items-center gap-1">
+//               {/* Mark all read */}
+//               {unreadCount > 0 && (
+//                 <Button
+//                   size="sm"
+//                   variant="ghost"
+//                   onClick={() => dispatch(markAllAsRead())}
+//                   className="h-8 px-2 text-xs text-gray-500 hover:text-teal-600 gap-1"
+//                 >
+//                   <CheckCheck className="w-3.5 h-3.5" />
+//                   Mark all read
+//                 </Button>
+//               )}
+
+//               {/* Close */}
+//               <Button
+//                 size="icon"
+//                 variant="ghost"
+//                 onClick={handleClose}
+//                 className="h-8 w-8 text-gray-500 hover:text-gray-800"
+//               >
+//                 <X className="w-4 h-4" />
+//               </Button>
+//             </div>
+//           </div>
+//         </SheetHeader>
+
+//         {/* Notification list */}
+//         <ScrollArea className="flex-1 min-h-0">
+//           <div className="p-3 space-y-1">
+//             {notifications.length > 0 ? (
+//               notifications.map(notification => (
+//                 <NotificationItem
+//                   key={notification.id}
+//                   notification={notification}
+//                   onDelete={handleDelete}
+//                 />
+//               ))
+//             ) : (
+//               <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
+//                 <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center">
+//                   <BellOff className="w-6 h-6 text-gray-400" />
+//                 </div>
+//                 <div>
+//                   <p className="text-sm font-medium text-gray-700">
+//                     All caught up!
+//                   </p>
+//                   <p className="text-xs text-gray-400 mt-0.5">
+//                     No notifications at the moment.
+//                   </p>
+//                 </div>
+//               </div>
+//             )}
+//           </div>
+//         </ScrollArea>
+
+//         {/* Footer */}
+//         {notifications.length > 0 && (
+//           <div className="border-t px-3 py-2.5 shrink-0 bg-white">
+//             <Button
+//               variant="ghost"
+//               size="sm"
+//               onClick={handleClearAll}
+//               disabled={isDeleting || isClearing}
+//               className={cn(
+//                 'w-full text-xs gap-1.5 text-red-500 hover:text-red-600 hover:bg-red-50',
+//                 (isDeleting || isClearing) && 'opacity-50 cursor-not-allowed',
+//               )}
+//             >
+//               <Trash2 className="w-3.5 h-3.5" />
+//               {isClearing ? 'Clearing…' : 'Clear all notifications'}
+//             </Button>
+//           </div>
+//         )}
+//       </SheetContent>
+//     </Sheet>
+//   );
+// }
+
 'use client';
 
+import { useCallback } from 'react';
+import { BellOff, CheckCheck, Trash2, X } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
-import { X } from 'lucide-react';
-import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../app/redux/store';
-import { markAllAsRead } from '../../store/NotificationSlice';
+import {
+  markAllAsRead,
+  clearNewFlag,
+  clearNotifications, // ✅ used for optimistic clear
+  addNotification, // ✅ used for rollback
+} from '../../store/NotificationSlice';
+import {
+  useDeleteUserNotificationMutation,
+  useDeleteAllUserNotificationsMutation,
+  useDeleteAdminNotificationMutation,
+  useDeleteAllAdminNotificationsMutation,
+} from '../../app/redux/api/notificationApi';
 import { NotificationItem } from './NotificationItem';
+import { cn } from '@/lib/utils';
 
 interface Props {
   open: boolean;
   onClose: () => void;
+  /** 'admin' in the admin topbar, 'user' everywhere else. */
+  role?: 'admin' | 'user';
 }
 
-export function NotificationSheet({ open, onClose }: Props) {
+export function NotificationSheet({ open, onClose, role = 'user' }: Props) {
   const dispatch = useDispatch();
 
   const notifications = useSelector(
     (state: RootState) => state.notifications.notifications,
   );
+  const unreadCount = useSelector(
+    (state: RootState) => state.notifications.unreadCount,
+  );
 
+  // ── Mutations ──────────────────────────────────────────────────────────────
+  const [deleteUserNotification, { isLoading: deletingUser }] =
+    useDeleteUserNotificationMutation();
+  const [deleteAdminNotification, { isLoading: deletingAdmin }] =
+    useDeleteAdminNotificationMutation();
+  const [deleteAllUser, { isLoading: clearingUser }] =
+    useDeleteAllUserNotificationsMutation();
+  const [deleteAllAdmin, { isLoading: clearingAdmin }] =
+    useDeleteAllAdminNotificationsMutation();
+
+  const isDeleting = deletingUser || deletingAdmin;
+  const isClearing = clearingUser || clearingAdmin;
+
+  // ── Handlers ───────────────────────────────────────────────────────────────
+
+  const handleDelete = useCallback(
+    (id: string) => {
+      if (role === 'admin') {
+        deleteAdminNotification(id);
+      } else {
+        deleteUserNotification(id);
+      }
+    },
+    [role, deleteAdminNotification, deleteUserNotification],
+  );
+
+  const handleClearAll = useCallback(async () => {
+    // ✅ Snapshot current list for rollback
+    const snapshot = [...notifications];
+
+    // ✅ Optimistic clear — UI empties immediately
+    dispatch(clearNotifications());
+
+    try {
+      // ✅ Calls the correct endpoint based on role
+      if (role === 'admin') {
+        await deleteAllAdmin().unwrap();
+      } else {
+        await deleteAllUser().unwrap();
+      }
+    } catch {
+      // ✅ Rollback: restore the snapshot if the API call failed
+      snapshot.forEach(n => dispatch(addNotification(n)));
+      toast.error('Failed to clear notifications. Please try again.');
+    }
+  }, [role, notifications, dispatch, deleteAllAdmin, deleteAllUser]);
+
+  const handleClose = useCallback(() => {
+    dispatch(markAllAsRead());
+    notifications.forEach(n => {
+      if (n.isNew) dispatch(clearNewFlag(n.id));
+    });
+    onClose();
+  }, [dispatch, notifications, onClose]);
+
+  // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <Sheet
       open={open}
       onOpenChange={value => {
-        if (!value) {
-          dispatch(markAllAsRead());
-          onClose();
-        }
+        if (!value) handleClose();
       }}
     >
       <SheetContent
         side="right"
-        className="w-full sm:w-96 p-0 z-100 font-[manrope]"
+        className="w-full sm:w-[400px] p-0 z-[100] font-[manrope] flex flex-col"
       >
-        <SheetHeader className="p-4 border-b relative">
-          <div className="flex items-center justify-between">
-            <SheetTitle className="text-base font-semibold">
-              Notifications
-            </SheetTitle>
-            <Button
-              size="icon"
-              variant="ghost"
-              onClick={() => {
-                dispatch(markAllAsRead());
-                onClose();
-              }}
-              className="absolute top-4 right-2 z-20 cursor-pointer"
-            >
-              <X className="w-4 h-4" />
-            </Button>
+        {/* Header */}
+        <SheetHeader className="px-4 py-3 border-b bg-white shrink-0">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <SheetTitle className="text-base font-semibold text-gray-900">
+                Notifications
+              </SheetTitle>
+              {unreadCount > 0 && (
+                <span className="text-xs font-semibold bg-teal-100 text-teal-700 px-2 py-0.5 rounded-full">
+                  {unreadCount} new
+                </span>
+              )}
+            </div>
+
+            <div className="flex items-center gap-1">
+              {unreadCount > 0 && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => dispatch(markAllAsRead())}
+                  className="h-8 px-2 text-xs text-gray-500 hover:text-teal-600 gap-1"
+                >
+                  <CheckCheck className="w-3.5 h-3.5" />
+                  Mark all read
+                </Button>
+              )}
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={handleClose}
+                className="h-8 w-8 text-gray-500 hover:text-gray-800"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </SheetHeader>
 
-        <ScrollArea className="h-[calc(100vh-8rem)] p-3">
-          <div className="space-y-1">
+        {/* List */}
+        <ScrollArea className="flex-1 min-h-0">
+          <div className="p-3 space-y-1">
             {notifications.length > 0 ? (
               notifications.map(notification => (
                 <NotificationItem
                   key={notification.id}
                   notification={notification}
+                  onDelete={handleDelete}
                 />
               ))
             ) : (
-              <div className="text-center text-sm text-gray-500 py-10">
-                No notifications found
+              <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
+                <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center">
+                  <BellOff className="w-6 h-6 text-gray-400" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-700">
+                    All caught up!
+                  </p>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    No notifications at the moment.
+                  </p>
+                </div>
               </div>
             )}
           </div>
         </ScrollArea>
 
-        <div className="border-t p-3">
-          <Button
-            variant="ghost"
-            className="w-full text-teal-600 hover:bg-teal-50 cursor-pointer"
-          >
-            View All
-          </Button>
-        </div>
+        {/* Footer */}
+        {notifications.length > 0 && (
+          <div className="border-t px-3 py-2.5 shrink-0 bg-white">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleClearAll}
+              disabled={isDeleting || isClearing}
+              className={cn(
+                'w-full text-xs gap-1.5 text-red-500 hover:text-red-600 hover:bg-red-50',
+                (isDeleting || isClearing) && 'opacity-50 cursor-not-allowed',
+              )}
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              {isClearing ? 'Clearing…' : 'Clear all notifications'}
+            </Button>
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );
