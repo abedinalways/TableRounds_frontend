@@ -66,7 +66,7 @@ export function PendingUsers({
                     <button
                       onClick={() =>
                         setPreviewImage(
-                          user.verifiy_document_url ?? '/images/doc.png',
+                          user.verifiy_document_url ?? '/images/documents.jpg',
                         )
                       }
                       className="bg-[#cdebe3] text-[#01503b] rounded-[4px] cursor-pointer py-1 px-2 flex items-center gap-2"
@@ -161,7 +161,7 @@ export function PendingUsers({
 
             <button
               onClick={() => setPreviewImage(null)}
-              className="absolute top-2 right-2 bg-black text-white rounded-full w-7 h-7 flex items-center justify-center hover:bg-gray-800"
+              className="absolute top-2 right-2 bg-black text-white rounded-full w-7 h-7 flex items-center justify-center hover:bg-gray-800 cursor-pointer"
             >
               ✕
             </button>

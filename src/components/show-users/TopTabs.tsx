@@ -37,7 +37,7 @@ export default function TopTabs<T extends string>({
             type="button"
             onClick={() => onChange(t.key)}
             className={[
-              'min-w-0 basis-0 flex-1 rounded-xl px-2 py-2 text-[10px] font-medium leading-tight transition-all duration-200 sm:px-3 sm:py-2.5 sm:text-xs md:px-4 md:py-3 md:text-[1rem] lg:text-[1.25rem]',
+              'min-w-0 basis-0 flex-1 rounded-xl px-2 py-2 text-[10px] font-medium leading-tight transition-all duration-200 sm:px-3 sm:py-2.5 sm:text-xs md:px-4 md:py-3 md:text-[1rem] lg:text-[1.25rem] cursor-pointer',
               active ? activeColorClassName : inactiveColorClassName,
             ].join(' ')}
             title={t.label}

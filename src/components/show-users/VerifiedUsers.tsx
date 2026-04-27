@@ -163,7 +163,7 @@ export function VerifiedUsers({
                     <button
                       onClick={() =>
                         setPreviewImage(
-                          user.verifiy_document_url ?? '/images/doc.png',
+                          user.verifiy_document_url ?? '/images/documents.jpg',
                         )
                       }
                       className="bg-[#cdebe3] text-[#01503b] rounded-[4px] cursor-pointer py-1 px-2 flex items-center gap-2"
