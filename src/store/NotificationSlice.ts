@@ -158,6 +158,7 @@ export interface AppNotification {
   user: {
     name: string;
     avatar: string;
+    avatar_url?: string;
     initials: string;
   };
 }

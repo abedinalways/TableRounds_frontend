@@ -2,91 +2,72 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
-
 import { UserProfile } from '@/types/profile';
 import LocationIcon from '../ui/LocationIcon';
 import BagIcon from '../reusable/icons/BagIcon';
 import { FaXTwitter } from 'react-icons/fa6';
 import CalendarIconForProfile from '../reusable/icons/CalendarIconForProfile';
 import { Facebook, Instagram, Linkedin } from 'lucide-react';
-import FollowersFollowingModal from '../my-profile/FollowersFollowingModal';
-
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCreateAdminConversationMutation } from '@/app/redux/api/chat/chatApi';
 import { useToggleFollowMutation } from '@/app/redux/api/followApi';
+import ProfileFollowersFollowingModal from './FollowersFollowingModal';
+
+
 
 interface ProfileHeaderProps {
   user: UserProfile;
-
 }
 
-const followersData = [
-  {
-    id: '1',
-    name: 'John Doe',
-    username: 'john_doe',
-    avatar: '/images/settings/img01.png',
-  },
-  {
-    id: '2',
-    name: 'Sarah Smith',
-    username: 'sarah_smith',
-    avatar: '/images/settings/img01.png',
-  },
-];
-
-const followingData = [
-  {
-    id: '1',
-    name: 'Alex Carter',
-    username: 'alex_carter',
-    avatar: '/images/settings/img01.png',
-  },
-];
-
 export default function ProfileHeader({ user }: ProfileHeaderProps) {
- 
   const router = useRouter();
-  const [createConversation] = useCreateAdminConversationMutation();
-
-   const [toggleFollow] = useToggleFollowMutation();
-
-   const handleFollowToggle = async (userId: string, isFollowing: boolean) => {
-     try {
-       await toggleFollow({ userId, isFollowing }).unwrap();
-     } catch (error) {
-       console.error('Follow toggle failed', error);
-     }
-   };
-
-  const handleMessageClick = async () => {
-    console.log('ff', user.id);
-    try {
-      const res = await createConversation({
-        
-        participant_id: user.id,
-
-      }).unwrap();
-
-      console.log('conversation response: ========================= ', res);
-
-      router.push(`/dashboard/admin/support-message/${res.data.id}`);
-    } catch (err: any) {
-      console.error('Conversation creation failed', err);
-    }
-  };
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'followers' | 'following'>(
     'followers',
   );
 
+  const [createConversation] = useCreateAdminConversationMutation();
+  const [toggleFollow] = useToggleFollowMutation();
+
+  const normalizeUrl = (url?: string) => {
+    if (!url) return '#';
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    return `https://${url}`;
+  };
+
+  // Needed by ProfileFollowersFollowingModal for follow toggles inside the list
+  const handleFollowToggle = async (userId: string, isFollowing: boolean) => {
+    try {
+      await toggleFollow({ userId, isFollowing }).unwrap();
+    } catch (error) {
+      console.error('Follow toggle failed', error);
+    }
+  };
+
+  const handleMessageClick = async () => {
+    try {
+      const res = await createConversation({
+        participant_id: user.id,
+      }).unwrap();
+      router.push(`/dashboard/admin/support-message/${res.data.id}`);
+    } catch (err: any) {
+      console.error('Conversation creation failed', err);
+    }
+  };
+
+  // Normalize join date
+  const normalizeDate = user.created_at
+    ? new Date(user.created_at).toISOString().split('T')[0]
+    : '—';
+
   return (
     <>
       <div className="bg-white w-full rounded-2xl p-6 font-[manrope]">
-        <div className=" flex flex-col md:flex-row gap-6 font-[manrope]">
+        <div className="flex flex-col md:flex-row gap-6 font-[manrope]">
           <div>
             <Image
-              src={user.avatar}
+              src={user.avatar ?? '/images/settings/img01.png'}
               alt="Profile image"
               width={213}
               height={255}
@@ -97,32 +78,34 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
 
           <div className="flex-1 space-y-3">
             <h2 className="text-[28px] text-[#0f172b] font-semibold">
-              {user.name} {' '}
+              {user.name}{' '}
               <span className="text-green-900 font-semibold uppercase">
                 {user.credentials}
-              </span>{' '}
+              </span>
             </h2>
 
-            <p className="text-[18px] text-[#047857]  ">{user.title}</p>
+            <p className="text-[18px] text-[#047857]">{user.title}</p>
 
-            <div className="flex md:gap-[48px] gap-6 items-center text-xs md:text-[16px] font-light text-[#6b7280] ">
+            <div className="flex md:gap-[48px] gap-6 items-center text-xs md:text-[16px] font-light text-[#6b7280]">
               <h4 className="flex items-center gap-2">
                 <LocationIcon />
-                {user.address}{' '}
+                {user.address}
+                {user?.country && `, ${user.country}`}
+                {user?.state && `, ${user.state}`}
               </h4>
               <h4 className="flex items-center gap-2">
                 <BagIcon />
-                {user.jobArea}{' '}
+                {user.jobArea}
               </h4>
               <h4 className="flex items-center gap-2">
                 <CalendarIconForProfile />
-                Joined {user.created_at}{' '}
+                <span className="font-semibold">Joined</span> {normalizeDate}
               </h4>
             </div>
 
             <p className="text-sm md:text-[18px] leading-[160%]">{user.bio}</p>
 
-            {/* ✅ Clickable Followers / Following (no design change) */}
+            {/* Followers / Following — opens real modal */}
             <div className="flex gap-6 mt-3 text-md text-[32px] text-center">
               <button
                 type="button"
@@ -130,9 +113,9 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
                   setModalType('followers');
                   setModalOpen(true);
                 }}
-                className="flex flex-col cursor-pointer"
+                className="flex flex-col cursor-pointer hover:opacity-80 transition"
               >
-                <strong>{user.followers}</strong>
+                <strong>{user.following}</strong>
                 <span className="font-normal text-[18px] text-[#62748e]">
                   Followers
                 </span>
@@ -144,15 +127,16 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
                   setModalType('following');
                   setModalOpen(true);
                 }}
-                className="flex flex-col cursor-pointer"
+                className="flex flex-col cursor-pointer hover:opacity-80 transition"
               >
-                <strong>{user.following}</strong>
+                <strong>{user.followers}</strong>
                 <span className="font-normal text-[18px] text-[#62748e]">
                   Following
                 </span>
               </button>
             </div>
 
+            {/* ✅ Message only — no Follow/Unfollow button for admin */}
             <div className="flex gap-3 mb-[24px]">
               <button
                 onClick={handleMessageClick}
@@ -160,48 +144,61 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
               >
                 Message
               </button>
-              {/* <button
-                onClick={() => setIsFollowing(prev => !prev)}
-                className={`px-[24px] py-[14px] text-center rounded-[8px] cursor-pointer border
-    ${
-      isFollowing
-        ? 'bg-[#01503b] text-white border-[#01503b]'
-        : 'bg-white text-[#01503b] border-[#01503b]'
-    }`}
-              >
-                {isFollowing ? 'Unfollow' : 'Follow'}
-              </button> */}
             </div>
           </div>
         </div>
 
         <hr />
 
-        {/* social media */}
-        <div className="flex flex-wrap items-center gap-4 md:gap-[24px]  text-[#01281e] mt-[24px]">
+        {/* Social links — wired to real URLs */}
+        <div className="flex flex-wrap items-center gap-4 md:gap-[24px] text-[#01281e] mt-[24px]">
           <h2 className="font-bold text-[16px] md:text-[20px]">Contact</h2>
-          <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center  cursor-pointer">
-            <Linkedin size="24" />
-          </button>
-          <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer ">
-            <Instagram size="24" />
-          </button>
-          <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer ">
-            <Facebook size="24" />
-          </button>
-          <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer ">
-            <FaXTwitter size="24" />
-          </button>
+          <Link
+            href={normalizeUrl(user.linkedin)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
+              <Linkedin size={24} />
+            </button>
+          </Link>
+          <Link
+            href={normalizeUrl(user.instagram)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
+              <Instagram size={24} />
+            </button>
+          </Link>
+          <Link
+            href={normalizeUrl(user.facebook)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
+              <Facebook size={24} />
+            </button>
+          </Link>
+          <Link
+            href={normalizeUrl(user.twitter)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
+              <FaXTwitter size={24} />
+            </button>
+          </Link>
         </div>
       </div>
 
-      {/* ✅ MODAL RENDER */}
-      <FollowersFollowingModal
-        onFollowToggle={handleFollowToggle}
+      {/* ✅ Same modal as user dashboard — fetches real followers/following via profileUserId */}
+      <ProfileFollowersFollowingModal
         open={modalOpen}
         onClose={setModalOpen}
         type={modalType}
-        data={modalType === 'followers' ? followersData : followingData}
+        profileUserId={user.id}
+        onFollowToggle={handleFollowToggle}
       />
     </>
   );

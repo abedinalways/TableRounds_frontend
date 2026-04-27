@@ -3,6 +3,7 @@ import { baseApi } from './baseApi';
 type ContactPayload = {
   name: string;
   email: string;
+  subject?: string | undefined;
   message: string;
 };
 

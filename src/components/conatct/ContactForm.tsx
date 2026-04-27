@@ -111,9 +111,11 @@ import Btn from '@/components/reusable/button/Btn';
 import { usePostContactMessageMutation } from '@/app/redux/api/contactApi';
 
 
+
 const contactSchema = z.object({
   name: z.string().min(2, 'Name is required'),
   email: z.string().email('Invalid email address'),
+  subject: z.string().optional(),
   message: z.string().min(5, 'Message is required'),
   honey: z.string().optional(), // Honeypot field
 });
@@ -198,6 +200,16 @@ export default function ContactForm() {
           {errors.email && (
             <p className="text-red-300 text-xs mt-1">{errors.email.message}</p>
           )}
+        </div>
+        <div>
+          <label className="text-white text-sm md:text-[18px] mb-1 block">
+            Subject
+          </label>
+          <Input
+            placeholder="Enter the subject"
+            {...register('subject')}
+            className="bg-[#1D886B] px-[12px] py-[16px] placeholder:text-[#f9f9f5] placeholder:text-[12px] rounded-[8px] border-none shadow-lg text-white md:h-[60px] w-full"
+          />
         </div>
 
         {/* Message */}

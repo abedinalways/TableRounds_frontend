@@ -138,13 +138,12 @@ export function NotificationItem({ notification, onDelete }: Props) {
       {/* Avatar */}
       <div className="relative shrink-0 mt-0.5">
         <Image
-          src={notification.user.avatar}
+          src={notification?.user?.avatar_url || '/images/footer_logo.png'}
           width={38}
           height={38}
           alt={notification.user.name}
           className="rounded-full object-cover aspect-square ring-1 ring-gray-200"
           unoptimized
-          
         />
         {/* Unread dot */}
         {!notification.isRead && (
