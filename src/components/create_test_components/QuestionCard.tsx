@@ -212,7 +212,7 @@
 
 'use client';
 
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { CardContent, CardHeader } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -224,6 +224,7 @@ import CorrectIcon from '../reusable/icons/CorrectIcon';
 import WrongIcon from '../reusable/icons/WrongIcon';
 import { useCompleteTestMutation } from '@/app/redux/api/testSessionApi';
 import { useRouter } from 'next/navigation';
+import { AnswerToast } from './AnswerToast';
 
 interface QuestionCardProps {
   testId: string;
@@ -232,7 +233,8 @@ interface QuestionCardProps {
   showExplanation: boolean;
   isUserCorrect: boolean;
   onAnswerChange: (value: string) => void;
-  onSubmit: () => void;
+  // onSubmit: () => void;
+  onSubmit: () => Promise<boolean>;
   onToggleHide: () => void;
   isQuestionHidden: boolean;
   hideActions?: boolean;
@@ -256,8 +258,9 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 }) => {
   const [completeTest] = useCompleteTestMutation();
   const router = useRouter();
-
-  // ✅ FIX: Safely fallback to empty array if answerOptions is undefined
+ const [showToast, setShowToast] = useState(false);
+ const [toastCorrect, setToastCorrect] = useState(false);
+ const hideToast = useCallback(() => setShowToast(false), []);
   const answerOptions = quizDetails?.answerOptions ?? [];
 
   const handleSubmitTest = async () => {
@@ -271,6 +274,11 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 
   return (
     <div className="w-full bg-[#f9f9f5] md:my-8 md:p-[32px] rounded-[16px]">
+      <AnswerToast
+        show={showToast}
+        isCorrect={toastCorrect}
+        onHide={hideToast}
+      />
       {showExplanation && !hideToggleButton && (
         <div className="mb-4">
           <Btn
@@ -400,8 +408,13 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
         {!hideActions && (
           <div className="md:flex justify-between items-center space-y-2 md:space-y-0">
             <Btn
+              
               text="Submit Answer"
-              onClick={onSubmit}
+              onClick={async () => {
+                const isCorrect = await onSubmit(); // ✅ wait for API, get real result
+                setToastCorrect(isCorrect);
+                setShowToast(true);
+              }}
               disabled={!selectedAnswerId || showExplanation}
               className={cn(
                 'bg-[#01281e] text-white w-full md:w-[164px] h-[50px] text-md font-semibold',

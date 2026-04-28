@@ -8,15 +8,10 @@ import QuestionSidebar from './QuestionSidebar';
 import QuestionCard from './QuestionCard';
 import ExplanationPanel from './ExplanationPanel';
 
-import type {
-  MarkedQuestion,
-  QuizDetailsUI,
-  QuizQuestionDataUI,
-} from '@/types/test-session';
+import type { MarkedQuestion, QuizQuestionDataUI } from '@/types/test-session';
 
 import {
   useAnswerQuestionMutation,
-  // useLazyGetTestResultQuery,
   useSkipQuestionMutation,
   useToggleMarkMutation,
 } from '@/app/redux/api/testSessionApi';
@@ -29,10 +24,9 @@ interface QuizQuestionViewProps {
   onNext: () => void;
   onPrevious: () => void;
   onJumpTo?: (index: number) => void;
-  // setQuestions: React.Dispatch<React.SetStateAction<QuizDetailsUI[]>>;
   setQuestions: React.Dispatch<React.SetStateAction<QuizQuestionDataUI[]>>;
   currentQuestion: number;
-  selectedAnswerId: string | null; // Add selectedAnswerId to props
+  selectedAnswerId: string | null;
   setSelectedAnswer: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
@@ -52,15 +46,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   const { testProgress, quizDetails } = data;
   const { totalQuestions, questionID } = testProgress;
 
-  // const [selectedAnswerId, setSelectedAnswer] = useState<string | null>(null);
   const [showExplanation, setShowExplanation] = useState<boolean>(false);
-
-  useEffect(() => {
-    setSelectedAnswer(quizDetails.userAnswerId ?? null);
-    setShowExplanation(Boolean(quizDetails.correctAnswerId));
-    setIsQuestionHidden(false);
-  }, [questionID]);
-
   const [isQuestionHidden, setIsQuestionHidden] = useState<boolean>(false);
   const [zoomLevel, setZoomLevel] = useState<number>(1);
 
@@ -73,6 +59,12 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   const [skipQuestionApi] = useSkipQuestionMutation();
 
   useEffect(() => {
+    setSelectedAnswer(quizDetails.userAnswerId ?? null);
+    setShowExplanation(Boolean(quizDetails.correctAnswerId));
+    setIsQuestionHidden(false);
+  }, [questionID]);
+
+  useEffect(() => {
     if (questionRef.current && explanationRef.current) {
       gsap.set(questionRef.current, { flex: '1 1 0%', opacity: 1 });
       gsap.set(explanationRef.current, { flex: '1 1 0%' });
@@ -80,7 +72,6 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   }, [questionID]);
 
   const progressValue = (currentQuestion / totalQuestions) * 100;
-
   const isMarked = markedQuestions.some(q => q.index === currentQuestion);
 
   const handleAnswerChange = (value: string) => {
@@ -88,15 +79,14 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
     setSelectedAnswer(value);
   };
 
-  const handleSubmit = async () => {
-    // Ensure the selectedAnswerId is valid
-    if (!selectedAnswerId || showExplanation || isAnswering) return;
+  // ✅ Returns boolean so QuestionCard can show the correct toast
+  const handleSubmit = async (): Promise<boolean> => {
+    if (!selectedAnswerId || showExplanation || isAnswering) return false;
 
     try {
       const res = await answerQuestion({
         test_id: testId,
         question_id: questionID,
-        // seletecd_option_id: selectedAnswerId,
         answer_option_id: selectedAnswerId,
       }).unwrap();
 
@@ -107,20 +97,21 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
       const answerOptions = res.data.answerOptions ?? [];
       const correctOption = answerOptions.find((o: any) => o.is_correct);
 
+      // ✅ Compute correctness right here from the API response — most reliable source
+      const isCorrect = res.data.selected_option_id === correctOption?.id;
+
       setSelectedAnswer(res.data.selected_option_id);
 
       setQuestions(prev => {
         const copy = [...prev];
         const idx = currentQuestion - 1;
         const existing = copy[idx];
-
         if (!existing) return prev;
 
         copy[idx] = {
           ...existing,
           quizDetails: {
             ...existing.quizDetails,
-
             userAnswerId: res.data.selected_option_id,
             correctAnswerId: correctOption?.id ?? null,
             explanation: {
@@ -152,19 +143,18 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
 
         return copy;
       });
-      console.log(quizDetails, 'llllll=======================');
+
       setShowExplanation(true);
+      return isCorrect; // ✅ Return real result to QuestionCard
     } catch (error) {
       console.error('Submit failed:', error);
+      return false; // ✅ Always return a boolean
     }
   };
-  /**
-   * Toggle Mark
-   */
+
   const handleToggleMark = async () => {
     try {
-      onToggleMark(); 
-
+      onToggleMark();
       await toggleMarkApi({
         test_id: testId,
         question_id: questionID,
@@ -175,10 +165,6 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
     }
   };
 
- 
-  /**
-   * Next Question
-   */
   const handleNext = async () => {
     if (!selectedAnswerId) {
       try {
@@ -190,7 +176,6 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
         // ignore skip errors
       }
     }
-
     onNext();
   };
 
@@ -198,23 +183,18 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
     onPrevious();
   };
 
-  // Skip Question
   const handleSkip = async () => {
     try {
       await skipQuestionApi({
         test_id: testId,
         question_id: questionID,
       }).unwrap();
-
       onNext();
-    } catch (err) {
+    } catch {
       console.log('skip failed');
     }
   };
 
-  /**
-   * Toggle hide/show question animation
-   */
   const handleToggleHide = () => {
     if (!showExplanation) return;
 
@@ -230,7 +210,6 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
         ease: 'power2.inOut',
         onComplete: () => setIsQuestionHidden(true),
       });
-
       gsap.to(eEl, {
         flex: '1 1 100%',
         duration: 0.45,
@@ -238,14 +217,12 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
       });
     } else {
       setIsQuestionHidden(false);
-
       gsap.to(qEl, {
         flex: '1 1 0%',
         opacity: 1,
         duration: 0.5,
         ease: 'power2.out',
       });
-
       gsap.to(eEl, {
         flex: '1 1 0%',
         duration: 0.5,
@@ -259,17 +236,11 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   const STEP = 0.1;
 
   const handleZoomIn = () => setZoomLevel(z => Math.min(z + STEP, MAX_ZOOM));
-
   const handleZoomOut = () => setZoomLevel(z => Math.max(z - STEP, MIN_ZOOM));
-
-  // const isUserCorrect =
-  //   quizDetails.correctAnswerId !== null &&
-  //   selectedAnswerId !== null &&
-  //   selectedAnswerId === quizDetails.correctAnswerId;
 
   const isUserCorrect =
     quizDetails.userAnswerId === quizDetails.correctAnswerId;
-  // console.log(isUserCorrect, 'who is  correct=================')
+
   return (
     <div className="flex flex-col space-y-4 font-[manrope]">
       <QuizTopbar
@@ -323,7 +294,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
                   showExplanation={showExplanation}
                   isUserCorrect={isUserCorrect}
                   onAnswerChange={handleAnswerChange}
-                  onSubmit={handleSubmit}
+                  onSubmit={handleSubmit} // ✅ now Promise<boolean>
                   onToggleHide={handleToggleHide}
                   isQuestionHidden={isQuestionHidden}
                 />

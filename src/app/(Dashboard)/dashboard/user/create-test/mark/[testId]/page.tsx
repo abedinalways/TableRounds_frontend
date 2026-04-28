@@ -265,7 +265,7 @@ export default function MarkPage() {
                   showExplanation={false}
                   isUserCorrect={false}
                   onAnswerChange={() => {}}
-                  onSubmit={() => {}}
+                  onSubmit={() => Promise.resolve(false)}
                   onToggleHide={() => {}}
                   isQuestionHidden={false}
                   hideActions={true}
