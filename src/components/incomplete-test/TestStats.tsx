@@ -5,16 +5,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 
 import { useGetIncompleteTestsQuery } from '@/app/redux/api/incompleteTestApi';
+import { IncompleteTestStatsSkeleton } from './IncompleteTestStatsSkeleton';
 
 export function TestStats() {
   const { data, isLoading, isError } = useGetIncompleteTestsQuery();
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center mt-8">
-        <Loader2 className="animate-spin text-[#01281e]" />
-      </div>
-    );
+    return <IncompleteTestStatsSkeleton/>;
   }
 
   if (isError || !data?.data) {

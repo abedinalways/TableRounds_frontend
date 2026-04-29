@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import { useGetTestHistoryStatsQuery } from '@/app/redux/api/testHistoryAPi';
+import { TestStatsSkeleton } from './TestStatsSkeleton';
 
 
 
@@ -11,11 +12,7 @@ export function TestStats() {
   const { data, isLoading, isError } = useGetTestHistoryStatsQuery();
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center mt-8">
-        <Loader2 className="animate-spin text-[#01281e]" />
-      </div>
-    );
+    return <TestStatsSkeleton />;
   }
 
   if (isError || !data?.data) {

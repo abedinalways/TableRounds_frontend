@@ -1,6 +1,49 @@
+// import { baseApi } from './baseApi';
+
+// export interface LeaderboardUser {
+//   id: string;
+//   name: string;
+//   institution: string;
+//   avatar: string;
+// }
+
+// export interface LeaderboardRow {
+//   rank: number;
+//   user: LeaderboardUser;
+//   tests_completed: number;
+//   accuracy: number;
+//   avg_score: number;
+//   trend: number[];
+// }
+
+// export interface LeaderboardResponse {
+//   success: boolean;
+//   data: {
+//     user_stats: unknown;
+//     leaderboard: LeaderboardRow[];
+//     meta: {
+//       page: number;
+//       limit: number;
+//     };
+//   };
+// }
+
+// export const leaderboardApi = baseApi.injectEndpoints({
+//   endpoints: builder => ({
+//     getLeaderboard: builder.query<LeaderboardResponse, void>({
+//       query: () => ({
+//         url: '/leaderboard',
+//         method: 'GET',
+//         credentials: 'include',
+//       }),
+//     }),
+//   }),
+//   overrideExisting: false,
+// });
+
+// export const { useGetLeaderboardQuery } = leaderboardApi;
+
 import { baseApi } from './baseApi';
-
-
 
 export interface LeaderboardUser {
   id: string;
@@ -18,10 +61,23 @@ export interface LeaderboardRow {
   trend: number[];
 }
 
+export interface LeaderboardQueryParams {
+  period?: 'week' | 'month' | 'quarter' | 'year' | 'all';
+  page?: number;
+  limit?: number;
+  filter?: 'high_accuracy' | 'top_10' | 'active_users';
+}
+
 export interface LeaderboardResponse {
   success: boolean;
   data: {
-    user_stats: unknown;
+    user_stats: {
+      rank: number;
+      tests_completed: number;
+      accuracy: number;
+      current_streak: number;
+      trend: number[];
+    };
     leaderboard: LeaderboardRow[];
     meta: {
       page: number;
@@ -30,15 +86,14 @@ export interface LeaderboardResponse {
   };
 }
 
-
-
 export const leaderboardApi = baseApi.injectEndpoints({
   endpoints: builder => ({
-    getLeaderboard: builder.query<LeaderboardResponse, void>({
-      query: () => ({
-        url: '/leaderboard', 
+    getLeaderboard: builder.query<LeaderboardResponse, LeaderboardQueryParams>({
+      query: params => ({
+        url: '/leaderboard',
         method: 'GET',
         credentials: 'include',
+        params,
       }),
     }),
   }),

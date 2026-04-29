@@ -10,6 +10,7 @@ import TestStatIcon from '../reusable/icons/TestStatIcon';
 import { useGetStatisticsQuery } from '@/app/redux/api/StatisTicsApi';
 import { link } from 'fs';
 import Link from 'next/link';
+import { TestStatisticsSkeleton } from './TestStatisticsSkeleton';
 
 
 
@@ -18,14 +19,7 @@ const TestStatistics: React.FC = () => {
   console.log(data);
 
   if (isLoading) {
-    return (
-      <div className="w-full max-w-7xl mx-auto p-6 min-h-screen flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-12 h-12 animate-spin text-teal-600" />
-          <p className="text-gray-600">Loading Statistics...</p>
-        </div>
-      </div>
-    );
+    return <TestStatisticsSkeleton />;
   }
 
   if (isError || !data) {

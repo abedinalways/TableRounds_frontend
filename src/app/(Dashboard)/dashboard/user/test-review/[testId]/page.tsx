@@ -2,6 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { useGetTestDetailsQuery } from '@/app/redux/api/testSessionApi';
+import { TestReviewSkeleton } from '@/components/preview-test/TestReviewSkeleton';
 
 export default function TestReviewPage() {
   const { testId } = useParams();
@@ -10,7 +11,7 @@ export default function TestReviewPage() {
   const { data, isLoading } = useGetTestDetailsQuery(testId);
   // console.log(data, '+++++++++++++++++++++++')
   if (isLoading) {
-    return <div className="p-6">Loading...</div>;
+    return <TestReviewSkeleton/>;
   }
 
   const test = data?.data;

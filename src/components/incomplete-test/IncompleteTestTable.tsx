@@ -183,6 +183,7 @@ import {
   useGetIncompleteTestsQuery,
 } from '@/app/redux/api/incompleteTestApi';
 import { IncompleteTestRow } from './IncompleteTestRow';
+import { IncompleteTestTableSkeleton } from './IncompleteTestTableSkeleton';
 
 const PAGE_LIMIT = 10;
 
@@ -236,11 +237,7 @@ export function IncompleteTestTable({ search }: Props) {
   }, [data, search]);
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center mt-6">
-        <Loader2 className="animate-spin text-[#01503b]" />
-      </div>
-    );
+    return <IncompleteTestTableSkeleton />;
   }
 
   if (isError || !data) {

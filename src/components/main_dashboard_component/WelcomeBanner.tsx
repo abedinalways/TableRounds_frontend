@@ -8,9 +8,10 @@ import FollowersFollowingModal from './FollowersFollowingModal';
 import { useMeQuery } from '@/app/redux/api/authApi';
 import { useGetConnectionsQuery } from '@/app/redux/api/connectionApi';
 import { useToggleFollowMutation } from '@/app/redux/api/followApi';
+import { WelcomeBannerSkeleton } from './WelcomeBannerSkeleton';
 
 export const WelcomeBanner = () => {
-  const { data: user } = useMeQuery();
+  
 
   const textRef = useRef<HTMLHeadingElement | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -51,6 +52,11 @@ export const WelcomeBanner = () => {
     day: 'numeric',
     year: 'numeric',
   });
+
+  const { data: user, isLoading: userLoading } = useMeQuery();
+  if (userLoading) {
+    return <WelcomeBannerSkeleton />;
+  }
 
   const avatar =
     user?.avatar && user.avatar.startsWith('http')

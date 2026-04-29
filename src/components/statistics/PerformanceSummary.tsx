@@ -6,16 +6,13 @@ import AnimatedProgressCircle from './AnimatedProgressCircle';
 import StatIcon from '../ui/StatIcon';
 import QuestionIcon from '../reusable/icons/QuestionIcon';
 import { useGetStatisticsQuery } from '@/app/redux/api/StatisTicsApi';
+import { PerformanceSummarySkeleton } from './PerformanceSummarySkeleton';
 
 export default function PerformanceSummary() {
   const { data, isLoading } = useGetStatisticsQuery();
 
   if (isLoading) {
-    return (
-      <div className="p-6 text-sm text-muted-foreground text-center">
-        Loading statistics...
-      </div>
-    );
+    return <PerformanceSummarySkeleton/>;
   }
 
   return (

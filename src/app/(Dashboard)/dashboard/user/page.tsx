@@ -3,7 +3,7 @@
 import { WelcomeBanner } from '@/components/main_dashboard_component/WelcomeBanner';
 
 import FindColleagues from '@/components/main_dashboard_component/FindColleagues';
-import Calendar from '@/components/main_dashboard_component/calendar';
+// import Calendar from '@/components/main_dashboard_component/calendar';
 import StatsCards from '@/components/main_dashboard_component/StatsCards ';
 
 export default function UserDashboard() {

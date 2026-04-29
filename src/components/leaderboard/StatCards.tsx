@@ -7,20 +7,17 @@ import { Loader2 } from 'lucide-react';
 
 import { useGetLeaderboardQuery } from '@/app/redux/api/leaderboardApi';
 import { useMeQuery } from '@/app/redux/api/authApi';
+import { StatCardsSkeleton } from './StatCardsSkeleton';
 
 export default function StatCards() {
-  const { data, isLoading, isError } = useGetLeaderboardQuery();
+  const { data, isLoading, isError } = useGetLeaderboardQuery({});
   const { data: userData } = useMeQuery();
   const userId = userData?.id;
-  console.log(userId, '===================UserId')
-  console.log(userData, '===================user data');
+  // console.log(userId, '===================UserId')
+  // console.log(userData, '===================user data');
   
   if (isLoading) {
-    return (
-      <div className="rounded-[12px] p-8 background flex justify-center">
-        <Loader2 className="animate-spin text-white" />
-      </div>
-    );
+    return <StatCardsSkeleton />;
   }
 
   if (isError || !data?.data) {
@@ -32,7 +29,7 @@ export default function StatCards() {
   }
 
   const stats = data?.data.leaderboard;
-  console.log(stats, '++++++++++++++++++++++wefyhweoifwefo');
+  // console.log(stats, '++++++++++++++++++++++wefyhweoifwefo');
 
   const userStats = stats.find((stat: any) => stat.user.id === userId);
   console.log(userStats, '-----------------++++++++++++++++++++++++++')

@@ -3,11 +3,14 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { useGetProfileQuery } from '@/app/redux/api/profileApi';
+import { DashboardStatsSkeleton } from './DashboardStatsSkeleton';
 
 const StatsCards = () => {
-  const { data: value, error } = useGetProfileQuery(); 
+  const { data: value, error, isLoading } = useGetProfileQuery(); 
   console.log(value)
-
+  if (isLoading) {
+    return <DashboardStatsSkeleton />;
+  }
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 font-[manrope]">
       <Card className="border rounded-xl shadow-sm p-4 bg-white hover:scale-[1.02] transition-transform duration-300 cursor-pointer">

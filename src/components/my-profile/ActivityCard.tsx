@@ -4,12 +4,7 @@ import { Card } from '@/components/ui/card';
 import BagIcon from '../reusable/icons/BagIcon';
 import { statisticsItems } from '@/types/myProfile';
 
-// interface QuestionBankStats {
-//   completion: number;
-//   ranking: number | string;
-//   correctRate: number;
-//   bestTopic: string;
-// }
+
 
 interface Props {
   data: statisticsItems;
@@ -18,12 +13,12 @@ interface Props {
 export default function QuestionBankSolved({ data }: Props) {
   const { complete_percentage, correct_percentage, ranking, best_topic } =
     data || {};
-  console.log(data, 'ehgkergher++++++++++++++++++==================', data);
+  // console.log(data, 'ehgkergher++++++++++++++++++==================', data);
   const radius = 110;
   const size = 251;
   const center = size / 2;
   const circumference = 2 * Math.PI * radius;
-  const offset = circumference - complete_percentage * circumference;
+  const offset = circumference - (complete_percentage / 100) * circumference;
 
   const gradientId = `progressGradient-${complete_percentage}`;
 
@@ -48,14 +43,14 @@ export default function QuestionBankSolved({ data }: Props) {
               <linearGradient
                 id={gradientId}
                 gradientUnits="userSpaceOnUse"
-                x1="0"
+                x1={center}
                 y1="0"
-                x2={size}
+                x2={center}
                 y2={size}
-                gradientTransform={`rotate(160 ${center} ${center})`}
               >
-                <stop offset="0%" stopColor="#023729" />
-                <stop offset="100%" stopColor="#02ae80" />
+                <stop offset="0%" stopColor="#065f46" />
+                <stop offset="50%" stopColor="#059669" />
+                <stop offset="100%" stopColor="#10b981" />
               </linearGradient>
             </defs>
 

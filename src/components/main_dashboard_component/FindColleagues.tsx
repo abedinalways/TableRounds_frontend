@@ -13,6 +13,7 @@ import { Card } from '@/components/ui/card';
 import { useDiscoverProfilesQuery } from '@/app/redux/api/discoverApi';
 import { useCreateConversationMutation } from '@/app/redux/api/chat/chatApi';
 import { useToggleFollowMutation } from '@/app/redux/api/followApi';
+import { ColleaguesGridSkeleton } from './ColleaguesGridSkeleton';
 
 
 interface Colleague {
@@ -153,46 +154,49 @@ const FindColleagues = () => {
 
   return (
     <>
-      
-    <div className="w-full  mx-auto bg-white border rounded-xl shadow-sm p-4 font-[manrope]">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <h2 className="text-2xl font-semibold text-gray-900">
-          Find Colleagues
-        </h2>
-        <Button
-          onClick={() => setShowAll(prev => !prev)}
-          className="bg-[#01503b] text-white"
-        >
-          {showAll ? 'Show Less' : 'View All Surgeons'}
-        </Button>
-      </div>
+      <div className="w-full  mx-auto bg-white border rounded-xl shadow-sm p-4 font-[manrope]">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <h2 className="text-2xl font-semibold text-gray-900">
+            Find Colleagues
+          </h2>
+          <Button
+            onClick={() => setShowAll(prev => !prev)}
+            className="bg-[#01503b] text-white cursor-pointer"
+          >
+            {showAll ? 'Show Less' : 'View All Surgeons'}
+          </Button>
+        </div>
 
-      <div className="relative mb-6">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-        <Input
-          placeholder="Search by name..."
-          value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
-          className="pl-10"
-        />
-      </div>
-
-      {(isLoading || isFetching) && (
-        <p className="text-center text-gray-500 py-6">Loading...</p>
-      )}
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {colleagues.map(colleague => (
-          <ColleagueCard
-            key={colleague.id}
-            colleague={colleague}
-            showAll={showAll}
-            onMessage={handleMessageClick}
-            onFollow={handleFollowToggle}
+        <div className="relative mb-6">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <Input
+            placeholder="Search by name..."
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            className="pl-10"
           />
-        ))}
+        </div>
+
+        {isLoading ? (
+          <ColleaguesGridSkeleton showAll={showAll} />
+        ) : (
+          <div
+            className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 transition ${
+              isFetching ? 'opacity-50 pointer-events-none' : ''
+            }`}
+          >
+            {colleagues.map(colleague => (
+              <ColleagueCard
+                key={colleague.id}
+                colleague={colleague}
+                showAll={showAll}
+                onMessage={handleMessageClick}
+                onFollow={handleFollowToggle}
+              />
+            ))}
+          </div>
+        )}
       </div>
-    </div>
     </>
   );
 };

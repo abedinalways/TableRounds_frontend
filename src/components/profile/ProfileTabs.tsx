@@ -43,10 +43,10 @@ export default function ProfileTabs({
   const contentRef = useRef<HTMLDivElement | null>(null);
  
     const { data: user } = useGetProfileDataQuery(profileUserId);
-    console.log(
-      user?.statistics,
-      'user data===========weweew==========++++++++++++++++',
-    );
+    // console.log(
+    //   user?.statistics,
+    //   'user data===========weweew==========++++++++++++++++',
+    // );
   
   const profileStatistics = user?.statistics;
   console.log(profileStatistics, '=====================sefghewkgf=================')

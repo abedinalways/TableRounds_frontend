@@ -18,7 +18,7 @@ import ExperienceIcon from '../reusable/icons/ExperienceIcon';
 import ActivityIcon from '../reusable/icons/ActivityIcon';
 import QuestionBankSolved from './ActivityCard';
 import AccountSettings from '../settings/AccountSettings';
-import { useGetStatisticsQuery } from '@/app/redux/api/StatisTicsApi';
+
 import { useMeQuery } from '@/app/redux/api/authApi';
 
 interface ProfileTabsProps {
@@ -35,40 +35,14 @@ export default function ProfileTabs({
 }: ProfileTabsProps) {
   const contentRef = useRef<HTMLDivElement | null>(null);
   const { data: user } = useMeQuery();
-  console.log(
-    user?.statistics,
-    'user data===========weweew==========++++++++++++++++',
-  );
+  // console.log(
+  //   user?.statistics,
+  //   'user data===========weweew==========++++++++++++++++',
+  // );
 
   const profileStatistics = user?.statistics;
   console.log(profileStatistics, 'llllllll');
-  // const { data: statisticsData, isLoading: statisticsLoading } =
-  //   useGetStatisticsQuery();
-
-  // const questionBankStats = useMemo(() => {
-  //   const stats = statisticsData?.data;
-
-  //   if (!stats) {
-  //     return {
-  //       completion: 0,
-  //       ranking: '-',
-  //       correctRate: 0,
-  //       bestTopic: 'N/A',
-  //     };
-  //   }
-
-  //   const bestTopicItem = [...stats.performance_by_topic].sort(
-  //     (a, b) => b.correct_percentage - a.correct_percentage,
-  //   )[0];
-
-  //   return {
-  //     completion: Math.round(stats.question_bank.progress_percentage ?? 0),
-  //     ranking: bestTopicItem?.percentile_rank ?? '-',
-  //     correctRate: Math.round(stats.performance.correct_percentage_avg ?? 0),
-  //     bestTopic: bestTopicItem?.topic ?? 'N/A',
-  //   };
-  // }, [statisticsData]);
-
+  
   useEffect(() => {
     if (!contentRef.current) return;
 

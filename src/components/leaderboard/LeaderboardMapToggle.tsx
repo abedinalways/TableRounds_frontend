@@ -11,7 +11,7 @@ import { LeaderboardTable } from './LeaderboardTable';
 import { Switch } from '../ui/CustomSwitch';
 
 
-const data = leaderboardData as LeaderboardData;
+
 
 
 const Mapview = dynamic(() => import('./Mapview'), {

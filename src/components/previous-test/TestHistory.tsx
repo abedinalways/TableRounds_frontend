@@ -17,6 +17,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { useGetPreviousTestHistoryStatsQuery } from '@/app/redux/api/previousTestHistoryApi';
+import { TestHistorySkeleton } from './TestHistorySkeleton';
 
 const PAGE_LIMIT = 10;
 
@@ -59,11 +60,7 @@ export function TestHistory({ search }: Props) {
   }, [data, search]);
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center mt-6">
-        <Loader2 className="animate-spin text-[#01503b]" />
-      </div>
-    );
+    return <TestHistorySkeleton/>;
   }
 
   if (isError || !data) {

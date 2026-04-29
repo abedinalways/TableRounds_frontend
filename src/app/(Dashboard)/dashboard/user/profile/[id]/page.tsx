@@ -5,6 +5,7 @@ import { ProfileTab } from '@/types/profile';
 import ProfileHeader from '@/components/profile/ProfileHeader';
 import ProfileTabs from '@/components/profile/ProfileTabs';
 import { useGetProfileDataQuery } from '@/app/redux/api/getProfileApi';
+import { ProfilePageSkeleton } from '@/components/user-profile/ProfilePageSkeleton';
 // import { is } from 'zod/v4/locales';
 
 
@@ -25,7 +26,7 @@ export default function ProfilePage({
   
 
   if (isLoading) {
-    return <div className="p-10 text-center">Loading profile...</div>;
+    return <ProfilePageSkeleton />;
   }
 
   if (error || !apiData) {
