@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { useGetTestQuery } from '@/app/redux/api/startTestApi';
 import type { TestData } from '@/app/redux/api/startTestApi';
 import { Skeleton } from '@/components/ui/skeleton';
+import { CreateTestPageSkeleton } from '@/components/create_test_components/CreateTestPageSkeleton';
 
 const MARKED_KEY_PREFIX = 'MARKED_QUESTIONS_';
 
@@ -191,49 +192,8 @@ export default function CreateTestPage() {
     });
   };
 
-  if (isLoading) return (
-    <div className="grid grid-cols-[1fr_240px] gap-4 p-6 h-sereen">
-      {/* Left column */}
-      <div className="flex flex-col gap-4">
-        {/* Progress bar card */}
-        <div className="rounded-xl border border-border bg-card p-5">
-          <div className="flex justify-between mb-3">
-            <Skeleton className="h-3 w-28" />
-            <Skeleton className="h-3 w-28" />
-            <Skeleton className="h-3 w-28" />
-            <Skeleton className="h-3 w-28" />
-          </div>
-          <Skeleton className="h-1.5 w-full rounded-full" />
-          <Skeleton className="h-1.5 w-full rounded-full" />
-          <Skeleton className="h-1.5 w-full rounded-full" />
-          <Skeleton className="h-1.5 w-full rounded-full" />
-        </div>
-
-        {/* Question stem card */}
-        <div className="rounded-xl border border-border bg-card p-6">
-          <Skeleton className="h-3 w-16 mb-4" />
-          <Skeleton className="h-3.5 w-full mb-2" />
-          <Skeleton className="h-3.5 w-[88%] mb-2" />
-          <Skeleton className="h-3.5 w-3/4" />
-        </div>
-
-        {/* Answer options */}
-        <div className="flex flex-col gap-3">
-          {[75, 90, 65, 82].map((w, i) => (
-            <div
-              key={i}
-              className="rounded-xl border border-border bg-card px-5 py-4 flex items-center gap-4"
-            >
-              <Skeleton className="h-7 w-7 rounded-full shrink-0" />
-              <Skeleton className={`h-3.5`} style={{ width: `${w}%` }} />
-            </div>
-          ))}
-        </div>
-
-      </div>
-
-    </div>
-  );
+  if (isLoading) return <CreateTestPageSkeleton/>
+  ;
   if (isError)
     return <div className="p-6">Failed to load test. Please try again.</div>;
   if (!data || !testId) return <div className="p-6">No test data found.</div>;

@@ -11,22 +11,78 @@ interface AnswerToastProps {
 
 export function AnswerToast({ show, isCorrect, onHide }: AnswerToastProps) {
   const toastRef = useRef<HTMLDivElement>(null);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>({} as ReturnType<typeof setTimeout>);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const playSound = (success: boolean) => {
+    try {
+      const AudioContext =
+        window.AudioContext || (window as any).webkitAudioContext;
+
+      const ctx = new AudioContext();
+
+      const playTone = (
+        frequency: number,
+        start: number,
+        duration: number,
+        type: OscillatorType = 'sine',
+      ) => {
+        const oscillator = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        oscillator.type = type;
+        oscillator.frequency.value = frequency;
+
+        oscillator.connect(gain);
+        gain.connect(ctx.destination);
+
+        gain.gain.setValueAtTime(0.0001, ctx.currentTime + start);
+        gain.gain.exponentialRampToValueAtTime(
+          0.16,
+          ctx.currentTime + start + 0.015,
+        );
+        gain.gain.exponentialRampToValueAtTime(
+          0.0001,
+          ctx.currentTime + start + duration,
+        );
+
+        oscillator.start(ctx.currentTime + start);
+        oscillator.stop(ctx.currentTime + start + duration);
+      };
+
+      if (success) {
+        playTone(523.25, 0, 0.14);
+        playTone(659.25, 0.09, 0.16);
+        playTone(783.99, 0.18, 0.2);
+      } else {
+        playTone(260, 0, 0.18, 'triangle');
+        playTone(180, 0.14, 0.22, 'triangle');
+      }
+    } catch {
+      // Browser may block sound before user interaction.
+    }
+  };
 
   useEffect(() => {
     if (!show) return;
-    clearTimeout(timerRef.current);
+
+    playSound(isCorrect);
+
+    if (timerRef.current) clearTimeout(timerRef.current);
+
     timerRef.current = setTimeout(() => {
       toastRef.current?.classList.add('animate-toast-out');
-      setTimeout(onHide, 400);
-    }, 3200);
-    return () => clearTimeout(timerRef.current);
-  }, [show, onHide]);
+      setTimeout(onHide, 420);
+    }, 3600);
+
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [show, isCorrect, onHide]);
 
   const dismiss = () => {
-    clearTimeout(timerRef.current);
+    if (timerRef.current) clearTimeout(timerRef.current);
     toastRef.current?.classList.add('animate-toast-out');
-    setTimeout(onHide, 400);
+    setTimeout(onHide, 420);
   };
 
   if (!show) return null;
@@ -34,152 +90,181 @@ export function AnswerToast({ show, isCorrect, onHide }: AnswerToastProps) {
   return (
     <div
       ref={toastRef}
+      role="status"
+      aria-live="polite"
       className={cn(
-        'fixed top-5 right-5 z-50 w-[340px] rounded-[18px] overflow-hidden animate-toast-in',
+        'fixed top-5 right-5 z-50 w-[360px] overflow-hidden rounded-[24px]',
+        'animate-toast-in shadow-[0_24px_80px_rgba(0,0,0,0.28)]',
+        'border backdrop-blur-2xl',
         isCorrect
-          ? 'bg-gradient-to-br from-[#064e2e] to-[#022c1a] border border-green-400/20'
-          : 'bg-gradient-to-br from-[#4c0519] to-[#2d0210] border border-red-400/20',
+          ? 'bg-[linear-gradient(135deg,rgba(2,68,47,0.96),rgba(3,49,35,0.96),rgba(1,24,18,0.98))] border-emerald-300/20'
+          : 'bg-[linear-gradient(135deg,rgba(76,5,25,0.96),rgba(52,4,18,0.96),rgba(25,2,9,0.98))] border-rose-300/20',
       )}
     >
-      {/* Shimmer sweep */}
+      {/* animated background glow */}
       <div
         className={cn(
-          'absolute inset-0 pointer-events-none animate-shimmer-sweep',
-          isCorrect ? 'bg-shimmer-green' : 'bg-shimmer-red',
+          'absolute inset-0 opacity-70',
+          isCorrect ? 'animate-success-aurora' : 'animate-error-aurora',
         )}
       />
 
-      {/* Glow blob */}
-      <div
-        className={cn(
-          'absolute -top-10 -right-10 w-[120px] h-[120px] rounded-full pointer-events-none animate-glow-pulse',
-          isCorrect
-            ? 'bg-[radial-gradient(circle,rgba(74,222,128,0.15)_0%,transparent_70%)]'
-            : 'bg-[radial-gradient(circle,rgba(248,113,113,0.15)_0%,transparent_70%)]',
-        )}
-      />
+      {/* success burst */}
+      {isCorrect && (
+        <div className="absolute left-[28px] top-[28px] w-[56px] h-[56px] rounded-full animate-success-burst pointer-events-none" />
+      )}
 
-      {/* Confetti — correct only */}
+      {/* floating particles for correct answer */}
       {isCorrect && (
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {[
-            '#4ade80',
-            '#86efac',
-            '#fbbf24',
-            '#a3e635',
-            '#bbf7d0',
-            '#34d399',
-          ].map((color, i) => (
-            <div
+          {Array.from({ length: 14 }).map((_, i) => (
+            <span
               key={i}
-              className="absolute w-[7px] h-[7px] rounded-sm animate-confetti"
+              className="absolute block rounded-full animate-floating-particle"
               style={{
-                left: `${10 + i * 15}%`,
-                top: `${5 + (i % 3) * 12}%`,
-                background: color,
-                animationDelay: `${i * 0.07}s`,
-                animationDuration: `${0.6 + (i % 3) * 0.2}s`,
+                left: `${8 + i * 6.4}%`,
+                top: `${18 + (i % 4) * 12}%`,
+                width: `${4 + (i % 3) * 2}px`,
+                height: `${4 + (i % 3) * 2}px`,
+                background:
+                  i % 3 === 0 ? '#facc15' : i % 3 === 1 ? '#86efac' : '#34d399',
+                animationDelay: `${i * 0.06}s`,
               }}
             />
           ))}
         </div>
       )}
 
-      {/* Body */}
-      <div className="flex items-center gap-3.5 px-[18px] pt-4 pb-3 relative">
-        {/* Icon */}
+      {/* shimmer */}
+      <div
+        className={cn(
+          'absolute inset-0 pointer-events-none animate-premium-shimmer',
+          isCorrect ? 'bg-shimmer-green' : 'bg-shimmer-red',
+        )}
+      />
+
+      <div className="relative flex items-start gap-4 px-5 pt-5 pb-4">
+        {/* icon */}
         <div
           className={cn(
-            'w-[46px] h-[46px] rounded-full flex items-center justify-center shrink-0',
-            'animate-icon-ring',
+            'relative w-[58px] h-[58px] rounded-2xl flex items-center justify-center shrink-0',
+            'shadow-lg animate-icon-pop',
             isCorrect
-              ? 'bg-green-400/[0.18] border border-green-400/40'
-              : 'bg-red-400/[0.18] border border-red-400/40',
+              ? 'bg-emerald-400/15 border border-emerald-300/35 shadow-emerald-500/20'
+              : 'bg-rose-400/15 border border-rose-300/35 shadow-rose-500/20',
           )}
         >
-          <div className="animate-icon-bounce">
-            {isCorrect ? (
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M4 13l5 5L20 7"
-                  stroke="#4ade80"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            ) : (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M18 6L6 18M6 6l12 12"
-                  stroke="#f87171"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            )}
-          </div>
+          {isCorrect && (
+            <>
+              <span className="absolute inset-[-6px] rounded-[22px] border border-emerald-300/25 animate-ping-soft" />
+              <span className="absolute inset-[-12px] rounded-[28px] border border-emerald-300/10 animate-ping-soft-delay" />
+            </>
+          )}
+
+          {isCorrect ? (
+            <svg
+              className="animate-check-draw"
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M4.5 12.7L9.3 17.5L20 6.8"
+                stroke="#86efac"
+                strokeWidth="2.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          ) : (
+            <svg
+              className="animate-wrong-shake"
+              width="27"
+              height="27"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M18 6L6 18M6 6l12 12"
+                stroke="#fda4af"
+                strokeWidth="2.6"
+                strokeLinecap="round"
+              />
+            </svg>
+          )}
         </div>
 
-        {/* Text */}
-        <div className="flex-1">
-          <p
-            className={cn(
-              'text-[13px] font-semibold tracking-[0.4px] mb-0.5 animate-text-up-1',
-              isCorrect ? 'text-green-400' : 'text-red-400',
-            )}
-          >
-            {isCorrect ? 'Excellent!' : 'Incorrect'}
+        {/* content */}
+        <div className="flex-1 min-w-0 pt-1">
+          <div className="flex items-center gap-2 mb-1">
+            <h4
+              className={cn(
+                'text-[15px] font-bold tracking-[0.2px] animate-text-slide-1',
+                isCorrect ? 'text-emerald-100' : 'text-rose-100',
+              )}
+            >
+              {isCorrect ? 'Excellent Work!' : 'Not Quite Right'}
+            </h4>
+
             <span
               className={cn(
-                'ml-2 inline-block text-[10px] font-semibold tracking-[0.6px] px-2 py-0.5 rounded-full border animate-text-up-3',
+                'text-[10px] font-bold px-2.5 py-1 rounded-full border animate-badge-pop',
                 isCorrect
-                  ? 'bg-green-400/15 text-green-400 border-green-400/30'
-                  : 'bg-red-400/15 text-red-400 border-red-400/30',
+                  ? 'bg-emerald-300/15 text-emerald-200 border-emerald-300/25'
+                  : 'bg-rose-300/15 text-rose-200 border-rose-300/25',
               )}
             >
               {isCorrect ? '+1 POINT' : 'REVIEW'}
             </span>
-          </p>
-          <p className="text-[12px] text-white/60 m-0 animate-text-up-2">
+          </div>
+
+          <p className="text-[13px] leading-[160%] text-white/70 animate-text-slide-2">
             {isCorrect
-              ? 'You nailed the correct answer.'
-              : 'Check the explanation to learn more.'}
+              ? 'You selected the correct answer. Keep the momentum going.'
+              : 'Review the explanation and learn from this attempt.'}
           </p>
         </div>
-      </div>
 
-      {/* Divider */}
-      <div className="h-px bg-white/[0.06] mx-[18px]" />
-
-      {/* Footer */}
-      <div className="flex items-center justify-between px-[18px] py-2.5">
-        <span className="text-[11px] text-white/35 animate-text-up-3">
-          {isCorrect
-            ? 'Keep it up — next question awaits'
-            : 'Correct answer is highlighted below'}
-        </span>
         <button
+          type="button"
           onClick={dismiss}
-          className="w-[22px] h-[22px] rounded-full bg-white/[0.08] border-none flex items-center justify-center text-white/40 text-[13px] cursor-pointer hover:bg-white/[0.15] hover:text-white transition-all animate-text-up-3"
+          className="w-7 h-7 rounded-full bg-white/8 hover:bg-white/15 text-white/45 hover:text-white transition-all flex items-center justify-center text-[14px]"
         >
           ✕
         </button>
       </div>
 
-      {/* Auto-dismiss progress bar */}
+      {/* footer */}
+      <div className="relative px-5 pb-4">
+        <div className="flex items-center justify-between rounded-[14px] bg-white/[0.055] border border-white/[0.07] px-3 py-2">
+          <span className="text-[11px] text-white/45 animate-text-slide-3">
+            {isCorrect
+              ? 'Great progress — next question awaits'
+              : 'Every mistake improves your score'}
+          </span>
+
+          {isCorrect && (
+            <span className="text-[11px] text-emerald-200 font-semibold animate-pulse">
+              Streak building
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* progress */}
       <div
         className={cn(
-          'h-[3px]',
-          isCorrect ? 'bg-green-400/[0.12]' : 'bg-red-400/[0.12]',
+          'h-[4px]',
+          isCorrect ? 'bg-emerald-400/10' : 'bg-rose-400/10',
         )}
       >
         <div
           className={cn(
             'h-full animate-toast-progress origin-left',
             isCorrect
-              ? 'bg-gradient-to-r from-green-400 to-green-300'
-              : 'bg-gradient-to-r from-red-400 to-red-300',
+              ? 'bg-gradient-to-r from-emerald-400 via-lime-300 to-yellow-300'
+              : 'bg-gradient-to-r from-rose-400 via-red-300 to-orange-300',
           )}
         />
       </div>

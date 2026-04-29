@@ -1,5 +1,3 @@
-
-
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
@@ -11,24 +9,18 @@ import { useToggleFollowMutation } from '@/app/redux/api/followApi';
 import { WelcomeBannerSkeleton } from './WelcomeBannerSkeleton';
 
 export const WelcomeBanner = () => {
-  
-
-  const textRef = useRef<HTMLHeadingElement | null>(null);
+  const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'follower' | 'following'>(
     'follower',
   );
 
-  // ✅ follow mutation
   const [toggleFollow] = useToggleFollowMutation();
-
-  // ✅ Fetch connections dynamically
   const { data: connectionsData, isLoading } = useGetConnectionsQuery(
     { type: modalType },
     { skip: !modalOpen },
   );
 
-  // ✅ follow/unfollow handler
   const handleFollowToggle = async (userId: string, isFollowing: boolean) => {
     try {
       await toggleFollow({ userId, isFollowing }).unwrap();
@@ -37,15 +29,25 @@ export const WelcomeBanner = () => {
     }
   };
 
+  const { data: user, isLoading: userLoading } = useMeQuery();
+
   useEffect(() => {
-    if (textRef.current) {
-      gsap.fromTo(
-        textRef.current,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.8 },
-      );
-    }
-  }, []);
+    const els = wordRefs.current.filter(Boolean);
+    if (!els.length) return;
+
+    gsap.fromTo(
+      els,
+      { opacity: 0, y: 24, filter: 'blur(6px)' },
+      {
+        opacity: 1,
+        y: 0,
+        filter: 'blur(0px)',
+        duration: 0.55,
+        ease: 'power3.out',
+        stagger: 0.12, // each word follows 120 ms after the previous
+      },
+    );
+  }, [user?.name]); // re-run once the name arrives
 
   const formattedDate = new Date().toLocaleDateString('en-US', {
     month: 'long',
@@ -53,15 +55,15 @@ export const WelcomeBanner = () => {
     year: 'numeric',
   });
 
-  const { data: user, isLoading: userLoading } = useMeQuery();
-  if (userLoading) {
-    return <WelcomeBannerSkeleton />;
-  }
+  if (userLoading) return <WelcomeBannerSkeleton />;
 
   const avatar =
     user?.avatar && user.avatar.startsWith('http')
       ? new URL(user.avatar).href
       : '/images/navbar-logo.png';
+
+  // Split "Welcome," and the name into separate animatable words
+  const words = ['Welcome,', ...(user?.name ?? '').split(' ')];
 
   return (
     <>
@@ -75,7 +77,7 @@ export const WelcomeBanner = () => {
                 width={160}
                 height={160}
                 alt=""
-                className="rounded-full object-cover aspect-square "
+                className="rounded-full object-cover aspect-square"
                 unoptimized
               />
             </div>
@@ -84,8 +86,19 @@ export const WelcomeBanner = () => {
           {/* Info */}
           <div className="flex items-center justify-center">
             <div className="flex flex-col gap-2">
-              <h2 ref={textRef} className="md:text-4xl text-lg font-bold">
-                Welcome, {user?.name}!
+              {/* ── Animated welcome text ── */}
+              <h2 className="md:text-4xl text-lg font-bold flex flex-wrap gap-x-[0.3em]">
+                {words.map((word, i) => (
+                  <span
+                    key={i}
+                    ref={el => {
+                      wordRefs.current[i] = el;
+                    }}
+                    style={{ opacity: 0, display: 'inline-block' }}
+                  >
+                    {word}
+                  </span>
+                ))}
               </h2>
 
               <p className="md:text-[18px] text-xs">
@@ -93,7 +106,6 @@ export const WelcomeBanner = () => {
               </p>
 
               <div className="flex md:space-x-4 space-x-2 text-[#b79e6b]">
-                {/* Followers */}
                 <button
                   onClick={() => {
                     setModalType('following');
@@ -105,10 +117,7 @@ export const WelcomeBanner = () => {
                     {user?.followers} Following
                   </span>
                 </button>
-
                 <span className="opacity-60">|</span>
-
-                {/* Following */}
                 <button
                   onClick={() => {
                     setModalType('follower');
@@ -137,15 +146,13 @@ export const WelcomeBanner = () => {
         </div>
       </div>
 
-      {/* ✅ Modal */}
       <FollowersFollowingModal
-        
         open={modalOpen}
         onClose={setModalOpen}
         type={modalType}
         data={connectionsData?.data || []}
         loading={isLoading}
-        onFollowToggle={handleFollowToggle} 
+        onFollowToggle={handleFollowToggle}
       />
     </>
   );

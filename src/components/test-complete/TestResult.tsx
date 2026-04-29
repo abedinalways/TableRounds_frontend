@@ -11,15 +11,18 @@ import DifficultyTopic from './DifficultyTopic';
 import { ResultSummary } from './ResultSummary';
 import { TopicResultCard } from './TopicResultCard';
 import { TestResultSkeleton } from './TestResultSkeleton';
+import { TestCompleteCelebration } from './TestCompleteCelebration';
 
 export default function TestResult({ testId }: { testId: string }) {
   const [isCompleted, setIsCompleted] = useState(false);
 
   const [completeTest] = useCompleteTestMutation();
-
+  const [showCelebration, setShowCelebration] = useState(false);
   const { data, isLoading } = useGetTestResultQuery(testId, {
     skip: !isCompleted,
   });
+
+
 
   useEffect(() => {
     const finishTest = async () => {
@@ -32,15 +35,28 @@ export default function TestResult({ testId }: { testId: string }) {
     finishTest();
   }, [testId]);
 
+  useEffect(() => {
+    if (!isLoading && isCompleted && data?.data) {
+      setShowCelebration(true);
+
+      const timer = setTimeout(() => {
+        setShowCelebration(false);
+      }, 2800);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, isCompleted, data]);
+
   if (isLoading)
     return <TestResultSkeleton/>
 
   const result = data?.data;
-  console.log(result, 'result========================')
+  // console.log(result, 'result========================')
   const topics = result?.topic_wise_stats ?? [];
   const difficulty = result?.difficulty.join(' , ');
   return (
-    <div className="flex flex-col gap-8">
+    <div className="relative flex flex-col gap-8">
+      {showCelebration && <TestCompleteCelebration />}
       <ResultSummary
         score={result?.score}
         total={result?.total_questions}

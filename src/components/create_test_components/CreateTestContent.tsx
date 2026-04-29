@@ -15,6 +15,8 @@ import { CustomCheckbox } from '../ui/CustomCheckbox';
 import { useStartTestMutation } from '@/app/redux/api/startTestApi';
 import { useGetQuestionCountQuery } from '@/app/redux/api/testSessionApi';
 import { toast } from 'sonner';
+import { Loader2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const TOPICS = [
   { label: 'Anesthesia/Medicine', value: 'Anesthesia_Medicine' },
@@ -36,7 +38,7 @@ type DifficultyLevel = (typeof DIFFICULTY_LEVELS)[number];
 
 export function CreateTestContent() {
   const router = useRouter();
-
+  const [isStarted, setIsStarted] = useState(false);
   const [selectedTopics, setSelectedTopics] = useState<string[]>(
     TOPICS.map(topic => topic.value),
   );
@@ -283,20 +285,18 @@ export function CreateTestContent() {
 
         <div className="space-y-4 bg-white p-4 rounded-[12px] border border-[#e9e9e9] custom-shadow">
           <div className="flex items-center gap-3 flex-wrap">
+            <h3 className="text-xl md:text-[24px] font-bold text-[#444950]">
+              Difficulty
+            </h3>
 
-          <h3 className="text-xl md:text-[24px] font-bold text-[#444950]">
-            Difficulty
-          </h3>
-
-          <button
-            type="button"
-            onClick={handleToggleAllDifficulties}
-            className="text-[#01503b] border border-[#01503b] px-3 py-1.5 rounded-[8px] text-sm font-medium cursor-pointer hover:bg-[#01503b] hover:text-white transition"
-          >
-            {allDifficultiesSelected ? 'Deselect All' : 'Select All'}
-          </button>
+            <button
+              type="button"
+              onClick={handleToggleAllDifficulties}
+              className="text-[#01503b] border border-[#01503b] px-3 py-1.5 rounded-[8px] text-sm font-medium cursor-pointer hover:bg-[#01503b] hover:text-white transition"
+            >
+              {allDifficultiesSelected ? 'Deselect All' : 'Select All'}
+            </button>
           </div>
-
 
           <div className="flex flex-wrap gap-4">
             {DIFFICULTY_LEVELS.map(level => {
@@ -367,11 +367,36 @@ export function CreateTestContent() {
 
         <div className="pt-4">
           <button
-            onClick={handleStartTest}
-            disabled={isLoading}
-            className="bg-[#01503b] text-white px-6 py-3 rounded-[8px] cursor-pointer"
+            type="button"
+            onClick={async () => {
+              if (isLoading || isStarted) return;
+
+              try {
+                await handleStartTest();
+                setIsStarted(true);
+
+                // optional: slight delay so user sees success
+                setTimeout(() => {
+                  // navigation already inside handleStartTest
+                }, 600);
+              } catch (e) {
+                // already handled
+              }
+            }}
+            disabled={isLoading || isStarted}
+            className={cn(
+              'px-6 py-3 rounded-[8px] font-semibold flex items-center justify-center gap-2 transition-all duration-200',
+              isStarted
+                ? 'bg-green-600 text-white cursor-not-allowed'
+                : 'bg-[#01503b] text-white',
+              isLoading || isStarted
+                ? 'opacity-60 cursor-not-allowed'
+                : 'cursor-pointer hover:bg-[#026a4d] hover:shadow-md active:scale-[0.98]',
+            )}
           >
-            {isLoading ? 'Starting...' : 'Start Test'}
+            {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+
+            {isLoading ? 'Starting...' : isStarted ? 'Started' : 'Start Test'}
           </button>
         </div>
       </div>

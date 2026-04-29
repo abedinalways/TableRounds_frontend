@@ -225,6 +225,7 @@ import WrongIcon from '../reusable/icons/WrongIcon';
 import { useCompleteTestMutation } from '@/app/redux/api/testSessionApi';
 import { useRouter } from 'next/navigation';
 import { AnswerToast } from './AnswerToast';
+import { Loader2 } from 'lucide-react';
 
 interface QuestionCardProps {
   testId: string;
@@ -259,7 +260,13 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   const [completeTest] = useCompleteTestMutation();
   const router = useRouter();
  const [showToast, setShowToast] = useState(false);
- const [toastCorrect, setToastCorrect] = useState(false);
+  const [toastCorrect, setToastCorrect] = useState(false);
+  const [isSubmittingAnswer, setIsSubmittingAnswer] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  //for test
+  const [isSubmittingTest, setIsSubmittingTest] = useState(false);
+  const [isTestSubmitted, setIsTestSubmitted] = useState(false);
  const hideToast = useCallback(() => setShowToast(false), []);
   const answerOptions = quizDetails?.answerOptions ?? [];
 
@@ -407,28 +414,85 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 
         {!hideActions && (
           <div className="md:flex justify-between items-center space-y-2 md:space-y-0">
-            <Btn
-              
-              text="Submit Answer"
-              onClick={async () => {
-                const isCorrect = await onSubmit(); // ✅ wait for API, get real result
-                setToastCorrect(isCorrect);
-                setShowToast(true);
-              }}
-              disabled={!selectedAnswerId || showExplanation}
-              className={cn(
-                'bg-[#01281e] text-white w-full md:w-[164px] h-[50px] text-md font-semibold',
-                showExplanation
-                  ? 'cursor-not-allowed opacity-60'
-                  : 'cursor-pointer',
-              )}
-            />
-
             <button
-              onClick={handleSubmitTest}
-              className="bg-[#b79e6b] cursor-pointer text-sm w-full md:w-[164px] h-[50px] text-white font-semibold rounded-md"
+              type="button"
+              onClick={async () => {
+                if (isSubmittingAnswer) return;
+
+                try {
+                  setIsSubmittingAnswer(true);
+
+                  const isCorrect = await onSubmit();
+                  setToastCorrect(isCorrect);
+                  setShowToast(true);
+                } finally {
+                  setIsSubmittingAnswer(false);
+                }
+              }}
+              disabled={
+                !selectedAnswerId || showExplanation || isSubmittingAnswer
+              }
+              className={cn(
+                'w-full md:w-[164px] h-[50px] rounded-md text-md font-semibold transition-all duration-200 flex items-center justify-center gap-2',
+                showExplanation
+                  ? 'bg-green-800 text-white cursor-not-allowed'
+                  : 'bg-[#01281e] text-white',
+                !selectedAnswerId || isSubmittingAnswer
+                  ? 'cursor-not-allowed opacity-60'
+                  : 'cursor-pointer hover:bg-[#014432] hover:shadow-md active:scale-[0.98]',
+              )}
             >
-              Submit Test
+              {isSubmittingAnswer && (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              )}
+
+              {isSubmittingAnswer
+                ? 'Submitting...'
+                : showExplanation
+                  ? 'Submitted'
+                  : 'Submit Answer'}
+            </button>
+            {/* for complete test */}
+            <button
+              type="button"
+              onClick={async () => {
+                if (isSubmittingTest || isTestSubmitted) return;
+
+                try {
+                  setIsSubmittingTest(true);
+
+                  await completeTest(testId).unwrap();
+
+                  setIsTestSubmitted(true);
+
+                  // small delay for UX (optional)
+                  setTimeout(() => {
+                    router.push(`/dashboard/user/test-complete/${testId}`);
+                  }, 800);
+                } catch (err) {
+                  console.error('Submit test failed', err);
+                } finally {
+                  setIsSubmittingTest(false);
+                }
+              }}
+              disabled={isSubmittingTest || isTestSubmitted}
+              className={cn(
+                'w-full md:w-[164px] h-[50px] rounded-md text-sm font-semibold flex items-center justify-center gap-2 transition-all duration-200',
+                isTestSubmitted
+                  ? 'bg-yellow-600 text-white cursor-not-allowed'
+                  : 'bg-[#b79e6b] text-white',
+                isSubmittingTest || isTestSubmitted
+                  ? 'opacity-60 cursor-not-allowed'
+                  : 'cursor-pointer hover:shadow-md active:scale-[0.98]',
+              )}
+            >
+              {isSubmittingTest && <Loader2 className="h-4 w-4 animate-spin" />}
+
+              {isSubmittingTest
+                ? 'Submitting...'
+                : isTestSubmitted
+                  ? 'Submitted'
+                  : 'Submit Test'}
             </button>
           </div>
         )}
