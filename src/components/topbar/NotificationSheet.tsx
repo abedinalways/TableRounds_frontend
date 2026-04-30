@@ -87,9 +87,10 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
 import { X } from 'lucide-react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../app/redux/store';
 import { NotificationItem } from './NotificationItem';
+import { markAsRead } from '../../store/NotificationSlice';
 
 interface Props {
   open: boolean;
@@ -97,17 +98,14 @@ interface Props {
 }
 
 export function NotificationSheet({ open, onClose }: Props) {
+  const dispatch = useDispatch();
   const notifications = useSelector(
     (state: RootState) => state.notifications.notifications,
   );
 
   // Handle marking a notification as read
   const handleRead = (id: string) => {
-    const updatedNotifications = notifications.map(notification =>
-      notification.id === id ? { ...notification, isRead: true } : notification,
-    );
-    // Optionally: Update the state of notifications in Redux (or local state)
-    // For now, we are doing it locally here for UI update only.
+    dispatch(markAsRead(id));
   };
 
   return (

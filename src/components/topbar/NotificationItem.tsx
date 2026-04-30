@@ -89,7 +89,8 @@ export function NotificationItem({
   const [deleteNotification] = useDeleteUserNotificationMutation();
 
   // Handle delete
-  const handleDelete = async () => {
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     await deleteNotification(notification.id); // Delete notification
   };
 
@@ -101,7 +102,11 @@ export function NotificationItem({
   return (
     <div
       onClick={handleClick} // Mark notification as read when clicked
-      className={`flex items-start gap-3 p-3 rounded-lg cursor-pointer transition font-[manrope]}`}
+      className={`flex items-start gap-3 p-3 rounded-lg cursor-pointer transition font-[manrope] ${
+        notification.isRead
+          ? 'bg-white hover:bg-gray-50'
+          : 'bg-blue-50 hover:bg-blue-100'
+      }`}
     >
       <div className="relative">
         <Avatar className="w-10 h-10">
