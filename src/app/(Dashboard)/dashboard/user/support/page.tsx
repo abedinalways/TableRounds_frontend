@@ -8,6 +8,7 @@ import { useGetHelpQuery } from '@/app/redux/api/helpApi';
 import DisclaimerContent from '@/components/help-support/DisclaimerContent';
 import PrivacyPolicyContent from '@/components/help-support/PrivacyPolicyContent';
 import TermsContent from '@/components/help-support/TermsContent';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function HelpPage() {
   const [activeTab, setActiveTab] = useState<
@@ -17,7 +18,7 @@ export default function HelpPage() {
   const { data, isLoading } = useGetHelpQuery();
 
   if (isLoading) {
-    return <p className="p-10">Loading...</p>;
+    return <p className="p-10"><Skeleton /></p>;
   }
 
   const helpData = data?.data?.[0];

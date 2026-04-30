@@ -225,7 +225,7 @@ export default function FollowersFollowingModal({
                           alt={user.name}
                           width={44}
                           height={44}
-                          className="rounded-md object-cover"
+                          className="rounded-full aspect-square object-cover"
                         />
                         <div>
                           <p className="font-semibold text-[#0f172b]">

@@ -173,7 +173,7 @@ export default function CreateTestPage() {
     setMarkedQuestions(prev => {
       const exists = prev.some(q => q.index === currentQuestion);
       const current = questions[currentQuestion - 1];
-      console.log(current, "lllllllllllll==========")
+      // console.log(current, "lllllllllllll==========")
       const updated: MarkedQuestion[] = exists
         ? prev.filter(q => q.index !== currentQuestion)
         : [

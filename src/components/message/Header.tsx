@@ -21,7 +21,7 @@ export default function Header() {
   const { conversations, activeConversationId } = useChat();
   const textRef = useRef<HTMLHeadingElement | null>(null);
   const { data: me } = useMeQuery();
-  console.log(me, ':::::::::::::::::::::::::::');
+  // console.log(me, ':::::::::::::::::::::::::::');
 
   const [reportUser, { isLoading: isReporting }] = useReportUserMutation();
   const [toggleFollow, { isLoading: isFollowLoading }] =
@@ -30,7 +30,7 @@ export default function Header() {
   const activeConversation = conversations.find(
     conv => conv.id === activeConversationId,
   );
-  console.log(activeConversation, 'activeConversation=====================++++++++++++++++',);
+  // console.log(activeConversation, 'activeConversation=====================++++++++++++++++',);
 
   
   
@@ -39,7 +39,7 @@ export default function Header() {
     conversationId: activeConversationId as string,
     limit: 20,
   });
-    console.log(chatData, 'chatData========efweo9wego=============++++++++++++++++',);
+    // console.log(chatData, 'chatData========efweo9wego=============++++++++++++++++',);
 
   // local follow state by participant id
   const [followState, setFollowState] = useState<Record<string, boolean>>({});
@@ -155,11 +155,11 @@ export default function Header() {
             className="w-44 bg-background text-foreground"
           >
             <DropdownMenuItem
-              className="cursor-pointer"
+              className="cursor-pointer font-[manrope]"
               onClick={handleReportUser}
               disabled={isReporting}
             >
-              {isReporting ? 'Reporting...' : 'Report User'}
+              {isReporting ? 'Reporting...' : 'Reported User'}
             </DropdownMenuItem>
 
             <DropdownMenuItem
@@ -170,8 +170,8 @@ export default function Header() {
               {isFollowLoading
                 ? 'Updating...'
                 : isFollowing
-                  ? 'Unfollow User'
-                  : 'Follow User'}
+                  ? 'follow User'
+                  : 'Unfollow User'}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

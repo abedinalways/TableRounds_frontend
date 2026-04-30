@@ -68,7 +68,7 @@ export default function Elevate() {
   }, [isHomepage]); // Trigger when we are on the homepage
 
   return (
-    <div className="relative flex flex-col items-center justify-center gap-6 max-w-[1920px] h-[492px] text-white text-center bg-[url('/images/elevate/bg.png')] bg-cover bg-no-repeat backdrop-blur-xs px-4 md:px-0">
+    <div className="relative flex flex-col items-center justify-center gap-6 max-w-[1920px] h-[492px] text-white text-center bg-[url('/images/elevate/bg.png')] bg-cover bg-no-repeat backdrop-blur-xs px-4 md:px-0 font-[manrope]">
       <div className="absolute top-10 left-0">
         <Image
           src="/images/elevate/background.png"
@@ -113,9 +113,9 @@ export default function Elevate() {
 
         <Btn
           text="Learn More About TableRounds"
-          // href="/#welcome"
+          
           className="bg-white text-[#B79E6B] w-full h-10 transition-colors rounded-xl md:w-[305px] md:h-[54px] cursor-pointer z-30 text-sm"
-          onClick={handleScrollToSection} // Scroll to section when clicked
+          onClick={handleScrollToSection}
         />
       </div>
     </div>
