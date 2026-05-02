@@ -299,7 +299,10 @@ export default function PublicationCard({ data }: PublicationCardProps) {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <Label>Authors</Label>
+                      <Label className=''>
+                        Authors
+                        <span className="text-red-600">*</span>
+                      </Label>
                       <Input
                         name="author"
                         value={formData.author}
