@@ -1,7 +1,7 @@
 // 'use client';
 
 // import Image from 'next/image';
-// import { useState } from 'react';
+// import { useState, useEffect } from 'react';
 // import { UserProfile } from '@/types/profile';
 // import LocationIcon from '../ui/LocationIcon';
 // import BagIcon from '../reusable/icons/BagIcon';
@@ -10,6 +10,7 @@
 // import { Facebook, Instagram, Linkedin } from 'lucide-react';
 // import { useCreateConversationMutation } from '@/app/redux/api/chat/chatApi';
 // import { useToggleFollowMutation } from '@/app/redux/api/followApi';
+// import { useGetConnectionsQuery } from '@/app/redux/api/connectionApi';
 // import ProfileFollowersFollowingModal from './FollowersFollowingModal';
 // import Link from 'next/link';
 
@@ -19,7 +20,6 @@
 // }
 
 // export default function ProfileHeader({ user }: ProfileHeaderProps) {
-//   const [isFollowing, setIsFollowing] = useState(false);
 //   const [modalOpen, setModalOpen] = useState(false);
 //   const [modalType, setModalType] = useState<'followers' | 'following'>(
 //     'followers',
@@ -28,15 +28,28 @@
 //   const [createConversation] = useCreateConversationMutation();
 //   const [toggleFollow] = useToggleFollowMutation();
 
+//   // ✅ Fetch logged-in user's following list to check real follow state
+//   const { data: myFollowingData } = useGetConnectionsQuery({
+//     type: 'following',
+//   });
+
+//   const isFollowingFromServer =
+//     myFollowingData?.data?.some(u => u.id === user.id) ?? false;
+
+//   // ✅ Initialized from server, synced when server data arrives
+//   const [isFollowing, setIsFollowing] = useState(false);
+
+//   useEffect(() => {
+//     setIsFollowing(isFollowingFromServer);
+//   }, [isFollowingFromServer]);
+
 //   const normalizeUrl = (url?: string) => {
 //     if (!url) return '#';
-//     if (url.startsWith('http://') || url.startsWith('https://')) {
-//       return url;
-//     }
+//     if (url.startsWith('http://') || url.startsWith('https://')) return url;
 //     return `https://${url}`;
 //   };
 
-//   // ✅ For follow/unfollow inside the modal list
+//   // For follow/unfollow inside the modal list
 //   const handleFollowToggle = async (userId: string, isFollowing: boolean) => {
 //     try {
 //       await toggleFollow({ userId, isFollowing }).unwrap();
@@ -45,13 +58,14 @@
 //     }
 //   };
 
+//   // For the main Follow button on the profile card
 //   const handleProfileFollowToggle = async () => {
 //     const prev = isFollowing;
-//     setIsFollowing(!prev); // optimistic update
+//     setIsFollowing(!prev); // optimistic
 //     try {
 //       await toggleFollow({ userId: user.id, isFollowing: prev }).unwrap();
 //     } catch (error) {
-//       setIsFollowing(prev); // rollback on error
+//       setIsFollowing(prev); // rollback
 //       console.error('Follow toggle failed', error);
 //     }
 //   };
@@ -66,6 +80,14 @@
 //       console.error('Conversation creation failed', err);
 //     }
 //   };
+
+//   //normalize date
+//   const rawDate = user.created_at;
+//   // console.log(rawDate);
+//   const date = new Date(rawDate);
+//   // console.log(date);
+//   const normalizeDate = date.toISOString().split("T")[0];
+//   // console.log(normalizeDate);
 
 //   return (
 //     <>
@@ -84,10 +106,10 @@
 
 //           <div className="flex-1 space-y-3">
 //             <h2 className="text-[28px] text-[#0f172b] font-semibold">
+//               {user.name}{' '}
 //               <span className="text-green-900 font-semibold uppercase">
 //                 {user.credentials}
-//               </span>{' '}
-//               {user.name}
+//               </span>
 //             </h2>
 
 //             <p className="text-[18px] text-[#047857]">{user.title}</p>
@@ -95,7 +117,7 @@
 //             <div className="flex md:gap-[48px] gap-6 items-center text-xs md:text-[16px] font-light text-[#6b7280]">
 //               <h4 className="flex items-center gap-2">
 //                 <LocationIcon />
-//                 {user.location}
+//                 {user.address} {user.state}, {user.country}
 //               </h4>
 //               <h4 className="flex items-center gap-2">
 //                 <BagIcon />
@@ -103,13 +125,12 @@
 //               </h4>
 //               <h4 className="flex items-center gap-2">
 //                 <CalendarIconForProfile />
-//                 Joined {user.joiningDate}
+//                 <span className='font-semibold'>Joined</span> {normalizeDate}
 //               </h4>
 //             </div>
 
 //             <p className="text-sm md:text-[18px] leading-[160%]">{user.bio}</p>
 
-//             {/* ✅ Clickable — opens modal with this profile's real data */}
 //             <div className="flex gap-6 mt-3 text-md text-[32px] text-center">
 //               <button
 //                 type="button"
@@ -119,7 +140,7 @@
 //                 }}
 //                 className="flex flex-col cursor-pointer hover:opacity-80 transition"
 //               >
-//                 <strong>{user.following}</strong>
+//                 <strong>{user.followers}</strong>
 //                 <span className="font-normal text-[18px] text-[#62748e]">
 //                   Followers
 //                 </span>
@@ -133,7 +154,7 @@
 //                 }}
 //                 className="flex flex-col cursor-pointer hover:opacity-80 transition"
 //               >
-//                 <strong>{user.followers}</strong>
+//                 <strong>{user.following}</strong>
 //                 <span className="font-normal text-[18px] text-[#62748e]">
 //                   Following
 //                 </span>
@@ -148,24 +169,22 @@
 //                 Message
 //               </button>
 
-//               {/* ✅ Wired to real API with optimistic update */}
-//              <button
-//   onClick={handleProfileFollowToggle}
-//   className={`px-[24px] py-[14px] text-center rounded-[8px] cursor-pointer border ${
-//     isFollowing
-//       ? 'bg-[#01503b] text-white border-[#01503b]'
-//       : 'bg-white text-[#01503b] border-[#01503b]'
-//   }`}
-// >
-//   {isFollowing ? 'Unfollow' : 'Follow'}
-// </button>
+//               <button
+//                 onClick={handleProfileFollowToggle}
+//                 className={`px-[24px] py-[14px] text-center rounded-[8px] cursor-pointer border ${
+//                   isFollowing
+//                     ? 'bg-[#01503b] text-white border-[#01503b]'
+//                     : 'bg-white text-[#01503b] border-[#01503b]'
+//                 }`}
+//               >
+//                 {isFollowing ? 'Unfollow' : 'Follow'}
+//               </button>
 //             </div>
 //           </div>
 //         </div>
 
 //         <hr />
 
-//         {/* Social media */}
 //         <div className="flex flex-wrap items-center gap-4 md:gap-[24px] text-[#01281e] mt-[24px]">
 //           <h2 className="font-bold text-[16px] md:text-[20px]">Contact</h2>
 //           <Link
@@ -195,9 +214,8 @@
 //               <Facebook size={24} />
 //             </button>
 //           </Link>
-
 //           <Link
-//             href={normalizeUrl(user.linkedin)}
+//             href={normalizeUrl(user.twitter)}
 //             target="_blank"
 //             rel="noopener noreferrer"
 //           >
@@ -228,7 +246,7 @@ import LocationIcon from '../ui/LocationIcon';
 import BagIcon from '../reusable/icons/BagIcon';
 import { FaXTwitter } from 'react-icons/fa6';
 import CalendarIconForProfile from '../reusable/icons/CalendarIconForProfile';
-import { Facebook, Instagram, Linkedin } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Loader2 } from 'lucide-react';
 import { useCreateConversationMutation } from '@/app/redux/api/chat/chatApi';
 import { useToggleFollowMutation } from '@/app/redux/api/followApi';
 import { useGetConnectionsQuery } from '@/app/redux/api/connectionApi';
@@ -245,11 +263,11 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
   const [modalType, setModalType] = useState<'followers' | 'following'>(
     'followers',
   );
+  const [isMessageLoading, setIsMessageLoading] = useState(false); // ✅ new
 
   const [createConversation] = useCreateConversationMutation();
   const [toggleFollow] = useToggleFollowMutation();
 
-  // ✅ Fetch logged-in user's following list to check real follow state
   const { data: myFollowingData } = useGetConnectionsQuery({
     type: 'following',
   });
@@ -257,7 +275,6 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
   const isFollowingFromServer =
     myFollowingData?.data?.some(u => u.id === user.id) ?? false;
 
-  // ✅ Initialized from server, synced when server data arrives
   const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
@@ -270,7 +287,6 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
     return `https://${url}`;
   };
 
-  // For follow/unfollow inside the modal list
   const handleFollowToggle = async (userId: string, isFollowing: boolean) => {
     try {
       await toggleFollow({ userId, isFollowing }).unwrap();
@@ -279,19 +295,19 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
     }
   };
 
-  // For the main Follow button on the profile card
   const handleProfileFollowToggle = async () => {
     const prev = isFollowing;
-    setIsFollowing(!prev); // optimistic
+    setIsFollowing(!prev);
     try {
       await toggleFollow({ userId: user.id, isFollowing: prev }).unwrap();
     } catch (error) {
-      setIsFollowing(prev); // rollback
+      setIsFollowing(prev);
       console.error('Follow toggle failed', error);
     }
   };
 
   const handleMessageClick = async () => {
+    setIsMessageLoading(true); // ✅ start loading
     try {
       const res = await createConversation({
         participant_id: user.id,
@@ -299,16 +315,13 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
       window.location.href = `/dashboard/user/messages/${res.data.id}`;
     } catch (err: any) {
       console.error('Conversation creation failed', err);
+      setIsMessageLoading(false); // ✅ stop loading only on error (on success we redirect)
     }
   };
 
-  //normalize date
   const rawDate = user.created_at;
-  // console.log(rawDate);
   const date = new Date(rawDate);
-  // console.log(date);
-  const normalizeDate = date.toISOString().split("T")[0];
-  // console.log(normalizeDate);
+  const normalizeDate = date.toISOString().split('T')[0];
 
   return (
     <>
@@ -346,7 +359,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
               </h4>
               <h4 className="flex items-center gap-2">
                 <CalendarIconForProfile />
-                <span className='font-semibold'>Joined</span> {normalizeDate}
+                <span className="font-semibold">Joined</span> {normalizeDate}
               </h4>
             </div>
 
@@ -383,11 +396,20 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
             </div>
 
             <div className="flex gap-3 mb-[24px]">
+              {/* ✅ Message button with loading state */}
               <button
                 onClick={handleMessageClick}
-                className="bg-[#01503b] px-[24px] py-[14px] text-center text-[#fff] rounded-[8px] cursor-pointer"
+                disabled={isMessageLoading}
+                className="flex items-center justify-center gap-2 bg-[#01503b] px-[24px] py-[14px] text-center text-white rounded-[8px] cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed transition-opacity min-w-[120px]"
               >
-                Message
+                {isMessageLoading ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" />
+                    <span>redirecting...</span>
+                  </>
+                ) : (
+                  <span>Message</span>
+                )}
               </button>
 
               <button
