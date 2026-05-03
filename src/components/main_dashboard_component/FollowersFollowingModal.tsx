@@ -80,6 +80,7 @@ export default function FollowersFollowingModal({
 
   useEffect(() => {
     if (connectionsData?.data) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFollowedUsers(
         new Set(connectionsData.data.map((user: UserItem) => user.id)),
       );
@@ -169,7 +170,7 @@ export default function FollowersFollowingModal({
                     <Button
                       variant="outline"
                       onClick={() => handleFollowToggle(user.id)}
-                      className="rounded-sm cursor-pointer"
+                      className={`rounded-sm cursor-pointer ${isFollowing ? 'bg-green-900 text-white' : ''}`}
                     >
                       {isFollowing ? 'Unfollow' : 'Follow'}
                     </Button>

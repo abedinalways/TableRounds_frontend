@@ -110,11 +110,11 @@ export default function Topbar({ onMenuClick }: TopbarProps = {}) {
 
   const { data: user } = useMeQuery();
 
-  console.log(user, 'user data=====================++++++++++++++++');
-  console.log(
-    user?.credentials,
-    'credentials=====================++++++++++++++++',
-  );
+  // console.log(user, 'user data=====================++++++++++++++++');
+  // console.log(
+  //   user?.credentials,
+  //   'credentials=====================++++++++++++++++',
+  // );
 
   const role = useAppSelector(state => state.auth.auth.role) || user?.type;
 

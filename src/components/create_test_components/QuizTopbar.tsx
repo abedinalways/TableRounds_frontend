@@ -245,7 +245,7 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
  
 
   return (
-    <div className="md:flex items-center md:justify-between gap-4 rounded-[12px] xl:text-[18px] md:text-sm text-xs border question-bg py-4">
+    <div className="md:flex items-center md:justify-between gap-4 rounded-[12px] xl:text-[18px] md:text-sm text-xs border question-bg py-4 md:h-30">
       <div className="md:flex items-center space-y-2">
         <div className="md:px-2 px-1 flex flex-col justify-between">
           <Progress value={progressValue} className="md:h-5 h-2 bg-white/60" />

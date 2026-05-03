@@ -247,7 +247,7 @@ export function IncompleteTestRow({ test, index, page }: Props) {
                 router.push(`/dashboard/user/create-test/${test.id}`)
               }
             >
-              Retake
+              Resume
             </button>
           </div>
         )}

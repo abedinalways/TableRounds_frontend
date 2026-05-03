@@ -1,13 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 
 import QuizTopbar from './QuizTopbar';
 import QuestionSidebar from './QuestionSidebar';
 import QuestionCard from './QuestionCard';
 import ExplanationPanel from './ExplanationPanel';
-
+import { useDispatch } from 'react-redux';
+import type { AppDispatch } from '@/app/redux/store';
+import { saveIncompleteRetakeAnswer } from '@/app/redux/features/incompleteRetakeSlice';
 import type { MarkedQuestion, QuizQuestionDataUI } from '@/types/test-session';
 
 import {
@@ -46,12 +50,15 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   const { testProgress, quizDetails } = data;
   const { totalQuestions, questionID } = testProgress;
 
+  const dispatch = useDispatch<AppDispatch>();
+
   const [showExplanation, setShowExplanation] = useState<boolean>(false);
   const [isQuestionHidden, setIsQuestionHidden] = useState<boolean>(false);
   const [zoomLevel, setZoomLevel] = useState<number>(1);
 
   const questionRef = useRef<HTMLDivElement>(null);
   const explanationRef = useRef<HTMLDivElement>(null);
+  const showExplanationRef = useRef(showExplanation);
 
   const [answerQuestion, { isLoading: isAnswering }] =
     useAnswerQuestionMutation();
@@ -59,10 +66,33 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   const [skipQuestionApi] = useSkipQuestionMutation();
 
   useEffect(() => {
-    setSelectedAnswer(quizDetails.userAnswerId ?? null);
-    setShowExplanation(Boolean(quizDetails.correctAnswerId));
+    showExplanationRef.current = showExplanation;
+  }, [showExplanation]);
+
+  useEffect(() => {
+    const nextSelectedAnswer = quizDetails.userAnswerId
+      ? String(quizDetails.userAnswerId)
+      : null;
+
+    const nextShowExplanation = Boolean(
+      quizDetails.userAnswerId && quizDetails.correctAnswerId,
+    );
+
+    setSelectedAnswer(prev =>
+      prev === nextSelectedAnswer ? prev : nextSelectedAnswer,
+    );
+
+    setShowExplanation(prev =>
+      prev === nextShowExplanation ? prev : nextShowExplanation,
+    );
+
     setIsQuestionHidden(false);
-  }, [questionID]);
+  }, [
+    questionID,
+    quizDetails.userAnswerId,
+    quizDetails.correctAnswerId,
+    setSelectedAnswer,
+  ]);
 
   useEffect(() => {
     if (questionRef.current && explanationRef.current) {
@@ -74,14 +104,19 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   const progressValue = (currentQuestion / totalQuestions) * 100;
   const isMarked = markedQuestions.some(q => q.index === currentQuestion);
 
-  const handleAnswerChange = (value: string) => {
-    if (showExplanation) return;
-    setSelectedAnswer(value);
-  };
+  const handleAnswerChange = useCallback(
+    (value: string) => {
+      if (quizDetails.userAnswerId || showExplanationRef.current) return;
 
-  // ✅ Returns boolean so QuestionCard can show the correct toast
-  const handleSubmit = async (): Promise<boolean> => {
-    if (!selectedAnswerId || showExplanation || isAnswering) return false;
+      setSelectedAnswer(String(value));
+    },
+    [quizDetails.userAnswerId, setSelectedAnswer],
+  );
+
+  const handleSubmit = useCallback(async (): Promise<boolean> => {
+    if (!selectedAnswerId || showExplanationRef.current || isAnswering) {
+      return false;
+    }
 
     try {
       const res = await answerQuestion({
@@ -97,64 +132,155 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
       const answerOptions = res.data.answerOptions ?? [];
       const correctOption = answerOptions.find((o: any) => o.is_correct);
 
-      // ✅ Compute correctness right here from the API response — most reliable source
-      const isCorrect = res.data.selected_option_id === correctOption?.id;
+      const selectedOptionId = String(res.data.selected_option_id);
+      const correctOptionId = correctOption?.id
+        ? String(correctOption.id)
+        : null;
 
-      setSelectedAnswer(res.data.selected_option_id);
+      const isCorrect = selectedOptionId === correctOptionId;
+
+      const explanation = {
+        main: res.data.explanation,
+        image: res.data.explanation_image_url
+          ? res.data.explanation_image_url
+          : res.data.explanation_image
+            ? `https://backend.tablerounds.ai/public/storage/question/${res.data.explanation_image}`
+            : null,
+        whyIncorrect: res.data.why_incorrect
+          ? [{ option: '', text: res.data.why_incorrect }]
+          : [],
+        pinningPoint: res.data.pimping_point,
+        memoryTrick: res.data.memory_trick,
+        referance: res.data.referance
+          ? Array.isArray(res.data.referance)
+            ? res.data.referance
+            : [res.data.referance]
+          : [],
+      };
+
+      const mappedAnswerOptions = answerOptions.map((o: any) => ({
+        id: String(o.id),
+        option_text: o.option_text,
+        is_correct: Boolean(o.is_correct),
+        percentage: o.total_select ?? 0,
+      }));
+
+      setSelectedAnswer(selectedOptionId);
 
       setQuestions(prev => {
         const copy = [...prev];
         const idx = currentQuestion - 1;
         const existing = copy[idx];
+
         if (!existing) return prev;
 
         copy[idx] = {
           ...existing,
           quizDetails: {
             ...existing.quizDetails,
-            userAnswerId: res.data.selected_option_id,
-            correctAnswerId: correctOption?.id ?? null,
-            explanation: {
-              main: res.data.explanation,
-              image: res.data.explanation_image_url
-                ? res.data.explanation_image_url
-                : res.data.explanation_image
-                  ? `https://backend.tablerounds.ai/public/storage/question/${res.data.explanation_image}`
-                  : null,
-              whyIncorrect: res.data.why_incorrect
-                ? [{ option: '', text: res.data.why_incorrect }]
-                : [],
-              pinningPoint: res.data.pimping_point,
-              memoryTrick: res.data.memory_trick,
-              referance: res.data.referance
-                ? Array.isArray(res.data.referance)
-                  ? res.data.referance
-                  : [res.data.referance]
-                : [],
-            },
-            answerOptions: answerOptions.map((o: any) => ({
-              id: o.id,
-              option_text: o.option_text,
-              is_correct: o.is_correct,
-              percentage: o.total_select ?? 0,
-            })),
+            userAnswerId: selectedOptionId,
+            correctAnswerId: correctOptionId,
+            explanation,
+            answerOptions: mappedAnswerOptions,
           },
         };
 
         return copy;
       });
 
+      dispatch(
+        saveIncompleteRetakeAnswer({
+          testId,
+          questionId: questionID,
+          selectedOptionId,
+          correctOptionId,
+          answerOptions: mappedAnswerOptions,
+          explanation,
+        }),
+      );
+
       setShowExplanation(true);
-      return isCorrect; // ✅ Return real result to QuestionCard
-    } catch (error) {
+      return isCorrect;
+    } catch (error: any) {
+      const message = error?.data?.message || error?.message || 'Submit failed';
+
+      const isAlreadyAnswered =
+        typeof message === 'string' &&
+        message.toLowerCase().includes('already answered');
+
+      if (isAlreadyAnswered) {
+        const fallbackSelectedOptionId =
+          quizDetails.userAnswerId ?? selectedAnswerId;
+
+        const fallbackCorrectOptionId =
+          quizDetails.correctAnswerId ??
+          quizDetails.answerOptions.find(option => option.is_correct)?.id ??
+          null;
+
+        if (fallbackSelectedOptionId) {
+          const selectedId = String(fallbackSelectedOptionId);
+          const correctId = fallbackCorrectOptionId
+            ? String(fallbackCorrectOptionId)
+            : null;
+
+          setSelectedAnswer(selectedId);
+
+          setQuestions(prev => {
+            const copy = [...prev];
+            const idx = currentQuestion - 1;
+            const existing = copy[idx];
+
+            if (!existing) return prev;
+
+            copy[idx] = {
+              ...existing,
+              quizDetails: {
+                ...existing.quizDetails,
+                userAnswerId: selectedId,
+                correctAnswerId: correctId,
+                answerOptions: existing.quizDetails.answerOptions.map(
+                  option => ({
+                    ...option,
+                    id: String(option.id),
+                    is_correct:
+                      Boolean(option.is_correct) ||
+                      String(option.id) === String(correctId),
+                  }),
+                ),
+              },
+            };
+
+            return copy;
+          });
+
+          setShowExplanation(Boolean(correctId));
+
+          return correctId ? selectedId === correctId : false;
+        }
+      }
+
       console.error('Submit failed:', error);
-      return false; // ✅ Always return a boolean
+      return false;
     }
-  };
+  }, [
+    selectedAnswerId,
+    isAnswering,
+    answerQuestion,
+    testId,
+    questionID,
+    currentQuestion,
+    setSelectedAnswer,
+    setQuestions,
+    dispatch,
+    quizDetails.userAnswerId,
+    quizDetails.correctAnswerId,
+    quizDetails.answerOptions,
+  ]);
 
   const handleToggleMark = async () => {
     try {
       onToggleMark();
+
       await toggleMarkApi({
         test_id: testId,
         question_id: questionID,
@@ -166,7 +292,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   };
 
   const handleNext = async () => {
-    if (!selectedAnswerId) {
+    if (!selectedAnswerId && !quizDetails.userAnswerId) {
       try {
         await skipQuestionApi({
           test_id: testId,
@@ -176,6 +302,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
         // ignore skip errors
       }
     }
+
     onNext();
   };
 
@@ -189,6 +316,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
         test_id: testId,
         question_id: questionID,
       }).unwrap();
+
       onNext();
     } catch {
       console.log('skip failed');
@@ -200,6 +328,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
 
     const qEl = questionRef.current;
     const eEl = explanationRef.current;
+
     if (!qEl || !eEl) return;
 
     if (!isQuestionHidden) {
@@ -210,6 +339,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
         ease: 'power2.inOut',
         onComplete: () => setIsQuestionHidden(true),
       });
+
       gsap.to(eEl, {
         flex: '1 1 100%',
         duration: 0.45,
@@ -217,12 +347,14 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
       });
     } else {
       setIsQuestionHidden(false);
+
       gsap.to(qEl, {
         flex: '1 1 0%',
         opacity: 1,
         duration: 0.5,
         ease: 'power2.out',
       });
+
       gsap.to(eEl, {
         flex: '1 1 0%',
         duration: 0.5,
@@ -239,7 +371,9 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   const handleZoomOut = () => setZoomLevel(z => Math.max(z - STEP, MIN_ZOOM));
 
   const isUserCorrect =
-    quizDetails.userAnswerId === quizDetails.correctAnswerId;
+    Boolean(quizDetails.userAnswerId) &&
+    Boolean(quizDetails.correctAnswerId) &&
+    String(quizDetails.userAnswerId) === String(quizDetails.correctAnswerId);
 
   return (
     <div className="flex flex-col space-y-4 font-[manrope]">
@@ -294,7 +428,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
                   showExplanation={showExplanation}
                   isUserCorrect={isUserCorrect}
                   onAnswerChange={handleAnswerChange}
-                  onSubmit={handleSubmit} // ✅ now Promise<boolean>
+                  onSubmit={handleSubmit}
                   onToggleHide={handleToggleHide}
                   isQuestionHidden={isQuestionHidden}
                 />

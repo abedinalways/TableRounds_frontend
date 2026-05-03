@@ -128,7 +128,7 @@ const TestStatistics: React.FC = () => {
                 </div>
 
                 <div className="flex justify-between bg-[#fef2f2] px-6 py-3 rounded-[8px]">
-                  <span>Percentile Rank</span>
+                  <span>Rank</span>
                   <span className="font-semibold text-red-500">
                     {item?.rank}
                   </span>

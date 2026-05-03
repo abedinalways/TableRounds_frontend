@@ -15,6 +15,14 @@ interface Props {
   data: statisticsItems;
 }
 
+
+function formatTopicName(name: string | undefined): string {
+  if (!name) return '';
+  return name
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' / ');
+}
 export default function QuestionBankSolved({ data }: Props) {
   const { complete_percentage, correct_percentage, ranking, best_topic } =
     data || {};
@@ -94,7 +102,10 @@ export default function QuestionBankSolved({ data }: Props) {
         <div className="flex-1 w-full space-y-3">
           <StatRow label="Ranking" value={ranking} />
           <StatRow label="Complete" value={`${complete_percentage}%`} />
-          <StatRow label="Best Topic" value={best_topic?.name} />
+          <StatRow
+            label="Best Topic"
+            value={formatTopicName(best_topic?.name)}
+          />
         </div>
       </div>
     </Card>

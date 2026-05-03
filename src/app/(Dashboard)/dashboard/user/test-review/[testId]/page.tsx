@@ -1,8 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
 import { useGetTestDetailsQuery } from '@/app/redux/api/testSessionApi';
 import { TestReviewSkeleton } from '@/components/preview-test/TestReviewSkeleton';
+import ExplainIcon from '@/components/reusable/icons/ExplainIcon';
+import CancelIcon from '@/components/reusable/icons/CancelIcon';
+import PimpingIcon from '@/components/reusable/icons/PimpingIcon';
+import MemoryIcon from '@/components/reusable/icons/MemoryIcon';
+import BookIcon from '@/components/reusable/icons/BookIcon';
 
 export default function TestReviewPage() {
   const { testId } = useParams();
@@ -81,7 +87,9 @@ export default function TestReviewPage() {
 
               {/* Explanation */}
               <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
-                <p className="font-bold mb-1">Explanation:</p>
+                <p className="font-bold mb-1 flex items-center gap-2">
+                  <ExplainIcon /> Explanation:
+                </p>
 
                 <div dangerouslySetInnerHTML={{ __html: q.explanation }} />
 
@@ -96,22 +104,30 @@ export default function TestReviewPage() {
 
               {/* Why Incorrect */}
               <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
-                <p className="font-bold mb-1">Why Incorrect:</p>
+                <p className="font-bold mb-1 flex items-center gap-2">
+                  <CancelIcon /> Why The Other Option Are Incorrect:
+                </p>
 
                 <div dangerouslySetInnerHTML={{ __html: q.why_incorrect }} />
               </div>
-              {/* Memory trick */}
-              <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
-                <p className="font-bold mb-1">Memory Trick:</p>
 
-                <div dangerouslySetInnerHTML={{ __html: q.memory_trick }} />
-              </div>
               {/* pimping point*/}
               <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
-                <p className="font-bold mb-1">Pimping Point:</p>
+                <p className="font-bold mb-1 flex items-center gap-2">
+                  <PimpingIcon /> Pimping Point:
+                </p>
 
                 <div dangerouslySetInnerHTML={{ __html: q.pimping_point }} />
               </div>
+              {/* Memory trick */}
+              <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
+                <p className="font-bold mb-1 flex items-center gap-2">
+                  <MemoryIcon /> Memory Trick:
+                </p>
+
+                <div dangerouslySetInnerHTML={{ __html: q.memory_trick }} />
+              </div>
+
               {/* pimping point*/}
               {/* <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
                 <p className="font-semibold mb-1">Pimping Point:</p>
@@ -120,7 +136,7 @@ export default function TestReviewPage() {
               </div> */}
               {/* reference */}
               <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
-                <p className="font-bold mb-1">References:</p>
+                <p className="font-bold mb-1 flex items-center gap-2"><BookIcon/> References:</p>
 
                 <div dangerouslySetInnerHTML={{ __html: q.referance }} />
               </div>

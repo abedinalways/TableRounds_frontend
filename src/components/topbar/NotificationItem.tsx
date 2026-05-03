@@ -111,9 +111,7 @@ export function NotificationItem({
       <div className="relative">
         <Avatar className="w-10 h-10">
           <AvatarImage
-            src={
-              notification.user.avatar || '/images/dashboard/message/doctor.png'
-            }
+            src={notification.user.avatar || '/images/navbar-logo.png'}
             alt={notification.user.name}
           />
           <AvatarFallback className="text-xs font-medium">
