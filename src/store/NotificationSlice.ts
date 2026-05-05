@@ -1,140 +1,3 @@
-// import { is } from 'zod/v4/locales';
-// import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-// import {
-//   notificationApi,
-//   ApiNotificationItem,
-// } from '../app/redux/api/notificationApi';
-
-// export type NotificationType =
-//   | 'approved'
-//   | 'rejected'
-//   | 'follow'
-//   | 'conversation'
-//   | 'user-registered';
-
-// export interface AppNotification {
-//   id: string;
-//   type: NotificationType;
-//   message: string;
-//   timestamp: string;
-//   isRead: boolean;
-//   isNew?: boolean; // For client-side only, indicates if the notification was received in the current session
-//   user: {
-//     name: string;
-//     avatar: string;
-//     initials: string;
-//   };
-// }
-
-// interface NotificationState {
-//   notifications: AppNotification[];
-// }
-
-// const initialState: NotificationState = {
-//   notifications: [],
-// };
-
-// function getInitials(name: string) {
-//   return name
-//     .split(' ')
-//     .map(word => word[0])
-//     .join('')
-//     .slice(0, 2)
-//     .toUpperCase();
-// }
-
-// function normalizeType(type: string): NotificationType {
-//   if (type === 'approved') return 'approved';
-//   if (type === 'rejected') return 'rejected';
-//   if (type === 'follow' || type === 'Follow') return 'follow';
-//   if (type === 'conversation' || type === 'message') return 'conversation';
-//   if (type === 'user-registered' || type === 'user_registered')
-//     return 'user-registered';
-//   return 'conversation';
-// }
-
-// function mapApiNotification(item: ApiNotificationItem): AppNotification {
-//   const actor = item.sender;
-
-//   const name = actor?.name || 'System';
-//   const avatar =
-//     actor?.avatar_url || actor?.avatar || '/images/default-avatar.png';
-
-//   return {
-//     id: item.id,
-//     type: normalizeType(item.notification_event?.type || 'conversation'),
-//     message: item.notification_event?.text || 'You have a new notification',
-//     timestamp: item.created_at,
-//     isRead: false,
-//     user: {
-//       name,
-//       avatar,
-//       initials: getInitials(name),
-//     },
-//   };
-// }
-
-// const notificationSlice = createSlice({
-//   name: 'notifications',
-//   initialState,
-//   reducers: {
-//     addNotification: (state, action: PayloadAction<AppNotification>) => {
-//       const exists = state.notifications.some(
-//         item => item.id === action.payload.id,
-//       );
-//       if (!exists) {
-//         state.notifications.unshift(action.payload);
-//       }
-//     },
-
-//     setNotifications: (state, action: PayloadAction<AppNotification[]>) => {
-//       state.notifications = action.payload;
-//     },
-
-//     markAllAsRead: state => {
-//       state.notifications = state.notifications.map(item => ({
-//         ...item,
-//         isRead: true,
-//       }));
-//     },
-
-//     removeNotification: (state, action: PayloadAction<string>) => {
-//       state.notifications = state.notifications.filter(
-//         item => item.id !== action.payload,
-//       );
-//     },
-
-//     clearNotifications: state => {
-//       state.notifications = [];
-//     },
-//   },
-//   extraReducers: builder => {
-//     builder.addMatcher(
-//       notificationApi.endpoints.getUserNotifications.matchFulfilled,
-//       (state, { payload }) => {
-//         state.notifications = payload.data.map(mapApiNotification);
-//       },
-//     );
-
-//     builder.addMatcher(
-//       notificationApi.endpoints.getAdminNotifications.matchFulfilled,
-//       (state, { payload }) => {
-//         state.notifications = payload.data.map(mapApiNotification);
-//       },
-//     );
-//   },
-// });
-
-// export const {
-//   addNotification,
-//   setNotifications,
-//   markAllAsRead,
-//   removeNotification,
-//   clearNotifications,
-// } = notificationSlice.actions;
-
-// export default notificationSlice.reducer;
-
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   notificationApi,
@@ -163,7 +26,6 @@ export interface AppNotification {
   };
 }
 
-// ✅ unreadCount is declared in the interface
 interface NotificationState {
   notifications: AppNotification[];
   unreadCount: number;
@@ -174,7 +36,7 @@ const initialState: NotificationState = {
   unreadCount: 0,
 };
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function getInitials(name: string): string {
   return name
@@ -215,7 +77,7 @@ function mapApiNotification(item: ApiNotificationItem): AppNotification {
     type: normalizeType(item.notification_event?.type),
     message: item.notification_event?.text ?? 'You have a new notification',
     timestamp: item.created_at,
-    isRead: false,
+    isRead: item.is_read ?? false, // ✅ uses actual API value
     isNew: false,
     user: { name, avatar, initials: getInitials(name) },
   };
@@ -257,7 +119,6 @@ const notificationSlice = createSlice({
       state.unreadCount = 0;
     },
 
-    // ✅ defined here so it can be exported
     clearNewFlag: (state, action: PayloadAction<string>) => {
       const n = state.notifications.find(n => n.id === action.payload);
       if (n) n.isNew = false;
@@ -277,27 +138,27 @@ const notificationSlice = createSlice({
   },
 
   extraReducers: builder => {
+    // ─── Fetch ───────────────────────────────────────────────────────────────
+
     const mergeApiNotifications = (
       state: NotificationState,
       payload: { data: ApiNotificationItem[] },
     ) => {
-      const apiItems = payload.data.map(mapApiNotification);
+      // ✅ Guard against unexpected payload shapes
+      const raw = Array.isArray(payload?.data) ? payload.data : [];
+      if (raw.length === 0) {
+        state.notifications = [];
+        state.unreadCount = 0;
+        return;
+      }
+
+      const apiItems = raw.map(mapApiNotification);
       const apiIds = new Set(apiItems.map(n => n.id));
 
-      // Preserve read state already tracked in the store
-      const readIds = new Set(
-        state.notifications.filter(n => n.isRead).map(n => n.id),
-      );
-
-      const merged = apiItems.map(n => ({
-        ...n,
-        isRead: readIds.has(n.id) || n.isRead,
-      }));
-
-      // Prepend socket-only notifications the API hasn't returned yet
+      // Preserve socket-only notifications not yet in the API response
       const socketOnly = state.notifications.filter(n => !apiIds.has(n.id));
 
-      state.notifications = [...socketOnly, ...merged];
+      state.notifications = [...socketOnly, ...apiItems];
       state.unreadCount = recalcUnread(state.notifications);
     };
 
@@ -305,10 +166,13 @@ const notificationSlice = createSlice({
       notificationApi.endpoints.getUserNotifications.matchFulfilled,
       (state, { payload }) => mergeApiNotifications(state, payload),
     );
+
     builder.addMatcher(
       notificationApi.endpoints.getAdminNotifications.matchFulfilled,
       (state, { payload }) => mergeApiNotifications(state, payload),
     );
+
+    // ─── Delete single ────────────────────────────────────────────────────────
 
     builder.addMatcher(
       notificationApi.endpoints.deleteUserNotification.matchFulfilled,
@@ -318,6 +182,7 @@ const notificationSlice = createSlice({
         state.unreadCount = recalcUnread(state.notifications);
       },
     );
+
     builder.addMatcher(
       notificationApi.endpoints.deleteAdminNotification.matchFulfilled,
       (state, { meta }) => {
@@ -327,6 +192,8 @@ const notificationSlice = createSlice({
       },
     );
 
+    // ─── Delete all ───────────────────────────────────────────────────────────
+
     builder.addMatcher(
       notificationApi.endpoints.deleteAllUserNotifications.matchFulfilled,
       state => {
@@ -334,6 +201,7 @@ const notificationSlice = createSlice({
         state.unreadCount = 0;
       },
     );
+
     builder.addMatcher(
       notificationApi.endpoints.deleteAllAdminNotifications.matchFulfilled,
       state => {
@@ -348,7 +216,7 @@ export const {
   addNotification,
   markAsRead,
   markAllAsRead,
-  clearNewFlag, 
+  clearNewFlag,
   removeNotification,
   clearNotifications,
 } = notificationSlice.actions;

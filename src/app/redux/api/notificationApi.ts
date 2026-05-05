@@ -26,6 +26,7 @@ export interface ApiNotificationItem {
   receiver_id: string | null;
   entity_id: string | null;
   created_at: string;
+  is_read: boolean; // ✅ added
   sender: ApiNotificationReceiver | null;
   receiver: ApiNotificationReceiver | null;
   notification_event: ApiNotificationEvent;
@@ -48,12 +49,12 @@ export const notificationApi = baseApi.injectEndpoints({
       providesTags: ['adminNotification'],
     }),
 
+    // ✅ No invalidatesTags — extraReducers handle state updates
     deleteUserNotification: builder.mutation<{ success: boolean }, string>({
       query: id => ({
         url: `/user/notification/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['notification'],
     }),
 
     deleteAllUserNotifications: builder.mutation<{ success: boolean }, void>({
@@ -61,7 +62,6 @@ export const notificationApi = baseApi.injectEndpoints({
         url: '/user/notification',
         method: 'DELETE',
       }),
-      invalidatesTags: ['notification'],
     }),
 
     deleteAdminNotification: builder.mutation<{ success: boolean }, string>({
@@ -69,7 +69,6 @@ export const notificationApi = baseApi.injectEndpoints({
         url: `/admin/notification/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['adminNotification'],
     }),
 
     deleteAllAdminNotifications: builder.mutation<{ success: boolean }, void>({
@@ -77,7 +76,6 @@ export const notificationApi = baseApi.injectEndpoints({
         url: '/admin/notification',
         method: 'DELETE',
       }),
-      invalidatesTags: ['adminNotification'],
     }),
   }),
   overrideExisting: false,
