@@ -96,7 +96,11 @@ import { persistStore } from 'redux-persist'; // Import persistStore
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['incompleteRetake'], // Persist the 'incompleteRetake' state
+  // 'incompleteRetake' intentionally removed from whitelist.
+  // Answers are stored server-side via /test/answer and restored via useGetTestQuery.
+  // Keeping it session-only (in-memory) prevents stale localStorage data
+  // from overriding the server's authoritative state on device/browser change.
+  whitelist: [],
 };
 
 // Combine reducers
