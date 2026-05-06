@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+
 import { ReactNode } from 'react';
 import Topbar from '../topbar/Topbar';
-import { useAppSelector } from '@/app/redux/hook';
+
 import Sidebar from '../sidebar/Sidebar';
-import { ChatProvider } from '../../context/ChatContext';
+
 
 interface UserLayoutProps {
   children: ReactNode;

@@ -335,14 +335,15 @@ function createSocketNotification(
   type: AppNotification['type'],
   rawData: unknown,
 ): AppNotification {
-  const data = rawData as RawSocketData;
-  const actor = data.sender ?? data.from_user;
+  const payload = rawData as any;
+  const data = payload?.data || payload;
+  const actor = data?.sender ?? data?.from_user;
 
   const name = actor?.name ?? 'User';
   const avatar = actor?.avatar_url ?? actor?.avatar ?? '/images/default-avatar.png';
   const message =
-    data.notification_event?.text ??
-    data.message?.body_text ??
+    data?.notification_event?.text ??
+    data?.message?.body_text ??
     'You have a new notification';
 
   return {
@@ -408,8 +409,9 @@ export function useNotificationSocket() {
     if (socketRef.current?.connected) return;
 
     const socket: Socket = io(socketUrl, {
-      transports: ['websocket'],
-      auth: { token: `Bearer ${token}` },
+      extraHeaders: {
+        authorization: `Bearer ${token}`,
+      },
       reconnection: false, // we manage reconnection manually for more control
     });
 
