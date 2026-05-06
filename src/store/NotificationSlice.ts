@@ -72,13 +72,26 @@ function mapApiNotification(item: ApiNotificationItem): AppNotification {
   const avatar =
     actor?.avatar_url ?? actor?.avatar ?? '/images/default-avatar.png';
 
+  const type = normalizeType(item.notification_event?.type);
+  let message = item.notification_event?.text;
+
+  // Generate a better fallback message if the backend didn't provide text
+  if (!message || message === 'You have a new notification') {
+    if (type === 'follow') message = `${name !== 'System' ? name : 'Someone'} followed you`;
+    else if (type === 'conversation') message = `${name !== 'System' ? name : 'Someone'} sent you a message`;
+    else if (type === 'approved') message = 'Your account has been approved';
+    else if (type === 'rejected') message = 'Your account has been rejected';
+    else if (type === 'user-registered') message = 'A new user registered';
+    else message = 'You have a new notification';
+  }
+
   return {
     id: item.id,
-    type: normalizeType(item.notification_event?.type),
-    message: item.notification_event?.text ?? 'You have a new notification',
+    type,
+    message,
     timestamp: item.created_at,
-    isRead: item.is_read ?? false, // ✅ uses actual API value
-    isNew: false,
+    isRead: item.is_read ?? false,
+    isNew: true, // Mark true by default, will be adjusted in mergeApiNotifications if it already exists
     user: { name, avatar, initials: getInitials(name) },
   };
 }
@@ -156,9 +169,23 @@ const notificationSlice = createSlice({
       const apiIds = new Set(apiItems.map(n => n.id));
 
       // Preserve socket-only notifications not yet in the API response
-      const socketOnly = state.notifications.filter(n => !apiIds.has(n.id));
+      // Also filter out any temporary socket notifications (those without a real ID)
+      const socketOnly = state.notifications.filter(n => !apiIds.has(n.id) && !n.id.startsWith('temp_'));
 
-      state.notifications = [...socketOnly, ...apiItems];
+      // Check which API items are truly new
+      const existingIds = new Set(state.notifications.map(n => n.id));
+      
+      const mergedItems = apiItems.map(item => {
+        // If it already existed in state, preserve its isNew flag from the previous state
+        // Otherwise, it is truly new, so keep isNew: true
+        if (existingIds.has(item.id)) {
+          const oldItem = state.notifications.find(n => n.id === item.id);
+          return { ...item, isNew: oldItem?.isNew ?? false };
+        }
+        return item;
+      });
+
+      state.notifications = [...socketOnly, ...mergedItems];
       state.unreadCount = recalcUnread(state.notifications);
     };
 
