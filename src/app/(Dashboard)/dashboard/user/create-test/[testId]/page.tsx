@@ -12,18 +12,9 @@ import type { TestData } from '@/app/redux/api/startTestApi';
 import { CreateTestPageSkeleton } from '@/components/create_test_components/CreateTestPageSkeleton';
 import type { RootState } from '@/app/redux/store';
 
-const MARKED_KEY_PREFIX = 'MARKED_QUESTIONS_';
+
 const EMPTY_PERSISTED_ANSWERS: Record<string, any> = {};
 
-function safeParseJSON<T>(value: string | null): T | null {
-  if (!value) return null;
-
-  try {
-    return JSON.parse(value) as T;
-  } catch {
-    return null;
-  }
-}
 
 function normalizeId(value: unknown): string | null {
   if (!value) return null;
@@ -298,7 +289,6 @@ export default function CreateTestPage() {
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [selectedAnswerId, setSelectedAnswer] = useState<string | null>(null);
 
-  const MARK_KEY = `${MARKED_KEY_PREFIX}${testId}`;
 
   const persistedAnswersForTest = useSelector((state: RootState) => {
     if (!testId) return EMPTY_PERSISTED_ANSWERS;
@@ -362,38 +352,12 @@ export default function CreateTestPage() {
         })
         .filter((m: MarkedQuestion) => m.index > 0) ?? [];
 
-    const savedMarks =
-      safeParseJSON<MarkedQuestion[]>(localStorage.getItem(MARK_KEY)) ?? [];
-
-    const merged = [
-      ...apiMarked,
-      ...savedMarks.filter(
-        saved => !apiMarked.some(api => api.questionId === saved.questionId),
-      ),
-    ];
-
-    setMarkedQuestions(merged);
-  }, [testResponse, testId, persistedAnswersForTest, MARK_KEY]);
-
-  const safeSetLocal = (key: string, value: unknown) => {
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch (err) {
-      if (err instanceof DOMException && err.name === 'QuotaExceededError') {
-        console.error(
-          '[Local] QuotaExceededError — clearing stale local data.',
-        );
-        localStorage.clear();
-      }
-    }
-  };
+    // Server is the source of truth for marks — works on any device/browser
+    setMarkedQuestions(apiMarked);
+  }, [testResponse, testId, persistedAnswersForTest]);
 
   const totalQuestions = questions.length;
   const data = questions[currentQuestion - 1] ?? null;
-
-  const persistMarks = (updated: MarkedQuestion[]) => {
-    safeSetLocal(MARK_KEY, updated);
-  };
 
   const onJumpTo = (index: number) => {
     const quizDetails = data?.quizDetails;
@@ -458,7 +422,7 @@ export default function CreateTestPage() {
             },
           ];
 
-      persistMarks(updated);
+      // Optimistic local update only — the API call in handleToggleMark persists to server
       return updated;
     });
   };
