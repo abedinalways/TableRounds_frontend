@@ -9,9 +9,9 @@ import QuizTopbar from './QuizTopbar';
 import QuestionSidebar from './QuestionSidebar';
 import QuestionCard from './QuestionCard';
 import ExplanationPanel from './ExplanationPanel';
-import { useDispatch } from 'react-redux';
-import type { AppDispatch } from '@/app/redux/store';
-import { saveIncompleteRetakeAnswer } from '@/app/redux/features/incompleteRetakeSlice';
+// import { useDispatch } from 'react-redux';
+// import type { AppDispatch } from '@/app/redux/store';
+// import { saveIncompleteRetakeAnswer } from '@/app/redux/features/incompleteRetakeSlice';
 import type { MarkedQuestion, QuizQuestionDataUI } from '@/types/test-session';
 
 import {
@@ -50,7 +50,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   const { testProgress, quizDetails } = data;
   const { totalQuestions, questionID } = testProgress;
 
-  const dispatch = useDispatch<AppDispatch>();
+  // const dispatch = useDispatch<AppDispatch>();
 
   const [showExplanation, setShowExplanation] = useState<boolean>(false);
   const [isQuestionHidden, setIsQuestionHidden] = useState<boolean>(false);
@@ -188,16 +188,16 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
         return copy;
       });
 
-      dispatch(
-        saveIncompleteRetakeAnswer({
-          testId,
-          questionId: questionID,
-          selectedOptionId,
-          correctOptionId,
-          answerOptions: mappedAnswerOptions,
-          explanation,
-        }),
-      );
+      // dispatch(
+      //   saveIncompleteRetakeAnswer({
+      //     testId,
+      //     questionId: questionID,
+      //     selectedOptionId,
+      //     correctOptionId,
+      //     answerOptions: mappedAnswerOptions,
+      //     explanation,
+      //   }),
+      // );
 
       setShowExplanation(true);
       return isCorrect;
@@ -271,7 +271,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
     currentQuestion,
     setSelectedAnswer,
     setQuestions,
-    dispatch,
+    // dispatch,
     quizDetails.userAnswerId,
     quizDetails.correctAnswerId,
     quizDetails.answerOptions,
