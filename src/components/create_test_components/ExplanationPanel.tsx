@@ -65,7 +65,7 @@ const ExplanationPanel: React.FC<ExplanationPanelProps> = ({
       />
 
       {/* Explanation Image */}
-      {explanation?.image && (
+      {/* {explanation?.image && (
         <div className="my-4">
           <Image
             src={
@@ -80,7 +80,7 @@ const ExplanationPanel: React.FC<ExplanationPanelProps> = ({
             unoptimized
           />
         </div>
-      )}
+      )} */}
 
       {/* Why the Other Options Are Incorrect */}
       <h3 className="text-[18px] md:text-[20px] font-semibold text-[#01281e] mt-6 mb-2 flex items-center gap-2">
