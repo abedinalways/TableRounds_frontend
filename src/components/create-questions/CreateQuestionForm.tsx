@@ -1,8 +1,6 @@
-
-
 'use client';
 
-import React, { useRef } from 'react';
+import React from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,7 +10,6 @@ import { QuestionFormValues, Difficulty } from '@/types/createQuestion';
 import { RichTextEditor } from './RichTextEditor';
 import { toast } from 'sonner';
 import { useCreateQuestionMutation } from '@/app/redux/api/createQuestionsApi';
-import Image from 'next/image';
 
 const TOPICS = [
   { value: 'Anesthesia_Medicine', label: 'Anesthesia / Medicine' },
@@ -29,6 +26,24 @@ const TOPICS = [
 ];
 
 const DIFFICULTIES: Difficulty[] = ['Intern', 'Senior', 'Board'];
+
+const prepareExplanationForPayload = (
+  html?: string | null,
+  file?: File | null,
+) => {
+  const safeHtml = html || '';
+
+  return safeHtml.replace(
+    /(<img[^>]+src=["'])([^"']+)(["'][^>]*>)/gi,
+    (match, before, src, after) => {
+      if (src.startsWith('blob:') && file) {
+        return `${before}${file.name}${after}`;
+      }
+
+      return match;
+    },
+  );
+};
 
 export default function CreateQuestionForm() {
   const { register, control, handleSubmit, watch, setValue, reset } =
@@ -53,8 +68,8 @@ export default function CreateQuestionForm() {
   const [editorKey, setEditorKey] = React.useState(0);
   const [createQuestion, { isLoading }] = useCreateQuestionMutation();
 
-  const [attachedFile, setAttachedFile] = React.useState<File | null>(null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [explanationImageFile, setExplanationImageFile] =
+    React.useState<File | null>(null);
 
   const onSubmit = async (data: QuestionFormValues) => {
     try {
@@ -62,7 +77,16 @@ export default function CreateQuestionForm() {
 
       formData.append('question_title', data.questionTitle || '');
       formData.append('question_steam', data.questionStem || '');
-      formData.append('explanation', data.explanation || '');
+
+      /**
+       * Explanation will contain image file name:
+       * <img src="documents.jpg" alt="documents.jpg" title="documents.jpg">
+       */
+      formData.append(
+        'explanation',
+        prepareExplanationForPayload(data.explanation, explanationImageFile),
+      );
+
       formData.append('why_incorrect', data.keyPoints || '');
       formData.append('pimping_point', data.keepingPoint || '');
       formData.append('memory_trick', data.memoryTrick || '');
@@ -81,8 +105,11 @@ export default function CreateQuestionForm() {
         ),
       );
 
-      if (attachedFile) {
-        formData.append('explanation_image', attachedFile);
+      /**
+       * Actual binary file exactly like Insomnia.
+       */
+      if (explanationImageFile) {
+        formData.append('explanation_image', explanationImageFile);
       }
 
       await createQuestion(formData).unwrap();
@@ -91,17 +118,10 @@ export default function CreateQuestionForm() {
 
       reset();
       setEditorKey(prev => prev + 1);
-      setAttachedFile(null);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setExplanationImageFile(null);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error?.data?.message || 'Failed to create question');
-    }
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0]) {
-      setAttachedFile(e.target.files[0]);
-      toast.success(`File "${e.target.files[0].name}" attached!`);
     }
   };
 
@@ -219,49 +239,9 @@ export default function CreateQuestionForm() {
         key={`explanation-${editorKey}`}
         value={watch('explanation') || ''}
         onChange={v => setValue('explanation', v)}
+        allowImageUpload
+        onImageFileChange={setExplanationImageFile}
       />
-
-      {/* Explanation Image Upload */}
-      <div className="space-y-3">
-        <h2 className="text-lg md:text-[24px] font-bold text-[#01281e]">
-          Explanation Image
-        </h2>
-
-        <div className="flex items-center gap-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => fileInputRef.current?.click()}
-            className="border-[#01503b] text-[#01503b] cursor-pointer hover:bg-[#01503b]/10"
-          >
-            Upload Image
-          </Button>
-
-          {attachedFile && (
-            <span className="text-sm text-green-600">{attachedFile.name}</span>
-          )}
-        </div>
-
-        {attachedFile && (
-          <div className="w-full max-w-md overflow-hidden rounded-xl border bg-white p-2">
-            <Image
-              width={500}
-              height={500}
-              src={URL.createObjectURL(attachedFile)}
-              alt="Explanation Preview"
-              className="h-auto w-full rounded-lg object-cover"
-            />
-          </div>
-        )}
-
-        <input
-          type="file"
-          accept="image/*"
-          ref={fileInputRef}
-          className="hidden"
-          onChange={handleFileChange}
-        />
-      </div>
 
       {/* Why incorrect */}
       <h2 className="text-lg md:text-[24px] font-bold text-[#01281e]">
@@ -306,19 +286,6 @@ export default function CreateQuestionForm() {
         value={watch('referance') || ''}
         onChange={v => setValue('referance', v)}
       />
-
-      {/* File Upload */}
-      {/* {attachedFile && (
-        <div className="text-green-600">Attached: {attachedFile.name}</div>
-      )}
-
-      <input
-        type="file"
-        accept=".pdf,.doc,.docx"
-        ref={fileInputRef}
-        className="hidden"
-        onChange={handleFileChange}
-      /> */}
 
       {/* Submit */}
       <button

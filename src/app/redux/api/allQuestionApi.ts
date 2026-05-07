@@ -2,12 +2,12 @@ import { baseApi } from './baseApi';
 
 /* ================= TYPES ================= */
 
-export type Difficulty = 'Intern' | 'Senior' | 'Boards';
+export type Difficulty = 'Intern' | 'Senior' | 'Board' | 'Boards';
 
 export interface Question {
-  id: string; // Mongo _id
+  id: string;
   question_title: string;
-  question_id: string; // Display ID
+  question_id: string;
   difficulty: Difficulty;
   topic: string[];
   total_attempts: number;
@@ -91,7 +91,7 @@ export const allQuestionApi = baseApi.injectEndpoints({
       providesTags: ['allQuestions'],
     }),
 
-    getSingleQuestion: builder.query({
+    getSingleQuestion: builder.query<SingleQuestionResponse, string>({
       query: id => ({
         url: `/admin/questions/${id}`,
         method: 'GET',
@@ -112,14 +112,17 @@ export const allQuestionApi = baseApi.injectEndpoints({
 
     updateQuestion: builder.mutation<
       { success: boolean; message: string },
-      { id: string; data: Partial<Question> }
+      { id: string; data: UpdateQuestionData | FormData }
     >({
       query: ({ id, data }) => ({
         url: `/admin/questions/${id}`,
         method: 'PATCH',
         body: data,
       }),
-      invalidatesTags: ['allQuestions'],
+      invalidatesTags: (result, error, { id }) => [
+        'allQuestions',
+        { type: 'SingleQuestion', id },
+      ],
     }),
   }),
 });
