@@ -37,6 +37,7 @@ export default function TestResult({ testId }: { testId: string }) {
 
   useEffect(() => {
     if (!isLoading && isCompleted && data?.data) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShowCelebration(true);
 
       const timer = setTimeout(() => {
@@ -94,8 +95,8 @@ export default function TestResult({ testId }: { testId: string }) {
           ))}
         </div>
 
-        <div className="mt-10">
-          <h1 className="mb-2 text-[24px] font-bold text-[#444950]">
+        <div className="mt-10 w-full overflow-hidden">
+          <h1 className="mb-2 text-[20px] font-bold text-[#444950] sm:text-[24px]">
             How You Did by Difficulty
           </h1>
 

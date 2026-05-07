@@ -4,40 +4,61 @@ import { Card } from '@/components/ui/card';
 import BagIcon from '../reusable/icons/BagIcon';
 import { statisticsItems } from '@/types/myProfile';
 
-
-
 interface Props {
   data: statisticsItems;
 }
 
+const formatTopicName = (value?: string) => {
+  if (!value) return 'N/A';
+
+  return value.replace(/_/g, ' / ');
+};
+
 export default function QuestionBankSolved({ data }: Props) {
-  const { complete_percentage, correct_percentage, ranking, best_topic } =
-    data || {};
-  // console.log(data, 'ehgkergher++++++++++++++++++==================', data);
-  const radius = 110;
+  const {
+    complete_percentage = 0,
+    correct_percentage = 0,
+    ranking = 0,
+    best_topic,
+  } = data || {};
+
+  const radius = 100;
   const size = 251;
   const center = size / 2;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (complete_percentage / 100) * circumference;
+  const strokeWidth = 24;
 
-  const gradientId = `progressGradient-${complete_percentage}`;
+  const safeCorrectPercentage = Math.min(
+    100,
+    Math.max(0, Number(correct_percentage) || 0),
+  );
+
+  const safeCompletePercentage = Math.min(
+    100,
+    Math.max(0, Number(complete_percentage) || 0),
+  );
+
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (safeCorrectPercentage / 100) * circumference;
+
+  const gradientId = 'questionBankProgressGradient';
 
   return (
-    <Card className="p-6 rounded-2xl border border-[#4444441A] font-[manrope]">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="bg-emerald-100 p-2 rounded-lg">
+    <Card className="rounded-2xl border border-[#4444441A] p-4 font-[manrope] sm:p-5 lg:p-6">
+      <div className="mb-6 flex items-center gap-3">
+        <div className="rounded-lg bg-emerald-100 p-2">
           <BagIcon />
         </div>
-        <h3 className="font-bold text-[15px] md:text-[20px] text-[#01503b]">
+
+        <h3 className="text-[15px] font-bold text-[#01503b] md:text-[20px]">
           Question Bank Statistics
         </h3>
       </div>
 
-      <div className="flex flex-col md:flex-row items-center gap-6">
-        <div className="relative w-[251px] h-[251px]">
+      <div className="flex flex-col items-center gap-6 xl:flex-row">
+        <div className="relative h-[210px] w-[210px] shrink-0 sm:h-[251px] sm:w-[251px]">
           <svg
             viewBox={`0 0 ${size} ${size}`}
-            className="w-full h-full -rotate-90"
+            className="h-full w-full -rotate-90"
           >
             <defs>
               <linearGradient
@@ -59,7 +80,7 @@ export default function QuestionBankSolved({ data }: Props) {
               cy={center}
               r={radius}
               stroke="#D1E3DC"
-              strokeWidth="24"
+              strokeWidth={strokeWidth}
               fill="none"
             />
 
@@ -68,7 +89,7 @@ export default function QuestionBankSolved({ data }: Props) {
               cy={center}
               r={radius}
               stroke={`url(#${gradientId})`}
-              strokeWidth="24"
+              strokeWidth={strokeWidth}
               fill="none"
               strokeDasharray={circumference}
               strokeDashoffset={offset}
@@ -77,33 +98,44 @@ export default function QuestionBankSolved({ data }: Props) {
           </svg>
 
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className=" text-sm md:text-[40px] leading-[130%] font-bold text-[#01503b]">
-              {correct_percentage}%
+            <span className="text-[28px] font-bold leading-[130%] text-[#01503b] sm:text-[40px]">
+              {safeCorrectPercentage}%
             </span>
-            <span className="text-sm md:text-[20px] text-[#01281e]">
+
+            <span className="text-sm text-[#01281e] sm:text-[20px]">
               Correct
             </span>
           </div>
         </div>
 
-        <div className="flex-1 w-full space-y-3">
+        <div className="w-full flex-1 space-y-3">
           <StatRow label="Ranking" value={ranking} />
-          <StatRow label="Complete" value={`${complete_percentage}%`} />
-          <StatRow label="Best Topic" value={best_topic?.name} />
+          <StatRow label="Complete" value={`${safeCompletePercentage}%`} />
+          <StatRow
+            label="Best Topic"
+            value={formatTopicName(best_topic?.name)}
+          />
         </div>
       </div>
     </Card>
   );
 }
 
-function StatRow({ label, value }: { label: string; value: string | number |undefined }) {
+function StatRow({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | number | undefined;
+}) {
   return (
-    <div className="flex justify-between items-center bg-[#ecfdf5] px-4 py-3 rounded-lg">
-      <span className="text-sm md:text-[16px] text-[#01281e] font-medium">
+    <div className="flex items-center justify-between gap-4 rounded-lg bg-[#ecfdf5] px-4 py-3">
+      <span className="text-sm font-medium text-[#01281e] md:text-[16px]">
         {label}
       </span>
-      <span className="text-sm text-[#01503b] font-medium">
-        {value}
+
+      <span className="text-right text-sm font-medium text-[#01503b]">
+        {value ?? 'N/A'}
       </span>
     </div>
   );

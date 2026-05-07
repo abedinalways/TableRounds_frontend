@@ -110,7 +110,7 @@ const TestStatistics: React.FC = () => {
                   height={25}
                   alt=""
                 />
-                {item.topic.replace('_', ' ')}
+                {item.topic.replace('_', '/')}
               </CardTitle>
             </CardHeader>
 

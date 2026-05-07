@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import {
@@ -15,9 +13,23 @@ import { Button } from '@/components/ui/button';
 import { CircularProgressPercentage } from '../CircularProgressPercentage';
 import { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Loader2,
+  MoreHorizontal,
+  Eye,
+  BarChart3,
+} from 'lucide-react';
 import { useGetPreviousTestHistoryStatsQuery } from '@/app/redux/api/previousTestHistoryApi';
 import { TestHistorySkeleton } from './TestHistorySkeleton';
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const PAGE_LIMIT = 10;
 
@@ -27,11 +39,10 @@ interface Props {
 
 export function TestHistory({ search }: Props) {
   const [page, setPage] = useState(1);
-  const [dropdownIndex, setDropdownIndex] = useState<number | null>(null);
   const router = useRouter();
 
-  // Reset to page 1 whenever search changes
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPage(1);
   }, [search]);
 
@@ -47,7 +58,9 @@ export function TestHistory({ search }: Props) {
 
   const filteredTests = useMemo(() => {
     if (!data?.data) return [];
+
     const q = search.toLowerCase().trim();
+
     if (!q) return data.data;
 
     return data.data.filter(
@@ -60,22 +73,23 @@ export function TestHistory({ search }: Props) {
   }, [data, search]);
 
   if (isLoading) {
-    return <TestHistorySkeleton/>;
+    return <TestHistorySkeleton />;
   }
 
   if (isError || !data) {
     return (
-      <div className="text-center text-red-500 mt-6">
+      <div className="mt-6 text-center text-red-500">
         Failed to load test history
       </div>
     );
   }
 
   return (
-    <div className="rounded-lg border mt-6 md:text-[16px] overflow-x-auto">
-      {/* Dimmed overlay while fetching next page */}
+    <div className="mt-6 rounded-lg border md:text-[16px]">
       <div
-        className={`transition-opacity ${isFetching ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}
+        className={`overflow-x-auto transition-opacity ${
+          isFetching ? 'opacity-50 pointer-events-none' : 'opacity-100'
+        }`}
       >
         <Table>
           <TableHeader className="bg-[#01503b] font-semibold">
@@ -86,7 +100,7 @@ export function TestHistory({ search }: Props) {
               <TableHead className="text-white">Test Mode</TableHead>
               <TableHead className="text-white">Topic</TableHead>
               <TableHead className="text-white"># Qs</TableHead>
-              <TableHead className="text-white text-right">Action</TableHead>
+              <TableHead className="text-right text-white">Action</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -95,44 +109,47 @@ export function TestHistory({ search }: Props) {
               <TableRow>
                 <TableCell
                   colSpan={7}
-                  className="text-center py-6 text-gray-500"
+                  className="py-6 text-center text-gray-500"
                 >
                   No results found
                 </TableCell>
               </TableRow>
             ) : (
-              filteredTests.map((test, i) => (
-                <TableRow key={test.id}>
+              filteredTests.map(test => (
+                <TableRow key={test.id} className="hover:bg-[#f9fafb]">
                   <TableCell>
                     <CircularProgressPercentage
                       showLabel
                       value={test?.score ?? 0}
-                      className="text-[10px]!  font-normal"
+                      className="text-[10px]! font-normal"
                     />
                   </TableCell>
 
                   <TableCell>
-                    <div className="flex space-x-2">
+                    <div className="flex flex-wrap gap-2">
                       {(test.difficulty ?? []).map((level, index) => {
                         let badgeClass = '';
+
                         switch (level) {
                           case 'Intern':
-                            badgeClass = 'bg-[#fde1dc] text-red-400';
+                            badgeClass = 'bg-[#fde1dc] text-red-500';
                             break;
                           case 'Senior':
                             badgeClass = 'bg-[#f0e1dc] text-[#b79e6b]';
                             break;
                           case 'Boards':
+                          case 'Board':
                             badgeClass = 'bg-[#cdebe3] text-[#01503b]';
                             break;
                           default:
-                            badgeClass = 'bg-[#e1e1e1] text-gray-500';
+                            badgeClass = 'bg-[#e5e7eb] text-gray-500';
                             break;
                         }
+
                         return (
                           <Badge
                             key={index}
-                            className={`px-2 rounded-[4px] py-2 ${badgeClass}`}
+                            className={`rounded-[6px] px-3 py-1.5 text-xs font-medium ${badgeClass}`}
                           >
                             {level}
                           </Badge>
@@ -141,63 +158,78 @@ export function TestHistory({ search }: Props) {
                     </div>
                   </TableCell>
 
-                  <TableCell>
+                  <TableCell className="text-[#4b5563]">
                     {new Date(test.created_at).toLocaleDateString()}
                   </TableCell>
 
-                  <TableCell className="space-x-2">
-                    {test.test_mode.map(mode => (
-                      <Badge
-                        key={mode}
-                        className="bg-[#cdebe3] text-[#01503b] rounded-[4px] px-2 py-2"
-                      >
-                        {mode}
-                      </Badge>
-                    ))}
+                  <TableCell>
+                    <div className="flex flex-wrap gap-2">
+                      {test.test_mode.map(mode => (
+                        <Badge
+                          key={mode}
+                          className="rounded-[6px] bg-[#cdebe3] px-3 py-1.5 text-xs font-medium text-[#01503b]"
+                        >
+                          {mode}
+                        </Badge>
+                      ))}
+                    </div>
                   </TableCell>
 
                   <TableCell>
-                    <Badge className="bg-[#cdebe3] text-[#01503b] rounded-[4px] px-2 py-2">
+                    <Badge className="rounded-[6px] bg-[#cdebe3] px-3 py-1.5 text-xs font-medium text-[#01503b]">
                       {test.topic.length === 1 ? 'Single' : 'Multiple'}
                     </Badge>
                   </TableCell>
 
-                  <TableCell>{test.total_questions}</TableCell>
+                  <TableCell className="font-medium text-[#111827]">
+                    {test.total_questions}
+                  </TableCell>
 
-                  <TableCell className="text-right relative">
-                    <span
-                      onClick={() =>
-                        setDropdownIndex(dropdownIndex === i ? null : i)
-                      }
-                      className="cursor-pointer text-lg"
-                    >
-                      •••
-                    </span>
+                  <TableCell className="text-right">
+                    <DropdownMenu modal={false}>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="h-9 w-9 rounded-full text-[#01281e] hover:bg-[#ecfdf5] hover:text-[#01503b] focus-visible:ring-2 focus-visible:ring-[#01503b]/30 cursor-pointer" 
+                        >
+                          <MoreHorizontal className="h-5 w-5" />
+                          <span className="sr-only">Open action menu</span>
+                        </Button>
+                      </DropdownMenuTrigger>
 
-                    {dropdownIndex === i && (
-                      <div className="absolute right-0 mt-2 w-32 bg-white shadow-lg rounded-md border z-20">
-                        <button
-                          className="block w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      <DropdownMenuContent
+                        align="end"
+                        side="bottom"
+                        sideOffset={8}
+                        className="z-[9999] w-[180px] rounded-xl border border-[#e5e7eb] bg-white p-1.5 shadow-xl"
+                      >
+                        <DropdownMenuItem
                           onClick={() =>
                             router.push(
                               `/dashboard/user/test-review/${test.id}`,
                             )
                           }
+                          className="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-[#111827] outline-none hover:bg-[#ecfdf5] focus:bg-[#ecfdf5]"
                         >
+                          <Eye className="h-4 w-4 text-[#01503b]" />
                           Review
-                        </button>
-                        <button
-                          className="block w-full px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem
                           onClick={() =>
                             router.push(
                               `/dashboard/user/test-complete/${test.id}`,
                             )
                           }
+                          className="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-[#111827] outline-none hover:bg-[#ecfdf5] focus:bg-[#ecfdf5]"
                         >
+                          <BarChart3 className="h-4 w-4 text-[#01503b]" />
                           Results
-                        </button>
-                      </div>
-                    )}
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
               ))
@@ -206,8 +238,7 @@ export function TestHistory({ search }: Props) {
         </Table>
       </div>
 
-      {/* Pagination */}
-      <div className="flex items-center justify-between px-4 py-3 border-t">
+      <div className="flex flex-col gap-3 border-t px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-gray-500">
           {isFetching ? (
             <span className="flex items-center gap-1">
@@ -222,7 +253,7 @@ export function TestHistory({ search }: Props) {
           )}
         </p>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Button
             variant="outline"
             size="sm"
@@ -242,7 +273,7 @@ export function TestHistory({ search }: Props) {
               onClick={() => setPage(pg)}
               className={`h-8 w-8 p-0 ${
                 pg === page
-                  ? 'bg-[#01503b] hover:bg-[#01503b]/90 text-white'
+                  ? 'bg-[#01503b] text-white hover:bg-[#01503b]/90'
                   : ''
               }`}
             >

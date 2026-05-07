@@ -144,7 +144,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
         image: res.data.explanation_image_url
           ? res.data.explanation_image_url
           : res.data.explanation_image
-            ? `https://backend.tablerounds.ai/public/storage/question/${res.data.explanation_image}`
+            ? `https://backend.tablerounds.ai/public/storage/question/${res.data.explanation_image_url}`
             : null,
         whyIncorrect: res.data.why_incorrect
           ? [{ option: '', text: res.data.why_incorrect }]

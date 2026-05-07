@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { XCircle } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { AppNotification } from '../../store/NotificationSlice';
+import Image from 'next/image';
 function getActionText(type: AppNotification['type']): string {
   switch (type) {
     case 'follow':
@@ -52,7 +53,14 @@ export function NotificationItem({
             alt={notification.user.name}
           />
           <AvatarFallback className="text-xs font-medium">
-            {notification.user.initials}
+            <Image
+              src={'/images/navbar-logo.png'}
+              width={32}
+              height={32}
+              alt="profile"
+              className="rounded-full aspect-square object-cover"
+              unoptimized
+            />
           </AvatarFallback>
         </Avatar>
       </div>

@@ -487,7 +487,7 @@ export function RichTextEditor({ value = '', onChange }: RichTextEditorProps) {
         <ToolbarDivider />
 
         {/* Attach File */}
-        <ToolbarButton
+        {/* <ToolbarButton
           onClick={() => {
             const input = document.createElement('input');
             input.type = 'file';
@@ -501,7 +501,7 @@ export function RichTextEditor({ value = '', onChange }: RichTextEditorProps) {
           title="Attach File"
         >
           <Paperclip className="w-5 h-5 text-white outline" />
-        </ToolbarButton>
+        </ToolbarButton> */}
 
         {/* Code Block */}
         <ToolbarButton
@@ -513,7 +513,7 @@ export function RichTextEditor({ value = '', onChange }: RichTextEditorProps) {
         </ToolbarButton>
 
         {/* Image */}
-        <ToolbarButton
+        {/* <ToolbarButton
           onClick={() => {
             const url = prompt(
               'Enter image URL (or use Attach File button for local images)'
@@ -537,7 +537,7 @@ export function RichTextEditor({ value = '', onChange }: RichTextEditorProps) {
               d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
             />
           </svg>
-        </ToolbarButton>
+        </ToolbarButton> */}
       </div>
 
       {/* Editor Content */}
