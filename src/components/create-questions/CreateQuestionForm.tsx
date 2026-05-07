@@ -12,6 +12,7 @@ import { QuestionFormValues, Difficulty } from '@/types/createQuestion';
 import { RichTextEditor } from './RichTextEditor';
 import { toast } from 'sonner';
 import { useCreateQuestionMutation } from '@/app/redux/api/createQuestionsApi';
+import Image from 'next/image';
 
 const TOPICS = [
   { value: 'Anesthesia_Medicine', label: 'Anesthesia / Medicine' },
@@ -91,6 +92,7 @@ export default function CreateQuestionForm() {
       reset();
       setEditorKey(prev => prev + 1);
       setAttachedFile(null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error?.data?.message || 'Failed to create question');
     }
@@ -219,6 +221,48 @@ export default function CreateQuestionForm() {
         onChange={v => setValue('explanation', v)}
       />
 
+      {/* Explanation Image Upload */}
+      <div className="space-y-3">
+        <h2 className="text-lg md:text-[24px] font-bold text-[#01281e]">
+          Explanation Image
+        </h2>
+
+        <div className="flex items-center gap-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => fileInputRef.current?.click()}
+            className="border-[#01503b] text-[#01503b] cursor-pointer hover:bg-[#01503b]/10"
+          >
+            Upload Image
+          </Button>
+
+          {attachedFile && (
+            <span className="text-sm text-green-600">{attachedFile.name}</span>
+          )}
+        </div>
+
+        {attachedFile && (
+          <div className="w-full max-w-md overflow-hidden rounded-xl border bg-white p-2">
+            <Image
+              width={500}
+              height={500}
+              src={URL.createObjectURL(attachedFile)}
+              alt="Explanation Preview"
+              className="h-auto w-full rounded-lg object-cover"
+            />
+          </div>
+        )}
+
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          className="hidden"
+          onChange={handleFileChange}
+        />
+      </div>
+
       {/* Why incorrect */}
       <h2 className="text-lg md:text-[24px] font-bold text-[#01281e]">
         Why The Other Options Are Incorrect
@@ -264,7 +308,7 @@ export default function CreateQuestionForm() {
       />
 
       {/* File Upload */}
-      {attachedFile && (
+      {/* {attachedFile && (
         <div className="text-green-600">Attached: {attachedFile.name}</div>
       )}
 
@@ -274,7 +318,7 @@ export default function CreateQuestionForm() {
         ref={fileInputRef}
         className="hidden"
         onChange={handleFileChange}
-      />
+      /> */}
 
       {/* Submit */}
       <button

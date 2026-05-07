@@ -175,7 +175,7 @@
 
 import React from 'react';
 import { Progress } from '@/components/ui/progress';
-import { ArrowRight, Mail, SkipForward } from 'lucide-react';
+import { ArrowRight, Link, Mail, SkipForward } from 'lucide-react';
 import { TopbarCheckbox } from '../topbarCheckbox';
 
 import Flag from '../reusable/icons/Flag';
@@ -226,6 +226,11 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
   const currentUser = useAppSelector(state => state.auth.user);
   const dispatch = useAppDispatch();
   const router = useRouter();
+
+  const skipTest = () => {
+    
+    router.push(`/dashboard/user/incomplete-test`);
+  }
 
   // const handleFeedback = async () => {
   //   if (!currentUser || isStartingChat) return;
@@ -333,16 +338,18 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
             <ZoomOutIcon className="md:size-8 size-4" />
             Zoom Out
           </button>
-
-          {/* <button
-            onClick={onSkip}
+         
+          <button
+            onClick={skipTest}
             className="text-white cursor-pointer p-2 gap-2 flex flex-col items-center"
           >
             <SkipForward className="md:size-8 size-4" />
             Skip Test
-          </button> */}
+          </button>
+          
         </div>
       </div>
+     
 
       <div className="flex gap-3 mx-2">
         <button

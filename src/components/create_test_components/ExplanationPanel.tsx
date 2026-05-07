@@ -6,12 +6,6 @@ import CancelIcon from '../reusable/icons/CancelIcon';
 import PimpingIcon from '../reusable/icons/PimpingIcon';
 import MemoryIcon from '../reusable/icons/MemoryIcon';
 
-// Function to convert HTML to plain text
-const htmlToPlainText = (html: string) => {
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-  return doc.body.textContent || '';
-};
-
 interface Explanation {
   main: string;
   image?: string | null;
@@ -27,14 +21,27 @@ interface ExplanationPanelProps {
   onShowQuestion: () => void;
 }
 
+const richTextClass = `
+  text-gray-700 text-[16px] md:text-[18px] leading-relaxed w-full
+  [&_p]:mb-3
+  [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:space-y-2 [&_ul]:mb-3
+  [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:space-y-2 [&_ol]:mb-3
+  [&_li]:pl-1
+  [&_strong]:font-bold [&_strong]:text-[#01281e]
+  [&_b]:font-bold [&_b]:text-[#01281e]
+  [&_em]:italic
+`;
+
 const ExplanationPanel: React.FC<ExplanationPanelProps> = ({
   quizDetails,
   isQuestionHidden,
   onShowQuestion,
 }) => {
+  const explanation = quizDetails?.explanation;
+
   return (
-    <div className="p-6 md:my-[32px] bg-[#f9f9f5] shadow-lg rounded-[16px] border font-[manrope] md:max-h-[1521px] overflow-x-hidden custom-scrollbar">
-      <div className="flex items-center justify-between mb-4">
+    <div className="p-4 md:p-6 md:my-[32px] bg-[#f9f9f5] shadow-lg rounded-[16px] border font-[manrope] md:max-h-[1521px] overflow-x-hidden custom-scrollbar">
+      <div className="flex items-center justify-between mb-4 gap-4">
         <h2 className="text-lg font-bold text-[#01281e] flex items-center gap-2">
           <ExplainIcon /> Explanation:
         </h2>
@@ -50,77 +57,107 @@ const ExplanationPanel: React.FC<ExplanationPanelProps> = ({
       </div>
 
       {/* Explanation */}
-      {/* <p className="text-gray-700 md:text-[18px] leading-relaxed whitespace-pre-line w-full">
-        {htmlToPlainText(quizDetails.explanation.main || '')}
-      </p> */}
-
       <div
-        className="text-gray-700 md:text-[18px] leading-relaxed whitespace-pre-line w-full"
+        className={richTextClass}
         dangerouslySetInnerHTML={{
-          __html: quizDetails.explanation.main || '',
+          __html: explanation?.main || '',
         }}
       />
 
       {/* Explanation Image */}
-      {quizDetails.explanation.image && (
+      {explanation?.image && (
         <div className="my-4">
           <Image
             src={
-              quizDetails?.explanation?.image.startsWith('http')
-                ? quizDetails.explanation.image
-                : `/images/${quizDetails.explanation.image}`
+              explanation.image.startsWith('http')
+                ? explanation.image
+                : `/images/${explanation.image}`
             }
-            alt="Explanation Image"
+            alt="Explanation"
             width={500}
             height={500}
-            className="rounded-md"
+            className="rounded-md w-full max-w-[500px] h-auto object-contain"
+            unoptimized
           />
         </div>
       )}
 
       {/* Why the Other Options Are Incorrect */}
-      <h3 className="text-[20px] font-semibold text-[#01281e] mt-6 mb-2 flex items-center gap-2">
+      <h3 className="text-[18px] md:text-[20px] font-semibold text-[#01281e] mt-6 mb-2 flex items-center gap-2">
         <CancelIcon /> Why the Other Options Are Incorrect:
       </h3>
 
-      <div className="space-y-3 whitespace-pre-line w-full">
-        {quizDetails?.explanation?.whyIncorrect &&
-          quizDetails.explanation.whyIncorrect.map((item, index) => (
+      <div className="space-y-3 w-full">
+        {explanation?.whyIncorrect?.map((item, index) => (
+          <div key={index} className={richTextClass}>
+            {item.option && (
+              <strong className="text-[#01281e]">{item.option}: </strong>
+            )}
+
             <div
-              key={index}
-              className="text-[18px] text-gray-700 whitespace-pre-line"
-            >
-              <strong>{item.option}: </strong>
-              {htmlToPlainText(item.text || '')}
-            </div>
-          ))}
+              dangerouslySetInnerHTML={{
+                __html: item.text || '',
+              }}
+            />
+          </div>
+        ))}
       </div>
 
       {/* Pimping Point */}
-      <h3 className="text-md font-semibold text-[#01281e] mt-6 mb-1 flex items-center gap-2 text-[18px]">
+      <h3 className="text-[18px] font-semibold text-[#01281e] mt-6 mb-1 flex items-center gap-2">
         <PimpingIcon /> Pimping Point:
       </h3>
-      <p className="text-[#01503b] text-[18px] whitespace-pre-line">
-        {htmlToPlainText(quizDetails.explanation.pinningPoint || '')}
-      </p>
+
+      <div
+        className={`
+          ${richTextClass}
+          text-[#01503b]
+          [&_strong]:text-[#01503b]
+          [&_b]:text-[#01503b]
+        `}
+        dangerouslySetInnerHTML={{
+          __html: explanation?.pinningPoint || '',
+        }}
+      />
 
       {/* Memory Trick */}
-      <h3 className="text-md font-semibold text-[#01281e] mt-6 mb-1 flex items-center gap-2 text-[18px]">
+      <h3 className="text-[18px] font-semibold text-[#01281e] mt-6 mb-1 flex items-center gap-2">
         <MemoryIcon /> Memory trick:
       </h3>
-      <p className="text-[#01281e] font-semibold leading-[150%] text-[18px]">
-        {htmlToPlainText(quizDetails.explanation.memoryTrick || '')}
-      </p>
+
+      <div
+        className={`
+          ${richTextClass}
+          text-[#01281e] font-semibold
+          [&_strong]:text-[#01281e]
+          [&_b]:text-[#01281e]
+        `}
+        dangerouslySetInnerHTML={{
+          __html: explanation?.memoryTrick || '',
+        }}
+      />
 
       {/* References */}
-      <h3 className="text-md font-semibold text-[#01281e] mt-6 mb-1 flex items-center gap-2 text-[18px]">
-        <BookIcon /> Referances:
+      <h3 className="text-[18px] font-semibold text-[#01281e] mt-6 mb-1 flex items-center gap-2">
+        <BookIcon /> References:
       </h3>
-      <ul className="list-none pl-6 text-[#01281e] text-[18px] font-semibold space-y-1">
-        {quizDetails.explanation.referance.map((ref: string, index: number) => (
-          <li key={index}>{htmlToPlainText(ref || '')}</li>
+
+      <div className="space-y-2">
+        {explanation?.referance?.map((ref: string, index: number) => (
+          <div
+            key={index}
+            className={`
+              ${richTextClass}
+              text-[#01281e] font-semibold
+              [&_strong]:text-[#01281e]
+              [&_b]:text-[#01281e]
+            `}
+            dangerouslySetInnerHTML={{
+              __html: ref || '',
+            }}
+          />
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

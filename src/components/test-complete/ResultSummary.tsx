@@ -257,7 +257,7 @@ export function ResultSummary({
   const [sendMessage] = useSendMessageMutation();
 
   const [testCardData, setTestCardData] = useState<TestCardData | null>(null);
-  console.log(testCardData, 'card data======================')
+  // console.log(testCardData, 'card data======================')
 
   useEffect(() => {
     gsap.fromTo(
@@ -329,18 +329,18 @@ export function ResultSummary({
               onClick={() =>
                 router.push(`/dashboard/user/test-review/${testId}`)
               }
-              className="bg-[#b79e6b] text-white cursor-pointer px-6 py-2 rounded-md"
+              className="bg-[#b79e6b] text-white cursor-pointer px-6 py-2 md:px-12 md:py-5 rounded-md"
             >
               Review Test
             </button>
 
-            <button
+            {/* <button
               onClick={handleShare}
               className="bg-white text-[#01281e] cursor-pointer px-6 py-2 rounded-md flex items-center gap-2"
             >
               Share
               <ShareIconBlack />
-            </button>
+            </button> */}
           </div>
 
           <div className="flex justify-center items-center">
