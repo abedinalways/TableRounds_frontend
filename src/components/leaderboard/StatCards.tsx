@@ -29,38 +29,40 @@ export default function StatCards() {
   }
 
   const stats = data?.data.leaderboard;
-  // console.log(stats, '++++++++++++++++++++++wefyhweoifwefo');
+  console.log(stats, '++++++++++++++++++++++wefyhweoifwefo');
+  const statData= data?.data.user_stats;
+  console.log(statData, 'OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOd')
 
-  const userStats = stats.find((stat: any) => stat.user.id === userId);
-  console.log(userStats, '-----------------++++++++++++++++++++++++++')
-  console.log(userStats, 'user stats');
+  // const userStats = stats.find((stat: any) => stat.user.id === userId);
+  // console.log(userStats, '-----------------++++++++++++++++++++++++++')
+  // console.log(userStats, 'user stats');
   
   const cards = [
     {
       id: 'rank',
       title: 'Your Rank',
-      value: String(userStats?.rank || 'N/A'),
+      value: String(statData?.rank || 'N/A'),
       subtitle: 'Overall position',
       icon: '/images/dashboard/statistics/img01.png',
     },
     {
       id: 'accuracy',
       title: 'Accuracy',
-      value: `${userStats?.accuracy || 'N/A'}%`,
+      value: `${statData?.accuracy || 'N/A'}%`,
       subtitle: 'Correct answers',
       icon: '/images/dashboard/statistics/img01.png',
     },
     {
-      id: 'avg_score',
-      title: 'Avg Score',
-      value: `${userStats?.avg_score || '0'}%`,
-      subtitle: 'Average performance',
+      id: 'current_streak',
+      title: 'Current Streak',
+      value: `${statData?.current_streak || '0'}`,
+      subtitle: 'Days Active',
       icon: '/images/dashboard/statistics/img01.png',
     },
     {
       id: 'tests',
       title: 'Tests Completed',
-      value: String(userStats?.tests_completed || 'N/A'),
+      value: String(statData?.tests_completed || 'N/A'),
       subtitle: 'Total attempts',
       icon: '/images/dashboard/statistics/img01.png',
     },
