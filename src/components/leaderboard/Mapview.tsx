@@ -9,8 +9,9 @@ import {
 } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import gsap from 'gsap';
+import { Country } from 'country-state-city';
 import { useGetMapDataQuery } from '@/app/redux/api/mapApi';
 
 const iconProto = L.Icon.Default.prototype as { _getIconUrl?: () => string };
@@ -23,93 +24,9 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
-// Country name/code → { lat, lng, displayName } lookup
-const COUNTRY_COORDS: Record<
-  string,
-  { lat: number; lng: number; displayName: string }
-> = {
-  // Common country codes
-  AF: { lat: 33.9391, lng: 67.71, displayName: 'Afghanistan' },
-  AL: { lat: 41.1533, lng: 20.1683, displayName: 'Albania' },
-  DZ: { lat: 28.0339, lng: 1.6596, displayName: 'Algeria' },
-  AR: { lat: -38.4161, lng: -63.6167, displayName: 'Argentina' },
-  AU: { lat: -25.2744, lng: 133.7751, displayName: 'Australia' },
-  AT: { lat: 47.5162, lng: 14.5501, displayName: 'Austria' },
-  BD: { lat: 23.685, lng: 90.3563, displayName: 'Bangladesh' },
-  BE: { lat: 50.5039, lng: 4.4699, displayName: 'Belgium' },
-  BR: { lat: -14.235, lng: -51.9253, displayName: 'Brazil' },
-  CA: { lat: 56.1304, lng: -106.3468, displayName: 'Canada' },
-  CL: { lat: -35.6751, lng: -71.543, displayName: 'Chile' },
-  CN: { lat: 35.8617, lng: 104.1954, displayName: 'China' },
-  CO: { lat: 4.5709, lng: -74.2973, displayName: 'Colombia' },
-  HR: { lat: 45.1, lng: 15.2, displayName: 'Croatia' },
-  CZ: { lat: 49.8175, lng: 15.473, displayName: 'Czech Republic' },
-  DK: { lat: 56.2639, lng: 9.5018, displayName: 'Denmark' },
-  EG: { lat: 26.8206, lng: 30.8025, displayName: 'Egypt' },
-  FI: { lat: 61.9241, lng: 25.7482, displayName: 'Finland' },
-  FR: { lat: 46.2276, lng: 2.2137, displayName: 'France' },
-  DE: { lat: 51.1657, lng: 10.4515, displayName: 'Germany' },
-  GH: { lat: 7.9465, lng: -1.0232, displayName: 'Ghana' },
-  GR: { lat: 39.0742, lng: 21.8243, displayName: 'Greece' },
-  HU: { lat: 47.1625, lng: 19.5033, displayName: 'Hungary' },
-  IN: { lat: 20.5937, lng: 78.9629, displayName: 'India' },
-  ID: { lat: -0.7893, lng: 113.9213, displayName: 'Indonesia' },
-  IE: { lat: 53.4129, lng: -8.2439, displayName: 'Ireland' },
-  IL: { lat: 31.0461, lng: 34.8516, displayName: 'Israel' },
-  IT: { lat: 41.8719, lng: 12.5674, displayName: 'Italy' },
-  JP: { lat: 36.2048, lng: 138.2529, displayName: 'Japan' },
-  KE: { lat: -0.0236, lng: 37.9062, displayName: 'Kenya' },
-  KR: { lat: 35.9078, lng: 127.7669, displayName: 'South Korea' },
-  MY: { lat: 4.2105, lng: 101.9758, displayName: 'Malaysia' },
-  MX: { lat: 23.6345, lng: -102.5528, displayName: 'Mexico' },
-  MA: { lat: 31.7917, lng: -7.0926, displayName: 'Morocco' },
-  NL: { lat: 52.1326, lng: 5.2913, displayName: 'Netherlands' },
-  NZ: { lat: -40.9006, lng: 174.886, displayName: 'New Zealand' },
-  NG: { lat: 9.082, lng: 8.6753, displayName: 'Nigeria' },
-  NO: { lat: 60.472, lng: 8.4689, displayName: 'Norway' },
-  PK: { lat: 30.3753, lng: 69.3451, displayName: 'Pakistan' },
-  PE: { lat: -9.19, lng: -75.0152, displayName: 'Peru' },
-  PH: { lat: 12.8797, lng: 121.774, displayName: 'Philippines' },
-  PL: { lat: 51.9194, lng: 19.1451, displayName: 'Poland' },
-  PT: { lat: 39.3999, lng: -8.2245, displayName: 'Portugal' },
-  RO: { lat: 45.9432, lng: 24.9668, displayName: 'Romania' },
-  RU: { lat: 61.524, lng: 105.3188, displayName: 'Russia' },
-  SA: { lat: 23.8859, lng: 45.0792, displayName: 'Saudi Arabia' },
-  SG: { lat: 1.3521, lng: 103.8198, displayName: 'Singapore' },
-  ZA: { lat: -30.5595, lng: 22.9375, displayName: 'South Africa' },
-  ES: { lat: 40.4637, lng: -3.7492, displayName: 'Spain' },
-  SE: { lat: 60.1282, lng: 18.6435, displayName: 'Sweden' },
-  CH: { lat: 46.8182, lng: 8.2275, displayName: 'Switzerland' },
-  TW: { lat: 23.6978, lng: 120.9605, displayName: 'Taiwan' },
-  TH: { lat: 15.87, lng: 100.9925, displayName: 'Thailand' },
-  TR: { lat: 38.9637, lng: 35.2433, displayName: 'Turkey' },
-  UA: { lat: 48.3794, lng: 31.1656, displayName: 'Ukraine' },
-  AE: { lat: 23.4241, lng: 53.8478, displayName: 'UAE' },
-  GB: { lat: 55.3781, lng: -3.436, displayName: 'United Kingdom' },
-  US: { lat: 37.0902, lng: -95.7129, displayName: 'United States' },
-  VN: { lat: 14.0583, lng: 108.2772, displayName: 'Vietnam' },
-  // Full country names (as returned by some APIs)
-  'United States': {
-    lat: 37.0902,
-    lng: -95.7129,
-    displayName: 'United States',
-  },
-  'United Kingdom': {
-    lat: 55.3781,
-    lng: -3.436,
-    displayName: 'United Kingdom',
-  },
-  Algeria: { lat: 28.0339, lng: 1.6596, displayName: 'Algeria' },
-  Australia: { lat: -25.2744, lng: 133.7751, displayName: 'Australia' },
-  Brazil: { lat: -14.235, lng: -51.9253, displayName: 'Brazil' },
-  Canada: { lat: 56.1304, lng: -106.3468, displayName: 'Canada' },
-  China: { lat: 35.8617, lng: 104.1954, displayName: 'China' },
-  France: { lat: 46.2276, lng: 2.2137, displayName: 'France' },
-  Germany: { lat: 51.1657, lng: 10.4515, displayName: 'Germany' },
-  India: { lat: 20.5937, lng: 78.9629, displayName: 'India' },
-  Japan: { lat: 36.2048, lng: 138.2529, displayName: 'Japan' },
-  Nigeria: { lat: 9.082, lng: 8.6753, displayName: 'Nigeria' },
-  Russia: { lat: 61.524, lng: 105.3188, displayName: 'Russia' },
+type ApiMapItem = {
+  country: string;
+  count: number | string;
 };
 
 type MappedLocation = {
@@ -120,7 +37,162 @@ type MappedLocation = {
   lng: number;
 };
 
-function MapControls() {
+type CountryLocation = {
+  isoCode: string;
+  name: string;
+  lat: number;
+  lng: number;
+};
+
+const normalizeCountryText = (value?: string | null) => {
+  if (!value) return '';
+
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/['’]/g, '')
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+};
+
+const COUNTRY_ALIASES: Record<string, string> = {
+  usa: 'US',
+  america: 'US',
+  'united states': 'US',
+  'united states of america': 'US',
+
+  uk: 'GB',
+  'u k': 'GB',
+  britain: 'GB',
+  'great britain': 'GB',
+  england: 'GB',
+  'united kingdom': 'GB',
+
+  uae: 'AE',
+  emirates: 'AE',
+  'united arab emirates': 'AE',
+
+  korea: 'KR',
+  'south korea': 'KR',
+  'republic of korea': 'KR',
+  'korea republic of': 'KR',
+  'korea south': 'KR',
+
+  'north korea': 'KP',
+  'democratic peoples republic of korea': 'KP',
+
+  russia: 'RU',
+  vietnam: 'VN',
+  'viet nam': 'VN',
+
+  iran: 'IR',
+  'iran islamic republic of': 'IR',
+
+  syria: 'SY',
+  'syrian arab republic': 'SY',
+
+  tanzania: 'TZ',
+  'tanzania united republic of': 'TZ',
+
+  moldova: 'MD',
+  'moldova republic of': 'MD',
+
+  bolivia: 'BO',
+  'bolivia plurinational state of': 'BO',
+
+  venezuela: 'VE',
+  'venezuela bolivarian republic of': 'VE',
+
+  laos: 'LA',
+  'lao peoples democratic republic': 'LA',
+
+  brunei: 'BN',
+  'brunei darussalam': 'BN',
+
+  'czech republic': 'CZ',
+  czechia: 'CZ',
+};
+
+const COUNTRY_INDEX: Record<string, CountryLocation> = (() => {
+  const index: Record<string, CountryLocation> = {};
+
+  Country.getAllCountries().forEach(country => {
+    const lat = Number(country.latitude);
+    const lng = Number(country.longitude);
+
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+
+    const location: CountryLocation = {
+      isoCode: country.isoCode,
+      name: country.name,
+      lat,
+      lng,
+    };
+
+    index[normalizeCountryText(country.isoCode)] = location;
+    index[normalizeCountryText(country.name)] = location;
+  });
+
+  Object.entries(COUNTRY_ALIASES).forEach(([alias, isoCode]) => {
+    const country = Country.getCountryByCode(isoCode);
+
+    if (!country) return;
+
+    const lat = Number(country.latitude);
+    const lng = Number(country.longitude);
+
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+
+    index[normalizeCountryText(alias)] = {
+      isoCode: country.isoCode,
+      name: country.name,
+      lat,
+      lng,
+    };
+  });
+
+  return index;
+})();
+
+const resolveCountryLocation = (
+  countryValue?: string | null,
+): CountryLocation | null => {
+  const normalizedCountry = normalizeCountryText(countryValue);
+
+  if (!normalizedCountry) return null;
+
+  const aliasIsoCode = COUNTRY_ALIASES[normalizedCountry];
+
+  if (aliasIsoCode) {
+    const country = Country.getCountryByCode(aliasIsoCode);
+
+    if (!country) return null;
+
+    const lat = Number(country.latitude);
+    const lng = Number(country.longitude);
+
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+
+    return {
+      isoCode: country.isoCode,
+      name: country.name,
+      lat,
+      lng,
+    };
+  }
+
+  return COUNTRY_INDEX[normalizedCountry] ?? null;
+};
+
+function MapControls({
+  onRefresh,
+  isRefreshing,
+}: {
+  onRefresh: () => void;
+  isRefreshing: boolean;
+}) {
   const map = useMap();
   const targetRef = useRef<HTMLButtonElement>(null);
   const [isLocating, setIsLocating] = useState(false);
@@ -139,6 +211,7 @@ function MapControls() {
 
   const handleRecenter = () => {
     setIsLocating(true);
+
     if (targetRef.current) {
       gsap.to(targetRef.current, {
         rotation: 360,
@@ -146,11 +219,17 @@ function MapControls() {
         ease: 'power2.out',
       });
     }
+
     map.flyTo([20, 0], 2, { duration: 1.5 });
     setTimeout(() => setIsLocating(false), 1500);
   };
 
-  const buttonStyle = {
+  const handleRefresh = () => {
+    map.invalidateSize();
+    onRefresh();
+  };
+
+  const buttonStyle: React.CSSProperties = {
     width: '44px',
     height: '44px',
     borderRadius: '10px',
@@ -193,6 +272,7 @@ function MapControls() {
         ref={targetRef}
         onClick={handleRecenter}
         disabled={isLocating}
+        title="Recenter map"
         style={{ ...buttonStyle, cursor: isLocating ? 'wait' : 'pointer' }}
         onMouseEnter={e => !isLocating && handleHover(e, true)}
         onMouseLeave={e => !isLocating && handleHover(e, false)}
@@ -216,6 +296,7 @@ function MapControls() {
 
       <button
         onClick={() => map.zoomIn()}
+        title="Zoom in"
         style={buttonStyle}
         onMouseEnter={e => handleHover(e, true)}
         onMouseLeave={e => handleHover(e, false)}
@@ -237,6 +318,7 @@ function MapControls() {
 
       <button
         onClick={() => map.zoomOut()}
+        title="Zoom out"
         style={buttonStyle}
         onMouseEnter={e => handleHover(e, true)}
         onMouseLeave={e => handleHover(e, false)}
@@ -256,10 +338,16 @@ function MapControls() {
       </button>
 
       <button
-        onClick={() => map.invalidateSize()}
-        style={buttonStyle}
-        onMouseEnter={e => handleHover(e, true)}
-        onMouseLeave={e => handleHover(e, false)}
+        onClick={handleRefresh}
+        disabled={isRefreshing}
+        title="Refresh map data"
+        style={{
+          ...buttonStyle,
+          cursor: isRefreshing ? 'wait' : 'pointer',
+          opacity: isRefreshing ? 0.7 : 1,
+        }}
+        onMouseEnter={e => !isRefreshing && handleHover(e, true)}
+        onMouseLeave={e => !isRefreshing && handleHover(e, false)}
       >
         <svg
           width="18"
@@ -269,7 +357,8 @@ function MapControls() {
           stroke="currentColor"
           strokeWidth="2"
         >
-          <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+          <path d="M21 12a9 9 0 1 1-2.64-6.36" />
+          <path d="M21 3v6h-6" />
         </svg>
       </button>
     </div>
@@ -277,62 +366,78 @@ function MapControls() {
 }
 
 export default function Mapview() {
-  const markerRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const { data, isLoading } = useGetMapDataQuery();
+  const markerRefs = useRef<(SVGElement | null)[]>([]);
 
-  // Map API response to locations with coordinates
-  const locations: MappedLocation[] = (data?.data ?? []).reduce<
-    MappedLocation[]
-  >((acc, item) => {
-    const coords = COUNTRY_COORDS[item.country];
-    if (coords) {
-      acc.push({
-        country: item.country,
-        displayName: coords.displayName,
-        count: item.count,
-        lat: coords.lat,
-        lng: coords.lng,
-      });
-    }
-    return acc;
-  }, []);
+  const { data, isLoading, isFetching, refetch } = useGetMapDataQuery(
+    undefined,
+    {
+      refetchOnMountOrArgChange: true,
+      refetchOnFocus: true,
+      refetchOnReconnect: true,
+    },
+  );
+
+  const locations: MappedLocation[] = useMemo(() => {
+    const groupedLocations = new Map<string, MappedLocation>();
+
+    const apiItems = (data?.data ?? []) as ApiMapItem[];
+
+    apiItems.forEach(item => {
+      const resolvedCountry = resolveCountryLocation(item.country);
+
+      if (!resolvedCountry) {
+        console.warn('[Mapview] Unknown country value:', item.country);
+        return;
+      }
+
+      const count = Number(item.count) || 0;
+      const existingLocation = groupedLocations.get(resolvedCountry.isoCode);
+
+      if (existingLocation) {
+        existingLocation.count += count;
+      } else {
+        groupedLocations.set(resolvedCountry.isoCode, {
+          country: resolvedCountry.isoCode,
+          displayName: resolvedCountry.name,
+          count,
+          lat: resolvedCountry.lat,
+          lng: resolvedCountry.lng,
+        });
+      }
+    });
+
+    return Array.from(groupedLocations.values());
+  }, [data]);
+
+  useEffect(() => {
+    markerRefs.current = markerRefs.current.slice(0, locations.length);
+  }, [locations.length]);
 
   useEffect(() => {
     const style = document.createElement('style');
-    style.innerHTML = `
-    .leaflet-container {
-      background: #f5f7f6 !important;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-    .leaflet-tile-pane {
-      filter: brightness(1.05) saturate(0.85) hue-rotate(-5deg);
-    }
-    .leaflet-popup-content-wrapper {
-      border-radius: 12px !important;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important;
-      border: 1px solid rgba(0,0,0,0.05);
-    }
-    .leaflet-popup-tip {
-      background: white !important;
-    }
-  `;
-    document.head.appendChild(style);
 
-    markerRefs.current.forEach((ref, index) => {
-      if (ref) {
-        gsap.fromTo(
-          ref,
-          { scale: 0, opacity: 0 },
-          {
-            scale: 1,
-            opacity: 1,
-            duration: 0.6,
-            delay: index * 0.15,
-            ease: 'back.out(1.7)',
-          },
-        );
+    style.innerHTML = `
+      .leaflet-container {
+        background: #f5f7f6 !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       }
-    });
+
+      .leaflet-tile-pane {
+        filter: brightness(1.05) saturate(0.85) hue-rotate(-5deg);
+      }
+
+      .leaflet-popup-content-wrapper {
+        border-radius: 12px !important;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important;
+        border: 1px solid rgba(0,0,0,0.05);
+      }
+
+      .leaflet-popup-tip {
+        background: white !important;
+      }
+    `;
+
+    document.head.appendChild(style);
 
     return () => {
       if (document.head.contains(style)) {
@@ -341,7 +446,6 @@ export default function Mapview() {
     };
   }, []);
 
-  // Re-animate markers when API data loads
   useEffect(() => {
     if (!isLoading && locations.length > 0) {
       markerRefs.current.forEach((ref, index) => {
@@ -360,7 +464,7 @@ export default function Mapview() {
         }
       });
     }
-  }, [isLoading, locations.length]);
+  }, [isLoading, locations]);
 
   return (
     <div
@@ -385,26 +489,25 @@ export default function Mapview() {
           attribution="&copy; OpenStreetMap, &copy; CARTO"
         />
 
-        <MapControls />
+        <MapControls onRefresh={refetch} isRefreshing={isFetching} />
 
         {locations.map((loc, index) => (
           <CircleMarker
             key={loc.country}
             center={[loc.lat, loc.lng]}
-            radius={Math.sqrt(loc.count) * 12}
+            radius={Math.max(8, Math.min(45, Math.sqrt(loc.count) * 12))}
             pathOptions={{
               color: '#32CD32',
               fillColor: '#7FFF00',
-              fillOpacity: 0.70,
+              fillOpacity: 0.7,
               weight: 1,
             }}
             eventHandlers={{
               add: e => {
-                markerRefs.current[index] =
-                  e.target.getElement() as HTMLDivElement;
+                markerRefs.current[index] = e.target.getElement() as SVGElement;
               },
               mouseover: e => e.target.setStyle({ fillOpacity: 0.3 }),
-              mouseout: e => e.target.setStyle({ fillOpacity: 0.15 }),
+              mouseout: e => e.target.setStyle({ fillOpacity: 0.7 }),
             }}
           >
             <Popup>
@@ -427,6 +530,7 @@ export default function Mapview() {
                 >
                   {loc.displayName}
                 </p>
+
                 <p
                   style={{
                     fontSize: '13px',
@@ -445,4 +549,3 @@ export default function Mapview() {
     </div>
   );
 }
-
