@@ -173,6 +173,7 @@ export default function ManageProfile({
 
       await onProfileUpdated?.();
       setImageFile(null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error('Profile update failed:', err);
       toast.error(err?.data?.message || 'Update failed');
@@ -201,6 +202,7 @@ export default function ManageProfile({
   );
 
   const formattedData =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     connectionsData?.data?.map((item: any) => ({
       id: item.id,
       name: item.name,

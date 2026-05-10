@@ -1,5 +1,3 @@
-
-
 import { baseApi } from './baseApi';
 
 interface QuestionCountData {
@@ -22,7 +20,6 @@ interface QuestionCountResponse {
 interface MarkedQuestionOption {
   id: string;
   option_text: string;
- 
 }
 
 interface MarkedQuestionItem {
@@ -53,6 +50,7 @@ export const testSessionApi = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
+      invalidatesTags: ['QuestionCount'],
     }),
 
     skipQuestion: builder.mutation({
@@ -61,6 +59,7 @@ export const testSessionApi = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
+      invalidatesTags: ['QuestionCount'],
     }),
 
     toggleMark: builder.mutation({
@@ -69,20 +68,21 @@ export const testSessionApi = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['MarkedQuestions'],
+      invalidatesTags: ['MarkedQuestions', 'QuestionCount'],
     }),
 
     completeTest: builder.mutation({
       query: (testId: string) => ({
-        url: `/test/complete`,
+        url: '/test/complete',
         method: 'PATCH',
         params: { test_id: testId },
       }),
+      invalidatesTags: ['QuestionCount'],
     }),
 
     getTestResult: builder.query({
       query: test_id => ({
-        url: `/test/result`,
+        url: '/test/result',
         method: 'GET',
         params: { test_id },
       }),
@@ -100,6 +100,7 @@ export const testSessionApi = baseApi.injectEndpoints({
         url: '/test/question-count',
         method: 'GET',
       }),
+      providesTags: ['QuestionCount'],
     }),
 
     getMarkedQuestions: builder.query<GetMarkedQuestionsResponse, void>({

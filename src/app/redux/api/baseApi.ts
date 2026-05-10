@@ -26,6 +26,7 @@ export const baseApi = createApi({
     'Chat',
     'allQuestions',
     'SingleQuestion',
+    'QuestionCount',
     'help',
     'notification',
     'adminNotification',
