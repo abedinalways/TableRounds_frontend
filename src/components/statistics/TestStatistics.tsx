@@ -8,7 +8,7 @@ import Image from 'next/image';
 import CircularProgressData from './CircularProgress';
 import TestStatIcon from '../reusable/icons/TestStatIcon';
 import { useGetStatisticsQuery } from '@/app/redux/api/StatisTicsApi';
-import { link } from 'fs';
+
 import Link from 'next/link';
 import { TestStatisticsSkeleton } from './TestStatisticsSkeleton';
 
@@ -29,8 +29,28 @@ const TestStatistics: React.FC = () => {
       </div>
     );
   }
+  
+  const { tests, performance_by_topic } = data.data;
+  console.log(performance_by_topic, "================wefwef")
+  
+  
+ const topicIcons: Record<string, string> = {
+   Anesthesia_Medicine: '/images/dashboard/statistics/img06.png',
+   Dentoalveolar: '/images/dashboard/statistics/img07.png',
+   Reconstruction: '/images/dashboard/statistics/img12.png',
+   Cancer: '/images/dashboard/statistics/img04.png',
+   Implants: '/images/dashboard/statistics/img11.png',
+   TMJ: '/images/dashboard/statistics/img10.png',
+   Cleft_Craniofacial: '/images/dashboard/statistics/img05.png',
+   Orthognathic: '/images/dashboard/statistics/img02.png',
+   Trauma: '/images/dashboard/statistics/img09.png',
+   Cosmetics: '/images/dashboard/statistics/img03.png',
+   Pathology: '/images/dashboard/statistics/img08.png',
+ };
 
-  const {tests, performance_by_topic } = data.data;
+ const getTopicIcon = (topic: string) => {
+   return topicIcons[topic] || '/images/dashboard/statistics/img12.png';
+ };
 
   /** ---------- TOP STAT CARDS (same design) ---------- */
   const statCards = [
@@ -105,10 +125,11 @@ const TestStatistics: React.FC = () => {
             <CardHeader className="pb-4">
               <CardTitle className="text-[24px] font-bold text-[#444950] flex items-center gap-2">
                 <Image
-                  src="/images/dashboard/statistics.png"
+                  src={getTopicIcon(item.topic)}
                   width={25}
                   height={25}
-                  alt=""
+                  alt={item.topic}
+                  unoptimized
                 />
                 {item.topic.replace('_', '/')}
               </CardTitle>

@@ -91,7 +91,7 @@ function AnimatedProgressCircle({
           <div className=" ">
             {color === 'green' ? (
               <h2 className="font-semibold text-[20px] text-[#01281e]">
-                Average Score
+                Correct
               </h2>
             ) : (
               <h2 className="font-semibold text-[20px] text-[#01281e]">Used</h2>
