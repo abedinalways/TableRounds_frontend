@@ -529,7 +529,7 @@ export function LeaderboardTable() {
                 }))
               }
             >
-              Active Users (≥50 tests)
+              Active Users (≥50% completed)
             </DropdownMenuCheckboxItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -544,7 +544,7 @@ export function LeaderboardTable() {
               <th className="p-3 text-left">Name</th>
               <th className="p-3">% Completed</th>
               <th className="p-3 text-left">Accuracy</th>
-              <th className="p-3">Avg Score</th>
+              <th className="p-3">Correct</th>
               <th className="p-3">Trend</th>
             </tr>
           </thead>
