@@ -29,7 +29,7 @@ export default function IncompleteTestList() {
           </h2>
 
           {/* 🔍 SEARCH */}
-          <div className="w-full max-w-md relative">
+          {/* <div className="w-full max-w-md relative">
             <Search
               className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
               size={18}
@@ -41,7 +41,7 @@ export default function IncompleteTestList() {
               placeholder="Search keywords of questions..."
               className="h-11 w-full pl-10 rounded-[10px] border bg-[#f9fafb]"
             />
-          </div>
+          </div> */}
         </div>
 
         <IncompleteTestTable search={search} />
