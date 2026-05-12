@@ -42,7 +42,7 @@ export function TestStats() {
     },
     {
       id: 'average_score',
-      title: 'Average Score',
+      title: 'Correct',
       value: `${stats.average_score}%`,
       subtitle: 'Overall average',
       icon: '/images/dashboard/test/img05.png',
