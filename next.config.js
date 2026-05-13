@@ -25,6 +25,12 @@ const nextConfig = {
         port: '4001',
         pathname: '/public/storage/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'tablerounds.s3.us-east-1.amazonaws.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };
