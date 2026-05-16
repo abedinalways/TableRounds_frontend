@@ -1,7 +1,6 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
-
 import { Trophy } from 'lucide-react';
 import BagIcon from '../reusable/icons/BagIcon';
 import { ProfileData } from '@/types/myProfile';
@@ -11,18 +10,37 @@ interface Props {
   data: statisticsItems;
 }
 
-export default function QuestionBankSolved({ data }: Props) {
-  const { complete_percentage, correct_percentage, ranking, best_topic } =
-    data || {};
+const formatTopicName = (value?: string) => {
+  if (!value) return 'N/A';
+  return value.replace(/_/g, ' / ');
+};
 
+export default function QuestionBankSolved({ data }: Props) {
+  const {
+    complete_percentage,
+    correct_percentage = 0,
+    ranking,
+    best_topic,
+  } = data || {};
+
+  // --- LINEAR GRADIENT & ARCS MATH UPDATE ---
   const radius = 110;
   const size = 251;
   const center = size / 2;
   const circumference = 2 * Math.PI * radius;
-  const offset = circumference - complete_percentage * circumference;
 
-  // ✅ unique gradient id (important if component renders multiple times)
-  const gradientId = `progressGradient-${complete_percentage}`;
+  // Safely handle if percentage comes as a whole number (75) or a decimal (0.75)
+  const normalizedPercentage =
+    correct_percentage > 1 ? correct_percentage / 100 : correct_percentage;
+
+  // Calculate offset and clamp it between 0 and circumference
+  const offset = Math.max(
+    0,
+    circumference - normalizedPercentage * circumference,
+  );
+
+  // Sanitizing the ID so it doesn't break if correct_percentage contains decimals
+  const gradientId = `progressGradient-${Math.round(normalizedPercentage * 100)}`;
 
   return (
     <Card className="p-6 rounded-2xl border border-[#4444441A] font-[manrope]">
@@ -85,10 +103,10 @@ export default function QuestionBankSolved({ data }: Props) {
           {/* Center Text */}
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span className="text-[32px] md:text-[48px] leading-[130%] font-bold text-[#01503b]">
-              {complete_percentage}%
+              {Math.round(normalizedPercentage * 100)}%
             </span>
             <span className="text-sm md:text-[20px]  text-[#01281e]">
-              Complete
+              Correct
             </span>
           </div>
         </div>
@@ -97,14 +115,23 @@ export default function QuestionBankSolved({ data }: Props) {
         <div className="flex-1 w-full space-y-3">
           <StatRow label="Ranking" value={ranking} />
           <StatRow label="Complete" value={`${complete_percentage}%`} />
-          <StatRow label="Best Topic" value={best_topic?.name} />
+          <StatRow
+            label="Best Topic"
+            value={formatTopicName(best_topic?.name)}
+          />
         </div>
       </div>
     </Card>
   );
 }
 
-function StatRow({ label, value }: { label: string; value: string | number| undefined }) {
+function StatRow({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | number | undefined;
+}) {
   return (
     <div className="flex justify-between items-center bg-[#ecfdf5] px-4 py-3 rounded-lg">
       <span className="text-sm md:text-[16px] text-[#01281e] font-[500px]">

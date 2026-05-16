@@ -307,7 +307,9 @@ opacity-xl font-[manrope]"
                 </Label>
                 <Select
                   value={formData.yearInTraining}
-                  onValueChange={value => handleInputChange('yearInTraining', value)}
+                  onValueChange={value =>
+                    handleInputChange('yearInTraining', value)
+                  }
                 >
                   <SelectTrigger
                     size="xl"
@@ -317,20 +319,14 @@ opacity-xl font-[manrope]"
                   </SelectTrigger>
 
                   <SelectContent className="bg-[#1C765E] border-none text-white">
-                    <SelectItem
-                      className="text-white"
-                      value="Medical Student"
-                    >
-                     Medical Student
+                    <SelectItem className="text-white" value="Medical Student">
+                      Medical Student
                     </SelectItem>
                     <SelectItem className="text-white" value="Dental Student">
                       Dental Student
                     </SelectItem>
-                    <SelectItem
-                      className="text-white"
-                      value="PGY-1"
-                    >
-                     PGY-1
+                    <SelectItem className="text-white" value="PGY-1">
+                      PGY-1
                     </SelectItem>
                     <SelectItem className="text-white" value="PGY-2">
                       PGY-2
@@ -461,7 +457,7 @@ opacity-xl font-[manrope]"
                 </Select>
                 <Input
                   id="location"
-                  placeholder="Enter your city, state, and country"
+                  placeholder="Enter Your City/Town"
                   value={formData.location}
                   onChange={e => handleInputChange('location', e.target.value)}
                   className="mt-6 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"

@@ -287,6 +287,10 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
     return `https://${url}`;
   };
 
+  const hasSocialLink = (url?: string | null) => {
+    return Boolean(url && url.trim() !== '');
+  };
+
   const handleFollowToggle = async (userId: string, isFollowing: boolean) => {
     try {
       await toggleFollow({ userId, isFollowing }).unwrap();
@@ -374,7 +378,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
                 }}
                 className="flex flex-col cursor-pointer hover:opacity-80 transition"
               >
-                <strong>{user.followers}</strong>
+                <strong>{user.following}</strong>
                 <span className="font-normal text-[18px] text-[#62748e]">
                   Followers
                 </span>
@@ -388,7 +392,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
                 }}
                 className="flex flex-col cursor-pointer hover:opacity-80 transition"
               >
-                <strong>{user.following}</strong>
+                <strong>{user.followers}</strong>
                 <span className="font-normal text-[18px] text-[#62748e]">
                   Following
                 </span>
@@ -430,42 +434,54 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
 
         <div className="flex flex-wrap items-center gap-4 md:gap-[24px] text-[#01281e] mt-[24px]">
           <h2 className="font-bold text-[16px] md:text-[20px]">Contact</h2>
-          <Link
-            href={normalizeUrl(user.linkedin)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
-              <Linkedin size={24} />
-            </button>
-          </Link>
-          <Link
-            href={normalizeUrl(user.instagram)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
-              <Instagram size={24} />
-            </button>
-          </Link>
-          <Link
-            href={normalizeUrl(user.facebook)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
-              <Facebook size={24} />
-            </button>
-          </Link>
-          <Link
-            href={normalizeUrl(user.twitter)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
-              <FaXTwitter size={24} />
-            </button>
-          </Link>
+
+          {hasSocialLink(user.linkedin) && (
+            <Link
+              href={normalizeUrl(user.linkedin)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
+                <Linkedin size={24} />
+              </button>
+            </Link>
+          )}
+
+          {hasSocialLink(user.instagram) && (
+            <Link
+              href={normalizeUrl(user.instagram)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
+                <Instagram size={24} />
+              </button>
+            </Link>
+          )}
+
+          {hasSocialLink(user.facebook) && (
+            <Link
+              href={normalizeUrl(user.facebook)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
+                <Facebook size={24} />
+              </button>
+            </Link>
+          )}
+
+          {hasSocialLink(user.twitter) && (
+            <Link
+              href={normalizeUrl(user.twitter)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
+                <FaXTwitter size={24} />
+              </button>
+            </Link>
+          )}
         </div>
       </div>
 

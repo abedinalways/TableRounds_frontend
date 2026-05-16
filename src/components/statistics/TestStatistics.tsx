@@ -52,6 +52,12 @@ const TestStatistics: React.FC = () => {
    return topicIcons[topic] || '/images/dashboard/statistics/img12.png';
  };
 
+  
+  const formatTopicName = (topic: string) => {
+    if (topic === 'Recontraction') return 'Reconstruction';
+
+    return topic.replace(/_/g, '/');
+  };
   /** ---------- TOP STAT CARDS (same design) ---------- */
   const statCards = [
     {
@@ -131,7 +137,7 @@ const TestStatistics: React.FC = () => {
                   alt={item.topic}
                   unoptimized
                 />
-                {item.topic.replace('_', '/')}
+                {formatTopicName(item.topic)}
               </CardTitle>
             </CardHeader>
 

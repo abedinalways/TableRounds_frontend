@@ -262,7 +262,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
                     : 'Submit Answer'}
             </button>
 
-            <button
+            {/* <button
               type="button"
               onClick={async () => {
                 if (isSubmittingTest || isTestSubmitted) return;
@@ -301,7 +301,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
                 : isTestSubmitted
                   ? 'Submitted'
                   : 'Submit Test'}
-            </button>
+            </button> */}
           </div>
         )}
       </CardContent>

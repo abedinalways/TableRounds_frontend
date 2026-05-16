@@ -13,21 +13,29 @@ interface TopicResultCardProps {
   icon: string;
 }
 
+function formatTopicTitle(title: string) {
+  if (!title) return '';
+
+  return title.replace(/_/g, '/');
+}
+
 export function TopicResultCard({
   title,
   total,
   correct,
-  icon
+  icon,
 }: TopicResultCardProps) {
-  const percentage = Math.round((correct / total) * 100);
+  const percentage = total > 0 ? Math.round((correct / total) * 100) : 0;
   const barRef = useRef<HTMLDivElement>(null);
   const percentRef = useRef<HTMLSpanElement>(null);
+
+  const displayTitle = formatTopicTitle(title);
 
   useEffect(() => {
     gsap.fromTo(
       barRef.current,
       { width: '0%' },
-      { width: `${percentage}%`, duration: 1, ease: 'power2.out' }
+      { width: `${percentage}%`, duration: 1, ease: 'power2.out' },
     );
 
     gsap.fromTo(
@@ -37,7 +45,7 @@ export function TopicResultCard({
         innerText: percentage,
         duration: 1,
         snap: { innerText: 1 },
-      }
+      },
     );
   }, [percentage]);
 
@@ -48,9 +56,9 @@ export function TopicResultCard({
           <div className="flex justify-between text-sm font-medium">
             <span className="flex items-center gap-2">
               <span>
-              <Image src={icon} width={28} height={28} alt=''/>
+                <Image src={icon} width={28} height={28} alt="" />
               </span>{' '}
-              {title}{' '}
+              {displayTitle}{' '}
             </span>
           </div>
 

@@ -476,7 +476,7 @@ export default function ManageProfile({
               Location <span className="text-red-600">*</span>
             </Label>
             <Input
-              placeholder="Enter your city, state, and country"
+              placeholder="Enter Your City/Town"
               {...register('address')}
               className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
             />

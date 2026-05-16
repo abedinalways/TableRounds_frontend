@@ -198,7 +198,7 @@ export function LeaderboardTable() {
                   <Input
                     autoFocus
                     type="text"
-                    placeholder="Search by name, institution, or location"
+                    placeholder="Search by name or institution"
                     value={searchQuery}
                     onChange={e =>
                       updateParam('search', e.target.value || null)
@@ -215,7 +215,7 @@ export function LeaderboardTable() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <Input
               type="text"
-              placeholder="Search by name, institution, or location"
+              placeholder="Search by name or institution"
               value={searchQuery}
               onChange={e => updateParam('search', e.target.value || null)}
               className="pl-10 bg-[#f7f7f3] md:w-[607px]"
@@ -272,7 +272,7 @@ export function LeaderboardTable() {
               <th className="p-3 text-left">Name</th>
               <th className="p-3">Completed</th>
               <th className="p-3 text-left">Accuracy</th>
-              <th className="p-3">Correct</th>
+              {/* <th className="p-3">Correct</th> */}
               <th className="p-3">Trend</th>
             </tr>
           </thead>
@@ -325,7 +325,7 @@ export function LeaderboardTable() {
                     <span className="text-xs">{row.accuracy}%</span>
                     <LeaderboardProgress value={row.accuracy} />
                   </td>
-                  <td className="p-3 text-center">{row.avg_score}%</td>
+                  {/* <td className="p-3 text-center">{row.avg_score}%</td> */}
                   <td className="p-3 flex justify-center">
                     {row.trend && row.trend.length > 0 && (
                       <TrendChart data={row.trend} />

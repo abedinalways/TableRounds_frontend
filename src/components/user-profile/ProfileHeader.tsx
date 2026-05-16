@@ -29,6 +29,10 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
 
   const [createConversation] = useCreateAdminConversationMutation();
   const [toggleFollow] = useToggleFollowMutation();
+  
+  const hasSocialLink = (url?: string | null) => {
+    return Boolean(url && url.trim() !== '');
+  };
 
   const normalizeUrl = (url?: string) => {
     if (!url) return '#';
@@ -90,8 +94,8 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
               <h4 className="flex items-center gap-2">
                 <LocationIcon />
                 {user.address}
-                {user?.country && `, ${user.country}`}
                 {user?.state && `, ${user.state}`}
+                {user?.country && `, ${user.country}`}
               </h4>
               <h4 className="flex items-center gap-2">
                 <BagIcon />
@@ -153,42 +157,54 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
         {/* Social links — wired to real URLs */}
         <div className="flex flex-wrap items-center gap-4 md:gap-[24px] text-[#01281e] mt-[24px]">
           <h2 className="font-bold text-[16px] md:text-[20px]">Contact</h2>
-          <Link
-            href={normalizeUrl(user.linkedin)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
-              <Linkedin size={24} />
-            </button>
-          </Link>
-          <Link
-            href={normalizeUrl(user.instagram)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
-              <Instagram size={24} />
-            </button>
-          </Link>
-          <Link
-            href={normalizeUrl(user.facebook)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
-              <Facebook size={24} />
-            </button>
-          </Link>
-          <Link
-            href={normalizeUrl(user.twitter)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
-              <FaXTwitter size={24} />
-            </button>
-          </Link>
+
+          {hasSocialLink(user.linkedin) && (
+            <Link
+              href={normalizeUrl(user.linkedin)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
+                <Linkedin size={24} />
+              </button>
+            </Link>
+          )}
+
+          {hasSocialLink(user.instagram) && (
+            <Link
+              href={normalizeUrl(user.instagram)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
+                <Instagram size={24} />
+              </button>
+            </Link>
+          )}
+
+          {hasSocialLink(user.facebook) && (
+            <Link
+              href={normalizeUrl(user.facebook)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
+                <Facebook size={24} />
+              </button>
+            </Link>
+          )}
+
+          {hasSocialLink(user.twitter) && (
+            <Link
+              href={normalizeUrl(user.twitter)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button className="bg-[#f1f5f9] py-[6px] md:py-[11px] md:px-[12px] px-[8px] rounded-[8px] text-center cursor-pointer">
+                <FaXTwitter size={24} />
+              </button>
+            </Link>
+          )}
         </div>
       </div>
 
