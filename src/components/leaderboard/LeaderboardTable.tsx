@@ -116,6 +116,7 @@ export function LeaderboardTable() {
       page: number;
       limit: number;
       filter?: ActiveFilter;
+      search?: string;
     } = {
       period: getApiPeriod(timePeriod) as
         | 'week'
@@ -131,8 +132,14 @@ export function LeaderboardTable() {
       params.filter = activeFilter;
     }
 
+    const trimmedSearch = searchQuery.trim();
+
+    if (trimmedSearch) {
+      params.search = trimmedSearch;
+    }
+
     return params;
-  }, [timePeriod, activeFilter]);
+  }, [timePeriod, activeFilter, searchQuery]);
 
   const {
     data: response,
@@ -140,23 +147,9 @@ export function LeaderboardTable() {
     isError,
   } = useGetLeaderboardQuery(queryParams);
 
-  const filteredData = useMemo(() => {
-    if (!response?.data?.leaderboard) return [];
-
-    let filtered = [...response.data.leaderboard];
-
-    if (searchQuery) {
-      filtered = filtered.filter(
-        item =>
-          item.user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.user.institution
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase()),
-      );
-    }
-
-    return filtered;
-  }, [response, searchQuery]);
+ const filteredData = useMemo(() => {
+   return response?.data?.leaderboard ?? [];
+ }, [response]);
 
   const hasActiveFilter = activeFilter !== undefined;
 
@@ -198,7 +191,7 @@ export function LeaderboardTable() {
                   <Input
                     autoFocus
                     type="text"
-                    placeholder="Search by name or institution"
+                    placeholder="Search by name , institution or location"
                     value={searchQuery}
                     onChange={e =>
                       updateParam('search', e.target.value || null)
@@ -215,7 +208,7 @@ export function LeaderboardTable() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <Input
               type="text"
-              placeholder="Search by name or institution"
+              placeholder="Search by name , institution or location"
               value={searchQuery}
               onChange={e => updateParam('search', e.target.value || null)}
               className="pl-10 bg-[#f7f7f3] md:w-[607px]"
