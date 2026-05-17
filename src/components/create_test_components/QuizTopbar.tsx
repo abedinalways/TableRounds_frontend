@@ -197,7 +197,7 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
             className="text-white cursor-pointer p-2 gap-2 flex flex-col items-center"
           >
             <SkipForward className="md:size-8 size-4" />
-            Skip Test
+           Pause Test
           </button>
         </div>
       </div>

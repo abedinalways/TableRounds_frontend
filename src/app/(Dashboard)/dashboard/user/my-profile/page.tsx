@@ -16,6 +16,7 @@ export default function MyProfilePage() {
 
   if (isLoading || !data) return null;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const profileUI = mapProfileToUI(data as any);
 
   return (

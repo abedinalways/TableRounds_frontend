@@ -128,7 +128,7 @@ export default function ProfileFollowersFollowingModal({
                     <Button
                       variant="outline"
                       onClick={() => handleFollowToggle(user.id)}
-                      className="rounded-sm cursor-pointer"
+                      className={`rounded-sm cursor-pointer ${isFollowing ? 'bg-green-900 text-white' : ''}`}
                     >
                       {isFollowing ? 'Unfollow' : 'Follow'}
                     </Button>

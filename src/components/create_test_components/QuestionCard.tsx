@@ -102,13 +102,13 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 
       <CardHeader>
         {quizDetails?.question_title && (
-          <h2 className="text-lg md:text-2xl font-bold text-[#01281e] mb-3">
+          <h2 className="text-lg md:text-2xl font-bold text-[#01281e] mb-3 ">
             {quizDetails.question_title}
           </h2>
         )}
 
         <div
-          className="prose prose-sm md:prose-base max-w-none text-gray-700 mb-5"
+          className="prose prose-sm md:prose-base max-w-none text-gray-700 mb-5 text-lg md:text-xl"
           dangerouslySetInnerHTML={{
             __html: quizDetails?.question_steam || '',
           }}
@@ -154,7 +154,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
                   <Label
                     htmlFor={`option-${optionId}`}
                     className={cn(
-                      'cursor-pointer text-xs md:text-base',
+                      'cursor-pointer text-base md:text-lg',
                       isLocked && 'cursor-not-allowed',
                       isCorrect && 'text-black',
                       isSelected && !isCorrect && 'text-black',
