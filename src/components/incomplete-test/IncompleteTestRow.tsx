@@ -120,7 +120,7 @@ export function IncompleteTestRow({ test, index, page }: Props) {
             sideOffset={8}
             className="z-[9999] w-[180px] rounded-xl border border-[#e5e7eb] bg-white p-1.5 shadow-xl"
           >
-            <DropdownMenuItem
+            {/* <DropdownMenuItem
               onClick={() =>
                 router.push(`/dashboard/user/test-review/${test.id}`)
               }
@@ -128,7 +128,7 @@ export function IncompleteTestRow({ test, index, page }: Props) {
             >
               <Eye className="h-4 w-4 text-[#01503b]" />
               Review
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
 
             <DropdownMenuItem
               onClick={() =>

@@ -42,7 +42,7 @@ const ExplanationPanel: React.FC<ExplanationPanelProps> = ({
   return (
     <div className="p-4 md:p-6 md:my-[32px] bg-[#f9f9f5] shadow-lg rounded-[16px] border font-[manrope] md:max-h-[1521px] overflow-x-hidden custom-scrollbar">
       <div className="flex items-center justify-between mb-4 gap-4">
-        <h2 className="text-lg font-bold text-[#01281e] flex items-center gap-2">
+        <h2 className="text-lg md:text-2xl font-bold text-[#01281e] flex items-center gap-2">
           <ExplainIcon /> Explanation:
         </h2>
 
@@ -83,7 +83,7 @@ const ExplanationPanel: React.FC<ExplanationPanelProps> = ({
       )} */}
 
       {/* Why the Other Options Are Incorrect */}
-      <h3 className="text-[18px] md:text-[20px] font-semibold text-[#01281e] mt-6 mb-2 flex items-center gap-2">
+      <h3 className="text-lg md:text-2xl font-semibold text-[#01281e] mt-6 mb-2 flex items-center gap-2">
         <CancelIcon /> Why the Other Options Are Incorrect:
       </h3>
 
@@ -104,7 +104,7 @@ const ExplanationPanel: React.FC<ExplanationPanelProps> = ({
       </div>
 
       {/* Pimping Point */}
-      <h3 className="text-[18px] font-semibold text-[#01281e] mt-6 mb-1 flex items-center gap-2">
+      <h3 className="text-lg md:text-2xl font-semibold text-[#01281e] mt-6 mb-1 flex items-center gap-2">
         <PimpingIcon /> Pimping Point:
       </h3>
 
@@ -121,7 +121,7 @@ const ExplanationPanel: React.FC<ExplanationPanelProps> = ({
       />
 
       {/* Memory Trick */}
-      <h3 className="text-[18px] font-semibold text-[#01281e] mt-6 mb-1 flex items-center gap-2">
+      <h3 className="text-lg md:text-2xl font-semibold text-[#01281e] mt-6 mb-1 flex items-center gap-2">
         <MemoryIcon /> Memory trick:
       </h3>
 
@@ -138,7 +138,7 @@ const ExplanationPanel: React.FC<ExplanationPanelProps> = ({
       />
 
       {/* References */}
-      <h3 className="text-[18px] font-semibold text-[#01281e] mt-6 mb-1 flex items-center gap-2">
+      <h3 className="text-lg md:text-2xl font-semibold text-[#01281e] mt-6 mb-1 flex items-center gap-2">
         <BookIcon /> References:
       </h3>
 

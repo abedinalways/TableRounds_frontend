@@ -33,6 +33,8 @@ export const baseApi = createApi({
     'Connections',
     'MapData',
     'MarkedQuestions',
+    'Test',
+    'IncompleteTests',
   ],
   endpoints: () => ({}),
 });

@@ -443,21 +443,21 @@ export default function ManageProfile({
           </div>
 
           <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold md:text-lg!">Instagram</Label>
-            <Input
-              placeholder="Personal Link"
-              {...register('instagram')}
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
-            />
-          </div>
-
-          <div className="flex flex-col gap-[8px]">
             <Label className="font-bold md:text-lg!">
               Credentials <span className="text-red-600">*</span>
             </Label>
             <Input
               {...register('credentials')}
               placeholder="i.e. DDS, DMD, MD, Student"
+              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
+            />
+          </div>
+
+          <div className="flex flex-col gap-[8px]">
+            <Label className="font-bold md:text-lg!">Instagram</Label>
+            <Input
+              placeholder="Personal Link"
+              {...register('instagram')}
               className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
             />
           </div>
@@ -472,6 +472,15 @@ export default function ManageProfile({
           </div>
 
           <div className="flex flex-col gap-[8px]">
+            <Label className="font-bold md:text-lg!">Facebook</Label>
+            <Input
+              placeholder="Personal Link"
+              {...register('facebook')}
+              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
+            />
+          </div>
+
+          {/* <div className="flex flex-col gap-[8px]">
             <Label className="font-bold md:text-lg!">
               Location <span className="text-red-600">*</span>
             </Label>
@@ -480,7 +489,7 @@ export default function ManageProfile({
               {...register('address')}
               className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
             />
-          </div>
+          </div> */}
 
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold md:text-lg!">Twitter/X</Label>
@@ -490,6 +499,7 @@ export default function ManageProfile({
               className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
             />
           </div>
+
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold md:text-lg!">
               Country<span className="text-red-600">*</span>
@@ -569,16 +579,6 @@ export default function ManageProfile({
               </Select>
             </div>
           </div>
-
-          <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold md:text-lg!">Facebook</Label>
-            <Input
-              placeholder="Personal Link"
-              {...register('facebook')}
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
-            />
-          </div>
-
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold md:text-lg!">
               Current Practice <span className="text-red-600">*</span>

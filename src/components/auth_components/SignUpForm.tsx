@@ -455,13 +455,13 @@ opacity-xl font-[manrope]"
                     ))}
                   </SelectContent>
                 </Select>
-                <Input
+                {/* <Input
                   id="location"
                   placeholder="Enter Your City/Town"
                   value={formData.location}
                   onChange={e => handleInputChange('location', e.target.value)}
                   className="mt-6 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
-                />
+                /> */}
               </div>
               {/* current practice */}
               <div>

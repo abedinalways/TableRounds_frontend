@@ -156,13 +156,14 @@ export default function FollowersFollowingModal({
 
   useEffect(() => {
     if (connectionsData?.data) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFollowedUsers(
         new Set(connectionsData.data.map((u: { id: string }) => u.id)),
       );
     }
   }, [connectionsData]);
 
-  // ✅ Optimistic toggle + rollback on error (same pattern as dashboard)
+  //Optimistic toggle + rollback on error (same pattern as dashboard)
   const handleFollowToggle = async (userId: string) => {
     const isCurrentlyFollowing = followedUsers.has(userId);
 
@@ -209,7 +210,7 @@ export default function FollowersFollowingModal({
                     ? user.avatar
                     : '/images/dashboard/message/doctor.png';
 
-                // ✅ Same hybrid check as dashboard modal
+                // Same hybrid check as dashboard modal
                 const isFollowing =
                   followedUsers.has(user.id) || user.is_following;
 
@@ -238,7 +239,7 @@ export default function FollowersFollowingModal({
                     <Button
                       variant="outline"
                       onClick={() => handleFollowToggle(user.id)}
-                      className="rounded-sm cursor-pointer"
+                      className={`rounded-sm cursor-pointer ${isFollowing ? 'bg-green-900 text-white' : ''}`}
                     >
                       {isFollowing ? 'Unfollow' : 'Follow'}
                     </Button>

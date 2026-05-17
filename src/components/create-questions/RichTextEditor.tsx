@@ -80,7 +80,7 @@ export function RichTextEditor({
   allowImageUpload = false,
   onImageFileChange,
 }: RichTextEditorProps) {
-  const [fontSize, setFontSize] = useState('16px');
+  const [fontSize, setFontSize] = useState('20px');
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const editor = useEditor({
