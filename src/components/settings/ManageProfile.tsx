@@ -272,7 +272,7 @@ export default function ManageProfile({
               <div className="flex  gap-4 items-center text-xs md:text-[16px] font-light text-[#6b7280]">
                 <h4 className="flex items-center gap-2 text-sm ">
                   <LocationIcon />
-                  {user.address}, {user.state} , {user.country}.
+                  {user.state} , {user.country}.
                 </h4>
 
                 <h4 className="md:flex items-center gap-2 text-sm">
@@ -526,7 +526,7 @@ export default function ManageProfile({
           {/* state */}
           <div className="flex flex-col gap-[8px] ">
             <Label className="font-bold md:text-lg!">
-              State<span className="text-red-600">*</span>
+              Region/State<span className="text-red-600">*</span>
             </Label>
             <Select
               value={watch('state')}
@@ -536,7 +536,7 @@ export default function ManageProfile({
               disabled={!watch('country')}
             >
               <SelectTrigger className="bg-[#f9f9f5] border border-[rgba(68,68,68,0.1)] h-9 md:w-[620px] w-[225px]">
-                <SelectValue placeholder="Select state / province" />
+                <SelectValue placeholder="Select Region/State" />
               </SelectTrigger>
               <SelectContent className="max-h-[300px]">
                 {State.getStatesOfCountry(watch('country')).map(state => (

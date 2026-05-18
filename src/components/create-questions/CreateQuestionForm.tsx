@@ -27,7 +27,7 @@ const TOPICS = [
 
 const DIFFICULTIES: Difficulty[] = ['Intern', 'Senior', 'Board'];
 
-const prepareExplanationForPayload = (
+const prepareEditorHtmlForPayload = (
   html?: string | null,
   file?: File | null,
 ) => {
@@ -67,7 +67,8 @@ export default function CreateQuestionForm() {
 
   const [editorKey, setEditorKey] = React.useState(0);
   const [createQuestion, { isLoading }] = useCreateQuestionMutation();
-
+  const [questionStemImageFile, setQuestionStemImageFile] =
+    React.useState<File | null>(null);
   const [explanationImageFile, setExplanationImageFile] =
     React.useState<File | null>(null);
 
@@ -76,15 +77,14 @@ export default function CreateQuestionForm() {
       const formData = new FormData();
 
       formData.append('question_title', data.questionTitle || '');
-      formData.append('question_steam', data.questionStem || '');
+      formData.append(
+        'question_steam',
+        prepareEditorHtmlForPayload(data.questionStem, questionStemImageFile),
+      );
 
-      /**
-       * Explanation will contain image file name:
-       * <img src="documents.jpg" alt="documents.jpg" title="documents.jpg">
-       */
       formData.append(
         'explanation',
-        prepareExplanationForPayload(data.explanation, explanationImageFile),
+        prepareEditorHtmlForPayload(data.explanation, explanationImageFile),
       );
 
       formData.append('why_incorrect', data.keyPoints || '');
@@ -105,9 +105,10 @@ export default function CreateQuestionForm() {
         ),
       );
 
-      /**
-       * Actual binary file exactly like Insomnia.
-       */
+      if (questionStemImageFile) {
+        formData.append('steam_image', questionStemImageFile);
+      }
+
       if (explanationImageFile) {
         formData.append('explanation_image', explanationImageFile);
       }
@@ -118,6 +119,7 @@ export default function CreateQuestionForm() {
 
       reset();
       setEditorKey(prev => prev + 1);
+      setQuestionStemImageFile(null);
       setExplanationImageFile(null);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -165,7 +167,9 @@ export default function CreateQuestionForm() {
       <RichTextEditor
         key={`questionStem-${editorKey}`}
         value={watch('questionStem') || ''}
+        allowImageUpload
         onChange={val => setValue('questionStem', val)}
+        onImageFileChange={setQuestionStemImageFile}
       />
 
       {/* Answers */}

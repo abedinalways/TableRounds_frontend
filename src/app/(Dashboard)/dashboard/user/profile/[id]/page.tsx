@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState, use } from 'react';
@@ -6,7 +7,7 @@ import ProfileHeader from '@/components/profile/ProfileHeader';
 import ProfileTabs from '@/components/profile/ProfileTabs';
 import { useGetProfileDataQuery } from '@/app/redux/api/getProfileApi';
 import { ProfilePageSkeleton } from '@/components/user-profile/ProfilePageSkeleton';
-// import { is } from 'zod/v4/locales';
+
 
 
 export default function ProfilePage({

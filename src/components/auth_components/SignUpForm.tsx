@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 
-import { CheckCircle2, CloudUpload } from 'lucide-react';
+import { CheckCircle2, CloudUpload, Eye, EyeOff } from 'lucide-react';
 import Image from 'next/image';
 import {
   Select,
@@ -175,7 +175,8 @@ export default function SignUpForm({
    await onSubmit?.(payload);
  };
   
-
+  const [showCreatePassword, setShowCreatePassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   return (
     <div className="z-40  font-[manrope] py-6 mb-12">
       <div
@@ -256,16 +257,35 @@ opacity-xl font-[manrope]"
                 >
                   Create Password <span className="text-red-600">*</span>
                 </Label>
-                <Input
-                  id="createPassword"
-                  type="password"
-                  placeholder="Enter your password"
-                  value={formData.createPassword}
-                  onChange={e =>
-                    handleInputChange('createPassword', e.target.value)
-                  }
-                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
-                />
+
+                <div className="relative mt-1 w-full md:w-[644px]">
+                  <Input
+                    id="createPassword"
+                    type={showCreatePassword ? 'text' : 'password'}
+                    placeholder="Enter your password"
+                    value={formData.createPassword}
+                    onChange={e =>
+                      handleInputChange('createPassword', e.target.value)
+                    }
+                    className="bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:h-[61px] pr-12"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setShowCreatePassword(prev => !prev)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white transition cursor-pointer"
+                    aria-label={
+                      showCreatePassword ? 'Hide password' : 'Show password'
+                    }
+                  >
+                    {showCreatePassword ? (
+                      <EyeOff size={22} />
+                    ) : (
+                      <Eye size={22} />
+                    )}
+                  </button>
+                </div>
+
                 {errors.createPassword && (
                   <p className="text-red-300 text-xs mt-1">
                     {errors.createPassword}
@@ -280,16 +300,35 @@ opacity-xl font-[manrope]"
                 >
                   Confirm Password <span className="text-red-600">*</span>
                 </Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  placeholder="Re-enter your password"
-                  value={formData.confirmPassword}
-                  onChange={e =>
-                    handleInputChange('confirmPassword', e.target.value)
-                  }
-                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D]  h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
-                />
+
+                <div className="relative mt-1 w-full md:w-[644px]">
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    placeholder="Re-enter your password"
+                    value={formData.confirmPassword}
+                    onChange={e =>
+                      handleInputChange('confirmPassword', e.target.value)
+                    }
+                    className="bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:h-[61px] pr-12"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(prev => !prev)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white transition cursor-pointer"
+                    aria-label={
+                      showConfirmPassword ? 'Hide password' : 'Show password'
+                    }
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff size={22} />
+                    ) : (
+                      <Eye size={22} />
+                    )}
+                  </button>
+                </div>
+
                 {errors.confirmPassword && (
                   <p className="text-red-300 text-xs mt-1">
                     {errors.confirmPassword}
@@ -444,7 +483,7 @@ opacity-xl font-[manrope]"
                   disabled={!formData.country}
                 >
                   <SelectTrigger className="mt-3 bg-[#1C765E] border-none rounded-[8px] text-white md:w-[644px] py-6">
-                    <SelectValue placeholder="Select state / province" />
+                    <SelectValue placeholder="Select Region/State" />
                   </SelectTrigger>
 
                   <SelectContent className="bg-[#1C765E] text-white max-h-[300px] py-4">
