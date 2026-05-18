@@ -311,15 +311,16 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
   };
 
   const handleMessageClick = async () => {
-    setIsMessageLoading(true); // ✅ start loading
+    setIsMessageLoading(true); 
     try {
       const res = await createConversation({
         participant_id: user.id,
       }).unwrap();
       window.location.href = `/dashboard/user/messages/${res.data.id}`;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error('Conversation creation failed', err);
-      setIsMessageLoading(false); // ✅ stop loading only on error (on success we redirect)
+      setIsMessageLoading(false); // 
     }
   };
 
@@ -355,7 +356,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
             <div className="flex md:gap-[48px] gap-6 items-center text-xs md:text-[16px] font-light text-[#6b7280]">
               <h4 className="flex items-center gap-2">
                 <LocationIcon />
-                {user.address} {user.state}, {user.country}
+                {user.state}, {user.country}
               </h4>
               <h4 className="flex items-center gap-2">
                 <BagIcon />

@@ -41,7 +41,7 @@ interface ApiError {
   message?: string;
 }
 
-const prepareExplanationForPayload = (
+const prepareEditorHtmlForPayload= (
   html?: string | null,
   file?: File | null,
 ) => {
@@ -62,6 +62,8 @@ const prepareExplanationForPayload = (
 export default function QuestionManagerPage() {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
+  const [questionStemImageFile, setQuestionStemImageFile] =
+    useState<File | null>(null);
   const [editingQuestionId, setEditingQuestionId] = useState<string | null>(
     null,
   );
@@ -118,6 +120,7 @@ export default function QuestionManagerPage() {
     setEditingQuestionId(null);
     setEditFormData({});
     setAnswerOptions([]);
+    setQuestionStemImageFile(null);
     setExplanationImageFile(null);
   };
 
@@ -191,11 +194,17 @@ export default function QuestionManagerPage() {
     try {
       const formData = new FormData();
 
-      formData.append('question_steam', editFormData.question_steam || '');
+      formData.append(
+        'question_steam',
+        prepareEditorHtmlForPayload(
+          editFormData.question_steam,
+          questionStemImageFile,
+        ),
+      );
 
       formData.append(
         'explanation',
-        prepareExplanationForPayload(
+        prepareEditorHtmlForPayload(
           editFormData.explanation,
           explanationImageFile,
         ),
@@ -219,9 +228,10 @@ export default function QuestionManagerPage() {
         ),
       );
 
-      /**
-       * Actual binary file exactly like Insomnia.
-       */
+      if (questionStemImageFile) {
+        formData.append('steam_image', questionStemImageFile);
+      }
+
       if (explanationImageFile) {
         formData.append('explanation_image', explanationImageFile);
       }
@@ -348,6 +358,8 @@ export default function QuestionManagerPage() {
                         question_steam: val,
                       })
                     }
+                    allowImageUpload
+                    onImageFileChange={setQuestionStemImageFile}
                   />
                 </div>
 

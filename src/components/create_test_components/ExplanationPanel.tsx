@@ -40,7 +40,7 @@ const ExplanationPanel: React.FC<ExplanationPanelProps> = ({
   const explanation = quizDetails?.explanation;
 
   return (
-    <div className="p-4 md:p-6 md:my-[32px] bg-[#f9f9f5] shadow-lg rounded-[16px] border font-[manrope] md:max-h-[1521px] overflow-x-hidden custom-scrollbar">
+    <div className="p-4 md:p-6 md:my-[32px] bg-[#f9f9f5] shadow-lg rounded-[16px] border font-[manrope] overflow-x-hidden custom-scrollbar">
       <div className="flex items-center justify-between mb-4 gap-4">
         <h2 className="text-lg md:text-2xl font-bold text-[#01281e] flex items-center gap-2">
           <ExplainIcon /> Explanation:

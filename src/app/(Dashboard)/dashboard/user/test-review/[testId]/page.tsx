@@ -236,7 +236,7 @@ export default function TestReviewPage() {
           return (
             <div
               key={q.id}
-              className="border rounded-xl p-4 bg-white shadow-sm"
+              className="border rounded-xl p-4 bg-white shadow-sm "
             >
               {/* Question */}
               <h3 className="font-semibold mb-2">
@@ -244,7 +244,7 @@ export default function TestReviewPage() {
               </h3>
 
               <p
-                className="text-sm text-gray-600 mb-3"
+                className="text-lg text-gray-600 mb-3"
                 dangerouslySetInnerHTML={{ __html: q.question_steam }}
               />
 
@@ -257,7 +257,7 @@ export default function TestReviewPage() {
                   return (
                     <div
                       key={opt.id}
-                      className={`p-2 rounded-md text-sm border
+                      className={`p-2 rounded-md text-md border
                         ${
                           isCorrect
                             ? 'bg-green-100 border-green-400'
@@ -274,27 +274,17 @@ export default function TestReviewPage() {
               </div>
 
               {/* Explanation */}
-              <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
-                <p className="font-bold mb-1 flex items-center gap-2">
+              <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-lg">
+                <p className="font-bold mb-1 flex items-center gap-2 text-xl">
                   <ExplainIcon /> Explanation:
                 </p>
 
                 <div dangerouslySetInnerHTML={{ __html: q.explanation }} />
-
-                {/* Image */}
-                {q.explanation_image_url && (
-                  <Image
-                    fill
-                    alt=''
-                    src={q.explanation_image_url}
-                    className="mt-2 rounded-lg max-h-[200px]"
-                  />
-                )}
               </div>
 
               {/* Why Incorrect */}
-              <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
-                <p className="font-bold mb-1 flex items-center gap-2">
+              <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-lg">
+                <p className="font-bold mb-1 flex items-center gap-2 text-xl">
                   <CancelIcon /> Why The Other Option Are Incorrect:
                 </p>
 
@@ -302,16 +292,16 @@ export default function TestReviewPage() {
               </div>
 
               {/* pimping point*/}
-              <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
-                <p className="font-bold mb-1 flex items-center gap-2">
+              <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-lg">
+                <p className="font-bold mb-1 flex items-center gap-2 text-xl">
                   <PimpingIcon /> Pimping Point:
                 </p>
 
                 <div dangerouslySetInnerHTML={{ __html: q.pimping_point }} />
               </div>
               {/* Memory trick */}
-              <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
-                <p className="font-bold mb-1 flex items-center gap-2">
+              <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-lg">
+                <p className="font-bold mb-1 flex items-center gap-2 text-xl">
                   <MemoryIcon /> Memory Trick:
                 </p>
 
@@ -325,8 +315,8 @@ export default function TestReviewPage() {
                 <div dangerouslySetInnerHTML={{ __html: q.pimping_point }} />
               </div> */}
               {/* reference */}
-              <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-sm">
-                <p className="font-bold mb-1 flex items-center gap-2">
+              <div className="mt-4 p-3 bg-[#f7f7f7] rounded-md text-lg">
+                <p className="font-bold mb-1 flex items-center gap-2 text-xl">
                   <BookIcon /> References:
                 </p>
 

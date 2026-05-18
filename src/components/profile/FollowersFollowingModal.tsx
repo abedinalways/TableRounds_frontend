@@ -47,6 +47,7 @@ export default function ProfileFollowersFollowingModal({
 
   useEffect(() => {
     if (myConnectionsData?.data) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFollowedUsers(
         new Set(myConnectionsData.data.map((u: { id: string }) => u.id)),
       );
