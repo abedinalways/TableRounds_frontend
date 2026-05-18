@@ -5,7 +5,7 @@ import { useState } from 'react';
 import {  CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import dynamic from 'next/dynamic';
 import StatCards from './StatCards';
-import leaderboardData from '../../../public/data/leadership-stat.json';
+
 import type { LeaderboardData } from '@/types/type';
 import { LeaderboardTable } from './LeaderboardTable';
 import { Switch } from '../ui/CustomSwitch';
