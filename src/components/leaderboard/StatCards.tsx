@@ -61,8 +61,8 @@ export default function StatCards() {
     },
     {
       id: 'tests',
-      title: 'Question Bank Usage %',
-      value: String(statData?.tests_completed || 'N/A'),
+      title: 'Question Bank Usage',
+      value: `${(statData?.completion_percentage || 'N/A')}%`,
       subtitle: 'Total attempts',
       icon: '/images/dashboard/statistics/img01.png',
     },

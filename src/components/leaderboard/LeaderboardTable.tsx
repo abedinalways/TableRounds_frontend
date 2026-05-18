@@ -263,7 +263,8 @@ export function LeaderboardTable() {
             <tr>
               <th className="p-3 text-left">Rank</th>
               <th className="p-3 text-left">Name</th>
-              <th className="p-3">Completed</th>
+              <th className="p-3 text-left">Country</th>
+              <th className="p-3">Question Bank Usage</th>
               <th className="p-3 text-left">Accuracy</th>
               {/* <th className="p-3">Correct</th> */}
               <th className="p-3">Trend</th>
@@ -313,7 +314,8 @@ export function LeaderboardTable() {
                       </div>
                     </div>
                   </td>
-                  <td className="p-3 text-center">{row.tests_completed}</td>
+                  <td className="p-3 ">{row.user?.country}</td>
+                  <td className="p-3 text-center">{row.completion_percentage}%</td>
                   <td className="p-3">
                     <span className="text-xs">{row.accuracy}%</span>
                     <LeaderboardProgress value={row.accuracy} />

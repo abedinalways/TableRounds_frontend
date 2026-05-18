@@ -18,6 +18,8 @@ export interface LeaderboardRow {
   tests_completed: number;
   accuracy: number;
   avg_score: number;
+  country: string;
+  completion_percentage: number;
   trend: number[];
 }
 
@@ -37,6 +39,7 @@ export interface LeaderboardResponse {
       tests_completed: number;
       accuracy: number;
       current_streak: number;
+      completion_percentage:number
       trend: number[];
     };
     leaderboard: LeaderboardRow[];
