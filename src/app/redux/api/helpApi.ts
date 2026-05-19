@@ -20,11 +20,8 @@ interface UpdateHelpResponse {
   message: string;
 }
 
-
-
 export const helpApi = baseApi.injectEndpoints({
   endpoints: builder => ({
-    /* -------- GET HELP -------- */
     getHelp: builder.query<GetHelpResponse, void>({
       query: () => ({
         url: '/admin/help',
@@ -33,13 +30,9 @@ export const helpApi = baseApi.injectEndpoints({
       providesTags: ['help'],
     }),
 
-    /* -------- UPDATE HELP -------- */
-    updateHelp: builder.mutation<
-      UpdateHelpResponse,
-      { id: string; body: Partial<HelpData> }
-    >({
-      query: ({  body }) => ({
-        url: `/admin/help`,
+    updateHelp: builder.mutation<UpdateHelpResponse, Partial<HelpData>>({
+      query: body => ({
+        url: '/admin/help',
         method: 'PATCH',
         body,
       }),

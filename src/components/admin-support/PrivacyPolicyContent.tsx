@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { RichTextEditor } from './RichTextEditor';
 import {
   useGetHelpQuery,
@@ -9,31 +9,41 @@ import {
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
-export default function PrivacyPolicyContent() {
-  const { data } = useGetHelpQuery();
-  const [updateHelp] = useUpdateHelpMutation();
-
-  const help = data?.data?.[0];
-
- const [content, setContent] = useState(help?.privacy_policy ?? '');
-
+function PrivacyPolicyEditor({ initialContent }: { initialContent: string }) {
+  const [content, setContent] = useState(initialContent);
+  const [updateHelp, { isLoading: isUpdating }] = useUpdateHelpMutation();
 
   const handleSave = async () => {
-    if (!help?.id) return;
-
     try {
       await updateHelp({
-        id: help.id,
-        body: {
-          privacy_policy: content,
-        },
+        privacy_policy: content,
       }).unwrap();
-      console.log('upsdatweew=========================')
+
       toast.success('Privacy policy updated successfully');
     } catch {
       toast.error('Failed to update privacy policy');
     }
   };
+
+  return (
+    <>
+      <RichTextEditor value={content} onChange={setContent} />
+
+      <Button
+        onClick={handleSave}
+        disabled={isUpdating}
+        className="mt-6 md:px-16! text-lg md:py-6! cursor-pointer"
+      >
+        {isUpdating ? 'Saving...' : 'Save'}
+      </Button>
+    </>
+  );
+}
+
+export default function PrivacyPolicyContent() {
+  const { data, isLoading } = useGetHelpQuery();
+
+  const help = data?.data?.[0];
 
   return (
     <div className="mx-auto font-[manrope]">
@@ -44,14 +54,14 @@ export default function PrivacyPolicyContent() {
       </div>
 
       <div className="py-8 space-y-10 text-gray-700 leading-relaxed">
-        <RichTextEditor value={content} onChange={setContent} />
-
-        <Button
-          onClick={handleSave}
-          className="mt-6 md:px-16! text-lg md:py-6!  cursor-pointer"
-        >
-          Save
-        </Button>
+        {isLoading ? (
+          <p className="text-gray-500">Loading...</p>
+        ) : (
+          <PrivacyPolicyEditor
+            key={`privacy-${help?.id ?? 'default'}-${help?.privacy_policy ?? ''}`}
+            initialContent={help?.privacy_policy ?? ''}
+          />
+        )}
       </div>
     </div>
   );
