@@ -91,7 +91,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
       />
 
       {showExplanation && !hideToggleButton && (
-        <div className="mb-4">
+        <div className="mb-4 py-2 px-2 md:py-0 md:px-0 ">
           <Btn
             text={isQuestionHidden ? 'Show Question' : 'Hide Question'}
             onClick={onToggleHide}
@@ -220,7 +220,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
         )}
 
         {!hideActions && (
-          <div className="md:flex justify-between items-center space-y-2 md:space-y-0">
+          <div className="md:flex justify-between items-center space-y-2 md:space-y-0 ">
             <button
               type="button"
               onClick={async () => {
@@ -240,7 +240,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
                 !activeSelectedAnswerId || isLocked || isSubmittingAnswer
               }
               className={cn(
-                'w-full md:w-[164px] h-[50px] rounded-md text-md font-semibold transition-all duration-200 flex items-center justify-center gap-2',
+                'md:w-[164px] md:h-[50px] h-9   rounded-md md:text-md text-xs py-2 px-2 md:px-0 md:py-0 my-4 md:my-0 font-semibold transition-all duration-200 flex items-center justify-center gap-2',
                 isLocked
                   ? 'bg-green-800 text-white cursor-not-allowed'
                   : 'bg-[#01281e] text-white',

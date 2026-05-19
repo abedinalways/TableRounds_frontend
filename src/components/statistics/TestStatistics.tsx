@@ -129,7 +129,7 @@ const TestStatistics: React.FC = () => {
         {performance_by_topic.map((item, index) => (
           <Card key={index} className="shadow-sm border-gray-200">
             <CardHeader className="pb-4">
-              <CardTitle className="text-[24px] font-bold text-[#444950] flex items-center gap-2">
+              <CardTitle className="md:text-[24px] font-bold text-[#444950] flex items-center gap-2">
                 <Image
                   src={getTopicIcon(item.topic)}
                   width={25}
