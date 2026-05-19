@@ -2,11 +2,15 @@ import React from 'react';
 import Flag from '../reusable/icons/Flag';
 import { cn } from '@/lib/utils';
 import { MarkedQuestion } from '@/types/markedQuestion';
+import { QuizQuestionDataUI } from '@/types/test-session';
+import CheckIcon from '../reusable/icons/CheckIcon';
+import { X } from 'lucide-react';
 
 interface QuestionSidebarProps {
   totalQuestions: number;
   currentQuestion: number;
   markedQuestions: MarkedQuestion[];
+  questions?: QuizQuestionDataUI[];
   onJumpTo?: (index: number) => void;
 }
 
@@ -14,15 +18,34 @@ const QuestionSidebar: React.FC<QuestionSidebarProps> = ({
   totalQuestions,
   currentQuestion,
   markedQuestions,
+  questions=[],
   onJumpTo,
 }) => {
+  const getQuestionStatus = (index: number) => {
+    const question = questions[index];
+
+    const userAnswerId = question?.quizDetails?.userAnswerId;
+    const correctAnswerId = question?.quizDetails?.correctAnswerId;
+
+    if (!userAnswerId || !correctAnswerId) return 'unanswered';
+
+    return String(userAnswerId) === String(correctAnswerId)
+      ? 'correct'
+      : 'wrong';
+  };
   return (
     <div className="lex md:col-span-1 md:flex-col flex-row gap-2 rounded-md mt-2 md:mt-4 mb-2 md:mb-4 background p-2 md:max-h-[700px] overflow-x-auto md:overflow-y-auto custom-scroll">
       <aside className="flex md:flex-col gap-3 h-full">
         {Array.from({ length: totalQuestions }, (_, i) => {
           const qIndex = i + 1;
           const isCurrent = qIndex === currentQuestion;
-          const isMarkedQuestion = markedQuestions.some(q => q.index === qIndex);
+          const isMarkedQuestion = markedQuestions.some(
+            q => q.index === qIndex,
+          );
+
+          const status = getQuestionStatus(i);
+          const isCorrect = status === 'correct';
+          const isWrong = status === 'wrong';
 
           return (
             <button
@@ -32,17 +55,31 @@ const QuestionSidebar: React.FC<QuestionSidebarProps> = ({
                 'flex items-center justify-between px-3 py-2 md:w-[80px] w-[120px] rounded-md border transition-all',
                 isCurrent
                   ? 'bg-[#b79e6b] text-white border-[#b79e6b]'
-                  : 'bg-[#01281e] text-white/80 border-[#084434]'
+                  : 'bg-[#01281e] text-white/80 border-[#084434]',
               )}
             >
               <div className="flex items-center gap-2">
                 <div
                   className={cn(
-                    'w-4 h-4 rounded-full border flex items-center justify-center',
-                    isCurrent ? 'border-white bg-white' : 'border-white/50'
+                    'w-4 h-4 rounded-full border flex items-center justify-center transition-all',
+                    isCorrect && 'bg-green-500 border-green-500 text-white',
+                    isWrong && 'bg-red-500 border-red-500 text-white',
+                    !isCorrect &&
+                      !isWrong &&
+                      isCurrent &&
+                      'border-white bg-white',
+                    !isCorrect && !isWrong && !isCurrent && 'border-white/50',
                   )}
                 >
-                  {isCurrent && <div className="w-2 h-2 rounded-full bg-[#b79e6b]" />}
+                  {isCorrect ? (
+                    <CheckIcon className="w-3 h-3" strokeWidth={3} />
+                  ) : isWrong ? (
+                    <X className="w-3 h-3" strokeWidth={3} />
+                  ) : (
+                    isCurrent && (
+                      <div className="w-2 h-2 rounded-full bg-[#b79e6b]" />
+                    )
+                  )}
                 </div>
 
                 <span className="text-sm">{qIndex}</span>
