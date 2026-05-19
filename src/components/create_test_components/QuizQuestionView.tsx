@@ -494,12 +494,14 @@ interface QuizQuestionViewProps {
   currentQuestion: number;
   selectedAnswerId: string | null;
   setSelectedAnswer: React.Dispatch<React.SetStateAction<string | null>>;
+  questions: QuizQuestionDataUI[];
 }
 
 const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   testId,
   data,
   markedQuestions,
+  questions,
   onToggleMark,
   onNext,
   onPrevious,
@@ -883,6 +885,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
           totalQuestions={totalQuestions}
           currentQuestion={currentQuestion}
           markedQuestions={markedQuestions}
+          questions={questions}
           onJumpTo={onJumpTo}
         />
 
