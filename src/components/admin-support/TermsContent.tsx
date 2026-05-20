@@ -49,7 +49,7 @@ export default function TermsContent() {
     <div className="mx-auto font-[manrope]">
       <div className="background text-white rounded-2xl py-8 ">
         <div className="text-3xl md:text-[48px] font-bold text-center">
-          Terms & Conditions
+          Terms of Use
         </div>
       </div>
 

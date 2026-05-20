@@ -26,6 +26,11 @@ interface Props {
   search: string;
 }
 
+const displayDifficultyLabel = (difficulty: string): string => {
+  if (difficulty === 'Board') return 'Boards';
+  return difficulty;
+};
+
 export function IncompleteTestTable({ search }: Props) {
   const [page, setPage] = useState(1);
 

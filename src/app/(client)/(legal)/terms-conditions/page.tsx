@@ -8,9 +8,9 @@ export default function TermsConditionsPage() {
       if (isLoading) {
         return <p className="p-10">Loading...</p>;
       }
-      console.log(data, 'data=================')
+      // console.log(data, 'data=================')
       const helpData = data?.data?.[0];
-      console.log(helpData, 'jjj===============')
+      // console.log(helpData, 'jjj===============')
   return (
     <div className="custom-container">
       <TermsConditions html={helpData?.terms_of_conditions ?? ''} />

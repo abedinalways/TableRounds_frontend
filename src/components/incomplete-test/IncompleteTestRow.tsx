@@ -20,6 +20,10 @@ interface Props {
   index: number;
   page: number;
 }
+const displayDifficultyLabel = (difficulty: string): string => {
+  if (difficulty === 'Board') return 'Boards';
+  return difficulty;
+};
 
 export function IncompleteTestRow({ test, index, page }: Props) {
   const router = useRouter();
@@ -61,7 +65,7 @@ export function IncompleteTestRow({ test, index, page }: Props) {
                 key={index}
                 className={`rounded-[6px] px-3 py-1.5 text-xs font-medium ${badgeClass}`}
               >
-                {level}
+                {displayDifficultyLabel(level)}
               </Badge>
             );
           })}

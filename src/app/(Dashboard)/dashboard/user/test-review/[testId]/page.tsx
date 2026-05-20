@@ -198,6 +198,11 @@ function BulletContent({ content }: { content?: string | null }) {
   );
 }
 
+const displayDifficultyLabel = (difficulty: string): string => {
+  if (difficulty === 'Board') return 'Boards';
+  return difficulty;
+};
+
 export default function TestReviewPage() {
   const { testId } = useParams();
 
@@ -225,7 +230,7 @@ export default function TestReviewPage() {
       <div className="percentage-bg text-white p-4 flex text-3xl flex-col justify-center items-center rounded-xl">
         <p>Score: {test?.score}%</p>
         <p>Total Questions: {test?.total_questions}</p>
-        <p>Difficulty: {diff}</p>
+        <p>Difficulty: {displayDifficultyLabel(diff)}</p>
       </div>
 
       {/* Questions */}

@@ -463,7 +463,7 @@ opacity-xl font-[manrope]"
                     handleInputChange('state', ''); // reset state
                   }}
                 >
-                  <SelectTrigger className="mt-2 bg-[#1C765E] border-none rounded-[8px] text-white md:w-[644px] py-6">
+                  <SelectTrigger className="mt-2 bg-[#1C765E] border-none rounded-[8px] text-white md:w-[644px] py-6 data-[placeholder]:!text-white [&_svg]:text-white">
                     <SelectValue placeholder="Select country" />
                   </SelectTrigger>
 
@@ -482,7 +482,7 @@ opacity-xl font-[manrope]"
                   onValueChange={value => handleInputChange('state', value)}
                   disabled={!formData.country}
                 >
-                  <SelectTrigger className="mt-3 bg-[#1C765E] border-none rounded-[8px] text-white md:w-[644px] py-6">
+                  <SelectTrigger className="mt-3 bg-[#1C765E] border-none rounded-[8px] text-white md:w-[644px] py-6 data-[placeholder]:!text-white [&_svg]:text-white">
                     <SelectValue placeholder="Select Region/State" />
                   </SelectTrigger>
 

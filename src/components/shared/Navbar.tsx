@@ -36,7 +36,7 @@ const specialtyOptions = [
 const legalOptions = [
   { label: 'Privacy Policy', href: '/privacy-policy' },
   { label: 'Disclaimer', href: '/disclaimer' },
-  { label: 'Terms & Conditions', href: '/terms-conditions' },
+  { label: 'Terms of Use', href: '/terms-conditions' },
 ];
 
 export default function Navbar({ isOms = false }) {

@@ -41,7 +41,7 @@ export default function AdminSupportPage() {
               className="w-full mx-auto  text-lg py-6 text-center rounded-t-2xl rounded-b-none!"
               onClick={() => setActiveTab('terms')}
             >
-              Terms & Conditions
+              Terms of Use
             </Button>
           </nav>
         </aside>
