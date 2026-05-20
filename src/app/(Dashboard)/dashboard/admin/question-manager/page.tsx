@@ -380,7 +380,7 @@ export default function QuestionManagerPage() {
                   >
                     <option value="Intern">Intern</option>
                     <option value="Senior">Senior</option>
-                    <option value="Board">Board</option>
+                    <option value="Board">Boards</option>
                   </select>
                 </div>
 

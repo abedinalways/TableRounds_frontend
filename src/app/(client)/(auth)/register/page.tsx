@@ -17,6 +17,7 @@ export default function RegisterPage() {
       toast.success(
         res?.message || 'Registration successful! Check your email.',
       );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       const message =
         err?.data?.message || 'Something went wrong during registration.';

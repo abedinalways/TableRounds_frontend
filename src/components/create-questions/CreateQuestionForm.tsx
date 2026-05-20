@@ -121,7 +121,7 @@ export default function CreateQuestionForm() {
       setEditorKey(prev => prev + 1);
       setQuestionStemImageFile(null);
       setExplanationImageFile(null);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error?.data?.message || 'Failed to create question');
     }
@@ -132,7 +132,6 @@ export default function CreateQuestionForm() {
       onSubmit={handleSubmit(onSubmit)}
       className="max-w-5xl space-y-8 font-[manrope] bg-gray-50/50"
     >
-      {/* Header */}
       <div className="flex flex-col gap-4">
         <h1 className="text-2xl md:text-[48px] leading-[120%] font-bold text-[#01281e]">
           Create Questions
@@ -143,7 +142,6 @@ export default function CreateQuestionForm() {
         </p>
       </div>
 
-      {/* Difficulty */}
       <TagSelector
         label="Difficulty"
         options={DIFFICULTIES}
@@ -151,7 +149,6 @@ export default function CreateQuestionForm() {
         onChange={val => setValue('difficulty', val as Difficulty)}
       />
 
-      {/* Topic */}
       <TagSelector
         label="Topic"
         options={TOPICS}
@@ -159,7 +156,6 @@ export default function CreateQuestionForm() {
         onChange={val => setValue('topic', val)}
       />
 
-      {/* Question Stem */}
       <h2 className="text-lg md:text-[24px] font-bold text-[#01281e]">
         Question Stem
       </h2>
@@ -172,7 +168,6 @@ export default function CreateQuestionForm() {
         onImageFileChange={setQuestionStemImageFile}
       />
 
-      {/* Answers */}
       <div className="space-y-4">
         <div className="flex justify-between">
           <label className="font-bold">Answer Choices</label>
@@ -219,7 +214,6 @@ export default function CreateQuestionForm() {
               className="border-none shadow-none focus-visible:ring-0 flex-1"
             />
 
-            {/* Delete Button */}
             {fields.length > 2 && (
               <Button
                 type="button"
@@ -234,7 +228,6 @@ export default function CreateQuestionForm() {
         ))}
       </div>
 
-      {/* Explanation */}
       <h2 className="text-lg md:text-[24px] font-bold text-[#01281e]">
         Explanation
       </h2>
@@ -247,7 +240,6 @@ export default function CreateQuestionForm() {
         onImageFileChange={setExplanationImageFile}
       />
 
-      {/* Why incorrect */}
       <h2 className="text-lg md:text-[24px] font-bold text-[#01281e]">
         Why The Other Options Are Incorrect
       </h2>
@@ -258,7 +250,6 @@ export default function CreateQuestionForm() {
         onChange={v => setValue('keyPoints', v)}
       />
 
-      {/* Pimping Point */}
       <h2 className="text-lg md:text-[24px] font-bold text-[#01281e]">
         Pimping Point
       </h2>
@@ -269,7 +260,6 @@ export default function CreateQuestionForm() {
         onChange={v => setValue('keepingPoint', v)}
       />
 
-      {/* Memory Trick */}
       <h2 className="text-lg md:text-[24px] font-bold text-[#01281e]">
         Memory Trick
       </h2>
@@ -280,7 +270,6 @@ export default function CreateQuestionForm() {
         onChange={v => setValue('memoryTrick', v)}
       />
 
-      {/* References */}
       <h2 className="text-lg md:text-[24px] font-bold text-[#01281e]">
         References
       </h2>
@@ -291,7 +280,6 @@ export default function CreateQuestionForm() {
         onChange={v => setValue('referance', v)}
       />
 
-      {/* Submit */}
       <button
         type="submit"
         disabled={isLoading}

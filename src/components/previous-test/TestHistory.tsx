@@ -37,6 +37,11 @@ interface Props {
   search: string;
 }
 
+const displayDifficultyLabel = (difficulty: string): string => {
+  if (difficulty === 'Board') return 'Boards';
+  return difficulty;
+};
+
 export function TestHistory({ search }: Props) {
   const [page, setPage] = useState(1);
   const router = useRouter();
@@ -137,7 +142,7 @@ export function TestHistory({ search }: Props) {
                           case 'Senior':
                             badgeClass = 'bg-[#f0e1dc] text-[#b79e6b]';
                             break;
-                          case 'Boards':
+                          
                           case 'Board':
                             badgeClass = 'bg-[#cdebe3] text-[#01503b]';
                             break;
@@ -151,7 +156,7 @@ export function TestHistory({ search }: Props) {
                             key={index}
                             className={`rounded-[6px] px-3 py-1.5 text-xs font-medium ${badgeClass}`}
                           >
-                            {level}
+                            {displayDifficultyLabel(level)}
                           </Badge>
                         );
                       })}

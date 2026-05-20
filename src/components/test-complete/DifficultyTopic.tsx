@@ -22,6 +22,11 @@ type DifficultyItem = {
   percentage: number;
 };
 
+const displayDifficultyLabel = (difficulty: string): string => {
+  if (difficulty === 'Board') return 'Boards';
+  return difficulty;
+};
+
 export default function DifficultyTopic({ result }: Props) {
   const difficultyStats: DifficultyItem[] = result?.difficulty_wise_stats ?? [];
 
@@ -61,7 +66,7 @@ export default function DifficultyTopic({ result }: Props) {
                       : 'bg-[#fafafa] text-[#5f6b6b] cursor-pointer '
                 }`}
               >
-                {item.difficulty}
+                {displayDifficultyLabel(item.difficulty)}
               </button>
             );
           })}
@@ -105,7 +110,7 @@ function DifficultyDetails({ item }: { item: DifficultyItem }) {
         <div className="flex h-6 w-6 shrink-0 items-center justify-center">
           <StatIcon />
         </div>
-        <span className="break-words">{item.difficulty}</span>
+        <span className="break-words">{displayDifficultyLabel(item.difficulty)}</span>
       </div>
 
       <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">

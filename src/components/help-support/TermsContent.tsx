@@ -11,7 +11,7 @@ export default function TermsContent({ html }: Props) {
     <div className="mx-auto font-[manrope]">
       <CardHeader className="background text-white rounded-lg py-8">
         <CardTitle className="text-3xl md:text-[48px] font-bold text-center">
-          Terms & Conditions
+          Terms of Use
         </CardTitle>
       </CardHeader>
 

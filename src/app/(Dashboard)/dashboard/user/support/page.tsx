@@ -61,7 +61,7 @@ export default function HelpPage() {
               className="w-full py-6 text-lg"
               onClick={() => setActiveTab('terms')}
             >
-              Terms & Conditions
+              Terms of Use
             </Button>
 
             <Button

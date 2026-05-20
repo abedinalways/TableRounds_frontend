@@ -93,8 +93,8 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
             <div className="flex md:gap-[48px] gap-6 items-center text-xs md:text-[16px] font-light text-[#6b7280]">
               <h4 className="flex items-center gap-2">
                 <LocationIcon />
-                {user.address}
-                {user?.state && `, ${user.state}`}
+                
+                {user?.state && ` ${user.state}`}
                 {user?.country && `, ${user.country}`}
               </h4>
               <h4 className="flex items-center gap-2">

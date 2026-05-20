@@ -1,3 +1,5 @@
+'use client';
+
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
@@ -23,6 +25,12 @@ export function TagSelector({
     typeof option === 'string' ? { value: option, label: option } : option,
   );
 
+  const getDisplayLabel = (option: Option) => {
+    // Only change UI text for difficulty 'Board'
+    if (label === 'Difficulty' && option.value === 'Board') return 'Boards';
+    return option.label;
+  };
+
   return (
     <div className="space-y-2 p-4 bg-white border rounded-lg">
       <h3 className="text-md md:text-[20px] text-[#444950] font-bold leading-[160%]">
@@ -42,7 +50,7 @@ export function TagSelector({
             )}
             onClick={() => onChange(option.value)}
           >
-            {option.label}
+            {getDisplayLabel(option)}
             {selected === option.value && ' ✕'}
           </Badge>
         ))}

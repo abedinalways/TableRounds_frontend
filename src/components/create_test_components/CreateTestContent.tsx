@@ -441,6 +441,11 @@ const DIFFICULTY_LEVELS = ['Intern', 'Senior', 'Board'] as const;
 
 type DifficultyLevel = (typeof DIFFICULTY_LEVELS)[number];
 
+const displayDifficultyLabel = (difficulty: string): string => {
+  if (difficulty === 'Board') return 'Boards';
+  return difficulty;
+};
+
 export function CreateTestContent() {
   const router = useRouter();
 
@@ -561,7 +566,7 @@ export function CreateTestContent() {
     const payload = {
       total_questions: Number(numQuestions),
       test_mode: selectedStatus
-        .filter(s => s === 'Used' || s === 'Unused')
+        .filter(s => s === 'Used' || s === 'Unused' || s==="Marked" || s==="Correct" || s==="Incorrect")
         .map(s => s.toLowerCase()),
       difficulty: selectedDifficulty,
       topic: selectedTopics,
@@ -674,7 +679,7 @@ export function CreateTestContent() {
                 >
                   <CustomCheckbox checked={isSelected} />
                   <span className="flex gap-2 items-center">
-                    {level}{' '}
+                    {displayDifficultyLabel(level)}{' '}
                     <span className="min-w-[30px] h-[22px] px-2 rounded-[6px] border border-[#00B977] text-[#00B977] text-xs font-medium flex items-center justify-center bg-white">
                       {isQuestionCountUpdating
                         ? '...'
