@@ -230,7 +230,7 @@ export default function TestReviewPage() {
       <div className="percentage-bg text-white p-4 flex text-3xl flex-col justify-center items-center rounded-xl">
         <p>Score: {test?.score}%</p>
         <p>Total Questions: {test?.total_questions}</p>
-        <p>Difficulty: {displayDifficultyLabel(diff)}</p>
+        {/* <p>Difficulty: {displayDifficultyLabel(diff)}</p> */}
       </div>
 
       {/* Questions */}
@@ -244,10 +244,66 @@ export default function TestReviewPage() {
               className="border rounded-xl p-4 bg-white shadow-sm "
             >
               {/* Question */}
-              <h3 className="font-semibold mb-2">
-                Q{index + 1}. {q.question_title}
-              </h3>
+              <h3 className="font-semibold mb-4 flex flex-col md:flex-row md:items-center gap-2 md:gap-6 border-b pb-2">
+                {/* Question Title */}
+                <span className="text-xl font-bold md:mr-4 block">
+                  Q{index + 1}. {q.question_title}
+                </span>
 
+                {/* Badges Container */}
+                <div className="flex flex-wrap items-center gap-2">
+                  {/* Question ID */}
+                  <span className="flex gap-1 items-center text-xs bg-gray-100 border border-gray-200 px-2 py-1 rounded-md text-gray-700">
+                    <span className="font-medium text-gray-500">
+                      Question ID:
+                    </span>
+                    <span className="font-semibold">
+                      {q.question_id || q.id}
+                    </span>
+                  </span>
+
+                  {/* Difficulty (Array or String handler) */}
+                  {q.difficulty && (
+                    <div className="flex flex-wrap items-center gap-1">
+                      <span className="text-xs font-medium text-gray-500 mr-1">
+                        Difficulty:
+                      </span>
+                      {(Array.isArray(q.difficulty)
+                        ? q.difficulty
+                        : [q.difficulty]
+                      ).map((diff: string, dIdx: number) => (
+                        <span
+                          key={dIdx}
+                          className="text-xs bg-blue-100 text-blue-800 font-semibold px-2.5 py-0.5 rounded-full shadow-sm"
+                        >
+                          {diff === 'Board' ? 'Boards' : diff}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Topic (Array handler) */}
+                  {q.topic &&
+                    (Array.isArray(q.topic) ? q.topic : [q.topic]).length >
+                      0 && (
+                      <div className="flex flex-wrap items-center gap-1 md:ml-2">
+                        <span className="text-xs font-medium text-gray-500 mr-1">
+                          Topic:
+                        </span>
+                        {(Array.isArray(q.topic) ? q.topic : [q.topic]).map(
+                          (top: string, tIdx: number) => (
+                            <span
+                              key={tIdx}
+                              className="text-xs bg-purple-100 text-purple-800 font-semibold px-2.5 py-0.5 rounded-full shadow-sm"
+                            >
+                              {top.replace(/_/g, ' / ')}
+                            </span>
+                          ),
+                        )}
+                      </div>
+                    )}
+                </div>
+              </h3>
               <p
                 className="text-lg text-gray-600 mb-3"
                 dangerouslySetInnerHTML={{ __html: q.question_steam }}

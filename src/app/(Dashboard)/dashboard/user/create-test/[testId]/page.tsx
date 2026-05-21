@@ -182,9 +182,10 @@ function mapTestDataToQuestions(data: TestData): QuizQuestionDataUI[] {
     const displayQuestionId = String(q.question_id ?? '');
     const questionAnswerOptions = q.answerOptions ?? [];
 
+    console.log('Answer Options from backend:', questionAnswerOptions);
+
     const apiAnswer = apiUserAnswers.find((answer: any) => {
       const apiQuestionId = getQuestionIdFromApiAnswer(answer);
-
       return (
         apiQuestionId === questionId || apiQuestionId === displayQuestionId
       );
@@ -201,6 +202,33 @@ function mapTestDataToQuestions(data: TestData): QuizQuestionDataUI[] {
       ? getCorrectOptionIdFromQuestion(questionAnswerOptions)
       : null;
 
+    // ✅ ONLY calculate percentage if total_select exists
+    const calculatePercentage = (opt: any) => {
+      // If no total_select data, return 0 (don't show percentage)
+      if (!opt.total_select && !opt.percentage) {
+        return 0;
+      }
+
+      // If backend sends percentage directly, use it
+      if (opt.percentage) {
+        return Number(opt.percentage);
+      }
+
+      // Calculate from total_select if available
+      if (opt.total_select) {
+        const totalSelects = questionAnswerOptions.reduce(
+          (sum: number, o: any) => sum + Number(o.total_select ?? 0),
+          0,
+        );
+
+        if (totalSelects > 0) {
+          return Math.round((Number(opt.total_select) / totalSelects) * 100);
+        }
+      }
+
+      return 0;
+    };
+
     const answerOptions = questionAnswerOptions.map((opt: any) => ({
       id: String(opt.id),
       option_text: opt.option_text,
@@ -210,7 +238,8 @@ function mapTestDataToQuestions(data: TestData): QuizQuestionDataUI[] {
           Boolean(
             correctOptionId && String(opt.id) === String(correctOptionId),
           )),
-      percentage: opt.total_select ?? opt.percentage ?? 0,
+      total_select: Number(opt.total_select ?? 0),
+      percentage: calculatePercentage(opt), // ✅ Only show if data exists
     }));
 
     const explanation = hasAnswered ? mapQuestionExplanation(q) : null;
@@ -252,6 +281,7 @@ export default function CreateTestPage() {
     isLoading,
     isFetching,
     isError,
+    refetch: refetchTest,
   } = useGetTestQuery(testId!, {
     skip: !testId,
     refetchOnMountOrArgChange: true,
@@ -260,31 +290,21 @@ export default function CreateTestPage() {
   });
 
 useEffect(() => {
-  if (!testResponse?.data || !testId) return;
-
-  if (isFetching) return;
+  if (!testResponse?.data || !testId || isFetching) return;
 
   const mapped = mapTestDataToQuestions(testResponse.data);
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
   setQuestions(mapped);
 
   const firstUnansweredIndex = mapped.findIndex(
     question => !question.quizDetails.userAnswerId,
   );
 
-  const resumeQuestion =
-    firstUnansweredIndex >= 0 ? firstUnansweredIndex + 1 : mapped.length;
-
   if (initializedTestIdRef.current !== testId) {
     initializedTestIdRef.current = testId;
-    setCurrentQuestion(resumeQuestion);
-  } else {
-    setCurrentQuestion(prev => {
-      if (prev > mapped.length) return mapped.length || 1;
-
-      return prev;
-    });
+    setCurrentQuestion(
+      firstUnansweredIndex >= 0 ? firstUnansweredIndex + 1 : 1,
+    );
   }
 
   const apiMarked: MarkedQuestion[] =
@@ -419,6 +439,7 @@ useEffect(() => {
       key={data.testProgress.questionID}
       testId={testId}
       data={data}
+      refetchTest={refetchTest}
       markedQuestions={markedQuestions}
       onToggleMark={onToggleMarkLocalOnly}
       onJumpTo={onJumpTo}

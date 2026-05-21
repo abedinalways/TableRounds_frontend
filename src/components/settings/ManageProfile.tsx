@@ -44,6 +44,7 @@ type ProfileFormData = {
   linkedin: string;
   twitter: string;
   facebook: string;
+  specialty: string;
   bio: string;
   current_practice: string;
   is_public: boolean;
@@ -51,6 +52,7 @@ type ProfileFormData = {
 
 interface ProfileHeaderProps {
   user: UserProfile;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onProfileUpdated?: () => Promise<any> | void;
 }
 
@@ -95,6 +97,7 @@ export default function ManageProfile({
       instagram: '',
       linkedin: '',
       twitter: '',
+      specialty:'',
       facebook: '',
       bio: '',
       current_practice: '',
@@ -125,6 +128,7 @@ export default function ManageProfile({
       linkedin: user?.linkedin || '',
       twitter: user?.twitter || '',
       facebook: user?.facebook || '',
+      specialty: user?.specialty || '',
       bio: user?.bio || '',
       current_practice: user?.current_practice || '',
       is_public: Boolean(user?.is_public),
@@ -161,6 +165,7 @@ export default function ManageProfile({
       formData.append('facebook', data.facebook || '');
       formData.append('bio', data.bio || '');
       formData.append('current_practice', data.current_practice || '');
+      formData.append('specialty', data.specialty || '');
       formData.append('is_public', String(data.is_public));
 
       if (imageFile) {
@@ -596,7 +601,37 @@ export default function ManageProfile({
               {normalizeDate}
             </h3>
           </div>
+         
+          <div className="flex flex-col gap-[8px] w-full">
+            <Label className="font-bold md:text-lg!">
+              Specialty <span className="text-red-600">*</span>
+            </Label>
+            <div className="w-full">
+              <Select
+                value={watch('specialty')}
+                onValueChange={value =>
+                  setValue('specialty', value, { shouldDirty: true })
+                }
+              >
+                <SelectTrigger className="bg-[#f9f9f5] border border-[rgba(68,68,68,0.1)] h-9 md:w-[620px] w-[225px]">
+                  <SelectValue placeholder="Select a specialty" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Oral and Maxillofacial Surgery">
+                    Oral and Maxillofacial Surgery
+                  </SelectItem>
+                  <SelectItem value="Plastic Surgery">Plastic Surgery</SelectItem>
+                  <SelectItem value="Otorhinolaryngology">
+                    Otorhinolaryngology
+                  </SelectItem>
+                  <SelectItem value="Dentistry">Dentistry</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
         </div>
+      
       </div>
 
       <div className="mt-6 bg-white rounded-2xl p-6 shadow-sm font-[manrope] mb-6">

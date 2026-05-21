@@ -10,6 +10,9 @@ export interface AuthUser {
   role: Role;
   avatar: string;
   followers: number;
+  current_practice: string;
+  training_practice: string;
+  specialty: string;
   followings: number;
   instagram: string;
   linkedin: string;
@@ -21,6 +24,7 @@ export interface AuthUser {
   facebook: string;
   bio: string;
   join_date: string;
+  created_at: string;
   type: 'admin' | 'user';
 }
 export interface AuthorizationResponse {

@@ -1,3 +1,4 @@
+
 export interface UserProfile {
   id: string;
   name: string;
@@ -21,6 +22,7 @@ export interface UserProfile {
   twitter: string;
   facebook: string;
   current_practice: string;
+  specialty: string;
 }
 
 export interface EducationItem {

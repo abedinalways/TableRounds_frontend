@@ -8,8 +8,6 @@ import ProfileTabs from '@/components/profile/ProfileTabs';
 import { useGetProfileDataQuery } from '@/app/redux/api/getProfileApi';
 import { ProfilePageSkeleton } from '@/components/user-profile/ProfilePageSkeleton';
 
-
-
 export default function ProfilePage({
   params,
 }: {
@@ -20,11 +18,8 @@ export default function ProfilePage({
   const [activeTab, setActiveTab] = useState<ProfileTab>('overview');
 
   const { data, isLoading, error } = useGetProfileDataQuery(id);
-  
-  
 
   const apiData = data;
-  
 
   if (isLoading) {
     return <ProfilePageSkeleton />;
@@ -37,6 +32,13 @@ export default function ProfilePage({
       </div>
     );
   }
+
+  // ✅ Get specialty from multiple sources with fallback
+  const specialty =
+    apiData.specialty ??
+    
+    apiData.current_practice ??
+    'Medical Professional';
 
   const formattedData = {
     user: {
@@ -61,12 +63,12 @@ export default function ProfilePage({
       following: apiData.followings ?? 0,
       credentials: apiData.credentials ?? '',
       training_practice: apiData.training_practice ?? '',
-      // year: apiData.educations?.[0]?.year ?? '',
       instagram: apiData.instagram ?? '',
       linkedin: apiData.linkedin ?? '',
       twitter: apiData.twitter_x ?? '',
       facebook: apiData.facebook ?? '',
       current_practice: apiData.current_practice ?? '',
+      specialty: specialty, // ✅ Add specialty here
     },
 
     education: (apiData.educations ?? []).map((edu: any) => ({
@@ -113,7 +115,6 @@ export default function ProfilePage({
         </div>
 
         <ProfileTabs
-        
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           data={formattedData}

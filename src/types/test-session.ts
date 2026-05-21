@@ -70,6 +70,7 @@ export interface QuizOptionUI {
   option_text: string;
   percentage?: number;
   is_correct: boolean;
+  total_select: number;
 }
 
 export interface QuizExplanationUI {

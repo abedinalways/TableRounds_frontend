@@ -8,7 +8,6 @@ import { useGetProfileDataQuery } from '@/app/redux/api/getProfileApi';
 import ProfileHeader from '@/components/user-profile/ProfileHeader';
 import ProfileTabs from '@/components/user-profile/ProfileTabs';
 
-
 export default function ProfilePage({
   params,
 }: {
@@ -34,69 +33,75 @@ export default function ProfilePage({
       </div>
     );
 
- const formattedData = {
-   user: {
-     name: apiData.name,
-     id: apiData.id,
-     cv: apiData.cv || '',
-     avatar: apiData.avatar
-       ? apiData.avatar.startsWith('http')
-         ? apiData.avatar
-         : `${apiData.avatar}`
-       : '/images/settings/img01.png',
-     is_public: apiData.is_public,
-     title: apiData.training_practice || 'Medical Professional',
-     address: apiData.address || 'Location not set',
-     jobArea: apiData.current_practice || 'General Practice',
-     bio: apiData.bio || 'No bio available.',
-     created_at: apiData.created_at ?? '',
-     followers: apiData.followers ?? 0,
-     following: apiData.followings ?? 0,
-     country: apiData.country ?? '',
-     state: apiData.state ?? '',
-     credentials: apiData.credentials ?? '',
-     training_practice:apiData.training_practice ?? '',
-    //  year: apiData.educations?.[0]?.year ?? '',
-     instagram: apiData.instagram ?? '',
-     linkedin: apiData.linkedin ?? '',
-     twitter: apiData.twitter_x ?? '',
-     facebook: apiData.facebook ?? '',
-     current_practice: apiData.current_practice ?? '',
-   },
+  // ✅ Get specialty from first experience or apiData
+  const specialty =
+    apiData.specialty ??
+    apiData.current_practice ??
+    'Medical Professional';
 
-   education: (apiData.educations ?? []).map((edu: any) => ({
-     title: edu.degree,
-     institute: edu.institute,
-     degree: edu.description,
-     year: edu.year,
-   })),
+  const formattedData = {
+    user: {
+      name: apiData.name,
+      id: apiData.id,
+      cv: apiData.cv || '',
+      avatar: apiData.avatar
+        ? apiData.avatar.startsWith('http')
+          ? apiData.avatar
+          : `${apiData.avatar}`
+        : '/images/settings/img01.png',
+      is_public: apiData.is_public,
+      title: apiData.training_practice || 'Medical Professional',
+      address: apiData.address || 'Location not set',
+      jobArea: apiData.current_practice || 'General Practice',
+      bio: apiData.bio || 'No bio available.',
+      created_at: apiData.created_at ?? '',
+      followers: apiData.followers ?? 0,
+      following: apiData.followings ?? 0,
+      country: apiData.country ?? '',
+      state: apiData.state ?? '',
+      credentials: apiData.credentials ?? '',
+      training_practice: apiData.training_practice ?? '',
+      instagram: apiData.instagram ?? '',
+      linkedin: apiData.linkedin ?? '',
+      twitter: apiData.twitter_x ?? '',
+      facebook: apiData.facebook ?? '',
+      current_practice: apiData.current_practice ?? '',
+      specialty: specialty, // ✅ Add specialty here
+    },
 
-   experience: (apiData.experiences ?? []).map((exp: any) => ({
-     role: exp.position,
-     hospital: exp.company,
-     location: exp.location,
-     period: `${exp.start_date} - ${exp.end_date}`,
-     specialty: exp.specialty ?? '',
-   })),
+    education: (apiData.educations ?? []).map((edu: any) => ({
+      title: edu.degree,
+      institute: edu.institute,
+      degree: edu.description,
+      year: edu.year,
+    })),
 
-   publications: (apiData.publications ?? []).map((pub: any) => ({
-     title: pub.title,
-     year: pub.year,
-     author: pub.topic,
-     articleLink: pub.link,
-   })),
+    experience: (apiData.experiences ?? []).map((exp: any) => ({
+      role: exp.position,
+      hospital: exp.company,
+      location: exp.location,
+      period: `${exp.start_date} - ${exp.end_date}`,
+      specialty: exp.specialty ?? '',
+    })),
 
-   skills: (apiData.skills ?? []).map((skill: any) => skill.name),
+    publications: (apiData.publications ?? []).map((pub: any) => ({
+      title: pub.title,
+      year: pub.year,
+      author: pub.topic,
+      articleLink: pub.link,
+    })),
 
-   statistics: {
-     complete_percentage: apiData.statistics?.complete_percentage ?? 0,
-     correct_percentage: apiData.statistics?.correct_percentage ?? 0,
-     ranking: apiData.statistics?.ranking ?? 0,
-     best_topic: apiData.statistics?.best_topic ?? null,
-   },
+    skills: (apiData.skills ?? []).map((skill: any) => skill.name),
 
-   practiceName: apiData.current_practice ?? '',
- };
+    statistics: {
+      complete_percentage: apiData.statistics?.complete_percentage ?? 0,
+      correct_percentage: apiData.statistics?.correct_percentage ?? 0,
+      ranking: apiData.statistics?.ranking ?? 0,
+      best_topic: apiData.statistics?.best_topic ?? null,
+    },
+
+    practiceName: apiData.current_practice ?? '',
+  };
 
   return (
     <div>

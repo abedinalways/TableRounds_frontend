@@ -246,6 +246,9 @@ export default function MarkPage() {
 
                 <QuestionCard
                   testId={item.test_id}
+                  questionID={item.question.id}
+                  currentQuestion={index + 1}
+                  setQuestions={() => {}}
                   quizDetails={{
                     id: item.question.id,
                     question_id: item?.question?.question_id,
@@ -256,6 +259,7 @@ export default function MarkPage() {
                       option_text: option.option_text,
                       is_correct: false,
                       percentage: 0,
+                      total_select: 0, // ✅ Add this required field
                     })),
                     correctAnswerId: null,
                     userAnswerId: null,
@@ -265,7 +269,6 @@ export default function MarkPage() {
                   showExplanation={false}
                   isUserCorrect={false}
                   onAnswerChange={() => {}}
-                  onSubmit={() => Promise.resolve(false)}
                   onToggleHide={() => {}}
                   isQuestionHidden={false}
                   hideActions={true}
