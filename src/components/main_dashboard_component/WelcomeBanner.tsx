@@ -7,6 +7,10 @@ import { useMeQuery } from '@/app/redux/api/authApi';
 import { useGetConnectionsQuery } from '@/app/redux/api/connectionApi';
 import { useToggleFollowMutation } from '@/app/redux/api/followApi';
 import { WelcomeBannerSkeleton } from './WelcomeBannerSkeleton';
+import { useGetProfileQuery } from '@/app/redux/api/profileApi';
+import LocationIcon from '../ui/LocationIcon';
+import { Disc, DiscIcon, DotIcon } from 'lucide-react';
+import { FaLocationDot } from 'react-icons/fa6';
 
 export const WelcomeBanner = () => {
   const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
@@ -14,7 +18,8 @@ export const WelcomeBanner = () => {
   const [modalType, setModalType] = useState<'follower' | 'following'>(
     'follower',
   );
-
+  const { data: value } = useMeQuery(); 
+  console.log(value, "----------------------wefwfwfwfwefffffffff")
   const [toggleFollow] = useToggleFollowMutation();
   const { data: connectionsData, isLoading } = useGetConnectionsQuery(
     { type: modalType },
@@ -44,10 +49,10 @@ export const WelcomeBanner = () => {
         filter: 'blur(0px)',
         duration: 0.55,
         ease: 'power3.out',
-        stagger: 0.12, // each word follows 120 ms after the previous
+        stagger: 0.12, 
       },
     );
-  }, [user?.name]); // re-run once the name arrives
+  }, [user?.name]); 
 
   const formattedDate = new Date().toLocaleDateString('en-US', {
     month: 'long',
@@ -62,7 +67,7 @@ export const WelcomeBanner = () => {
       ? new URL(user.avatar).href
       : '/images/navbar-logo.png';
 
-  // Split "Welcome," and the name into separate animatable words
+  
   const words = ['Welcome,', ...(user?.name ?? '').split(' ')];
 
   return (
@@ -104,7 +109,63 @@ export const WelcomeBanner = () => {
               <p className="md:text-[18px] text-xs">
                 Stay up to date on your current progress
               </p>
+              {/* ── Specialty & Training ── */}
+              {(user?.specialty || user?.training_practice) && (
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-sm md:text-base opacity-90">
+                  {user?.specialty && (
+                    <span className="flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded-full text-xs md:text-sm border border-white/5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse" />
+                      {user.specialty}
+                    </span>
+                  )}
+                  {user?.training_practice && (
+                    <span className="flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded-full text-xs md:text-sm border border-white/5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                      {user.training_practice}
+                    </span>
+                  )}
+                </div>
+              )}
 
+              {/* ── Meta Info (Location & Joined Date) ── */}
+              <div className="flex  gap-5 mt-2 text-xs md:text-sm text-gray-300">
+                {/* Location */}
+                {(user?.country || user?.state) && (
+                  <div className="flex items-center gap-2 group">
+                    <FaLocationDot className="text-yellow-500 text-sm shrink-0 transition-transform group-hover:scale-110 duration-200" />
+                    <span className="font-medium tracking-wide">
+                      {[user?.state, user?.country].filter(Boolean).join(', ')}
+                    </span>
+                  </div>
+                )}
+
+                {/* Joined Date */}
+                {user?.created_at && (
+                  <div className="flex items-center gap-2 text-gray-300">
+                    
+                    <svg
+                      className="w-3.5 h-3.5 text-gray-400 shrink-0"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="orange"
+                      strokeWidth="2.5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                    <span className="text-[11px] md:text-xs">
+                      Joined:{' '}
+                      {new Date(user.created_at).toLocaleDateString('en-US', {
+                        month: 'long',
+                        year: 'numeric',
+                      })}
+                    </span>
+                  </div>
+                )}
+              </div>
               <div className="flex md:space-x-4 space-x-2 text-[#b79e6b]">
                 <button
                   onClick={() => {

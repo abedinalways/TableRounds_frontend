@@ -8,8 +8,14 @@ import {
 
 import { ProfileData as ProfileUIData } from '@/types/myProfile';
 
-
 export function mapProfileToUI(data: ProfileData): ProfileUIData {
+  // ✅ Get specialty from multiple sources with fallback
+  const specialty =
+    data.specialty ??
+   
+    data.current_practice ??
+    'Medical Professional';
+
   return {
     user: {
       id: data.id,
@@ -22,7 +28,6 @@ export function mapProfileToUI(data: ProfileData): ProfileUIData {
       jobArea: data.current_practice || '',
       country: data.country || '',
       state: data.state || '',
-      
       followers: data.followers || 0,
       following: data?.followings || 0,
       is_public: data.is_public,
@@ -34,6 +39,7 @@ export function mapProfileToUI(data: ProfileData): ProfileUIData {
       facebook: data.facebook ?? '',
       current_practice: data.current_practice ?? '',
       created_at: data.created_at ?? '',
+      specialty: specialty, // ✅ Add specialty here
     },
 
     education: (data.educations ?? []).map((edu: Education) => ({
@@ -59,18 +65,12 @@ export function mapProfileToUI(data: ProfileData): ProfileUIData {
     })),
 
     skills: (data.skills ?? []).map((skill: Skill) => skill.name),
+
     statistics: {
       complete_percentage: data.statistics?.complete_percentage ?? 0,
       correct_percentage: data.statistics?.correct_percentage ?? 0,
       ranking: data.statistics?.ranking ?? 0,
       best_topic: data.statistics?.best_topic ?? null,
     },
-
-    // questionBank: {
-    //   completion: 0,
-    //   ranking: 0,
-    //   correctRate: 0,
-    //   bestTopic: '',
-    // },
   };
 }

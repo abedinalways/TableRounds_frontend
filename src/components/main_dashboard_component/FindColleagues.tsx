@@ -38,6 +38,7 @@ const ColleagueCard = memo(
     const [isFollowing, setIsFollowing] = useState(colleague.is_following);
 
     useEffect(() => {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsFollowing(colleague.is_following);
     }, [colleague.is_following]);
 

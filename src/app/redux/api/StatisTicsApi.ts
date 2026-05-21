@@ -11,6 +11,7 @@ export interface Data {
   question_bank: QuestionBank;
   tests: Tests;
   performance_by_topic: PerformanceByTopic[];
+  performance_by_difficulty: PerformanceByDifficulty[];
 }
 
 export interface Performance {
@@ -41,6 +42,13 @@ export interface PerformanceByTopic {
   question_bank_progress: number;
 }
 
+export interface PerformanceByDifficulty {
+  difficulty: string;
+  correct_percentage: number;
+  total_correct: number;
+  rank: number;
+  question_bank_progress: number;
+}
 export const statisTicsApi = baseApi.injectEndpoints({
   endpoints: builder => ({
     getStatistics: builder.query<Root, void>({

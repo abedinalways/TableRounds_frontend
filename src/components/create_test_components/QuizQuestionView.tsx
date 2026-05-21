@@ -489,6 +489,7 @@ interface QuizQuestionViewProps {
   onToggleMark: () => void;
   onNext: () => void;
   onPrevious: () => void;
+  refetchTest: () => Promise<any>;
   onJumpTo?: (index: number) => void;
   setQuestions: React.Dispatch<React.SetStateAction<QuizQuestionDataUI[]>>;
   currentQuestion: number;
@@ -504,6 +505,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   questions,
   onToggleMark,
   onNext,
+  refetchTest,
   onPrevious,
   onJumpTo,
   setQuestions,
@@ -629,7 +631,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
         id: String(o.id),
         option_text: o.option_text,
         is_correct: Boolean(o.is_correct),
-        percentage: o.total_select ?? 0,
+        total_select: Number(o.total_select ?? 0),
       }));
 
       setSelectedAnswer(selectedOptionId);
@@ -667,6 +669,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
       // );
 
       setShowExplanation(true);
+      
       return isCorrect;
     } catch (error: any) {
       const message = error?.data?.message || error?.message || 'Submit failed';
@@ -912,12 +915,14 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
                 >
                   <QuestionCard
                     testId={testId}
+                    questionID={questionID}
+                    currentQuestion={currentQuestion}
+                    setQuestions={setQuestions}
                     quizDetails={quizDetails}
                     selectedAnswerId={selectedAnswerId}
                     showExplanation={showExplanation}
                     isUserCorrect={isUserCorrect}
                     onAnswerChange={handleAnswerChange}
-                    onSubmit={handleSubmit}
                     onToggleHide={handleToggleHide}
                     isQuestionHidden={isQuestionHidden}
                   />

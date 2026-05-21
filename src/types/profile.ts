@@ -1,3 +1,4 @@
+
 import { Education, Publication } from './../app/redux/api/getProfileApi';
 
 // export interface UserProfile {
@@ -81,6 +82,7 @@ export interface UserProfile {
   twitter: string;
   facebook: string;
   current_practice: string;
+  specialty: string;
 }
 
 export interface EducationItem {
