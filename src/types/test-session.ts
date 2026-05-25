@@ -94,6 +94,7 @@ export interface QuizDetailsUI {
   userAnswerId: string | null;
   correctAnswerId: string | null;
   explanation: QuizExplanationUI | null;
+  is_marked?: boolean;
 }
 
 export interface QuizQuestionDataUI {

@@ -1,5 +1,6 @@
 // 'use client';
-// import { useState } from 'react';
+
+// import { useEffect, useState } from 'react';
 // import { useRouter } from 'next/navigation';
 
 // import { Label } from '@/components/ui/label';
@@ -36,9 +37,16 @@
 
 // type DifficultyLevel = (typeof DIFFICULTY_LEVELS)[number];
 
+// const displayDifficultyLabel = (difficulty: string): string => {
+//   if (difficulty === 'Board') return 'Boards';
+//   return difficulty;
+// };
+
 // export function CreateTestContent() {
 //   const router = useRouter();
+
 //   const [isStarted, setIsStarted] = useState(false);
+
 //   const [selectedTopics, setSelectedTopics] = useState<string[]>(
 //     TOPICS.map(topic => topic.value),
 //   );
@@ -47,20 +55,25 @@
 //     DifficultyLevel[]
 //   >(['Intern']);
 
-//   const handleDifficultyToggle = (level: DifficultyLevel, checked: boolean) => {
-//     setSelectedDifficulty(prev =>
-//       checked ? [...prev, level] : prev.filter(d => d !== level),
-//     );
-//   };
-
 //   const [selectedStatus, setSelectedStatus] = useState<string[]>(['Unused']);
 //   const [numQuestions, setNumQuestions] = useState<string>('');
 
 //   const [startTest, { isLoading }] = useStartTestMutation();
-//   // console.log(startTest, "ooooooooooooooooooooooo===========")
 
-//   const { data: questionCountData, isLoading: isQuestionCountLoading } =
-//     useGetQuestionCountQuery();
+//   const {
+//     data: questionCountData,
+//     isLoading: isQuestionCountLoading,
+//     isFetching: isQuestionCountFetching,
+//     refetch: refetchQuestionCount,
+//   } = useGetQuestionCountQuery(undefined, {
+//     refetchOnMountOrArgChange: true,
+//     refetchOnFocus: true,
+//     refetchOnReconnect: true,
+//   });
+
+//   useEffect(() => {
+//     refetchQuestionCount();
+//   }, [refetchQuestionCount]);
 
 //   const handleTopicToggle = (topicValue: string, checked: boolean) => {
 //     setSelectedTopics(prev =>
@@ -80,7 +93,8 @@
 //     );
 //   };
 
-//   const allDifficultiesSelected = selectedDifficulty.length === DIFFICULTY_LEVELS.length;
+//   const allDifficultiesSelected =
+//     selectedDifficulty.length === DIFFICULTY_LEVELS.length;
 
 //   const handleToggleAllDifficulties = () => {
 //     setSelectedDifficulty(
@@ -129,77 +143,26 @@
 //         questionCountData?.data?.topic_wise_count?.find(
 //           t => t.name === topic.value,
 //         )?.count ?? 0;
+
 //       acc[topic.value] = count;
 //       return acc;
 //     },
 //     {} as Record<string, number>,
 //   );
 
-//   // const handleStartTest = async () => {
-//   //   if (!numQuestions || selectedTopics.length === 0) {
-//   //     toast.error('Please select Question Count');
-//   //     return;
-//   //   }
+//   const isQuestionCountUpdating =
+//     isQuestionCountLoading || isQuestionCountFetching;
 
-//   //   const payload = {
-//   //     total_questions: Number(numQuestions),
-//   //     test_mode: selectedStatus
-//   //       .filter(s => s === 'Used' || s === 'Unused')
-//   //       .map(s => s.toLowerCase()),
-//   //     difficulty: selectedDifficulty,
-//   //     topic: selectedTopics,
-//   //   };
-
-//   //   try {
-//   //     const res = await startTest(payload).unwrap();
-//   //     if (!res.success || !res.data) {
-//   //       throw new Error(res.message || 'Failed to create test');
-//   //     }
-
-//   //     const testSession = {
-//   //       id: res.data.id,
-//   //       total_questions: res.data.total_questions,
-//   //       questions: res.data.questions.map((q, index) => ({
-//   //         testProgress: {
-//   //           questionID: q.id,
-//   //           totalQuestions: res?.data?.total_questions,
-//   //           currentQuestion: index + 1,
-//   //         },
-//   //         quizDetails: {
-//   //           question_title: q.question_title,
-//   //           question_steam: q.question_steam,
-//   //           answerOptions: q.answerOptions.map(opt => ({
-//   //             id: opt.id,
-//   //             option_text: opt.option_text,
-//   //             percentage: 0,
-//   //           })),
-//   //           correctAnswerId: null,
-//   //           userAnswerId: null,
-//   //           explanation: null,
-//   //         },
-//   //       })),
-//   //     };
-
-//   //     sessionStorage.setItem(
-//   //       `TEST_SESSION_${res.data.id}`,
-//   //       JSON.stringify(testSession),
-//   //     );
-
-//   //     router.push(`/dashboard/user/create-test/${res.data.id}`);
-//   //   } catch (error) {
-//   //     console.error('Start test failed:', error);
-//   //   }
-//   // };
-//   const handleStartTest = async () => {
+//   const handleStartTest = async (): Promise<boolean> => {
 //     if (!numQuestions || selectedTopics.length === 0) {
 //       toast.error('Please select Question Count');
-//       return;
+//       return false;
 //     }
 
 //     const payload = {
 //       total_questions: Number(numQuestions),
 //       test_mode: selectedStatus
-//         .filter(s => s === 'Used' || s === 'Unused')
+//         .filter(s => s === 'Used' || s === 'Unused' || s==="Marked" || s==="Correct" || s==="Incorrect")
 //         .map(s => s.toLowerCase()),
 //       difficulty: selectedDifficulty,
 //       topic: selectedTopics,
@@ -207,16 +170,20 @@
 
 //     try {
 //       const res = await startTest(payload).unwrap();
+
 //       if (!res.success || !res.data) {
 //         throw new Error(res.message || 'Failed to create test');
 //       }
 
 //       router.push(`/dashboard/user/create-test/${res.data.id}`);
+//       return true;
 //     } catch (error) {
 //       console.error('Start test failed:', error);
 //       toast.error('Failed to start test. Please try again.');
+//       return false;
 //     }
 //   };
+
 //   return (
 //     <div className="flex-1 max-w-5xl space-y-4 pt-2 test-container text-[#4b5563]">
 //       <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-2">
@@ -271,7 +238,7 @@
 //                   <Label>{status}</Label>
 
 //                   <span className="min-w-[30px] h-[22px] px-2 rounded-[6px] border border-[#00B977] text-[#00B977] text-xs font-medium flex items-center justify-center bg-white">
-//                     {isQuestionCountLoading
+//                     {isQuestionCountUpdating
 //                       ? '...'
 //                       : questionCounts[status as keyof typeof questionCounts]}
 //                   </span>
@@ -307,11 +274,12 @@
 //                   onClick={() => handleDifficultySelect(level)}
 //                 >
 //                   <CustomCheckbox checked={isSelected} />
-//                   {/* Display the count beside the difficulty */}
 //                   <span className="flex gap-2 items-center">
-//                     {level}{' '}
+//                     {displayDifficultyLabel(level)}{' '}
 //                     <span className="min-w-[30px] h-[22px] px-2 rounded-[6px] border border-[#00B977] text-[#00B977] text-xs font-medium flex items-center justify-center bg-white">
-//                       {difficultyCounts[level]}
+//                       {isQuestionCountUpdating
+//                         ? '...'
+//                         : difficultyCounts[level]}
 //                     </span>
 //                   </span>{' '}
 //                 </div>
@@ -353,10 +321,11 @@
 //                   <Label className="flex gap-2 items-center">
 //                     {topic.label}{' '}
 //                     <span className="min-w-[20px] h-[22px] px-2 rounded-[6px] border border-[#00B977] text-[#00B977] text-xs font-medium flex items-center justify-center bg-white">
-//                       {topicCounts[topic.value]}
+//                       {isQuestionCountUpdating
+//                         ? '...'
+//                         : topicCounts[topic.value]}
 //                     </span>
 //                   </Label>{' '}
-//                   {/* Display the count beside the topic */}
 //                 </div>
 //               );
 //             })}
@@ -369,16 +338,10 @@
 //             onClick={async () => {
 //               if (isLoading || isStarted) return;
 
-//               try {
-//                 await handleStartTest();
-//                 setIsStarted(true);
+//               const started = await handleStartTest();
 
-//                 // optional: slight delay so user sees success
-//                 setTimeout(() => {
-//                   // navigation already inside handleStartTest
-//                 }, 600);
-//               } catch (e) {
-//                 // already handled
+//               if (started) {
+//                 setIsStarted(true);
 //               }
 //             }}
 //             disabled={isLoading || isStarted}
@@ -518,44 +481,84 @@ export function CreateTestContent() {
     );
   };
 
-  const questionCounts = {
-    Used: questionCountData?.data?.used_questions ?? 0,
-    Unused: questionCountData?.data?.unused_questions ?? 0,
-    Correct: questionCountData?.data?.correct_count ?? 0,
-    Incorrect: questionCountData?.data?.incorrect_count ?? 0,
-    Marked: questionCountData?.data?.mark_count ?? 0,
-  };
-
-  const difficultyCounts = {
-    Intern:
-      questionCountData?.data?.difficulty_wise_count?.find(
-        d => d.name === 'Intern',
-      )?.count ?? 0,
-    Senior:
-      questionCountData?.data?.difficulty_wise_count?.find(
-        d => d.name === 'Senior',
-      )?.count ?? 0,
-    Board:
-      questionCountData?.data?.difficulty_wise_count?.find(
-        d => d.name === 'Board',
-      )?.count ?? 0,
-  };
-
-  const topicCounts = TOPICS.reduce(
-    (acc, topic) => {
-      const count =
-        questionCountData?.data?.topic_wise_count?.find(
-          t => t.name === topic.value,
-        )?.count ?? 0;
-
-      acc[topic.value] = count;
-      return acc;
-    },
-    {} as Record<string, number>,
-  );
-
   const isQuestionCountUpdating =
     isQuestionCountLoading || isQuestionCountFetching;
+
+  // --- CLIENT-SIDE DEDUPLICATION CALCULATION ENGINE ---
+
+  // Helper mapping to grab state segments from server payload safely
+  const getStatusArray = (status: string) => {
+    if (!questionCountData?.data) return [];
+    switch (status) {
+      case 'Used':
+        return questionCountData.data.used_questions || [];
+      case 'Unused':
+        return questionCountData.data.unused_questions || [];
+      case 'Correct':
+        return questionCountData.data.correct_count || [];
+      case 'Incorrect':
+        return questionCountData.data.incorrect_count || [];
+      case 'Marked':
+        return questionCountData.data.mark_count || [];
+      default:
+        return [];
+    }
+  };
+
+  // 1. Calculate unique question counts for a Test Mode pill based on selected Difficulties + Topics
+  const getDynamicStatusCount = (statusName: string): number => {
+    const statusGroups = getStatusArray(statusName);
+    const uniqueIds = new Set<string>();
+
+    statusGroups.forEach(group => {
+      if (selectedDifficulty.includes(group.difficulty)) {
+        group.topic_wise_count.forEach(t => {
+          if (selectedTopics.includes(t.name) && t.ids) {
+            t.ids.forEach(id => uniqueIds.add(id));
+          }
+        });
+      }
+    });
+    return uniqueIds.size;
+  };
+
+  // 2. Calculate unique question counts for a Difficulty item based on selected Test Modes + Topics
+  const getDynamicDifficultyCount = (level: DifficultyLevel): number => {
+    const uniqueIds = new Set<string>();
+
+    selectedStatus.forEach(status => {
+      const statusGroups = getStatusArray(status);
+      const targetGroup = statusGroups.find(g => g.difficulty === level);
+      if (targetGroup) {
+        targetGroup.topic_wise_count.forEach(t => {
+          if (selectedTopics.includes(t.name) && t.ids) {
+            t.ids.forEach(id => uniqueIds.add(id));
+          }
+        });
+      }
+    });
+    return uniqueIds.size;
+  };
+
+  // 3. Calculate unique question counts for a Topic item based on selected Test Modes + Difficulties
+  const getDynamicTopicCount = (topicValue: string): number => {
+    const uniqueIds = new Set<string>();
+
+    selectedStatus.forEach(status => {
+      const statusGroups = getStatusArray(status);
+      statusGroups.forEach(group => {
+        if (selectedDifficulty.includes(group.difficulty)) {
+          const matchedTopic = group.topic_wise_count.find(
+            t => t.name === topicValue,
+          );
+          if (matchedTopic && matchedTopic.ids) {
+            matchedTopic.ids.forEach(id => uniqueIds.add(id));
+          }
+        }
+      });
+    });
+    return uniqueIds.size;
+  };
 
   const handleStartTest = async (): Promise<boolean> => {
     if (!numQuestions || selectedTopics.length === 0) {
@@ -566,7 +569,9 @@ export function CreateTestContent() {
     const payload = {
       total_questions: Number(numQuestions),
       test_mode: selectedStatus
-        .filter(s => s === 'Used' || s === 'Unused' || s==="Marked" || s==="Correct" || s==="Incorrect")
+        .filter(s =>
+          ['Used', 'Unused', 'Marked', 'Correct', 'Incorrect'].includes(s),
+        )
         .map(s => s.toLowerCase()),
       difficulty: selectedDifficulty,
       topic: selectedTopics,
@@ -644,7 +649,7 @@ export function CreateTestContent() {
                   <span className="min-w-[30px] h-[22px] px-2 rounded-[6px] border border-[#00B977] text-[#00B977] text-xs font-medium flex items-center justify-center bg-white">
                     {isQuestionCountUpdating
                       ? '...'
-                      : questionCounts[status as keyof typeof questionCounts]}
+                      : getDynamicStatusCount(status)}
                   </span>
                 </div>
               ),
@@ -683,7 +688,7 @@ export function CreateTestContent() {
                     <span className="min-w-[30px] h-[22px] px-2 rounded-[6px] border border-[#00B977] text-[#00B977] text-xs font-medium flex items-center justify-center bg-white">
                       {isQuestionCountUpdating
                         ? '...'
-                        : difficultyCounts[level]}
+                        : getDynamicDifficultyCount(level)}
                     </span>
                   </span>{' '}
                 </div>
@@ -727,7 +732,7 @@ export function CreateTestContent() {
                     <span className="min-w-[20px] h-[22px] px-2 rounded-[6px] border border-[#00B977] text-[#00B977] text-xs font-medium flex items-center justify-center bg-white">
                       {isQuestionCountUpdating
                         ? '...'
-                        : topicCounts[topic.value]}
+                        : getDynamicTopicCount(topic.value)}
                     </span>
                   </Label>{' '}
                 </div>
@@ -760,7 +765,6 @@ export function CreateTestContent() {
             )}
           >
             {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-
             {isLoading ? 'Starting...' : isStarted ? 'Started' : 'Start Test'}
           </button>
         </div>

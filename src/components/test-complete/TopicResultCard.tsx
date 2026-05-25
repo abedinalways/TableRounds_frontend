@@ -15,8 +15,10 @@ interface TopicResultCardProps {
 
 function formatTopicTitle(title: string) {
   if (!title) return '';
+ return title
+    .replace(/Recontraction/gi, 'Reconstruction')
+    .replace(/_/g, '/');
 
-  return title.replace(/_/g, '/');
 }
 
 export function TopicResultCard({
