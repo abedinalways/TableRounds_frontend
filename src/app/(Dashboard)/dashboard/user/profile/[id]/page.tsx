@@ -33,7 +33,18 @@ export default function ProfilePage({
     );
   }
 
-  // ✅ Get specialty from multiple sources with fallback
+  const getFullCountryName = (countryCode: string | null | undefined) => {
+    if (!countryCode) return '';
+    if (countryCode.length !== 2) return countryCode;
+
+    try {
+      
+      const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
+      return regionNames.of(countryCode.toUpperCase()) || countryCode;
+    } catch (error) {
+      return countryCode;
+    }
+  };
   const specialty =
     apiData.specialty ??
     
@@ -57,7 +68,7 @@ export default function ProfilePage({
       created_at: apiData.created_at,
       is_public: apiData.is_public,
       bio: apiData.bio || 'No bio available.',
-      country: apiData.country,
+      country: getFullCountryName(apiData.country),
       state: apiData.state,
       followers: apiData.followers ?? 0,
       following: apiData.followings ?? 0,
@@ -68,7 +79,7 @@ export default function ProfilePage({
       twitter: apiData.twitter_x ?? '',
       facebook: apiData.facebook ?? '',
       current_practice: apiData.current_practice ?? '',
-      specialty: specialty, // ✅ Add specialty here
+      specialty: specialty,
     },
 
     education: (apiData.educations ?? []).map((edu: any) => ({
@@ -105,6 +116,7 @@ export default function ProfilePage({
     practiceName: apiData.current_practice ?? '',
   };
 
+  
   return (
     <div>
       <div className="w-full rounded-2xl background h-[383px]" />

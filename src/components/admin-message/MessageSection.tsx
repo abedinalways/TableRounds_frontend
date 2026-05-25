@@ -264,9 +264,13 @@ export default function MessageSection() {
                   <Image
                     width="24"
                     height="24"
-                    src={'https://img.icons8.com/color/24/google-contacts.png'}
-                    alt="google-contacts"
-                    className="rounded-full aspect-square object-cover"
+                    // Checks if the sender has an avatar, otherwise falls back to a clean placeholder img
+                    src={
+                      msg?.sender?.avatar_url || msg?.sender?.avatar ||
+                      'https://img.icons8.com/color/24/google-contacts.png'
+                    }
+                    alt={msg?.sender?.name || 'User avatar'}
+                    className="rounded-full aspect-square object-cover w-6 h-6"
                     unoptimized
                   />
                 )}
