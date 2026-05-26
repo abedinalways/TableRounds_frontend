@@ -420,7 +420,7 @@ export function CreateTestContent() {
 
   const [selectedDifficulty, setSelectedDifficulty] = useState<
     DifficultyLevel[]
-  >(['Intern']);
+  >([...DIFFICULTY_LEVELS]);
 
   const [selectedStatus, setSelectedStatus] = useState<string[]>(['Unused']);
   const [numQuestions, setNumQuestions] = useState<string>('');

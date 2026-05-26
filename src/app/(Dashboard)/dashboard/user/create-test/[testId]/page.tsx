@@ -736,13 +736,31 @@ export default function CreateTestPage() {
   const onJumpTo = (index: number) => {
     if (index < 1 || index > totalQuestions) return;
     if (index === currentQuestion) return;
+
+    
     if (!canLeaveCurrentQuestion()) return;
 
     const targetQuestion = questions[index - 1];
+
+    
     if (targetQuestion?.quizDetails?.userAnswerId) {
       setCurrentQuestion(index);
       return;
     }
+
+    
+    const firstUnansweredIndex = questions.findIndex(
+      question => !question.quizDetails?.userAnswerId,
+    );
+
+    const maxAllowedQuestion =
+      firstUnansweredIndex === -1 ? totalQuestions : firstUnansweredIndex + 1;
+
+    if (index <= maxAllowedQuestion) {
+      setCurrentQuestion(index);
+      return;
+    }
+
     toast.error('Please answer the questions serially.');
   };
 

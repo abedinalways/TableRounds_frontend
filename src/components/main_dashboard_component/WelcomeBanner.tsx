@@ -11,6 +11,7 @@ import { useGetProfileQuery } from '@/app/redux/api/profileApi';
 import LocationIcon from '../ui/LocationIcon';
 import { Disc, DiscIcon, DotIcon } from 'lucide-react';
 import { FaLocationDot } from 'react-icons/fa6';
+import { getFullCountryName } from '@/lib/country';
 
 export const WelcomeBanner = () => {
   const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
@@ -134,7 +135,9 @@ export const WelcomeBanner = () => {
                   <div className="flex items-center gap-2 group">
                     <FaLocationDot className="text-yellow-500 text-sm shrink-0 transition-transform group-hover:scale-110 duration-200" />
                     <span className="font-medium tracking-wide">
-                      {[user?.state, user?.country].filter(Boolean).join(', ')}
+                      {[user?.state, getFullCountryName(user?.country)]
+                        .filter(Boolean)
+                        .join(', ')}
                     </span>
                   </div>
                 )}
@@ -142,7 +145,6 @@ export const WelcomeBanner = () => {
                 {/* Joined Date */}
                 {user?.created_at && (
                   <div className="flex items-center gap-2 text-gray-300">
-                    
                     <svg
                       className="w-3.5 h-3.5 text-gray-400 shrink-0"
                       fill="none"
