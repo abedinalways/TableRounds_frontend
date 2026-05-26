@@ -31,6 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
+import { getFullCountryName } from '@/lib/country';
 
 type ProfileFormData = {
   name: string;
@@ -277,7 +278,7 @@ export default function ManageProfile({
               <div className="flex  gap-4 items-center text-xs md:text-[16px] font-light text-[#6b7280]">
                 <h4 className="flex items-center gap-2 text-sm ">
                   <LocationIcon />
-                  {user.state} , {user.country}.
+                  {user.state} , {getFullCountryName(user.country)}.
                 </h4>
 
                 <h4 className="md:flex items-center gap-2 text-sm">
@@ -442,7 +443,6 @@ export default function ManageProfile({
             </Label>
             <Input
               {...register('name')}
-              readOnly
               className="bg-[#f9f9f5] text-black border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
             />
           </div>
@@ -454,53 +454,6 @@ export default function ManageProfile({
             <Input
               {...register('credentials')}
               placeholder="i.e. DDS, DMD, MD, Student"
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
-            />
-          </div>
-
-          <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold md:text-lg!">Instagram</Label>
-            <Input
-              placeholder="Personal Link"
-              {...register('instagram')}
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
-            />
-          </div>
-
-          <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold">LinkedIn</Label>
-            <Input
-              placeholder="Personal Link"
-              {...register('linkedin')}
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
-            />
-          </div>
-
-          <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold md:text-lg!">Facebook</Label>
-            <Input
-              placeholder="Personal Link"
-              {...register('facebook')}
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
-            />
-          </div>
-
-          {/* <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold md:text-lg!">
-              Location <span className="text-red-600">*</span>
-            </Label>
-            <Input
-              placeholder="Enter Your City/Town"
-              {...register('address')}
-              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
-            />
-          </div> */}
-
-          <div className="flex flex-col gap-[8px]">
-            <Label className="font-bold md:text-lg!">Twitter/X</Label>
-            <Input
-              placeholder="Personal Link"
-              {...register('twitter')}
               className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
             />
           </div>
@@ -601,7 +554,7 @@ export default function ManageProfile({
               {normalizeDate}
             </h3>
           </div>
-         
+
           <div className="flex flex-col gap-[8px] w-full">
             <Label className="font-bold md:text-lg!">
               Specialty <span className="text-red-600">*</span>
@@ -620,7 +573,9 @@ export default function ManageProfile({
                   <SelectItem value="Oral and Maxillofacial Surgery">
                     Oral and Maxillofacial Surgery
                   </SelectItem>
-                  <SelectItem value="Plastic Surgery">Plastic Surgery</SelectItem>
+                  <SelectItem value="Plastic Surgery">
+                    Plastic Surgery
+                  </SelectItem>
                   <SelectItem value="Otorhinolaryngology">
                     Otorhinolaryngology
                   </SelectItem>
@@ -630,8 +585,42 @@ export default function ManageProfile({
             </div>
           </div>
 
+          {/* social media links */}
+          <div className="flex flex-col gap-[8px]">
+            <Label className="font-bold md:text-lg!">Instagram</Label>
+            <Input
+              placeholder="Personal Link"
+              {...register('instagram')}
+              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
+            />
+          </div>
+
+          <div className="flex flex-col gap-[8px]">
+            <Label className="font-bold">LinkedIn</Label>
+            <Input
+              placeholder="Personal Link"
+              {...register('linkedin')}
+              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
+            />
+          </div>
+
+          <div className="flex flex-col gap-[8px]">
+            <Label className="font-bold md:text-lg!">Facebook</Label>
+            <Input
+              placeholder="Personal Link"
+              {...register('facebook')}
+              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
+            />
+          </div>
+          <div className="flex flex-col gap-[8px]">
+            <Label className="font-bold md:text-lg!">Twitter/X</Label>
+            <Input
+              placeholder="Personal Link"
+              {...register('twitter')}
+              className="bg-[#f9f9f5] border [border-[rgba(68,68,68,0.1)]] md:text-lg!"
+            />
+          </div>
         </div>
-      
       </div>
 
       <div className="mt-6 bg-white rounded-2xl p-6 shadow-sm font-[manrope] mb-6">

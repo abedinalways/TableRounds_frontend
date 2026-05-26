@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/card';
 import { LeaderboardProgress } from '../ui/LeaderboardProgress';
 import { LineChart, Line } from 'recharts';
 import { Search, Filter } from 'lucide-react';
+import { getFullCountryName } from '@/lib/country';
 import {
   Select,
   SelectContent,
@@ -314,8 +315,12 @@ export function LeaderboardTable() {
                       </div>
                     </div>
                   </td>
-                  <td className="p-3 ">{row.user?.country}</td>
-                  <td className="p-3 text-center">{row.completion_percentage}%</td>
+                  <td className="p-3">
+                    {getFullCountryName(row.user?.country)}
+                  </td>
+                  <td className="p-3 text-center">
+                    {row.completion_percentage}%
+                  </td>
                   <td className="p-3">
                     <span className="text-xs">{row.accuracy}%</span>
                     <LeaderboardProgress value={row.accuracy} />

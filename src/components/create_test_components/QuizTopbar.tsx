@@ -2,14 +2,20 @@
 
 import React, { useState } from 'react';
 import { Progress } from '@/components/ui/progress';
-import { ArrowRight, Loader2, SkipForward } from 'lucide-react';
+
 import { TopbarCheckbox } from '../topbarCheckbox';
 
 import Flag from '../reusable/icons/Flag';
 import ChatBubble from '../reusable/icons/ChatBubble';
 import ZoomInIcon from '../reusable/icons/ZoomInIcon';
 import ZoomOutIcon from '../reusable/icons/ZoomOutIcon';
-
+import {
+  ArrowRight,
+  CheckCircle2,
+  Loader2,
+  SkipForward,
+  XCircle,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { QuizDetailsUI } from '@/types/test-session';
@@ -53,6 +59,57 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
 
   const isLastQuestion = currentQuestion === totalQuestions;
 
+  const showSubmitStatusToast = (
+    type: 'loading' | 'success' | 'error',
+    title: string,
+    description?: string,
+  ) => {
+    toast.custom(
+      t => (
+        <div className="w-[360px] max-w-[calc(100vw-32px)] overflow-hidden rounded-2xl border border-[#b79e6b]/40 bg-[#01281e] text-white shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+          <div className="h-1 w-full bg-[#b79e6b]" />
+
+          <div className="flex items-start gap-3 p-4">
+            <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#b79e6b]/20 text-[#b79e6b]">
+              {type === 'loading' && (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              )}
+              {type === 'success' && <CheckCircle2 className="h-5 w-5" />}
+              {type === 'error' && <XCircle className="h-5 w-5" />}
+            </div>
+
+            <div className="flex-1">
+              <h4 className="text-[15px] font-semibold leading-5 text-white">
+                {title}
+              </h4>
+
+              {description && (
+                <p className="mt-1 text-[13px] leading-5 text-white/75">
+                  {description}
+                </p>
+              )}
+            </div>
+
+            {type !== 'loading' && (
+              <button
+                type="button"
+                onClick={() => toast.dismiss(t)}
+                className="rounded-full p-1 text-white/60 transition hover:bg-white/10 hover:text-white"
+                aria-label="Close toast"
+              >
+                ×
+              </button>
+            )}
+          </div>
+        </div>
+      ),
+      {
+        id: 'submit-test-status',
+        duration: type === 'loading' ? 100000 : 3000,
+      },
+    );
+  };
+
   const skipTest = () => {
     router.push(`/dashboard/user/incomplete-test`);
   };
@@ -63,17 +120,21 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
     try {
       setIsSubmittingTest(true);
 
-      toast.loading('Submitting test...', {
-        id: 'submit-test-status',
-      });
+      showSubmitStatusToast(
+        'loading',
+        'Submitting your test...',
+        'Please wait while we securely save your answers.',
+      );
 
       await completeTest(testId).unwrap();
 
       setIsTestSubmitted(true);
 
-      toast.success('Test submitted successfully.', {
-        id: 'submit-test-status',
-      });
+      showSubmitStatusToast(
+        'success',
+        'Test submitted successfully',
+        'You will be redirected to the result page shortly.',
+      );
 
       setTimeout(() => {
         router.push(`/dashboard/user/test-complete/${testId}`);
@@ -81,9 +142,11 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
     } catch (err) {
       console.error('Submit test failed', err);
 
-      toast.error('Failed to submit test. Please try again.', {
-        id: 'submit-test-status',
-      });
+      showSubmitStatusToast(
+        'error',
+        'Submission failed',
+        'Something went wrong. Please try again.',
+      );
     } finally {
       setIsSubmittingTest(false);
     }
@@ -92,24 +155,57 @@ const QuizTopbar: React.FC<QuizTopbarProps> = ({
   const handleSubmitTestClick = () => {
     if (isSubmittingTest || isTestSubmitted) return;
 
-    toast('Are you sure you want to submit?', {
-      id: 'submit-test-confirmation',
-      description:
-        'Once submitted, you will be redirected to the test result page.',
-      action: {
-        label: 'Yes, Submit',
-        onClick: () => {
-          toast.dismiss('submit-test-confirmation');
-          void handleConfirmSubmitTest();
-        },
+    toast.custom(
+      t => (
+        <div className="w-[390px] max-w-[calc(100vw-32px)] overflow-hidden rounded-2xl border border-[#b79e6b]/45 bg-[#01281e] text-white shadow-[0_24px_70px_rgba(0,0,0,0.38)]">
+          <div className="h-1 w-full bg-[#b79e6b]" />
+
+          <div className="p-5">
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#b79e6b]/20 text-[#b79e6b]">
+                <CheckCircle2 className="h-5 w-5" />
+              </div>
+
+              <div className="flex-1">
+                <h3 className="text-[16px] font-semibold leading-6 text-white">
+                  Submit your test?
+                </h3>
+
+                <p className="mt-1 text-[13px] leading-5 text-white/75">
+                  Once submitted, your answers will be finalized and you will be
+                  redirected to the result page.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => toast.dismiss(t)}
+                className="rounded-lg border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white/85 transition hover:bg-white/15 hover:text-white"
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  toast.dismiss(t);
+                  void handleConfirmSubmitTest();
+                }}
+                className="rounded-lg bg-[#b79e6b] px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-[#a58d5e]"
+              >
+                Yes, Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      ),
+      {
+        id: 'submit-test-confirmation',
+        duration: 12000,
       },
-      cancel: {
-        label: 'Cancel',
-        onClick: () => {
-          toast.dismiss('submit-test-confirmation');
-        },
-      },
-    });
+    );
   };
 
   return (

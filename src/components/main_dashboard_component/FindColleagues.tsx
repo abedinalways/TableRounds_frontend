@@ -120,7 +120,7 @@ const FindColleagues = () => {
   });
 
   const colleagues = data?.data ?? [];
-
+  console.log('Colleagues data:', colleagues);
   const handleMessageClick = async (participantId: string) => {
     if (isCreating) return;
     setIsCreating(true);
