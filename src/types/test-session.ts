@@ -95,6 +95,8 @@ export interface QuizDetailsUI {
   correctAnswerId: string | null;
   explanation: QuizExplanationUI | null;
   is_marked?: boolean;
+  difficulty?: 'Intern' | 'Senior' | 'Board';
+  topic?: string[];
 }
 
 export interface QuizQuestionDataUI {

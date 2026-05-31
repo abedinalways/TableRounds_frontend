@@ -144,6 +144,7 @@ const QuestionSidebar: React.FC<QuestionSidebarProps> = ({
           
           const isMarkedQuestion =
             markedQuestions.some(q => q.index === qIndex) ||
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             Boolean((questions[i]?.quizDetails as any)?.is_marked);
 
           const status = getQuestionStatus(i);
