@@ -76,7 +76,7 @@ export const WelcomeBanner = () => {
       <div className="px-4 pt-2 background text-white rounded-lg shadow-lg relative overflow-hidden font-[manrope]">
         <div className="md:flex items-center justify-evenly py-4 relative z-10">
           {/* Avatar */}
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex  md:items-center items-start gap-4">
             <div className="rounded-full border-4 border-[#B79E6B] w-fit">
               <Image
                 src={avatar}
@@ -87,6 +87,17 @@ export const WelcomeBanner = () => {
                 unoptimized
               />
             </div>
+            {/* Date */}
+            <div className="md:hidden md:items-center">
+              <p className="text-[16px] font-medium">{formattedDate}</p>
+              <Image
+                src="/images/dashboard/main_dashboard/tr.png"
+                width={138}
+                height={138}
+                alt="doctor"
+              />
+            </div>
+            <div></div>
           </div>
 
           {/* Info */}
@@ -129,7 +140,7 @@ export const WelcomeBanner = () => {
               )}
 
               {/* ── Meta Info (Location & Joined Date) ── */}
-              <div className="flex  gap-5 mt-2 text-xs md:text-sm text-gray-300">
+              <div className="flex  gap-5 mt-2 text-xs md:text-sm text-gray-300 ">
                 {/* Location */}
                 {(user?.country || user?.state) && (
                   <div className="flex items-center gap-2 group">
@@ -176,7 +187,7 @@ export const WelcomeBanner = () => {
                   }}
                   className="hover:opacity-80 cursor-pointer"
                 >
-                  <span className="md:text-lg text-xs font-semibold">
+                  <span className="md:text-lg text-sm font-semibold">
                     {user?.followers} Following
                   </span>
                 </button>
@@ -188,7 +199,7 @@ export const WelcomeBanner = () => {
                   }}
                   className="hover:opacity-80 cursor-pointer"
                 >
-                  <span className="md:text-lg text-xs font-semibold">
+                  <span className="md:text-lg text-sm font-semibold">
                     {user?.followings} Followers
                   </span>
                 </button>
@@ -197,7 +208,7 @@ export const WelcomeBanner = () => {
           </div>
 
           {/* Date */}
-          <div className="flex flex-col items-center">
+          <div className="md:flex  flex-col hidden md:items-center">
             <p className="text-[16px] font-medium">{formattedDate}</p>
             <Image
               src="/images/dashboard/main_dashboard/tr.png"

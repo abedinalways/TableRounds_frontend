@@ -905,7 +905,7 @@ export default function TestReviewPage() {
               )}
 
               <div className={isQuestionHidden ? 'w-full' : 'flex-1'}>
-                <div className="bg-[#f9f9f5] shadow-lg rounded-[16px] border font-[manrope] p-4 md:p-6 mb-4">
+                <div className="bg-[#f9f9f5] shadow-lg rounded-[16px] border font-[manrope] p-4 md:p-6 mb-4 mt-8">
                   <div className="flex flex-wrap gap-3 items-center">
                     {difficultyList.length > 0 && (
                       <div className="flex flex-wrap items-center gap-2">

@@ -180,13 +180,29 @@ export default function Sidebar({
 
       <aside
         className={`fixed top-0 left-0 h-screen w-64 background border-r
-        flex flex-col text-white z-50 md:hidden
+        flex flex-col text-white z-5000000000000 md:hidden
         transition-transform duration-300 ease-in-out
         ${open ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <div className="p-4">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="font-bold text-lg">Menu</h2>
+            <Link href="/">
+              <div className="flex items-center gap-2 mb-6">
+                <Image
+                  src="/images/navbar-logo.png"
+                  width={40}
+                  height={40}
+                  alt="Logo"
+                />
+                <h1 className="relative font-bold text-lg sm:text-xl lg:text-3xl text-white font-[manrope] mb-4">
+                  <div className="flex items-center justify-center gap-1">
+                    Table
+                    <OmsLogo />
+                  </div>
+                  <span className="absolute top-6">Rounds</span>
+                </h1>
+              </div>
+            </Link>
             <button onClick={() => setOpen?.(false)}>
               <X />
             </button>
