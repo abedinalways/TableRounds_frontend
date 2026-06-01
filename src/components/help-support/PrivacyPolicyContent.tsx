@@ -1,9 +1,17 @@
-'use client';
-
-import { CardHeader, CardTitle } from '@/components/ui/card';
-
+import { CardHeader, CardTitle } from "../ui/card";
 interface Props {
   html: string;
+}
+function sanitizeHtml(html: string): string {
+  return html
+    .replace(
+      /<pre>/gi,
+      '<pre style="white-space:pre-wrap;word-break:break-word;overflow-x:hidden;">',
+    )
+    .replace(
+      /<code>/gi,
+      '<code style="white-space:pre-wrap;word-break:break-word;">',
+    );
 }
 
 export default function PrivacyPolicyContent({ html }: Props) {
@@ -17,7 +25,7 @@ export default function PrivacyPolicyContent({ html }: Props) {
 
       <div
         className="p-8 text-gray-700 leading-relaxed"
-        dangerouslySetInnerHTML={{ __html: html }}
+        dangerouslySetInnerHTML={{ __html: sanitizeHtml(html) }}
       />
     </div>
   );

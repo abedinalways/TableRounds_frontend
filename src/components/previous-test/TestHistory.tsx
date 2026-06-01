@@ -90,22 +90,36 @@ export function TestHistory({ search }: Props) {
   }
 
   return (
-    <div className="mt-6 rounded-lg border md:text-[16px]">
+    <div className="mt-6 rounded-lg border md:text-[16px] w-full max-w-full overflow-x-auto">
       <div
         className={`overflow-x-auto transition-opacity ${
           isFetching ? 'opacity-50 pointer-events-none' : 'opacity-100'
         }`}
       >
-        <Table>
+        <Table className="min-w-[900px] w-full">
           <TableHeader className="bg-[#01503b] font-semibold">
             <TableRow>
-              <TableHead className="text-white">Score</TableHead>
-              <TableHead className="text-white">Difficulty</TableHead>
-              <TableHead className="text-white">Date</TableHead>
-              <TableHead className="text-white">Test Mode</TableHead>
-              <TableHead className="text-white">Topic</TableHead>
-              <TableHead className="text-white"># Qs</TableHead>
-              <TableHead className="text-right text-white">Action</TableHead>
+              <TableHead className="whitespace-nowrap text-white">
+                Score
+              </TableHead>
+              <TableHead className="whitespace-nowrap text-white">
+                Difficulty
+              </TableHead>
+              <TableHead className="whitespace-nowrap text-white">
+                Date
+              </TableHead>
+              <TableHead className="whitespace-nowrap text-white">
+                Test Mode
+              </TableHead>
+              <TableHead className="whitespace-nowrap text-white">
+                Topic
+              </TableHead>
+              <TableHead className="whitespace-nowrap text-white">
+                # Qs
+              </TableHead>
+              <TableHead className="whitespace-nowrap text-right text-white">
+                Action
+              </TableHead>
             </TableRow>
           </TableHeader>
 
@@ -122,7 +136,7 @@ export function TestHistory({ search }: Props) {
             ) : (
               filteredTests.map(test => (
                 <TableRow key={test.id} className="hover:bg-[#f9fafb]">
-                  <TableCell>
+                  <TableCell className="whitespace-nowrap">
                     <CircularProgressPercentage
                       showLabel
                       value={test?.score ?? 0}
@@ -130,7 +144,7 @@ export function TestHistory({ search }: Props) {
                     />
                   </TableCell>
 
-                  <TableCell>
+                  <TableCell className="whitespace-nowrap">
                     <div className="flex flex-wrap gap-2">
                       {(test.difficulty ?? []).map((level, index) => {
                         let badgeClass = '';
@@ -142,7 +156,6 @@ export function TestHistory({ search }: Props) {
                           case 'Senior':
                             badgeClass = 'bg-[#f0e1dc] text-[#b79e6b]';
                             break;
-                          
                           case 'Board':
                             badgeClass = 'bg-[#cdebe3] text-[#01503b]';
                             break;
@@ -163,11 +176,11 @@ export function TestHistory({ search }: Props) {
                     </div>
                   </TableCell>
 
-                  <TableCell className="text-[#4b5563]">
+                  <TableCell className="whitespace-nowrap text-[#4b5563]">
                     {new Date(test.created_at).toLocaleDateString()}
                   </TableCell>
 
-                  <TableCell>
+                  <TableCell className="whitespace-nowrap">
                     <div className="flex flex-wrap gap-2">
                       {test.test_mode.map(mode => (
                         <Badge
@@ -180,24 +193,24 @@ export function TestHistory({ search }: Props) {
                     </div>
                   </TableCell>
 
-                  <TableCell>
+                  <TableCell className="whitespace-nowrap">
                     <Badge className="rounded-[6px] bg-[#cdebe3] px-3 py-1.5 text-xs font-medium text-[#01503b]">
                       {test.topic.length === 1 ? 'Single' : 'Multiple'}
                     </Badge>
                   </TableCell>
 
-                  <TableCell className="font-medium text-[#111827]">
+                  <TableCell className="whitespace-nowrap font-medium text-[#111827]">
                     {test.total_questions}
                   </TableCell>
 
-                  <TableCell className="text-right">
+                  <TableCell className="whitespace-nowrap text-right">
                     <DropdownMenu modal={false}>
                       <DropdownMenuTrigger asChild>
                         <Button
                           type="button"
                           variant="ghost"
                           size="icon"
-                          className="h-9 w-9 rounded-full text-[#01281e] hover:bg-[#ecfdf5] hover:text-[#01503b] focus-visible:ring-2 focus-visible:ring-[#01503b]/30 cursor-pointer" 
+                          className="h-9 w-9 rounded-full text-[#01281e] hover:bg-[#ecfdf5] hover:text-[#01503b] focus-visible:ring-2 focus-visible:ring-[#01503b]/30 cursor-pointer"
                         >
                           <MoreHorizontal className="h-5 w-5" />
                           <span className="sr-only">Open action menu</span>

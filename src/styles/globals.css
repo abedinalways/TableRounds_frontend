@@ -1006,3 +1006,32 @@ background: rgba(183, 158, 107, 0.14)
   animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   animation-fill-mode: forwards;
 }
+
+
+.help-content * {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  word-break: break-word !important;
+  white-space: normal !important;
+  box-sizing: border-box !important;
+}
+
+.help-content table {
+  display: block;
+  overflow-x: auto;
+}
+
+.help-content img {
+  height: auto;
+}
+
+.help-content pre {
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+  overflow-x: hidden !important;
+}
+
+.help-content code {
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+}

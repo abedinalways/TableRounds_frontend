@@ -29,7 +29,7 @@ export default function PerformanceSummary() {
             </CardTitle>
           </CardHeader>
 
-          <CardContent className="flex gap-6">
+          <CardContent className="md:flex gap-6">
             <AnimatedProgressCircle
               value={data?.data?.performance?.correct_percentage_avg ?? 0}
               color="green"
@@ -71,7 +71,7 @@ export default function PerformanceSummary() {
             </CardTitle>
           </CardHeader>
 
-          <CardContent className="flex items-center gap-6">
+          <CardContent className="md:flex items-center gap-6">
             <AnimatedProgressCircle
               value={data?.data?.question_bank?.progress_percentage ?? 0}
               color="brown"

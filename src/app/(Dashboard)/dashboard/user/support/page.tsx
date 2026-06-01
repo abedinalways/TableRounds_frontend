@@ -74,7 +74,7 @@ export default function HelpPage() {
           </nav>
         </aside>
 
-        <main className="flex-1 mt-16 md:mt-0">
+        <main className="flex-1 mt-16 md:mt-0 overflow-x-hidden min-w-0">
           {activeTab === 'disclaimer' && (
             <DisclaimerContent html={helpData?.disclaimer ?? ''} />
           )}
