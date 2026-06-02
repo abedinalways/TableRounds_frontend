@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  MapContainer,
-  Popup,
-  CircleMarker,
-  TileLayer,
-  useMap,
-} from 'react-leaflet';
+import { MapContainer, Popup, Marker, TileLayer, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -366,7 +360,7 @@ function MapControls({
 }
 
 export default function Mapview() {
-  const markerRefs = useRef<(SVGElement | null)[]>([]);
+  const markerRefs = useRef<(HTMLElement | null)[]>([]);
 
   const { data, isLoading, isFetching, refetch } = useGetMapDataQuery(
     undefined,
@@ -435,6 +429,26 @@ export default function Mapview() {
       .leaflet-popup-tip {
         background: white !important;
       }
+
+      
+      .custom-map-cluster {
+        background: #7FFF00;
+        border: 2px solid #32CD32;
+        color: #1f2937;
+        font-weight: bold;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justifyContent: center;
+        border-radius: 50%;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        transition: transform 0.2s ease, background-color 0.2s ease;
+      }
+
+      .custom-map-cluster:hover {
+        background: rgba(127, 255, 0, 0.5) !important;
+        transform: scale(1.1);
+      }
     `;
 
     document.head.appendChild(style);
@@ -466,6 +480,16 @@ export default function Mapview() {
     }
   }, [isLoading, locations]);
 
+
+  const createClusterIcon = (count: number) => {
+    return L.divIcon({
+      html: `<div>${count}</div>`,
+      className: 'custom-map-cluster',
+      iconSize: L.point(32, 32), 
+      iconAnchor: [16, 16],
+    });
+  };
+
   return (
     <div
       className="w-full h-[620px] rounded-xl overflow-hidden relative"
@@ -492,22 +516,15 @@ export default function Mapview() {
         <MapControls onRefresh={refetch} isRefreshing={isFetching} />
 
         {locations.map((loc, index) => (
-          <CircleMarker
+          <Marker
             key={loc.country}
-            center={[loc.lat, loc.lng]}
-            radius={Math.max(8, Math.min(45, Math.sqrt(loc.count) * 12))}
-            pathOptions={{
-              color: '#32CD32',
-              fillColor: '#7FFF00',
-              fillOpacity: 0.7,
-              weight: 1,
-            }}
+            position={[loc.lat, loc.lng]}
+            icon={createClusterIcon(loc.count)}
             eventHandlers={{
               add: e => {
-                markerRefs.current[index] = e.target.getElement() as SVGElement;
+                markerRefs.current[index] =
+                  e.target.getElement() as HTMLElement;
               },
-              mouseover: e => e.target.setStyle({ fillOpacity: 0.3 }),
-              mouseout: e => e.target.setStyle({ fillOpacity: 0.7 }),
             }}
           >
             <Popup>
@@ -543,7 +560,7 @@ export default function Mapview() {
                 </p>
               </div>
             </Popup>
-          </CircleMarker>
+          </Marker>
         ))}
       </MapContainer>
     </div>
