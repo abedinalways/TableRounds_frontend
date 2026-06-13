@@ -760,12 +760,12 @@ export default function TestReviewPage() {
         prev.map((q, idx) =>
           idx === currentQuestion - 1
             ? {
-                ...q,
-                quizDetails: {
-                  ...q.quizDetails,
-                  is_marked: targetMarkedState,
-                },
-              }
+              ...q,
+              quizDetails: {
+                ...q.quizDetails,
+                is_marked: targetMarkedState,
+              },
+            }
             : q,
         ),
       );
@@ -819,7 +819,7 @@ export default function TestReviewPage() {
     Boolean(current?.quizDetails?.userAnswerId) &&
     Boolean(current?.quizDetails?.correctAnswerId) &&
     String(current?.quizDetails?.userAnswerId) ===
-      String(current?.quizDetails?.correctAnswerId);
+    String(current?.quizDetails?.correctAnswerId);
 
   const difficultyList = useMemo(() => {
     const raw = current?.quizDetails?.difficulty ?? [];
@@ -851,7 +851,7 @@ export default function TestReviewPage() {
     <div className="flex flex-col gap-4 font-[manrope]">
       <QuizTopbar
         quizDetails={current.quizDetails as any}
-        onSkip={() => {}}
+        onSkip={() => { }}
         progressValue={progressValue}
         currentQuestion={currentQuestion}
         totalQuestions={totalQuestions}
@@ -888,6 +888,7 @@ export default function TestReviewPage() {
               {!isQuestionHidden && (
                 <div className="flex-1 min-w-0 overflow-hidden">
                   <QuestionCard
+                    key={current.testProgress.questionID}
                     testId={testId}
                     questionID={current.testProgress.questionID}
                     currentQuestion={currentQuestion}
@@ -896,7 +897,7 @@ export default function TestReviewPage() {
                     selectedAnswerId={selectedAnswerId}
                     showExplanation={true}
                     isUserCorrect={isUserCorrect}
-                    onAnswerChange={() => {}}
+                    onAnswerChange={() => { }}
                     onToggleHide={handleToggleHide}
                     isQuestionHidden={isQuestionHidden}
                     hideActions

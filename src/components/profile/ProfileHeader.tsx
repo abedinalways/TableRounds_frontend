@@ -9,7 +9,7 @@ import LocationIcon from '../ui/LocationIcon';
 import BagIcon from '../reusable/icons/BagIcon';
 import { FaXTwitter } from 'react-icons/fa6';
 import CalendarIconForProfile from '../reusable/icons/CalendarIconForProfile';
-import { Facebook, Instagram, Linkedin, Loader2 } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Loader2, StethoscopeIcon } from 'lucide-react';
 import { useCreateConversationMutation } from '@/app/redux/api/chat/chatApi';
 import { useToggleFollowMutation } from '@/app/redux/api/followApi';
 import { useGetConnectionsQuery } from '@/app/redux/api/connectionApi';
@@ -74,13 +74,13 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
   };
 
   const handleMessageClick = async () => {
-    setIsMessageLoading(true); 
+    setIsMessageLoading(true);
     try {
       const res = await createConversation({
         participant_id: user.id,
       }).unwrap();
       window.location.href = `/dashboard/user/messages/${res.data.id}`;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error('Conversation creation failed', err);
       setIsMessageLoading(false); // 
@@ -120,6 +120,10 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
               <h4 className="flex items-center gap-2">
                 <LocationIcon />
                 {user.state}, {user.country}
+              </h4>
+              <h4 className="flex items-center gap-2">
+                <StethoscopeIcon />
+                {user.specialty}
               </h4>
               <h4 className="flex items-center gap-2">
                 <BagIcon />
@@ -182,11 +186,10 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
 
               <button
                 onClick={handleProfileFollowToggle}
-                className={`px-[24px] py-[14px] text-center rounded-[8px] cursor-pointer border ${
-                  isFollowing
-                    ? 'bg-[#01503b] text-white border-[#01503b]'
-                    : 'bg-white text-[#01503b] border-[#01503b]'
-                }`}
+                className={`px-[24px] py-[14px] text-center rounded-[8px] cursor-pointer border ${isFollowing
+                  ? 'bg-[#01503b] text-white border-[#01503b]'
+                  : 'bg-white text-[#01503b] border-[#01503b]'
+                  }`}
               >
                 {isFollowing ? 'Unfollow' : 'Follow'}
               </button>

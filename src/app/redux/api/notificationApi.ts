@@ -42,19 +42,21 @@ export const notificationApi = baseApi.injectEndpoints({
     getUserNotifications: builder.query<GetNotificationsResponse, void>({
       query: () => '/user/notification',
       providesTags: ['notification'],
+      keepUnusedDataFor: 30,
     }),
 
     getAdminNotifications: builder.query<GetNotificationsResponse, void>({
       query: () => '/admin/notification',
       providesTags: ['adminNotification'],
+      keepUnusedDataFor: 30,
     }),
 
-    // ✅ No invalidatesTags — extraReducers handle state updates
     deleteUserNotification: builder.mutation<{ success: boolean }, string>({
       query: id => ({
         url: `/user/notification/${id}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['notification'],
     }),
 
     deleteAllUserNotifications: builder.mutation<{ success: boolean }, void>({
@@ -62,6 +64,7 @@ export const notificationApi = baseApi.injectEndpoints({
         url: '/user/notification',
         method: 'DELETE',
       }),
+      invalidatesTags: ['notification'],
     }),
 
     deleteAdminNotification: builder.mutation<{ success: boolean }, string>({
@@ -69,6 +72,7 @@ export const notificationApi = baseApi.injectEndpoints({
         url: `/admin/notification/${id}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['adminNotification'],
     }),
 
     deleteAllAdminNotifications: builder.mutation<{ success: boolean }, void>({
@@ -76,6 +80,7 @@ export const notificationApi = baseApi.injectEndpoints({
         url: '/admin/notification',
         method: 'DELETE',
       }),
+      invalidatesTags: ['adminNotification'],
     }),
   }),
   overrideExisting: false,
