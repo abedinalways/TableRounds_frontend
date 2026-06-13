@@ -11,14 +11,19 @@ export interface DiscoverProfile {
   search_rank: number;
   is_following: boolean;
 }
-
+export interface MetaData {
+  page: number;
+  limit: number;
+  total: number;
+}
 export interface DiscoverProfileResponse {
   success: boolean;
   data: DiscoverProfile[];
-  meta: {
-    page: number;
-    limit: number;
-  };
+  meta_data: MetaData;
+  // meta: {
+  //   page: number;
+  //   limit: number;
+  // };
 }
 export const discoverApi = baseApi.injectEndpoints({
   endpoints: builder => ({

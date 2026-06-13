@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { FaXTwitter } from 'react-icons/fa6';
-import { Facebook, Instagram, Linkedin } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, StethoscopeIcon } from 'lucide-react';
 import AttachImageIcon from '../reusable/icons/AttachImageIcon';
 import LocationIcon from '../ui/LocationIcon';
 import BagIcon from '../reusable/icons/BagIcon';
@@ -69,7 +69,7 @@ export default function ManageProfile({
     'followers',
   );
   const [toggleFollow] = useToggleFollowMutation();
-  
+
   const handleFollowToggle = async (userId: string, isFollowing: boolean) => {
     try {
       await toggleFollow({ userId, isFollowing }).unwrap();
@@ -98,7 +98,7 @@ export default function ManageProfile({
       instagram: '',
       linkedin: '',
       twitter: '',
-      specialty:'',
+      specialty: '',
       facebook: '',
       bio: '',
       current_practice: '',
@@ -113,7 +113,7 @@ export default function ManageProfile({
     );
     const isoCode = matchedCountry?.isoCode || '';
 
-    
+
     const matchedState = State.getStatesOfCountry(isoCode).find(
       s => s.name === user?.state || s.isoCode === user?.state,
     );
@@ -179,7 +179,7 @@ export default function ManageProfile({
 
       await onProfileUpdated?.();
       setImageFile(null);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error('Profile update failed:', err);
       toast.error(err?.data?.message || 'Update failed');
@@ -280,6 +280,10 @@ export default function ManageProfile({
                   <LocationIcon />
                   {user.state} , {getFullCountryName(user.country)}.
                 </h4>
+                <h4 className="flex items-center gap-2 text-sm">
+                  <StethoscopeIcon />
+                  {user.specialty}
+                </h4>
 
                 <h4 className="md:flex items-center gap-2 text-sm">
                   <BagIcon />
@@ -351,11 +355,10 @@ export default function ManageProfile({
                   </div>
 
                   <span
-                    className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
-                      isPublicWatch
+                    className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${isPublicWatch
                         ? 'bg-green-100 text-green-700'
                         : 'bg-slate-200 text-slate-700'
-                    }`}
+                      }`}
                   >
                     {isPublicWatch ? 'Public' : 'Private'}
                   </span>
