@@ -20,6 +20,7 @@ interface TopbarProps {
 export default function Topbar({ onMenuClick }: TopbarProps = {}) {
   // sockets
   useChatSocket();
+  useNotificationSocket();
   useGetUserNotificationsQuery();
 
   const { data: user } = useMeQuery();
