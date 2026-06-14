@@ -261,8 +261,6 @@ export type NotificationType =
   | 'rejected'
   | 'follow'
   | 'conversation'
-  | 'message'
-  | 'conversation'
   | 'user-registered';
 
 export interface AppNotification {
@@ -465,6 +463,9 @@ const notificationSlice = createSlice({
       const raw = Array.isArray(payload?.data) ? payload.data : [];
 
       if (raw.length === 0) {
+        state.notifications = state.notifications.filter(
+          n => n.type === 'conversation' && Boolean(n.conversationId),
+        );
         state.unreadCount = recalcUnread(state.notifications);
         return;
       }

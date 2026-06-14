@@ -112,7 +112,6 @@ function getActionText(type: AppNotification['type']): string {
     case 'rejected':
       return 'rejected your request';
     case 'conversation':
-    case 'message':
       return 'sent you a message';
     case 'user-registered':
       return 'joined the platform';

@@ -11,7 +11,6 @@ import { useChatSocket } from '@/app/redux/api/chat/useChatSocket';
 import { useAppSelector } from '@/app/redux/hook';
 import { useGetAdminNotificationsQuery } from '@/app/redux/api/notificationApi';
 import { NotificationButton } from '@/components/admin-topbar/NotificationButton';
-import { useNotificationSocket } from '@/app/socket/useNotificationSocket';
 
 interface TopbarProps {
   onMenuClick?: () => void;
@@ -19,7 +18,6 @@ interface TopbarProps {
 
 export default function Topbar({ onMenuClick }: TopbarProps = {}) {
   useChatSocket();
-  useNotificationSocket();
   useGetAdminNotificationsQuery();
 
   const { data: user } = useMeQuery();

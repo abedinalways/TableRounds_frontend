@@ -86,10 +86,6 @@ const TYPE_CONFIG: Record<
     label: 'Message',
     className: 'bg-violet-100 text-violet-700',
   },
-  message: {
-    label: 'Message',
-    className: 'bg-violet-100 text-violet-700',
-  },
   'user-registered': {
     label: 'New User',
     className: 'bg-amber-100 text-amber-700',
