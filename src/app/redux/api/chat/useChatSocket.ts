@@ -503,8 +503,12 @@ export function useChatSocket() {
     socket.on('connect', () => {
       console.log('[useChatSocket] Connected:', socket.id);
       joinAllRooms();
-      // Immediately fetch fresh notifications from the API so users who just
-      // logged in / reconnected see missed notifications without page reload.
+      // Fetch fresh notifications from the API immediately so users who just
+      // logged in or reconnected see missed notifications without waiting for
+      // the 30-second polling interval. This is safe now because
+      // mergeApiNotifications (NotificationSlice.ts) deduplicates by messageId,
+      // so the same notification won't appear twice even if the API database ID
+      // differs from the socket-created notification ID.
       dispatch(notificationApi.util.invalidateTags(['notification', 'adminNotification'] as any));
       dispatch(chatApi.util.invalidateTags(['Chat'] as any));
     });
