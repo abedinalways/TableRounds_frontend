@@ -286,15 +286,22 @@
 
 import { useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { useDispatch } from 'react-redux';
-import Cookies from 'js-cookie';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { store, type AppDispatch } from '../../store';
+import { store, type AppDispatch, type RootState } from '../../store';
 import { chatApi, useGetConversationsQuery } from './chatApi';
 import type { ChatAttachment, Message } from './chatApi';
 import { authApi } from '../authApi';
-import { addNotification } from '@/store/NotificationSlice';
 import { notificationApi } from '../notificationApi';
+import { addNotification } from '@/store/NotificationSlice';
+import { toast } from 'sonner';
+
+// Module-level socket ref shared across all usages — prevents duplicate connections
+let sharedSocket: Socket | null = null;
+
+export function joinConversation(conversationId: string) {
+  sharedSocket?.emit('joinRoom', { room_id: conversationId });
+}
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -347,6 +354,8 @@ function createSocketNotification(
     '/images/default-avatar.png';
 
   let message: string =
+    data?.last_message ||
+    payload?.last_message ||
     data?.notification_event?.text ||
     data?.message?.body_text ||
     data?.text ||
@@ -409,6 +418,9 @@ export function useChatSocket() {
   const socketRef = useRef<Socket | null>(null);
   const dispatch = useDispatch<AppDispatch>();
 
+  // Watch Redux token so socket reconnects on login without page reload
+  const token = useSelector((state: RootState) => state.auth.auth.token);
+
   const { data: convData } = useGetConversationsQuery();
 
   const convDataRef = useRef(convData);
@@ -438,7 +450,16 @@ export function useChatSocket() {
   }, [convData]);
 
   useEffect(() => {
-    const token = Cookies.get('token');
+    // Don't connect if not authenticated (token is null or false)
+    if (!token) {
+      return;
+    }
+
+    // Disconnect existing shared socket if it was created with a different token
+    if (sharedSocket) {
+      sharedSocket.disconnect();
+      sharedSocket = null;
+    }
 
     const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL!, {
       extraHeaders: {
@@ -446,6 +467,7 @@ export function useChatSocket() {
       },
     });
 
+    sharedSocket = socket;
     socketRef.current = socket;
 
     const joinAllRooms = () => {
@@ -481,12 +503,31 @@ export function useChatSocket() {
     socket.on('connect', () => {
       console.log('[useChatSocket] Connected:', socket.id);
       joinAllRooms();
+      // Fetch fresh notifications from the API immediately so users who just
+      // logged in or reconnected see missed notifications without waiting for
+      // the 30-second polling interval. This is safe now because
+      // mergeApiNotifications (NotificationSlice.ts) deduplicates by messageId,
+      // so the same notification won't appear twice even if the API database ID
+      // differs from the socket-created notification ID.
+      dispatch(notificationApi.util.invalidateTags(['notification', 'adminNotification'] as any));
+      dispatch(chatApi.util.invalidateTags(['Chat'] as any));
     });
 
     socket.onAny((event, data) => {
       console.log('[useChatSocket] EVENT:', event, data);
     });
 
+    /**
+     * Handle a notification event from the socket.
+     * 
+     * This function ONLY dispatches to the Redux store directly.
+     * It does NOT trigger an API refetch (no invalidateTags) because:
+     * 1. The socket already has real-time data, so a refetch is redundant
+     * 2. The refetch causes duplicate notifications (the API response is merged
+     *    into the slice's state via extraReducers, creating a second copy)
+     * 3. The pollingInterval on the notification query handles catching up
+     *    on missed notifications when the user was offline
+     */
     const handleNotification = (
       type:
         | 'conversation'
@@ -495,7 +536,6 @@ export function useChatSocket() {
         | 'follow'
         | 'user-registered',
       rawData: unknown,
-      refetchFromApi = false,
     ) => {
       const state = store.getState() as any;
 
@@ -507,28 +547,35 @@ export function useChatSocket() {
 
       if (!existingIds.has(notification.id)) {
         dispatch(addNotification(notification as any));
-      }
 
-      if (refetchFromApi) {
-        dispatch(
-          notificationApi.util.invalidateTags([
-            'notification',
-            'adminNotification',
-          ] as any),
-        );
+        // Show toast for real-time visual feedback
+        const TYPE_LABEL: Record<string, string> = {
+          approved: '✅ Approved',
+          rejected: '❌ Rejected',
+          follow: '👤 New Follower',
+          conversation: '💬 New Message',
+          'user-registered': '🎉 New User',
+        };
+
+        toast(TYPE_LABEL[type] || '🔔 Notification', {
+          description: notification.message,
+          duration: 4000,
+        });
       }
     };
 
-    socket.on('approved', d => handleNotification('approved', d, true));
-    socket.on('rejected', d => handleNotification('rejected', d, true));
-    socket.on('follow', d => handleNotification('follow', d, true));
+    socket.on('approved', d => handleNotification('approved', d));
+    socket.on('rejected', d => handleNotification('rejected', d));
+    socket.on('follow', d => handleNotification('follow', d));
     socket.on('user-registered', d =>
-      handleNotification('user-registered', d, true),
+      handleNotification('user-registered', d),
     );
 
+    // ⚠️ Do NOT call handleNotification for the 'conversation' event.
+    // The backend also fires a 'message' event for the same message,
+    // and that event's handleNotification call creates the notification.
+    // Calling it here too would produce a SECOND notification (duplicate).
     socket.on('conversation', d => {
-      handleNotification('conversation', d);
-
       const p = d as any;
       const convId = p?.data?.id || p?.id;
 
@@ -543,7 +590,12 @@ export function useChatSocket() {
       const msg = payload?.data?.message;
 
       if (!msg) {
-        handleNotification('conversation', payload);
+        // No structured message data — this might be a conversation-created event.
+        // Only create a notification if we know its ID is unique.
+        const notificationId = payload?.data?.id || payload?.id;
+        if (notificationId && !notificationId.startsWith('temp_')) {
+          handleNotification('conversation', payload);
+        }
         dispatch(chatApi.util.invalidateTags(['Chat'] as any));
         return;
       }
@@ -630,6 +682,7 @@ export function useChatSocket() {
           id: msg.message_id,
           message_id: msg.message_id,
           conversation_id: msg.conversation_id,
+          last_message: payload?.data?.last_message || msg.body_text,
           message: {
             body_text: msg.body_text,
             created_at: msg.created_at,
@@ -644,12 +697,11 @@ export function useChatSocket() {
 
     return () => {
       socket.disconnect();
+      if (sharedSocket === socket) {
+        sharedSocket = null;
+      }
     };
-  }, [dispatch]);
+  }, [dispatch, token]);
 
-  const joinConversation = (conversationId: string) => {
-    socketRef.current?.emit('joinRoom', { room_id: conversationId });
-  };
-
-  return { joinConversation };
+  return {};
 }

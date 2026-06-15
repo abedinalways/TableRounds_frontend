@@ -400,7 +400,13 @@ const notificationSlice = createSlice({
   initialState,
   reducers: {
     addNotification: (state, action: PayloadAction<AppNotification>) => {
-      const exists = state.notifications.some(n => n.id === action.payload.id);
+      // Check by both id AND messageId (for deduplication of conversation notifications)
+      const exists = state.notifications.some(
+        n =>
+          n.id === action.payload.id ||
+          (action.payload.messageId &&
+            n.messageId === action.payload.messageId),
+      );
 
       if (!exists) {
         state.notifications.unshift({
@@ -463,6 +469,7 @@ const notificationSlice = createSlice({
       const raw = Array.isArray(payload?.data) ? payload.data : [];
 
       if (raw.length === 0) {
+        // Keep conversation-type notifications that came from socket
         state.notifications = state.notifications.filter(
           n => n.type === 'conversation' && Boolean(n.conversationId),
         );
@@ -471,18 +478,39 @@ const notificationSlice = createSlice({
       }
 
       const apiItems = raw.map(mapApiNotification);
-      const apiIds = new Set(apiItems.map(n => n.id));
 
-      const socketOnly = state.notifications.filter(
-        n => !apiIds.has(n.id) && !n.id.startsWith('temp_'),
-      );
+      // Build a set of messageIds from API items (for conversation notifications)
+      const apiMessageIds = new Set<string>();
+      const apiIds = new Set<string>();
+      apiItems.forEach(n => {
+        apiIds.add(n.id);
+        if (n.messageId) apiMessageIds.add(n.messageId);
+      });
+
+      // Filter out socket-only notifications that don't exist in the API response.
+      // Skip notifications whose messageId matches an API item (the API version
+      // will replace it), and skip temp IDs.
+      const socketOnly = state.notifications.filter(n => {
+        if (apiIds.has(n.id)) return false;
+        if (n.id.startsWith('temp_')) return false;
+        // If the socket notification has a messageId that matches an API item,
+        // don't keep it — the API version is authoritative.
+        if (n.messageId && apiMessageIds.has(n.messageId)) return false;
+        return true;
+      });
 
       const existingIds = new Set(state.notifications.map(n => n.id));
 
+      // Build a lookup of existing notifications by messageId
+      const existingByMessageId = new Map<string, AppNotification>();
+      state.notifications.forEach(n => {
+        if (n.messageId) existingByMessageId.set(n.messageId, n);
+      });
+
       const mergedItems = apiItems.map(item => {
+        // Check if this API item matches an existing socket notification by id
         if (existingIds.has(item.id)) {
           const oldItem = state.notifications.find(n => n.id === item.id);
-
           return {
             ...item,
             isNew: oldItem?.isNew ?? false,
@@ -491,6 +519,21 @@ const notificationSlice = createSlice({
           };
         }
 
+        // Check if this API item matches an existing socket notification by messageId
+        // (socket uses message_id as notification id, API uses db id)
+        if (item.messageId && existingByMessageId.has(item.messageId)) {
+          const oldItem = existingByMessageId.get(item.messageId)!;
+          return {
+            ...item,
+            // Preserve socket isNew flag so the notification doesn't lose its "new" state
+            isNew: oldItem.isNew,
+            // Carry forward the socket's conversationId/messageId for click navigation
+            conversationId: oldItem.conversationId || item.conversationId,
+            messageId: item.messageId || oldItem.messageId,
+          };
+        }
+
+        // Truly new API notification — keep it as is
         return item;
       });
 

@@ -5,7 +5,7 @@
 import React, { createContext, useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { type AppDispatch, type RootState } from '@/app/redux/store';
-import { useChatSocket } from '@/app/redux/api/chat/useChatSocket';
+import { joinConversation } from '@/app/redux/api/chat/useChatSocket';
 import {
   useGetConversationsQuery,
   useGetMessagesQuery,
@@ -58,7 +58,6 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   const isAdmin = auth?.role === 'admin' || currentUser?.role === 'admin';
 
   // API Hooks
-  const { joinConversation } = useChatSocket();
   const { data: conversationsData } = useGetConversationsQuery();
   const [sendMessageApi] = useSendMessageMutation();
   const [sendAdminMessageApi] = useSendAdminMessageMutation(); // ✅ NEW
@@ -84,11 +83,11 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     }
   }, [conversationIdFromUrl, activeConversationId, dispatch]);
 
-  // Join socket
+  // Join socket room when active conversation changes
   useEffect(() => {
     if (!conversationId) return;
     joinConversation(conversationId);
-  }, [conversationId, joinConversation]);
+  }, [conversationId]);
 
   /**
    * Start Conversation Logic
