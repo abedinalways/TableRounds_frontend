@@ -400,7 +400,13 @@ const notificationSlice = createSlice({
   initialState,
   reducers: {
     addNotification: (state, action: PayloadAction<AppNotification>) => {
-      const exists = state.notifications.some(n => n.id === action.payload.id);
+      // Check by both id AND messageId (for deduplication of conversation notifications)
+      const exists = state.notifications.some(
+        n =>
+          n.id === action.payload.id ||
+          (action.payload.messageId &&
+            n.messageId === action.payload.messageId),
+      );
 
       if (!exists) {
         state.notifications.unshift({
