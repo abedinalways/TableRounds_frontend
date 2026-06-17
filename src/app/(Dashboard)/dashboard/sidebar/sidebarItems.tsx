@@ -34,11 +34,11 @@ export const adminMenu: MenuItem[] = [
     href: '/dashboard/admin/support-message',
     icon: '/images/dashboard/img007.png',
   },
-  // {
-  //   title: 'Admin Profile',
-  //   href: '/dashboard/admin/manage-settings',
-  //   icon: '/images/dashboard/img00008.png',
-  // },
+  {
+    title: 'Subscriptions',
+    href: '/dashboard/admin/financial-management',
+    icon: '/images/dashboard/img33.png',
+  },
 
   // OTHER SECTION
   {
@@ -90,11 +90,11 @@ export const userMenu: MenuItem[] = [
     href: '/dashboard/user/leaderboard',
     icon: '/images/dashboard/img05.png',
   },
-  // {
-  //   title: 'Reset Bank',
-  //   href: '/dashboard/user/reset-bank',
-  //   icon: '/images/dashboard/img06.png',
-  // },
+  {
+    title: 'Payment & Billing',
+    href: '/dashboard/user/payment',
+    icon: '/images/dashboard/img33.png',
+  },
   {
     title: 'Messages',
     href: '/dashboard/user/messages',

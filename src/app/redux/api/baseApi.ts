@@ -35,6 +35,9 @@ export const baseApi = createApi({
     'MarkedQuestions',
     'Test',
     'IncompleteTests',
+    'FinancialStats',
+    'SubscriptionPlansList',
+    'BillingTransactions',
   ],
   endpoints: () => ({}),
 });
