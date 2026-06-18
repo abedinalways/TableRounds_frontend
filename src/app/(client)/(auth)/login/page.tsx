@@ -9,6 +9,7 @@ import { useLoginMutation } from '@/app/redux/api/authApi';
 import { useAppDispatch } from '@/app/redux/hook';
 import { setAuth } from '@/app/redux/authSlice';
 import LoginSkeleton from '@/components/auth_components/LoginSkeleton';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const [error, setError] = useState('');
@@ -76,6 +77,19 @@ export default function LoginPage() {
       ) : (
         <LoginForm onLogin={handleLogin} isLoading={isLoading} />
       )}
+
+      {/* Sign Up Link */}
+      <div className="mt-6 text-center z-10">
+        <p className="text-[#4B5563] text-sm">
+          Don't have an account?{' '}
+          <Link
+            href="/register"
+            className="text-[#B79E6B] font-semibold hover:text-[#a08c5f] transition-colors underline underline-offset-2"
+          >
+            Sign Up
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

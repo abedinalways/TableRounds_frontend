@@ -5,7 +5,7 @@ import SignUpForm from '@/components/auth_components/SignUpForm';
 import Image from 'next/image';
 import React from 'react';
 import { toast } from 'sonner';
-
+import Link from 'next/link';
 
 export default function RegisterPage() {
   const [registerUser, { isLoading }] = useRegisterNewUserMutation();
@@ -49,6 +49,19 @@ export default function RegisterPage() {
       </div>
 
       <SignUpForm onSubmit={handleRegister} isLoading={isLoading} />
+
+      {/* Login Link */}
+      <div className="text-center pb-10">
+        <p className="text-[#4B5563] text-sm">
+          Already have an account?{' '}
+          <Link
+            href="/login"
+            className="text-[#B79E6B] font-semibold hover:text-[#a08c5f] transition-colors underline underline-offset-2"
+          >
+            Sign In
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

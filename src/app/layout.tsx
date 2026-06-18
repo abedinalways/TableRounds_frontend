@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import {
   EB_Garamond,
+  Fraunces,
   Inter,
   Manrope,
   Outfit,
@@ -13,8 +14,14 @@ import { Toaster } from 'sonner';
 
 
 import { Providers } from './Providers';
+import AuthProvider from './AuthProvider';
 ;
 
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  weight: ['600', '700'],
+  variable: '--font-fraunces',
+});
 
 const manrope = Manrope({
   variable: '--font-manrope',
@@ -58,10 +65,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${manrope.variable} ${outfit.variable} ${inter.variable} ${outfit.variable} ${garamond.variable} ${roboto.variable} ${jakarta.variable} antialiased`}
+        className={`${manrope.variable} ${outfit.variable} ${inter.variable} ${fraunces.variable} ${garamond.variable} ${roboto.variable} ${jakarta.variable} antialiased`}
       >
           <Providers>
-        
+        <AuthProvider>
             <Toaster
               position="top-center"
               richColors
@@ -71,7 +78,7 @@ export default function RootLayout({
               }}
             />
             {children}
-        
+        </AuthProvider>
           </Providers>
       </body>
     </html>
