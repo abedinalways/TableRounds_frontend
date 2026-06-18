@@ -1,58 +1,3 @@
-// import React from 'react';
-// import { Card, CardContent } from '@/components/ui/card';
-// import { Button } from '@/components/ui/button';
-// import { Check } from 'lucide-react';
-// import Link from 'next/link';
-
-// const PricingCard: React.FC = () => {
-//   const features = [
-//     '100 free practice questions',
-//     'Access to the full question bank',
-//     'Track quiz performances',
-//     'Flag and review questions',
-//     'Connect with colleagues',
-//     'Compete against others worldwide',
-//   ];
-
-//   return (
-//     <div className=" flex items-center justify-center font-[manrope]">
-//       <Card className="w-full max-w-md  shadow-lg">
-//         <CardContent className="p-8">
-//           {/* Price Section */}
-//           <div className="text-center mb-6">
-//             <div className="flex items-baseline justify-center mb-2">
-//               <span className="text-5xl font-bold text-[#01281e]">$0</span>
-//               <span className="text-xl text-[#01281e] ml-2">/month</span>
-//             </div>
-//             <p className="text-slate-500 text-sm">While in Early Access</p>
-//           </div>
-
-//           {/* CTA Button */}
-//           <Link href="/register">
-//             <Button className="w-full bg-[#B79E6B] hover:[bg-[#B79E6B] text-white font-semibold py-6 text-base mb-6 rounded-md shadow-sm cursor-pointer">
-//               Create Free Account
-//             </Button>
-//           </Link>
-
-//           {/* Features List */}
-//           <div className="space-y-3">
-//             {features.map((feature, index) => (
-//               <div key={index} className="flex items-center gap-3">
-//                 <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-100 flex items-center justify-center">
-//                   <Check className="w-3 h-3 text-green-600 stroke-[3]" />
-//                 </div>
-//                 <span className="text-slate-600 text-sm">{feature}</span>
-//               </div>
-//             ))}
-//           </div>
-//         </CardContent>
-//       </Card>
-//     </div>
-//   );
-// };
-
-// export default PricingCard;
-
 'use client';
 
 import React from 'react';
@@ -66,7 +11,8 @@ import {
   useBuySubscriptionMutation,
   BackendPlanData,
 } from '@/app/redux/api/userFinancialApi';
-import Link from 'next/link';
+import { useAppSelector } from '@/app/redux/hook';
+import { useRouter } from 'next/navigation';
 
 type DisplayPlan = {
   id: string;
@@ -75,6 +21,7 @@ type DisplayPlan = {
   billing_period: string;
   benefits: string[];
 };
+
 const FREE_PLAN_FALLBACK: DisplayPlan = {
   id: 'free',
   name: 'Free',
@@ -101,18 +48,30 @@ const billingSuffix = (period: string) => {
 };
 
 export default function PricingSection() {
+  const router = useRouter();
+  const token = useAppSelector(state => state.auth.auth.token);
+
   const {
     data: plans,
     isLoading: plansLoading,
     isError: plansError,
   } = useGetUserSubscriptionPlansQuery();
 
-  const { data: activeSubscription } = useGetMyActiveSubscriptionQuery();
+  const { data: activeSubscription, isLoading: subLoading } =
+    useGetMyActiveSubscriptionQuery(undefined, {
+      skip: !token,
+    });
 
   const [buySubscription] = useBuySubscriptionMutation();
   const [loadingPlanId, setLoadingPlanId] = React.useState<string | null>(null);
 
   const handleSubscribe = async (planId: string) => {
+    // If user is not logged in, redirect to login
+    if (!token) {
+      router.push('/login');
+      return;
+    }
+
     setLoadingPlanId(planId);
     try {
       const res = await buySubscription({
@@ -145,8 +104,14 @@ export default function PricingSection() {
     activeSubscription?.plan_id === plan.id &&
     activeSubscription?.status === 'active';
 
-  // With 3+ tiers, anchor attention on the middle one — the usual
-  // "most balanced" position in a pricing ladder.
+  // If user has any active subscription check
+  const hasActiveSubscription =
+    activeSubscription?.status === 'active' && !!token;
+
+  // For free plan: if user is logged in, free is automatically assigned
+  const isFreeSubscribed = token && !hasActiveSubscription;
+
+  // With 3+ tiers, anchor attention on the middle one
   const recommendedIndex =
     displayPlans.length >= 3 ? Math.floor(displayPlans.length / 2) : -1;
 
@@ -163,7 +128,7 @@ export default function PricingSection() {
           Built for board day
         </h2>
         <p className="text-[#444950] text-base md:text-lg max-w-xl mx-auto">
-          Start free with 100 questions. Upgrade when you&apos;re ready for the
+          Start free with 100 questions. Upgrade when you're ready for the
           full bank and the rest of the prep tools.
         </p>
       </div>
@@ -181,7 +146,7 @@ export default function PricingSection() {
 
       {plansError && !plansLoading && (
         <p className="text-center text-red-600 text-sm">
-          Couldn&apos;t load plans right now. Please refresh the page.
+          Couldn't load plans right now. Please refresh the page.
         </p>
       )}
 
@@ -199,6 +164,35 @@ export default function PricingSection() {
             const current = isCurrentPlan(plan);
             const recommended = index === recommendedIndex && !current;
             const checkoutLoading = loadingPlanId === plan.id;
+
+            // Determine button state
+            let isDisabled = false;
+            let buttonText = 'Subscribe';
+            let buttonStyle = 'bg-[#B79E6B] hover:bg-[#a8905f] text-white cursor-pointer';
+
+            if (free) {
+              // Free plan: always disabled if logged in (auto-assigned), else redirect to login
+              if (token) {
+                isDisabled = true;
+                buttonText = 'Free';
+                buttonStyle = 'bg-[#f7f7f3] text-[#444950] cursor-not-allowed';
+              } else {
+                // Not logged in: clicking redirects to login
+                buttonText = 'Get Free';
+              }
+            } else if (hasActiveSubscription) {
+              // User has an active subscription - disable all buttons
+              isDisabled = true;
+              if (current) {
+                buttonText = 'Current plan';
+              } else {
+                buttonText = 'Subscribed';
+              }
+              buttonStyle = 'bg-[#f7f7f3] text-[#444950] cursor-not-allowed';
+            } else if (!token) {
+              // Not logged in: clicking any button redirects to login
+              buttonText = 'Subscribe';
+            }
 
             return (
               <div
@@ -244,32 +238,21 @@ export default function PricingSection() {
                   {free ? 'No card required' : 'Cancel anytime'}
                 </p>
 
-                {free ? (
-                  <Link href="/login">
-                    <Button className="w-full py-6 text-base font-semibold rounded-md mb-6 bg-[#f7f7f3] text-[#444950]">
-                      Free
-                    </Button>
-                  </Link>
-                ) : (
-                  <Button
-                    onClick={() => handleSubscribe(plan.id)}
-                    disabled={current || checkoutLoading}
-                    className={cn(
-                      'w-full py-6 text-base font-semibold rounded-md shadow-sm mb-6',
-                      current
-                        ? 'bg-[#f7f7f3] text-[#444950] cursor-not-allowed'
-                        : 'bg-[#B79E6B] hover:bg-[#a8905f] text-white cursor-pointer',
-                    )}
-                  >
-                    {checkoutLoading ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : current ? (
-                      'Current plan'
-                    ) : (
-                      'Subscribe'
-                    )}
-                  </Button>
-                )}
+                <Button
+                  onClick={() => handleSubscribe(plan.id)}
+                  disabled={isDisabled || checkoutLoading}
+                  className={cn(
+                    'w-full py-6 text-base font-semibold rounded-md shadow-sm mb-6',
+                    buttonStyle,
+                    isDisabled && 'cursor-not-allowed',
+                  )}
+                >
+                  {checkoutLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    buttonText
+                  )}
+                </Button>
 
                 <div className="space-y-3 mt-auto">
                   {plan.benefits.map((benefit, i) => (

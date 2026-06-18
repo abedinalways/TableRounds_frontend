@@ -77,6 +77,9 @@ const authSlice = createSlice({
     },
     clearUser(state) {
       state.user = null;
+      state.auth = { token: false };
+      Cookies.remove('token');
+      Cookies.remove('role');
     },
   },
 });

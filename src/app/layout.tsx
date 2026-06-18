@@ -14,6 +14,7 @@ import { Toaster } from 'sonner';
 
 
 import { Providers } from './Providers';
+import AuthProvider from './AuthProvider';
 ;
 
 const fraunces = Fraunces({
@@ -67,7 +68,7 @@ export default function RootLayout({
         className={`${manrope.variable} ${outfit.variable} ${inter.variable} ${fraunces.variable} ${garamond.variable} ${roboto.variable} ${jakarta.variable} antialiased`}
       >
           <Providers>
-        
+        <AuthProvider>
             <Toaster
               position="top-center"
               richColors
@@ -77,7 +78,7 @@ export default function RootLayout({
               }}
             />
             {children}
-        
+        </AuthProvider>
           </Providers>
       </body>
     </html>
