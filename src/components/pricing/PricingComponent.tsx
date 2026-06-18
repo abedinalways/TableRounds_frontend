@@ -11,7 +11,7 @@ export default function Pricing() {
         </CardTitle>
       </CardHeader>
       <div className="my-10 flex items-center justify-center">
-        <div className="bg-[#B79E6B] p-[2px] rounded-2xl w-full ">
+        <div className="gradient-bg p-[2px] rounded-2xl w-full ">
           <PricingCard />
         </div>
       </div>

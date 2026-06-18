@@ -118,18 +118,18 @@ export default function PricingSection() {
   return (
     <section className="w-full py-12 px-4 font-[manrope]">
       <div className="max-w-full mx-auto text-center mb-12">
-        <span className="inline-block text-xs font-semibold tracking-[0.18em] uppercase text-[#01503b] bg-[#00B977]/10 px-3 py-1 rounded-full mb-4">
+        <span className="inline-block text-xs font-semibold tracking-[0.18em] uppercase text-white bg-[#B79E6B] px-3 py-1 rounded-full mb-4">
           Membership
         </span>
         <h2
-          className="text-4xl md:text-5xl font-bold text-[#01281e] mb-3"
+          className="text-4xl md:text-5xl font-bold text-white mb-3"
           style={{ fontFamily: 'var(--font-fraunces), serif' }}
         >
           Built for board day
         </h2>
-        <p className="text-[#444950] text-base md:text-lg max-w-xl mx-auto">
-          Start free with 100 questions. Upgrade when you're ready for the
-          full bank and the rest of the prep tools.
+        <p className="text-white text-base md:text-lg max-w-xl mx-auto">
+          Start free with 100 questions. Upgrade when you're ready for the full
+          bank and the rest of the prep tools.
         </p>
       </div>
 
@@ -168,7 +168,8 @@ export default function PricingSection() {
             // Determine button state
             let isDisabled = false;
             let buttonText = 'Subscribe';
-            let buttonStyle = 'bg-[#B79E6B] hover:bg-[#a8905f] text-white cursor-pointer';
+            let buttonStyle =
+              'bg-[#B79E6B] hover:bg-[#a8905f] text-white cursor-pointer';
 
             if (free) {
               // Free plan: always disabled if logged in (auto-assigned), else redirect to login
