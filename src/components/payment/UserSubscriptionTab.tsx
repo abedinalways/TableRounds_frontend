@@ -3,81 +3,65 @@
 import React, { useState } from 'react';
 import { Check, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
-
-interface UserPlan {
-  id: string;
-  type: string;
-  price: number;
-  billingPeriod: 'post' | 'month';
-  isPopular?: boolean;
-  benefits: string[];
-}
-
-const USER_PLANS: UserPlan[] = [
-  {
-    id: 'price_pay_as_you_go_id', 
-    type: 'Pay-As-You-Go',
-    price: 35.0,
-    billingPeriod: 'post',
-    isPopular: false,
-    benefits: [
-      'One Official Memorial Notice',
-      'Charity Integration',
-      'Verified Professional Seal',
-      'Tribute Book Generation',
-      'Stripe Secure Processing',
-    ],
-  },
-  {
-    id: 'price_monthly_prof_id',
-    type: 'Monthly Professional',
-    price: 135.0,
-    billingPeriod: 'month',
-    isPopular: true,
-    benefits: [
-      'Unlimited Notices',
-      'Priority Verification',
-      'Advanced Analytics',
-      'Multi-User Access',
-      'Premium Priority on Notice',
-    ],
-  },
-];
+import {
+  useGetUserSubscriptionPlansQuery,
+  useBuySubscriptionMutation,
+} from '@/app/redux/api/userFinancialApi';
 
 export default function UserSubscriptionTab() {
+ 
+  const { data: plans = [], isLoading } = useGetUserSubscriptionPlansQuery();
+  const [buySubscription] = useBuySubscriptionMutation();
   const [loadingPlanId, setLoadingPlanId] = useState<string | null>(null);
 
   const handleCheckout = async (planId: string) => {
     setLoadingPlanId(planId);
     try {
-      toast.info('Redirecting to secure Stripe checkout...');
-
-      /* 
-         =========================================
-         API INTEGRATION PLACEHOLDER:
-         =========================================
-         const response = await createStripeSessionMutation({ priceId: planId }).unwrap();
-         window.location.href = response.stripeCheckoutUrl;
-      */
-
      
-      setTimeout(() => {
-        window.location.href = `https://checkout.stripe.com/pay/mock_session_for_${planId}`;
-      }, 1500);
-    } catch (error) {
-      toast.error('Failed to initiate checkout. Please try again.');
+
+      const currentOrigin = window.location.origin;
+
+      const response = await buySubscription({
+        planId,
+        callbackUrl: currentOrigin,
+      }).unwrap();
+
+      if (response && response.data?.url) {
+        
+        toast.info('Redirecting to secure Stripe checkout...');
+        window.location.href = response.data.url;
+      } else {
+        throw new Error('You already have an active monthly subscription.');
+      }
+    } catch (error: any) {
+      
+      const errorMessage = 
+        error?.data?.message || 
+        error?.message || 
+        'Failed to initiate checkout. Please try again.';
+
+      toast.error(errorMessage);
+      
       setLoadingPlanId(null);
     }
   };
+  if (isLoading) {
+    return (
+      <div className="text-sm font-medium text-gray-500 p-6 animate-pulse font-[manrope]">
+        Loading subscription plans...
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-wrap gap-6 items-start pt-6 font-[manrope]">
-      {USER_PLANS.map(plan => (
+      {plans.map(plan => (
         <div
           key={plan.id}
           className="relative flex flex-col justify-between bg-white border border-gray-100 rounded-2xl p-6 shadow-xs min-h-[460px] w-full max-w-[320px]"
         >
-          {plan.isPopular && (
+         
+          {plan.name.toLowerCase().includes('professional') && (
             <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#bfa122] text-white text-[10px] font-bold px-4 py-1 rounded-full uppercase tracking-wider">
               Popular Plan
             </span>
@@ -85,13 +69,13 @@ export default function UserSubscriptionTab() {
 
           <div>
             <div className="text-center mt-3 space-y-4">
-              <p className="text-sm font-semibold text-gray-700">{plan.type}</p>
+              <p className="text-sm font-semibold text-gray-700">{plan.name}</p>
               <div className="flex items-baseline justify-center gap-0.5">
                 <span className="text-4xl font-bold text-gray-900">
-                  £{plan.price.toFixed(2)}
+                  £{Number(plan.price || 0).toFixed(2)}
                 </span>
                 <span className="text-xs text-gray-400">
-                  /{plan.billingPeriod}
+                  /{plan.billing_period}
                 </span>
               </div>
             </div>
@@ -101,7 +85,7 @@ export default function UserSubscriptionTab() {
                 Core includes
               </p>
               <ul className="space-y-3.5">
-                {plan.benefits.map((benefit, idx) => (
+                {plan.benefits?.map((benefit, idx) => (
                   <li
                     key={idx}
                     className="flex items-start gap-2.5 text-sm text-gray-500"

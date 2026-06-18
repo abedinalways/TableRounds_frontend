@@ -6,21 +6,18 @@ import UserSubscriptionTab from './UserSubscriptionTab';
 import UserBillingHistoryTab from './UserBillingHistoryTab';
 import PaymentStatusModal from './PaymentStatusModal';
 
-
 type UserTabType = 'subscription' | 'methods' | 'history';
 
 export default function PaymentMainPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
- 
   const activeTab = (searchParams.get('tab') as UserTabType) || 'subscription';
-  const paymentStatus = searchParams.get('status'); 
+  const paymentStatus = searchParams.get('status');
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    
     if (paymentStatus === 'success' || paymentStatus === 'cancel') {
       setIsModalOpen(true);
     }
@@ -32,57 +29,42 @@ export default function PaymentMainPage() {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-  
-    router.push(`?tab=${activeTab}`, { scroll: false });
+    window.location.href = '/dashboard/user/payment?tab=history';
   };
-
   return (
     <>
       <h2 className="text-[#01281e] text-[32px] md:text-[48px] font-bold font-[manrope]">
         Payment & Billing
       </h2>
-    <div className="min-h-screen bg-gray-50/20 p-4 md:p-4 space-y-4 font-[manrope]">
-      
-      <div className="border-b border-gray-200">
-        <nav className="flex gap-8 text-sm font-medium">
-          <button
-            onClick={() => handleTabChange('subscription')}
-            className={`pb-3 border-b-2 transition-all cursor-pointer ${activeTab === 'subscription' ? 'border-[#01503b] text-[#01503b] font-bold' : 'border-transparent text-gray-400'}`}
-          >
-            Subscription Plans
-          </button>
-          {/* <button
-            onClick={() => handleTabChange('methods')}
-            className={`pb-3 border-b-2 transition-all cursor-pointer ${activeTab === 'methods' ? 'border-[#01503b] text-[#01503b] font-bold' : 'border-transparent text-gray-400'}`}
+      <div className="min-h-screen bg-gray-50/20 p-4 md:p-4 space-y-4 font-[manrope]">
+        <div className="border-b border-gray-200">
+          <nav className="flex gap-8 text-sm font-medium">
+            <button
+              onClick={() => handleTabChange('subscription')}
+              className={`pb-3 border-b-2 transition-all cursor-pointer ${activeTab === 'subscription' ? 'border-[#01503b] text-[#01503b] font-bold' : 'border-transparent text-gray-400'}`}
             >
-            Payment Methods
-          </button> */}
-          <button
-            onClick={() => handleTabChange('history')}
-            className={`pb-3 border-b-2 transition-all cursor-pointer ${activeTab === 'history' ? 'border-[#01503b] text-[#01503b] font-bold' : 'border-transparent text-gray-400'}`}
-          >
-            Billing History
-          </button>
-        </nav>
-      </div>
+              Subscription Plans
+            </button>
+            <button
+              onClick={() => handleTabChange('history')}
+              className={`pb-3 border-b-2 transition-all cursor-pointer ${activeTab === 'history' ? 'border-[#01503b] text-[#01503b] font-bold' : 'border-transparent text-gray-400'}`}
+            >
+              Billing History
+            </button>
+          </nav>
+        </div>
 
-      <div className="pt-2">
-        {activeTab === 'subscription' && <UserSubscriptionTab />}
-        {activeTab === 'methods' && (
-          <div className="text-sm text-gray-400 p-6 bg-white border border-dashed rounded-xl max-w-xl text-center">
-            Saved payment options and credit card manager will be integrated
-            here.
-          </div>
-        )}
-        {activeTab === 'history' && <UserBillingHistoryTab />}
-      </div>
+        <div className="pt-2">
+          {activeTab === 'subscription' && <UserSubscriptionTab />}
+          {activeTab === 'history' && <UserBillingHistoryTab />}
+        </div>
 
-      <PaymentStatusModal
-        isOpen={isModalOpen}
-        status={paymentStatus as 'success' | 'cancel'}
-        onClose={handleCloseModal}
-      />
-    </div>
-        </>
+        <PaymentStatusModal
+          isOpen={isModalOpen}
+          status={paymentStatus as 'success' | 'cancel'}
+          onClose={handleCloseModal}
+        />
+      </div>
+    </>
   );
 }
