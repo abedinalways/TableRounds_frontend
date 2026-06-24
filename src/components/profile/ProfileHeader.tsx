@@ -116,7 +116,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
 
             <p className="text-[18px] text-[#047857]">{user.title}</p>
 
-            <div className="flex md:gap-[48px] gap-6 items-center text-xs md:text-[16px] font-light text-[#6b7280]">
+            <div className="flex md:gap-[48px] gap-3 items-center text-xs md:text-[16px] font-light text-[#6b7280]">
               <h4 className="flex items-center gap-2">
                 <LocationIcon />
                 {user.state}, {user.country}
@@ -131,7 +131,11 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
               </h4>
               <h4 className="flex items-center gap-2">
                 <CalendarIconForProfile />
-                <span className="font-semibold">Joined</span> {normalizeDate}
+                <span className="font-semibold">Joined</span>{' '}
+                {new Date(user.created_at).toLocaleDateString('en-US', {
+                  month: 'long',
+                  year: 'numeric',
+                })}
               </h4>
             </div>
 
@@ -186,10 +190,11 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
 
               <button
                 onClick={handleProfileFollowToggle}
-                className={`px-[24px] py-[14px] text-center rounded-[8px] cursor-pointer border ${isFollowing
-                  ? 'bg-[#01503b] text-white border-[#01503b]'
-                  : 'bg-white text-[#01503b] border-[#01503b]'
-                  }`}
+                className={`px-[24px] py-[14px] text-center rounded-[8px] cursor-pointer border ${
+                  isFollowing
+                    ? 'bg-[#01503b] text-white border-[#01503b]'
+                    : 'bg-white text-[#01503b] border-[#01503b]'
+                }`}
               >
                 {isFollowing ? 'Unfollow' : 'Follow'}
               </button>

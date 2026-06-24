@@ -20,7 +20,7 @@ export const WelcomeBanner = () => {
     'follower',
   );
   const { data: value } = useMeQuery(); 
-  console.log(value, "----------------------wefwfwfwfwefffffffff")
+  // console.log(value, "----------------------wefwfwfwfwefffffffff")
   const [toggleFollow] = useToggleFollowMutation();
   const { data: connectionsData, isLoading } = useGetConnectionsQuery(
     { type: modalType },
