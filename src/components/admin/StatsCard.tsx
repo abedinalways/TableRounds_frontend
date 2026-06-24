@@ -20,25 +20,25 @@ export function StatsCard() {
     {
       label: 'Total Users',
       value: data.data.total_users.toString(),
-      note: '+4.2% This week',
+      note: '',
       icon: '/images/dashboard/Admin/img01.png',
     },
     {
       label: 'Pending Verifications',
       value: data.data.pending_user_verification.toString(),
-      note: 'Need review',
+      note: '',
       icon: '/images/dashboard/Admin/img02.png',
     },
     {
       label: 'Questions',
       value: data.data.total_questions.toString(),
-      note: 'Last added 2h ago',
+      note: '',
       icon: '/images/dashboard/Admin/img04.png',
     },
     {
       label: 'Active Sessions',
       value: data.data.total_tests.toString(),
-      note: 'DAU 742',
+      note: '',
       icon: '/images/dashboard/Admin/img03.png',
     },
   ];

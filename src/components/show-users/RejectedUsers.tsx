@@ -46,6 +46,12 @@ export function RejectedUsers({
   onPageChange,
 }: Props) {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const totalPages = Math.max(1, Math.ceil((total ?? 0) / limit));
+
+  const goToPage = (nextPage: number) => {
+    const safePage = Math.min(Math.max(nextPage, 1), totalPages);
+    onPageChange(safePage);
+  };
 
   return (
     <>
@@ -134,23 +140,42 @@ export function RejectedUsers({
             </tbody>
           </table>
 
-          <div className="flex justify-end items-center gap-2 mt-4">
+          {/* Pagination */}
+          <div className="flex flex-wrap justify-end items-center gap-2 mt-4">
             <button
-              onClick={() => onPageChange(page - 1)}
+              onClick={() => goToPage(1)}
               disabled={page === 1}
-              className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
+              className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed hover:bg-gray-50 text-sm"
+            >
+              First
+            </button>
+
+            <button
+              onClick={() => goToPage(page - 1)}
+              disabled={page === 1}
+              className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed hover:bg-gray-50 text-sm"
             >
               Prev
             </button>
 
-            <span className="text-sm">Page {page}</span>
+            <span className="text-sm px-2 font-medium">
+              Page {page} of {totalPages}
+            </span>
 
             <button
-              onClick={() => onPageChange(page + 1)}
-              disabled={total ? page * limit >= total : false}
-              className="px-3 py-1 border rounded cursor-pointer"
+              onClick={() => goToPage(page + 1)}
+              disabled={page >= totalPages}
+              className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed hover:bg-gray-50 text-sm"
             >
               Next
+            </button>
+
+            <button
+              onClick={() => goToPage(totalPages)}
+              disabled={page >= totalPages}
+              className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed hover:bg-gray-50 text-sm"
+            >
+              Last
             </button>
           </div>
         </div>

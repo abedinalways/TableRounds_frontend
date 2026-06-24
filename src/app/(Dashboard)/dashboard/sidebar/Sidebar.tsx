@@ -96,6 +96,20 @@ export default function Sidebar({
       );
     }
 
+    // DISABLED ITEM
+    if (item.disabled) {
+      return (
+        <button
+          key={item.href}
+          disabled
+          title="Coming soon"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-md w-full text-left opacity-50 cursor-not-allowed"
+        >
+          <Image src={item.icon} width={18} height={18} alt={item.title} />
+          <span className="text-sm">{item.title}</span>
+        </button>
+      );
+    }
     // NORMAL LINK
     return (
       <Link
@@ -113,7 +127,7 @@ export default function Sidebar({
         <span className="text-sm">{item.title}</span>
       </Link>
     );
-  };
+  };;
 
   /* ================= DESKTOP ================= */
 

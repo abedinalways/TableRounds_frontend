@@ -292,7 +292,11 @@ export default function ManageProfile({
 
                 <h4 className="flex items-center gap-2 text-sm">
                   <CalendarIconForProfile />
-                  Joined {normalizeDate}
+                  Joined{' '}
+                  {new Date(user.created_at).toLocaleDateString('en-US', {
+                    month: 'long',
+                    year: 'numeric',
+                  })}
                 </h4>
               </div>
 
@@ -355,10 +359,11 @@ export default function ManageProfile({
                   </div>
 
                   <span
-                    className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${isPublicWatch
+                    className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
+                      isPublicWatch
                         ? 'bg-green-100 text-green-700'
                         : 'bg-slate-200 text-slate-700'
-                      }`}
+                    }`}
                   >
                     {isPublicWatch ? 'Public' : 'Private'}
                   </span>

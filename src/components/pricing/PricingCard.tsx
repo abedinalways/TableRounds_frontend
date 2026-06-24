@@ -166,7 +166,8 @@ export default function PricingSection() {
             const checkoutLoading = loadingPlanId === plan.id;
 
             // Determine button state
-            let isDisabled = false;
+            // let isDisabled = false;
+            let isDisabled = true;
             let buttonText = 'Subscribe';
             let buttonStyle =
               'bg-[#B79E6B] hover:bg-[#a8905f] text-white cursor-pointer';

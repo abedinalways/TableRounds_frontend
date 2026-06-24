@@ -172,6 +172,14 @@ export const chatApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Chat'],
     }),
+
+    deleteConversation: builder.mutation<ApiResponse<null>, string>({
+      query: conversationId => ({
+        url: `/chat/conversation/${conversationId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Chat'],
+    }),
   }),
 });
 
@@ -182,4 +190,5 @@ export const {
   useSendMessageMutation,
   useSendAdminMessageMutation,
   useCreateAdminConversationMutation,
+  useDeleteConversationMutation,
 } = chatApi;

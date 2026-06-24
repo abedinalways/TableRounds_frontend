@@ -4,7 +4,7 @@ export interface MenuItem {
   href: string;
   icon: string;
   section?: string;
-  
+  disabled?: boolean;
 }
 
 export const adminMenu: MenuItem[] = [
@@ -94,6 +94,7 @@ export const userMenu: MenuItem[] = [
     title: 'Payment & Billing',
     href: '/dashboard/user/payment',
     icon: '/images/dashboard/img33.png',
+    disabled: true,
   },
   {
     title: 'Messages',
