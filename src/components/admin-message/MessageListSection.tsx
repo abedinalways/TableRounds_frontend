@@ -1,9 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import { useChat } from '@/app/(Dashboard)/context/ChatContext';
 import { useRouter } from 'next/navigation';
 import { useMeQuery } from '@/app/redux/api/authApi';
+import { useDeleteConversationMutation } from '@/app/redux/api/chat/chatApi';
+import { Trash2 } from 'lucide-react';
 
 export default function MessageListSection() {
   const { conversations, selectConversation, activeConversationId } = useChat();
@@ -11,6 +14,25 @@ export default function MessageListSection() {
 
   // Fetching the current admin user data
   const { data: adminData } = useMeQuery();
+  const [deleteConversation] = useDeleteConversationMutation();
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+
+  const handleDelete = async (e: React.MouseEvent, conversationId: string) => {
+    e.stopPropagation();
+
+    if (deleteConfirmId === conversationId) {
+      // Second click — confirm delete
+      try {
+        await deleteConversation(conversationId).unwrap();
+      } catch (error) {
+        console.error('Failed to delete conversation:', error);
+      }
+      setDeleteConfirmId(null);
+    } else {
+      // First click — show confirmation
+      setDeleteConfirmId(conversationId);
+    }
+  };
 
   return (
     <>
@@ -30,6 +52,8 @@ export default function MessageListSection() {
               ? conv.messages[conv.messages.length - 1].message
               : 'No messages yet';
 
+          const isConfirming = deleteConfirmId === conv.id;
+
           return (
             <div
               key={conv.id}
@@ -38,7 +62,7 @@ export default function MessageListSection() {
                 // Ensure the path matches your Admin routing structure
                 router.push(`/dashboard/admin/support-message/${conv.id}`);
               }}
-              className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer ${
+              className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer group ${
                 activeConversationId === conv.id
                   ? 'bg-gray-100'
                   : 'hover:bg-gray-50'
@@ -63,6 +87,24 @@ export default function MessageListSection() {
                 </p>
                 <p className="text-xs text-gray-500 truncate">{lastMessage}</p>
               </div>
+
+              {/* Delete button */}
+              <button
+                type="button"
+                onClick={(e) => handleDelete(e, conv.id)}
+                className={`shrink-0 w-8 h-8  cursor-pointer rounded-full flex items-center justify-center transition-all ${
+                  isConfirming
+                    ? 'bg-red-500 text-white scale-110 '
+                    : 'bg-gray-100 text-gray-400 hover:text-red-500 hover:bg-red-50 opacity-0 group-hover:opacity-100'
+                }`}
+                title={isConfirming ? 'Click again to confirm delete' : 'Delete conversation'}
+              >
+                {isConfirming ? (
+                  <span className="text-xs font-bold">✓</span>
+                ) : (
+                  <Trash2 size={14} />
+                )}
+              </button>
             </div>
           );
         })}
