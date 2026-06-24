@@ -1,6 +1,6 @@
 'use client';
-import { PendingUser } from '@/types/admin';
 
+import { PendingUser } from '@/types/admin';
 import Image from 'next/image';
 import EyeIcon from '../reusable/icons/EyeIcon';
 import Link from 'next/link';
@@ -25,17 +25,24 @@ export function PendingUsers({
   limit,
   onPageChange,
 }: Props) {
-
+  const totalPages = Math.max(1, Math.ceil((total ?? 0) / limit));
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+
+  const goToPage = (nextPage: number) => {
+    const safePage = Math.min(Math.max(nextPage, 1), totalPages);
+    onPageChange(safePage);
+  };
+
   return (
     <>
       <div className="bg-white rounded-lg shadow p-[18px] font-[manrope]">
         <div className="mb-4 text-[#01281e] text-[20px] font-bold leading-[150%]">
           Users Pending
         </div>
-        <div className="rounded-t-[8px]  overflow-x-auto">
+
+        <div className="rounded-t-[8px] overflow-x-auto">
           <table className="w-full text-sm min-w-[700px]">
-            <thead className=" bg-[#01503b] h-[89px] text-white ">
+            <thead className="bg-[#01503b] h-[89px] text-white">
               <tr className="text-left text-white">
                 <th className="p-3 text-left">Name</th>
                 <th className="p-3 text-left">Email</th>
@@ -48,11 +55,14 @@ export function PendingUsers({
 
             <tbody>
               {users.map(user => (
-                <tr key={user.id} className="mx-auto last:border-b">
-                  <td className="p-4 font-medium flex gap-2 items-center ">
+                <tr
+                  key={user.id}
+                  className="border-b border-gray-100 last:border-b-0"
+                >
+                  <td className="p-4 font-medium flex gap-2 items-center">
                     <Image
                       src={user?.image ?? '/images/doc.png'}
-                      alt=""
+                      alt={user.name}
                       width={32}
                       height={32}
                       className="rounded-full aspect-square object-cover"
@@ -60,8 +70,13 @@ export function PendingUsers({
                     />
                     {user.name}
                   </td>
-                  <td className='p-4 align-middle"'>{user.email}</td>
-                  <td className="truncate max-w-[200px]">{user.address}</td>
+
+                  <td className="p-4 align-middle">{user.email}</td>
+
+                  <td className="p-4 truncate max-w-[200px]">
+                    {user.address ?? 'Unknown'}
+                  </td>
+
                   <td className="p-4 align-middle">
                     <button
                       onClick={() =>
@@ -74,6 +89,7 @@ export function PendingUsers({
                       <EyeIcon /> View
                     </button>
                   </td>
+
                   <td className="p-4 align-middle">
                     <Link href={`/dashboard/admin/user-profile/${user.id}`}>
                       <button className="bg-[#cdebe3] text-[#01503b] cursor-pointer rounded-[4px] py-1 px-2 flex items-center gap-2">
@@ -81,6 +97,7 @@ export function PendingUsers({
                       </button>
                     </Link>
                   </td>
+
                   <td className="p-4 align-middle">
                     <div className="flex gap-2">
                       <button
@@ -101,29 +118,48 @@ export function PendingUsers({
               ))}
             </tbody>
           </table>
+        </div>
 
-          {/* Pagination */}
-          <div className="flex justify-end items-center gap-2 mt-4">
-            <button
-              onClick={() => onPageChange(page - 1)}
-              disabled={page === 1}
-              className="px-3 py-1 border rounded disabled:opacity-50"
-            >
-              Prev
-            </button>
+        {/* Pagination */}
+        <div className="flex flex-wrap justify-end items-center gap-2 mt-4 text-[#01281e]">
+          <button
+            onClick={() => goToPage(1)}
+            disabled={page === 1}
+            className="px-3 py-1 border border-gray-200 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 text-sm"
+          >
+            First
+          </button>
 
-            <span className="text-sm">Page {page}</span>
+          <button
+            onClick={() => goToPage(page - 1)}
+            disabled={page === 1}
+            className="px-3 py-1 border border-gray-200 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 text-sm"
+          >
+            Prev
+          </button>
 
-            <button
-              onClick={() => onPageChange(page + 1)}
-              disabled={total ? page * limit >= total : false}
-              className="px-3 py-1 border rounded"
-            >
-              Next
-            </button>
-          </div>
+          <span className="text-sm px-2 font-medium">
+            Page {page} of {totalPages}
+          </span>
+
+          <button
+            onClick={() => goToPage(page + 1)}
+            disabled={page >= totalPages}
+            className="px-3 py-1 border border-gray-200 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 text-sm"
+          >
+            Next
+          </button>
+
+          <button
+            onClick={() => goToPage(totalPages)}
+            disabled={page >= totalPages}
+            className="px-3 py-1 border border-gray-200 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 text-sm"
+          >
+            Last
+          </button>
         </div>
       </div>
+
       {previewImage && (
         <div
           className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center"

@@ -1,26 +1,27 @@
 'use client';
+
 import { VerifiedUser } from '@/types/admin';
 import Image from 'next/image';
 import EyeIcon from '../reusable/icons/EyeIcon';
-import { MoreVertical } from 'lucide-react'; 
+import { MoreVertical } from 'lucide-react';
 import FacebookIcon from '../reusable/icons/FacebookIcon';
 import InstaIcon from '../reusable/icons/InstaIcon';
 import LinkedInIcon from '../reusable/icons/LinkedInIcon';
 import XIcon from '../reusable/icons/XIcon';
-
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
-import { use, useState } from 'react';
+import { useState } from 'react';
 import { useChat } from '@/app/(Dashboard)/context/ChatContext';
 import { useCreateAdminConversationMutation } from '@/app/redux/api/chat/chatApi';
 import { useRouter } from 'next/navigation';
-import { useGetAllUsersQuery, useGetUserStatusQuery } from '@/app/redux/api/userStatusApi';
+import { useGetAllUsersQuery } from '@/app/redux/api/userStatusApi';
+import Pagination from '../reusable/Pagination';
+
 type Props = {
   users: VerifiedUser[];
   onDelete: (id: string) => void;
@@ -38,47 +39,42 @@ export function VerifiedUsers({
   limit,
   onPageChange,
 }: Props) {
-  
   const { selectConversation } = useChat();
   const [createConversation] = useCreateAdminConversationMutation();
   const router = useRouter();
-  
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  useGetAllUsersQuery();
+
   const handleMessageClick = async (userId: string) => {
     try {
       const response = await createConversation({
         participant_id: userId,
       }).unwrap();
 
-      console.log('Conversation created successfully:', response);
-
       const conversationId = response.data.id;
 
       if (conversationId) {
         selectConversation(conversationId);
-
         router.push(`/dashboard/admin/support-message/${conversationId}`);
       }
     } catch (error) {
       console.error('Conversation creation failed:', error);
     }
   };
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const { data: allUsers } = useGetAllUsersQuery();
-  console.log(allUsers, 'okew-======================================');
 
   const normalizeUrl = (url?: string) => {
     if (!url) return '';
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      return url;
-    }
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
     return `https://${url}`;
   };
+
   return (
     <>
       <div className="bg-white rounded-lg shadow p-[18px] font-[manrope]">
         <div className="mb-4 text-[#01281e] text-[20px] font-bold leading-[150%]">
           Users Verified
         </div>
+
         <div className="rounded-t-[8px] overflow-x-auto">
           <table className="w-full text-sm min-w-[900px]">
             <thead className="bg-[#01503b] h-[89px] text-white">
@@ -86,7 +82,6 @@ export function VerifiedUsers({
                 <th className="p-3">Name</th>
                 <th className="p-3">Email</th>
                 <th className="p-3">Location</th>
-
                 <th className="p-3">Social media</th>
                 <th className="p-3">Documents</th>
                 <th className="p-3">Profile</th>
@@ -115,7 +110,6 @@ export function VerifiedUsers({
                   <td className="p-4 truncate max-w-[150px]">
                     {user.location}
                   </td>
-
                   <td className="p-4">
                     <div className="flex gap-3 text-[#01503b]">
                       {user.facebook && (
@@ -127,8 +121,7 @@ export function VerifiedUsers({
                           <FacebookIcon />
                         </a>
                       )}
-
-                      {user?.instagram && (
+                      {user.instagram && (
                         <a
                           href={normalizeUrl(user.instagram)}
                           target="_blank"
@@ -137,7 +130,6 @@ export function VerifiedUsers({
                           <InstaIcon />
                         </a>
                       )}
-
                       {user.linkedin && (
                         <a
                           href={normalizeUrl(user.linkedin)}
@@ -147,7 +139,6 @@ export function VerifiedUsers({
                           <LinkedInIcon />
                         </a>
                       )}
-
                       {user.twitter_x && (
                         <a
                           href={normalizeUrl(user.twitter_x)}
@@ -186,7 +177,7 @@ export function VerifiedUsers({
                         </button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem asChild>
                           <Link
                             href={`/dashboard/admin/user-profile/${user.id}`}
                           >
@@ -198,10 +189,9 @@ export function VerifiedUsers({
                             Contact user
                           </button>
                         </DropdownMenuItem>
-                        {/* implement delete user functionality */}
                         <DropdownMenuItem
                           onClick={() => onDelete(user.id)}
-                          className=" cursor-pointer"
+                          className="cursor-pointer"
                         >
                           Delete user
                         </DropdownMenuItem>
@@ -212,29 +202,16 @@ export function VerifiedUsers({
               ))}
             </tbody>
           </table>
-
-          {/* Pagination */}
-          <div className="flex justify-end items-center gap-2 mt-4">
-            <button
-              onClick={() => onPageChange(page - 1)}
-              disabled={page === 1}
-              className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
-            >
-              Prev
-            </button>
-
-            <span className="text-sm">Page {page}</span>
-
-            <button
-              onClick={() => onPageChange(page + 1)}
-              disabled={total ? page * limit >= total : false}
-              className="px-3 py-1 border rounded cursor-pointer"
-            >
-              Next
-            </button>
-          </div>
         </div>
+
+        <Pagination
+          page={page}
+          total={total}
+          limit={limit}
+          onPageChange={onPageChange}
+        />
       </div>
+
       {previewImage && (
         <div
           className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center"
@@ -249,7 +226,6 @@ export function VerifiedUsers({
                 <p className="text-gray-700 font-medium">
                   PDF Preview not available
                 </p>
-
                 <a
                   href={previewImage}
                   target="_blank"

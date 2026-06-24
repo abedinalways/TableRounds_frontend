@@ -1,135 +1,4 @@
-// import Image from "next/image";
-// import Link from "next/link";
-// import EyeIcon from "../reusable/icons/EyeIcon";
-// import { useRouter } from "next/navigation";
-// import { useGetReportedUsersQuery } from "@/app/redux/api/userStatusApi";
-
-// type ReportedUser = {
-//   id: string;
-//   reportingUser: {
-//     name: string;
-//     id: string;
-//     avatar_url?: string;
-//     image?: string;
-//     email: string;
-//   };
-//   reportedUser: {
-//     name: string;
-//     id: string;
-//     avatar_url?: string;
-//     image?: string;
-//     email: string;
-
-//   };
-// };
-
-// type Props = {
-//   users: ReportedUser[];
-// };
-
-// export function ReportedUsers({ users }: Props) {
-//   const router = useRouter();
-//   const { data: reportedData } = useGetReportedUsersQuery();
-//   const conversationId =
-//     reportedData?.data?.map(report => ({
-//       id: report.conversation_id,
-//     }));
-//   // console.log(conversationId, 'what is my reported data??????????????????+======================');
-//   return (
-//     <div className="bg-white rounded-lg shadow p-[18px] font-[manrope]">
-//       <div className="mb-4 text-[#01281e] text-[20px] font-bold leading-[150%]">
-//         Users Reported
-//       </div>
-
-//       <div className="rounded-t-[8px] overflow-x-auto">
-//         <table className="w-full text-sm min-w-[900px]">
-//           <thead className="bg-[#01503b] text-white h-[70px]">
-//             <tr className="text-left">
-//               <th className="p-4">Reporting User</th>
-//               <th className="p-4">Reporting User Email</th>
-//               <th className="p-4">Profile</th>
-//               <th className="p-4">Reported User</th>
-//               <th className="p-4">Reported User Email</th>
-//               <th className="p-4">Profile</th>
-//             </tr>
-//           </thead>
-
-//           <tbody>
-//             {users.map(item => (
-//               <tr
-//                 key={item.id}
-//                 className="border-b border-gray-100 hover:bg-gray-50"
-//               >
-//                 <td className="p-4 flex items-center gap-2 font-medium cursor-pointer">
-//                   <Image
-//                     src={item.reportingUser.image ?? '/images/doc.png'}
-//                     alt={item.reportingUser.name}
-//                     width={32}
-//                     height={32}
-//                     className="rounded-full aspect-square object-cover"
-//                     unoptimized
-//                   />
-//                   {item.reportingUser.name}
-//                 </td>
-
-//                 <td className="p-4">{item.reportingUser.email}</td>
-
-//                 <td className="p-4 align-middle">
-//                   <Link
-//                     href={`/dashboard/admin/user-profile/${item.reportingUser.id}`}
-//                   >
-//                     <button className="bg-[#cdebe3] text-[#01503b] cursor-pointer rounded-[4px] py-1 px-2 flex items-center gap-2">
-//                       <EyeIcon /> Profile
-//                     </button>
-//                   </Link>
-//                 </td>
-
-//                 <td className="p-4 cursor-pointer flex items-center gap-2 font-medium">
-//                   <Image
-//                     src={item.reportedUser.image ?? '/images/doc.png'}
-//                     alt={item.reportedUser.name}
-//                     width={32}
-//                     height={32}
-//                     className="rounded-full aspect-square object-cover"
-//                     unoptimized
-//                   />
-//                   {item.reportedUser.name}
-//                 </td>
-
-//                 <td className="p-4">{item.reportedUser.email}</td>
-//                 <td className="p-4 align-middle">
-//                   <button
-//                     onClick={() => {
-
-//                       const reportMatch = reportedData?.data?.find(
-//                         (report: any) => report.id === item.id,
-//                       );
-
-//                       const cId = reportMatch?.conversation_id;
-
-//                       if (cId) {
-//                         router.push(
-//                           `/dashboard/admin/reported-conversation/${cId}`,
-//                         );
-//                       } else {
-//                         console.error(
-//                           'Conversation ID not found for this user',
-//                         );
-//                       }
-//                     }}
-//                     className="px-4 py-2 bg-[#01503b] text-white rounded-md text-sm font-semibold hover:bg-[#01382a] cursor-pointer"
-//                   >
-//                     View Conversation
-//                   </button>
-//                 </td>
-//               </tr>
-//             ))}
-//           </tbody>
-//         </table>
-//       </div>
-//     </div>
-//   );
-// }
+'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -164,6 +33,10 @@ type ReportedUser = {
 
 type Props = {
   users: ReportedUser[];
+  page?: number;
+  total?: number;
+  limit?: number;
+  onPageChange?: (page: number) => void;
 };
 
 // ─── Confirm Dialog ───────────────────────────────────────────────────────────
@@ -222,16 +95,28 @@ function ConfirmDeleteDialog({
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-export function ReportedUsers({ users }: Props) {
+export function ReportedUsers({
+  users,
+  page = 1,
+  total,
+  limit = 10,
+  onPageChange,
+}: Props) {
   const router = useRouter();
   const { data: reportedData } = useGetReportedUsersQuery();
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
 
-  // Track which reported user is pending deletion confirmation
   const [pendingDelete, setPendingDelete] = useState<{
     userId: string;
     userName: string;
   } | null>(null);
+
+  const totalPages = Math.max(1, Math.ceil((total ?? 0) / limit));
+
+  const goToPage = (nextPage: number) => {
+    const safePage = Math.min(Math.max(nextPage, 1), totalPages);
+    onPageChange?.(safePage);
+  };
 
   const handleDeleteConfirm = async () => {
     if (!pendingDelete) return;
@@ -246,7 +131,6 @@ export function ReportedUsers({ users }: Props) {
 
   return (
     <>
-      {/* Confirm dialog rendered outside the table so it's never clipped */}
       {pendingDelete && (
         <ConfirmDeleteDialog
           userName={pendingDelete.userName}
@@ -292,7 +176,6 @@ export function ReportedUsers({ users }: Props) {
                   key={item.id}
                   className="border-b border-gray-100 hover:bg-gray-50"
                 >
-                  {/* Reporting user */}
                   <td className="p-4">
                     <div className="flex items-center gap-2 font-medium">
                       <Image
@@ -321,7 +204,6 @@ export function ReportedUsers({ users }: Props) {
                     </Link>
                   </td>
 
-                  {/* Reported user */}
                   <td className="p-4">
                     <div className="flex items-center gap-2 font-medium">
                       <Image
@@ -363,7 +245,6 @@ export function ReportedUsers({ users }: Props) {
                     </button>
                   </td>
 
-                  {/* Delete action */}
                   <td className="p-4">
                     <button
                       onClick={() =>
@@ -382,6 +263,45 @@ export function ReportedUsers({ users }: Props) {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Pagination — only added here */}
+        <div className="flex flex-wrap justify-end items-center gap-2 mt-4 text-[#01281e]">
+          <button
+            onClick={() => goToPage(1)}
+            disabled={page === 1}
+            className="px-3 py-1 border border-gray-200 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 text-sm"
+          >
+            First
+          </button>
+
+          <button
+            onClick={() => goToPage(page - 1)}
+            disabled={page === 1}
+            className="px-3 py-1 border border-gray-200 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 text-sm"
+          >
+            Prev
+          </button>
+
+          <span className="text-sm px-2 font-medium">
+            Page {page} of {totalPages}
+          </span>
+
+          <button
+            onClick={() => goToPage(page + 1)}
+            disabled={page >= totalPages}
+            className="px-3 py-1 border border-gray-200 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 text-sm"
+          >
+            Next
+          </button>
+
+          <button
+            onClick={() => goToPage(totalPages)}
+            disabled={page >= totalPages}
+            className="px-3 py-1 border border-gray-200 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 text-sm"
+          >
+            Last
+          </button>
         </div>
       </div>
     </>
