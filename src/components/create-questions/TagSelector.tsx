@@ -48,7 +48,13 @@ export function TagSelector({
                 ? 'bg-[#01503b] hover:bg-[#013b2c]'
                 : 'bg-white text-gray-600',
             )}
-            onClick={() => onChange(option.value)}
+            onClick={() => {
+              if (selected === option.value) {
+                onChange(''); 
+              } else {
+                onChange(option.value); 
+              }
+            }}
           >
             {getDisplayLabel(option)}
             {selected === option.value && ' ✕'}

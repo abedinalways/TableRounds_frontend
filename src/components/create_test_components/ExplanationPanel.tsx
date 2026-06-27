@@ -354,7 +354,7 @@ const ExplanationPanel: React.FC<ExplanationPanelProps> = ({
       {selectedImage && (
         <div
           ref={overlayRef}
-          className={`fixed top-118 left-80 inset-0 z-[999999] flex items-start justify-center p-4 pt-10 md:pt-10 `}
+          className={`fixed top-90 left-80 inset-0 z-[999999] flex items-start justify-center p-4 pt-10 md:pt-10 `}
           onClick={closeViewer}
           aria-hidden={!viewerOpen}
           

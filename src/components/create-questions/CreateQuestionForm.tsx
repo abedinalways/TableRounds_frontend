@@ -49,8 +49,8 @@ export default function CreateQuestionForm() {
   const { register, control, handleSubmit, watch, setValue, reset } =
     useForm<QuestionFormValues>({
       defaultValues: {
-        difficulty: 'Intern',
-        topic: 'Anesthesia_Medicine',
+        difficulty: '',
+        topic: '',
         questionStem: '',
         memoryTrick: '',
         answers: [
@@ -73,6 +73,16 @@ export default function CreateQuestionForm() {
     React.useState<File | null>(null);
 
   const onSubmit = async (data: QuestionFormValues) => {
+
+    if (!data.difficulty) {
+      toast.error('Please select a difficulty level');
+      return;
+    }
+    if (!data.topic) {
+      toast.error('Please select a topic');
+      return;
+    }
+    
     try {
       const formData = new FormData();
 
