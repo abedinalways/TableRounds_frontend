@@ -1,4 +1,4 @@
-export type Difficulty = 'Intern' | 'Senior' | 'Board';
+export type Difficulty = 'Intern' | 'Senior' | 'Board' | '';
 
 export interface AnswerChoice {
   id: string;
