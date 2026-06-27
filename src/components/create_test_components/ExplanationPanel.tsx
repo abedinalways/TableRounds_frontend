@@ -354,18 +354,10 @@ const ExplanationPanel: React.FC<ExplanationPanelProps> = ({
       {selectedImage && (
         <div
           ref={overlayRef}
-          className={`fixed inset-0 z-[999999] flex items-center justify-center p-4 transition-opacity ${
-            viewerOpen
-              ? 'opacity-100 pointer-events-auto'
-              : 'opacity-0 pointer-events-none'
-          }`}
+          className={`fixed top-118 left-80 inset-0 z-[999999] flex items-start justify-center p-4 pt-10 md:pt-10 `}
           onClick={closeViewer}
           aria-hidden={!viewerOpen}
-          style={{
-            background: 'rgba(15, 23, 42, 0.6)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
-          }}
+          
         >
           {/* ── Window shell ── */}
           <div
@@ -373,7 +365,8 @@ const ExplanationPanel: React.FC<ExplanationPanelProps> = ({
             className="flex flex-col overflow-hidden rounded-xl bg-white shadow-2xl border border-gray-200/80 transition-transform"
             style={{
               width: 'min(760px, 95vw)',
-              maxHeight: '88vh',
+              maxHeight:
+                '88vh' ,
               transformOrigin: 'center center',
             }}
             onClick={e => e.stopPropagation()}
