@@ -54,7 +54,7 @@ const garamond = EB_Garamond({
 });
 export const metadata: Metadata = {
   title: 'TableRounds',
-  description: 'Where healthcare providers come to learn and collaborate',
+  description: 'TableRounds is a clinician-built platform that brings board-style question banks and a vetted community of surgeons, dentists, and trainees into one place. Create a verified profile, work through specialty-tagged questions with detailed explanations, track your performance by topic, and connect with colleagues who are equally invested in maintaining a high standard of practice',
 };
 
 export default function RootLayout({
