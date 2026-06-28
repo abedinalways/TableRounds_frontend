@@ -395,6 +395,16 @@ function createSocketNotification(
   const id =
     data?.id || payload?.id || messageId || `temp_${crypto.randomUUID()}`;
 
+  const senderId =
+    actor?.id ||
+    actor?.sender_id ||
+    data?.sender_id ||
+    data?.from ||
+    data?.from_user_id ||
+    payload?.sender_id ||
+    payload?.from ||
+    payload?.sender?.id;
+
   return {
     id,
     type,
@@ -409,6 +419,7 @@ function createSocketNotification(
     user: { name, avatar, initials: getInitials(name) },
     conversationId,
     messageId,
+    senderId,
   };
 }
 
@@ -677,6 +688,8 @@ export function useChatSocket() {
         }),
       );
 
+      // Create socket notification for real-time feedback
+      // The deduplication logic in NotificationSlice will merge this with API notification later
       if (me?.id !== msg.from) {
         handleNotification('conversation', {
           id: msg.message_id,
@@ -690,6 +703,7 @@ export function useChatSocket() {
           sender: {
             name: senderName,
             avatar: senderAvatar,
+            id: msg.from,
           },
         });
       }
