@@ -127,9 +127,7 @@ interface Props {
 }
 
 export function NotificationItem({ notification, onDelete, onClick }: Props) {
-  const isClickable =
-    notification.type === 'conversation' &&
-    Boolean(notification.conversationId);
+  const isClickable = notification.type === 'conversation';
 
   const handleDelete = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();

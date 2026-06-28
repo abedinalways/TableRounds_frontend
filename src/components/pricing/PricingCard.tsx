@@ -68,7 +68,7 @@ export default function PricingSection() {
   const handleSubscribe = async (planId: string) => {
     // If user is not logged in, redirect to login
     if (!token) {
-      router.push('/login');
+      router.push('/register');
       return;
     }
 
@@ -125,11 +125,11 @@ export default function PricingSection() {
           className="text-4xl md:text-5xl font-bold text-white mb-3"
           style={{ fontFamily: 'var(--font-fraunces), serif' }}
         >
-          Built for board day
+          Built for Boards
         </h2>
         <p className="text-white text-base md:text-lg max-w-xl mx-auto">
-          Start free with 100 questions. Upgrade when you're ready for the full
-          bank and the rest of the prep tools.
+          Start with 100 free questions. Upgrade for full access to the question
+          bank.
         </p>
       </div>
 
@@ -167,7 +167,7 @@ export default function PricingSection() {
 
             // Determine button state
             // let isDisabled = false;
-            let isDisabled = true;
+            let isDisabled = false;
             let buttonText = 'Subscribe';
             let buttonStyle =
               'bg-[#B79E6B] hover:bg-[#a8905f] text-white cursor-pointer';
@@ -179,7 +179,6 @@ export default function PricingSection() {
                 buttonText = 'Free';
                 buttonStyle = 'bg-[#f7f7f3] text-[#444950] cursor-not-allowed';
               } else {
-                // Not logged in: clicking redirects to login
                 buttonText = 'Get Free';
               }
             } else if (hasActiveSubscription) {

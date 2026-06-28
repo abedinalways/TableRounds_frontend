@@ -183,7 +183,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
-import { RootState } from '../../app/redux/store';
+import { RootState, type AppDispatch } from '../../app/redux/store';
 import {
   markAllAsRead,
   clearNewFlag,
@@ -196,6 +196,8 @@ import {
   useDeleteUserNotificationMutation,
   useDeleteAllUserNotificationsMutation,
 } from '../../app/redux/api/notificationApi';
+import { chatApi, type Conversation } from '../../app/redux/api/chat/chatApi';
+import { store } from '../../app/redux/store';
 import { NotificationItem } from './NotificationItem';
 import { cn } from '@/lib/utils';
 
@@ -218,7 +220,7 @@ function getDashboardMessagePath(pathname: string, conversationId: string) {
 }
 
 export function NotificationSheet({ open, onClose }: Props) {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -246,16 +248,85 @@ export function NotificationSheet({ open, onClose }: Props) {
   );
 
   const handleNotificationClick = useCallback(
-    (notification: AppNotification) => {
+    async (notification: AppNotification) => {
       if (notification.type !== 'conversation') return;
-      if (!notification.conversationId) return;
+
+      let convId = notification.conversationId;
+
+      // If notification doesn't have conversationId, try to find it
+      // from the conversations cache by matching the sender
+      if (!convId) {
+        try {
+          const state = store.getState() as RootState;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const queryResult = (chatApi.endpoints.getConversations.select as any)(state);
+          const conversationsData = queryResult?.data;
+          const conversations = Array.isArray(conversationsData?.data)
+            ? conversationsData.data
+            : conversationsData || [];
+          const me = state.auth?.user;
+
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const matchedConv = conversations.find((c: any) => {
+            const otherUser =
+              c.creator_id === me?.id ? c.participant : c.creator;
+            if (notification.senderId && otherUser?.id) {
+              return otherUser.id === notification.senderId;
+            }
+            return otherUser?.name === notification.user?.name;
+          });
+
+          if (matchedConv) {
+            convId = matchedConv.id;
+          }
+        } catch {
+          // Silently fail if we can't find the conversation
+        }
+      }
+
+      // If still no convId, try to fetch conversations from API
+      if (!convId) {
+        try {
+          const result = await dispatch(
+            chatApi.endpoints.getConversations.initiate(undefined, { forceRefetch: true }),
+          ).unwrap();
+          
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const apiResponse = result as any;
+          const conversations = Array.isArray(apiResponse?.data)
+            ? apiResponse.data
+            : apiResponse?.data?.data || [];
+          const state = store.getState() as RootState;
+          const me = state.auth?.user;
+
+          const matchedConv = conversations.find((c: Conversation) => {
+            const otherUser =
+              c.creator_id === me?.id ? c.participant : c.creator;
+            if (notification.senderId && otherUser?.id) {
+              return otherUser.id === notification.senderId;
+            }
+            return otherUser?.name === notification.user?.name;
+          });
+
+          if (matchedConv) {
+            convId = matchedConv.id;
+          }
+        } catch {
+          // Silently fail if we can't fetch conversations
+        }
+      }
+
+      if (!convId) {
+        toast.error('Could not find conversation. Please try again.');
+        return;
+      }
 
       dispatch(markAsRead(notification.id));
       dispatch(clearNewFlag(notification.id));
 
       const messagePath = getDashboardMessagePath(
         pathname,
-        notification.conversationId,
+        convId,
       );
 
       const finalPath = notification.messageId

@@ -283,6 +283,7 @@ export interface AppNotification {
    */
   conversationId?: string;
   messageId?: string;
+  senderId?: string;
 }
 
 interface NotificationState {
@@ -355,22 +356,37 @@ function mapApiNotification(item: ApiNotificationItem): AppNotification {
     }
   }
 
+  // For conversation-type notifications, entity_id is likely the conversation_id
+  const entityId = type === 'conversation' ? rawItem?.entity_id : undefined;
+
   const conversationId =
     rawItem?.conversation_id ||
     rawItem?.conversationId ||
     rawItem?.room_id ||
+    rawItem?.message?.conversation_id ||
+    rawItem?.message?.conversationId ||
     rawItem?.notification_event?.conversation_id ||
     rawItem?.notification_event?.conversationId ||
     rawItem?.data?.conversation_id ||
-    rawItem?.data?.conversationId;
+    rawItem?.data?.conversationId ||
+    rawItem?.data?.message?.conversation_id ||
+    rawItem?.data?.message?.conversationId ||
+    entityId ||
+    rawItem?.data?.id; // Fallback: sometimes the notification data itself contains the conversation id
 
+  // For message notifications, try to extract messageId from multiple sources
+  // The API might store it in entity_id or data fields
   const messageId =
     rawItem?.message_id ||
     rawItem?.messageId ||
     rawItem?.notification_event?.message_id ||
     rawItem?.notification_event?.messageId ||
     rawItem?.data?.message_id ||
-    rawItem?.data?.messageId;
+    rawItem?.data?.messageId ||
+    // For conversation notifications, entity_id might be the message_id
+    (type === 'conversation' ? rawItem?.entity_id : undefined);
+
+  const senderId = item.sender_id || actor?.id;
 
   return {
     id: item.id,
@@ -386,6 +402,7 @@ function mapApiNotification(item: ApiNotificationItem): AppNotification {
     },
     conversationId,
     messageId,
+    senderId,
   };
 }
 
@@ -400,22 +417,52 @@ const notificationSlice = createSlice({
   initialState,
   reducers: {
     addNotification: (state, action: PayloadAction<AppNotification>) => {
-      // Check by both id AND messageId (for deduplication of conversation notifications)
-      const exists = state.notifications.some(
-        n =>
-          n.id === action.payload.id ||
-          (action.payload.messageId &&
-            n.messageId === action.payload.messageId),
-      );
+      const payload = action.payload;
 
-      if (!exists) {
+      // Find if we already have this notification by:
+      // 1. exact notification ID
+      // 2. exact messageId
+      // 3. conversationId (if type is conversation)
+      const existingIndex = state.notifications.findIndex(n => {
+        if (n.id === payload.id) return true;
+        if (payload.messageId && n.messageId === payload.messageId) return true;
+        if (
+          payload.type === 'conversation' &&
+          payload.conversationId &&
+          n.type === 'conversation' &&
+          n.conversationId === payload.conversationId
+        ) {
+          return true;
+        }
+        return false;
+      });
+
+      if (existingIndex > -1) {
+        // Update the existing notification with the latest message and timestamp
+        const existing = state.notifications[existingIndex];
+        
+        const merged = {
+          ...existing,
+          ...payload,
+          conversationId: payload.conversationId || existing.conversationId,
+          messageId: payload.messageId || existing.messageId,
+          senderId: payload.senderId || existing.senderId,
+          isRead: payload.isRead !== undefined ? payload.isRead : false,
+          isNew: true,
+        };
+
+        // Remove from current position and move to the top
+        state.notifications.splice(existingIndex, 1);
+        state.notifications.unshift(merged);
+      } else {
+        // Add as a new notification
         state.notifications.unshift({
-          ...action.payload,
+          ...payload,
           isNew: true,
         });
-
-        state.unreadCount = recalcUnread(state.notifications);
       }
+
+      state.unreadCount = recalcUnread(state.notifications);
     },
 
     markAsRead: (state, action: PayloadAction<string>) => {
@@ -479,65 +526,65 @@ const notificationSlice = createSlice({
 
       const apiItems = raw.map(mapApiNotification);
 
-      // Build a set of messageIds from API items (for conversation notifications)
-      const apiMessageIds = new Set<string>();
-      const apiIds = new Set<string>();
-      apiItems.forEach(n => {
-        apiIds.add(n.id);
-        if (n.messageId) apiMessageIds.add(n.messageId);
-      });
+      // Copy the current notifications to a working array
+      const currentNotifications = [...state.notifications];
 
-      // Filter out socket-only notifications that don't exist in the API response.
-      // Skip notifications whose messageId matches an API item (the API version
-      // will replace it), and skip temp IDs.
-      const socketOnly = state.notifications.filter(n => {
-        if (apiIds.has(n.id)) return false;
-        if (n.id.startsWith('temp_')) return false;
-        // If the socket notification has a messageId that matches an API item,
-        // don't keep it — the API version is authoritative.
-        if (n.messageId && apiMessageIds.has(n.messageId)) return false;
-        return true;
-      });
+      apiItems.forEach(apiItem => {
+        const matchIndex = currentNotifications.findIndex(n => {
+          if (n.id === apiItem.id) return true;
+          if (apiItem.messageId && n.messageId === apiItem.messageId) return true;
+          if (
+            apiItem.type === 'conversation' &&
+            apiItem.conversationId &&
+            n.type === 'conversation' &&
+            n.conversationId === apiItem.conversationId
+          ) {
+            return true;
+          }
+          return false;
+        });
 
-      const existingIds = new Set(state.notifications.map(n => n.id));
-
-      // Build a lookup of existing notifications by messageId
-      const existingByMessageId = new Map<string, AppNotification>();
-      state.notifications.forEach(n => {
-        if (n.messageId) existingByMessageId.set(n.messageId, n);
-      });
-
-      const mergedItems = apiItems.map(item => {
-        // Check if this API item matches an existing socket notification by id
-        if (existingIds.has(item.id)) {
-          const oldItem = state.notifications.find(n => n.id === item.id);
-          return {
-            ...item,
-            isNew: oldItem?.isNew ?? false,
-            conversationId: oldItem?.conversationId ?? item.conversationId,
-            messageId: oldItem?.messageId ?? item.messageId,
+        if (matchIndex > -1) {
+          const existing = currentNotifications[matchIndex];
+          // Merge them, preserving the existing isNew flag
+          const merged = {
+            ...existing,
+            ...apiItem,
+            conversationId: apiItem.conversationId || existing.conversationId,
+            messageId: apiItem.messageId || existing.messageId,
+            senderId: apiItem.senderId || existing.senderId,
+            isNew: existing.isNew,
           };
+          currentNotifications[matchIndex] = merged;
+        } else {
+          // Add as new
+          currentNotifications.push({
+            ...apiItem,
+            isNew: !apiItem.isRead,
+          });
         }
-
-        // Check if this API item matches an existing socket notification by messageId
-        // (socket uses message_id as notification id, API uses db id)
-        if (item.messageId && existingByMessageId.has(item.messageId)) {
-          const oldItem = existingByMessageId.get(item.messageId)!;
-          return {
-            ...item,
-            // Preserve socket isNew flag so the notification doesn't lose its "new" state
-            isNew: oldItem.isNew,
-            // Carry forward the socket's conversationId/messageId for click navigation
-            conversationId: oldItem.conversationId || item.conversationId,
-            messageId: item.messageId || oldItem.messageId,
-          };
-        }
-
-        // Truly new API notification — keep it as is
-        return item;
       });
 
-      state.notifications = [...socketOnly, ...mergedItems];
+      // Filter out duplicate conversations/IDs and sort by timestamp descending
+      const uniqueNotifications: AppNotification[] = [];
+      const seenIds = new Set<string>();
+      const seenConvIds = new Set<string>();
+
+      const sorted = currentNotifications.sort(
+        (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      );
+
+      sorted.forEach(n => {
+        if (n.type === 'conversation' && n.conversationId) {
+          if (seenConvIds.has(n.conversationId)) return;
+          seenConvIds.add(n.conversationId);
+        }
+        if (seenIds.has(n.id)) return;
+        seenIds.add(n.id);
+        uniqueNotifications.push(n);
+      });
+
+      state.notifications = uniqueNotifications;
       state.unreadCount = recalcUnread(state.notifications);
     };
 

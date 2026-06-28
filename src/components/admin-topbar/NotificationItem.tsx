@@ -97,15 +97,22 @@ const TYPE_CONFIG: Record<
 interface Props {
   notification: AppNotification;
   onDelete: (id: string) => void;
+  onClick?: (notification: AppNotification) => void;
 }
 
-export function NotificationItem({ notification, onDelete }: Props) {
+export function NotificationItem({ notification, onDelete, onClick }: Props) {
   const dispatch = useDispatch();
   const config = TYPE_CONFIG[notification.type] ?? TYPE_CONFIG.conversation;
+
+  const isClickable = notification.type === 'conversation';
 
   const handleClick = () => {
     if (!notification.isRead) {
       dispatch(markAsRead(notification.id));
+    }
+
+    if (isClickable) {
+      onClick?.(notification);
     }
   };
 

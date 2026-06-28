@@ -26,7 +26,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
   const [modalType, setModalType] = useState<'followers' | 'following'>(
     'followers',
   );
-  const [isMessageLoading, setIsMessageLoading] = useState(false); // ✅ new
+  const [isMessageLoading, setIsMessageLoading] = useState(false); 
 
   const [createConversation] = useCreateConversationMutation();
   const [toggleFollow] = useToggleFollowMutation();
@@ -116,20 +116,20 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
 
             <p className="text-[18px] text-[#047857]">{user.title}</p>
 
-            <div className="flex md:gap-[48px] gap-3 items-center text-xs md:text-[16px] font-light text-[#6b7280]">
-              <h4 className="flex items-center gap-2">
+            <div className="md:flex md:gap-6 block py-2 md:py-0  items-center text-xs md:text-[16px] font-light text-[#6b7280]">
+              <h4 className="flex items-center gap-1">
                 <LocationIcon />
                 {user.state}, {user.country}
               </h4>
-              <h4 className="flex items-center gap-2">
+              <h4 className="flex items-center gap-1">
                 <StethoscopeIcon />
                 {user.specialty}
               </h4>
-              <h4 className="flex items-center gap-2">
+              <h4 className="flex items-center gap-1">
                 <BagIcon />
                 {user.jobArea}
               </h4>
-              <h4 className="flex items-center gap-2">
+              <h4 className="flex items-center gap-1">
                 <CalendarIconForProfile />
                 <span className="font-semibold">Joined</span>{' '}
                 {new Date(user.created_at).toLocaleDateString('en-US', {

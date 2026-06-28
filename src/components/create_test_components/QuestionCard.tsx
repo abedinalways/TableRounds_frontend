@@ -79,17 +79,17 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
     quizDetails.explanation ?? null,
   );
 
-  // ✅ Shuffle order একবার তৈরি হবে, প্রশ্ন পরিবর্তন হলে নতুন shuffle হবে
+
   const [shuffleOrder, setShuffleOrder] = useState<string[]>([]);
 
-  // ✅ প্রশ্ন পরিবর্তন হলে নতুন shuffle order তৈরি করো
+ 
   useEffect(() => {
     const options = quizDetails.answerOptions ?? [];
     if (options.length > 0) {
       const shuffled = shuffleArray(options);
       setShuffleOrder(shuffled.map(opt => String(opt.id)));
     }
-  }, [quizDetails.id]); // শুধু প্রশ্ন পরিবর্তন হলে নতুন shuffle
+  }, [quizDetails.id]); 
 
   const hideToast = useCallback(() => setShowToast(false), []);
 
@@ -105,7 +105,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
     setLocalSelectedAnswerId(nextSelectedAnswer);
     setLocalCorrectAnswerId(nextCorrectAnswerId);
 
-    // ✅ Only update if not already answered with stats
+    
     setLocalAnswerOptions(prev => {
       const hasPercentageData = prev.some(
         opt => Number(opt.percentage ?? 0) > 0,
@@ -133,18 +133,18 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
     ? localAnswerOptions
     : (quizDetails.answerOptions ?? []);
 
-  // ✅ shuffleOrder অনুযায়ী অপশন সাজাও
+  
   const shuffledOptions = useMemo(() => {
     if (shuffleOrder.length === 0) return answerOptions;
 
     const optionMap = new Map(answerOptions.map(opt => [String(opt.id), opt]));
 
-    // shuffleOrder অনুযায়ী সাজাও, নতুন অপশন থাকলে শেষে যোগ করো
+    
     const ordered = shuffleOrder
       .map(id => optionMap.get(id))
       .filter(Boolean) as typeof answerOptions;
 
-    // যদি submit-এর পরে নতুন অপশন আসে (percentage সহ), সেগুলোও যোগ করো
+    
     const orderedIds = new Set(shuffleOrder);
     const remaining = answerOptions.filter(
       opt => !orderedIds.has(String(opt.id)),
@@ -408,7 +408,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
           onValueChange={handleAnswerChange}
           className="space-y-4"
         >
-          {/* ✅ answerOptions এর বদলে shuffledOptions ব্যবহার */}
+        
           {shuffledOptions.map((option, index) => {
             const optionId = String(option.id);
             const isCorrect =
@@ -489,7 +489,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
                 )}
               </div>
 
-              {/* ✅ Correct Answer লেটার shuffledOptions থেকে বের করো */}
+             
               {!isCorrectAnswer && (
                 <div className="text-xs md:text-sm text-gray-600">
                   <p className="flex items-center gap-2 font-semibold text-[#20AC19]">
