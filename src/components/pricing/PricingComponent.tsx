@@ -5,7 +5,7 @@ import PricingCard from './PricingCard';
 export default function Pricing() {
   return (
     <div className="font-[manrope] my-40 mx-2 md:mx-auto">
-      <CardHeader className="background text-white rounded-2xl py-10">
+      <CardHeader className="gradient-bg text-white rounded-2xl py-10">
         <CardTitle className="text-3xl md:text-[48px] font-bold text-center">
           Pricing
         </CardTitle>
