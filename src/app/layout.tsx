@@ -66,9 +66,9 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: 'https://i.ibb.co.com/0pDGczN1/footer-logo.png',
-        width: 220,
-        height: 216,
+        url: 'https://tablerounds.ai/footer-logo.png',
+        width: 600,
+        height: 300,
         alt: 'TableRounds Logo',
       },
     ],
@@ -79,7 +79,7 @@ export const metadata: Metadata = {
     title: 'TableRounds',
     description:
       'TableRounds is a clinician-built platform that brings board-style question banks and a vetted community of surgeons, dentists, and trainees into one place.',
-    images: ['https://i.ibb.co.com/0pDGczN1/footer-logo.png'],
+    images: ['https://tablerounds.ai/footer-logo.png'],
   },
 };
 
