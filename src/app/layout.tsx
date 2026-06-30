@@ -54,7 +54,33 @@ const garamond = EB_Garamond({
 });
 export const metadata: Metadata = {
   title: 'TableRounds',
-  description: 'TableRounds is a clinician-built platform that brings board-style question banks and a vetted community of surgeons, dentists, and trainees into one place. Create a verified profile, work through specialty-tagged questions with detailed explanations, track your performance by topic, and connect with colleagues who are equally invested in maintaining a high standard of practice',
+  description:
+    'TableRounds is a clinician-built platform that brings board-style question banks and a vetted community of surgeons, dentists, and trainees into one place. Create a verified profile, work through specialty-tagged questions with detailed explanations, track your performance by topic, and connect with colleagues who are equally invested in maintaining a high standard of practice',
+  //preview for Facebook, WhatsApp, LinkedIn
+  openGraph: {
+    title: 'TableRounds',
+    description:
+      'TableRounds is a clinician-built platform that brings board-style question banks and a vetted community of surgeons, dentists, and trainees into one place.',
+    url: 'https://tablerounds.ai',
+    siteName: 'TableRounds',
+    type: 'website',
+    images: [
+      {
+        url: 'https://i.ibb.co.com/0pDGczN1/footer-logo.png',
+        width: 220,
+        height: 216,
+        alt: 'TableRounds Logo',
+      },
+    ],
+  },
+
+  twitter: {
+    card: 'summary_large_image',
+    title: 'TableRounds',
+    description:
+      'TableRounds is a clinician-built platform that brings board-style question banks and a vetted community of surgeons, dentists, and trainees into one place.',
+    images: ['https://i.ibb.co.com/0pDGczN1/footer-logo.png'],
+  },
 };
 
 export default function RootLayout({
