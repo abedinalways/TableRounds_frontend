@@ -593,12 +593,12 @@ export function useChatSocket() {
     }
 
     const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL;
-    console.log('[useChatSocket] Attempting to connect to:', socketUrl, 'with token:', token ? 'Token present' : 'No token');
+    console.log('[useChatSocket] Attempting to connect to:', socketUrl);
+    console.log('[useChatSocket] Full token:', token);
 
-    const socket = io(socketUrl!, {
+    // ✅ Send token ONLY in URL query parameter - most reliable method
+    const socket = io(`${socketUrl}?token=${encodeURIComponent(token)}`, {
       transports: ['websocket', 'polling'],
-      auth: { token },
-      query: { token },
       reconnection: true,
       reconnectionAttempts: Infinity,
       reconnectionDelay: 1000,
