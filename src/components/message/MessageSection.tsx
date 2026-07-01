@@ -7,41 +7,104 @@ import { AudioBubble } from './AudioBubble';
 import { useMeQuery } from '@/app/redux/api/authApi';
 import { FileIcon, X } from 'lucide-react';
 import TestResultCard from '../test-complete/TestResultCard';
-import { useGetMessagesQuery } from '@/app/redux/api/chat/chatApi';
+
+// ─── Date/time formatting helpers ────────────────────────────────────────────
+
+function formatMessageTime(dateStr: string): string {
+  const date = new Date(dateStr);
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  const isToday =
+    date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear();
+
+  const isYesterday =
+    date.getDate() === yesterday.getDate() &&
+    date.getMonth() === yesterday.getMonth() &&
+    date.getFullYear() === yesterday.getFullYear();
+
+  const timeStr = date.toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+  if (isToday) return `Today ${timeStr}`;
+  if (isYesterday) return `Yesterday ${timeStr}`;
+
+  return `${date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+  })} ${timeStr}`;
+}
+
+function formatDateSeparator(dateStr: string): string {
+  const date = new Date(dateStr);
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  const isToday =
+    date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear();
+
+  const isYesterday =
+    date.getDate() === yesterday.getDate() &&
+    date.getMonth() === yesterday.getMonth() &&
+    date.getFullYear() === yesterday.getFullYear();
+
+  if (isToday) return 'Today';
+  if (isYesterday) return 'Yesterday';
+
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: date.getFullYear() !== today.getFullYear() ? 'numeric' : undefined,
+  });
+}
+
+function shouldShowDateSeparator(
+  currentMsg: string,
+  previousMsg: string | undefined,
+): boolean {
+  if (!previousMsg) return true;
+
+  const current = new Date(currentMsg);
+  const previous = new Date(previousMsg);
+
+  return (
+    current.getDate() !== previous.getDate() ||
+    current.getMonth() !== previous.getMonth() ||
+    current.getFullYear() !== previous.getFullYear()
+  );
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 export default function MessageSection() {
   const { messages, conversations, activeConversationId } = useChat();
   const endRef = useRef<HTMLDivElement>(null);
-  const {data:me } = useMeQuery();
-  
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { data: me } = useMeQuery();
+  const prevMessagesLengthRef = useRef(0);
+
   const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001';
 
   const [viewerOpen, setViewerOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const activeConversation = conversations.find(
-      conv => conv.id === activeConversationId,
-    );
-    console.log(activeConversation, 'activeConversation=====================++++++++++++++++',);
-  
-    
-    
-  
-    const { data: chatData } = useGetMessagesQuery({
-      conversationId: activeConversationId as string,
-      limit: 20,
-    });
-  
-  const participantId = activeConversation?.participant?.id;
-  
 
-  const participantAvatar =
-    activeConversation?.creator?.id == me?.id
-      ? activeConversation?.participant?.avatar_url
-      : activeConversation?.creator?.avatar_url;
-
+  // ── Force scroll to bottom whenever messages change ──────────────────
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages.length]);
+    const isNewMessage = messages.length > prevMessagesLengthRef.current;
+    prevMessagesLengthRef.current = messages.length;
+
+    requestAnimationFrame(() => {
+      endRef.current?.scrollIntoView({ behavior: isNewMessage ? 'smooth' : 'auto', block: 'end' });
+    });
+  }, [messages, activeConversationId]);
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -62,7 +125,7 @@ export default function MessageSection() {
     };
   }, [viewerOpen]);
 
-  const renderMessage = (msg: any) => {
+  const renderMessage = (msg: { message: string | null }) => {
     if (!msg.message) return null;
 
     try {
@@ -72,7 +135,7 @@ export default function MessageSection() {
         return <TestResultCard {...parsed.data} />;
       }
     } catch {
-   
+      // Not JSON — render as plain text
     }
 
     return (
@@ -92,22 +155,39 @@ export default function MessageSection() {
     setSelectedImage(null);
   };
 
+  const sortedMessages = [...messages].sort(
+    (a, b) =>
+      new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+  );
+
   return (
     <>
-      <div className="flex flex-col p-4 overflow-y-auto space-y-3">
-        {[...messages]
-          .sort(
-            (a, b) =>
-              new Date(a.created_at).getTime() -
-              new Date(b.created_at).getTime(),
-          )
-          .map(msg => {
-            const isMe = msg?.sender?.id === me?.id;
+      <div
+        ref={containerRef}
+        className="flex flex-col p-4 overflow-y-auto space-y-1 max-h-[calc(100vh-220px)]"
+      >
+        {sortedMessages.map((msg, index) => {
+          const isMe = msg?.sender?.id === me?.id;
+          const prevMsg = index > 0 ? sortedMessages[index - 1] : undefined;
+          const showDateSeparator = shouldShowDateSeparator(
+            msg.created_at,
+            prevMsg?.created_at,
+          );
 
-            return (
+          return (
+            <div key={msg.id}>
+              {/* ── Date separator ─────────────────────────────────────────── */}
+              {showDateSeparator && (
+                <div className="flex items-center justify-center my-4">
+                  <div className="bg-gray-100 text-gray-500 text-[11px] font-medium px-3 py-1 rounded-full">
+                    {formatDateSeparator(msg.created_at)}
+                  </div>
+                </div>
+              )}
+
+              {/* ── Message bubble with slide animation ────────────────────── */}
               <div
-                key={msg.id}
-                className={`flex items-end gap-2 ${
+                className={`flex items-end gap-2 animate-message-in ${
                   isMe ? 'justify-end' : 'justify-start'
                 }`}
               >
@@ -115,9 +195,9 @@ export default function MessageSection() {
                   <Image
                     width="24"
                     height="24"
-                    src={participantAvatar || '/images/doc.png'}
-                    alt="google-contacts"
-                    className="rounded-full aspect-square object-cover"
+                    src={msg?.sender?.avatar_url || '/images/doc.png'}
+                    alt="avatar"
+                    className="rounded-full aspect-square object-cover flex-shrink-0"
                     unoptimized
                   />
                 )}
@@ -133,67 +213,73 @@ export default function MessageSection() {
 
                   {msg.attachments?.length > 0 && (
                     <div className={`space-y-2 ${msg.message ? 'mt-2' : ''}`}>
-                      {msg.attachments.map((file: any) => {
-                        const fileUrl = file.file_url?.startsWith('http')
-                          ? file.file_url
-                          : `${BASE_URL}/${file.file_url}`;
+                      {msg.attachments.map(
+                        (file: {
+                          id: string;
+                          file_url: string;
+                          type: string;
+                          name: string;
+                        }) => {
+                          const fileUrl = file.file_url?.startsWith('http')
+                            ? file.file_url
+                            : `${BASE_URL}/${file.file_url}`;
 
-                        const isImage =
-                          file.type?.includes('image') ||
-                          fileUrl.match(/\.(jpeg|jpg|png|gif|webp)$/i);
+                          const isImage =
+                            file.type?.includes('image') ||
+                            fileUrl.match(/\.(jpeg|jpg|png|gif|webp)$/i);
 
-                        const isAudio =
-                          file.type?.includes('audio') ||
-                          fileUrl.match(/\.(mp3|wav|webm|ogg)$/i);
+                          const isAudio =
+                            file.type?.includes('audio') ||
+                            fileUrl.match(/\.(mp3|wav|webm|ogg)$/i);
 
-                        if (isImage) {
+                          if (isImage) {
+                            return (
+                              <button
+                                key={file.id}
+                                type="button"
+                                onClick={() => openViewer(fileUrl)}
+                                className="group relative block overflow-hidden rounded-2xl focus:outline-none"
+                              >
+                                <Image
+                                  src={fileUrl}
+                                  alt={file.name || 'chat image'}
+                                  width={280}
+                                  height={200}
+                                  unoptimized
+                                  className="rounded-xl object-cover max-h-[260px] cursor-pointer hover:opacity-90 transition"
+                                />
+                                <div className="absolute inset-0 rounded-2xl bg-black/0 group-hover:bg-black/10 transition duration-200" />
+                              </button>
+                            );
+                          }
+
+                          if (isAudio) {
+                            return (
+                              <AudioBubble key={file.id} src={fileUrl} />
+                            );
+                          }
+
                           return (
-                            <button
+                            <a
                               key={file.id}
-                              type="button"
-                              onClick={() => openViewer(fileUrl)}
-                              className="group relative block overflow-hidden rounded-2xl focus:outline-none"
+                              href={fileUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2 text-xs underline hover:text-blue-500"
                             >
-                              <Image
-                                src={fileUrl}
-                                alt={file.name || 'chat image'}
-                                width={280}
-                                height={200}
-                                unoptimized
-                                className="rounded-xl object-cover max-h-[260px] cursor-pointer hover:opacity-90 transition"
-                              />
-
-                              <div className="absolute inset-0 rounded-2xl bg-black/0 group-hover:bg-black/10 transition duration-200" />
-                            </button>
+                              <FileIcon className="w-4 h-4 text-gray-400" />
+                              {file.name}
+                            </a>
                           );
-                        }
-
-                        if (isAudio) {
-                          return <AudioBubble key={file.id} src={fileUrl} />;
-                        }
-
-                        return (
-                          <a
-                            key={file.id}
-                            href={fileUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-xs underline hover:text-blue-500"
-                          >
-                            <FileIcon className="w-4 h-4 text-gray-400" />
-                            {file.name}
-                          </a>
-                        );
-                      })}
+                        },
+                      )}
                     </div>
                   )}
 
+                  {/* ── Time + date with status ───────────────────────────── */}
                   <div className="flex items-center justify-end gap-1 mt-1 text-[10px] opacity-70">
                     <span>
-                      {new Date(msg.created_at).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
+                      {formatMessageTime(msg.created_at)}
                     </span>
 
                     {isMe && (
@@ -218,13 +304,14 @@ export default function MessageSection() {
                       'https://img.icons8.com/color/24/google-contacts.png'
                     }
                     alt=""
-                    className="rounded-full aspect-square object-cover"
+                    className="rounded-full aspect-square object-cover flex-shrink-0"
                     unoptimized
                   />
                 )}
               </div>
-            );
-          })}
+            </div>
+          );
+        })}
 
         <div ref={endRef} />
       </div>

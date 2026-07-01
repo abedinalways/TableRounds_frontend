@@ -984,6 +984,22 @@ background: rgba(183, 158, 107, 0.14)
   );
 }
 
+/* ── Message slide-in animation ──────────────────────────────────────────── */
+@keyframes message-in {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-message-in {
+  animation: message-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 @keyframes confetti {
   0% {
     transform: translateY(0) rotate(0deg) scale(1);
