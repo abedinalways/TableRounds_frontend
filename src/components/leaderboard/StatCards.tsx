@@ -13,9 +13,7 @@ export default function StatCards() {
   const { data, isLoading, isError } = useGetLeaderboardQuery({});
   const { data: userData } = useMeQuery();
   const userId = userData?.id;
-  // console.log(userId, '===================UserId')
-  // console.log(userData, '===================user data');
-  
+
   if (isLoading) {
     return <StatCardsSkeleton />;
   }
@@ -29,14 +27,8 @@ export default function StatCards() {
   }
 
   const stats = data?.data.leaderboard;
-  console.log(stats, '++++++++++++++++++++++wefyhweoifwefo');
-  const statData= data?.data.user_stats;
-  console.log(statData, 'OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOd')
+  const statData = data?.data.user_stats;
 
-  // const userStats = stats.find((stat: any) => stat.user.id === userId);
-  // console.log(userStats, '-----------------++++++++++++++++++++++++++')
-  // console.log(userStats, 'user stats');
-  
   const cards = [
     {
       id: 'rank',
@@ -62,28 +54,38 @@ export default function StatCards() {
     {
       id: 'tests',
       title: 'Question Bank Usage',
-      value: `${(statData?.completion_percentage || 'N/A')}%`,
+      value: `${statData?.completion_percentage || 'N/A'}%`,
       subtitle: 'Total attempts',
       icon: '/images/dashboard/statistics/img01.png',
     },
   ];
 
   return (
-    <div className="rounded-[12px] p-2 background font-[manrope]">
-      {/* Header */}
-      <div className="flex gap-4 items-center ml-8 mt-[24px]">
-        <div className="w-[64px] h-[64px] rounded-[16px] bg-icon flex items-center justify-center">
-          <TrophyIcon />
+    <div className="rounded-[12px] p-2 background font-[manrope] relative">
+      {/* Header Container */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between ml-8 mt-[24px] mr-8 gap-4">
+        {/* Left Side: Icon and Title */}
+        <div className="flex gap-4 items-center">
+          <div className="w-[64px] h-[64px] rounded-[16px] bg-icon flex items-center justify-center">
+            <TrophyIcon />
+          </div>
+          <div className="flex flex-col text-white">
+            <h2 className="text-[24px] font-semibold leading-[130%]">
+              Your Stats
+            </h2>
+            <p className="text-[18px] leading-[160%]">Your current standing</p>
+          </div>
         </div>
-        <div className="flex flex-col text-white">
-          <h2 className="text-[24px] font-semibold leading-[130%]">
-            Your Stats
-          </h2>
-          <p className="text-[18px] leading-[160%]">Your current standing</p>
+
+        {/* Right Side: Client's Requested Gold Note */}
+        <div className="sm:text-right self-start sm:self-center">
+          <p className="text-[#B79E6B] text-sm md:text-base font-bold tracking-wide">
+            *Toggle your Score Visibility in &apos;My Profile&apos;
+          </p>
         </div>
       </div>
 
-      {/* Cards */}
+      {/* Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 p-6 text-white">
         {cards.map(item => (
           <Card
