@@ -119,6 +119,8 @@ export const chatApi = baseApi.injectEndpoints({
           body: formData,
         };
       },
+      // No invalidatesTags — optimistic update in ChatContext handles immediate UI
+      // Socket 'message' event from the server will confirm and update the cache
     }),
 
     sendAdminMessage: builder.mutation<
@@ -144,10 +146,8 @@ export const chatApi = baseApi.injectEndpoints({
           body: formData,
         };
       },
-      // Invalidate the specific conversation cache so messages refresh
-      invalidatesTags: (result, error, arg) => [
-        { type: 'Chat', id: arg.conversationId },
-      ],
+      // No invalidatesTags — optimistic update in ChatContext handles immediate UI
+      // Socket 'message' event from the server will confirm and update the cache
     }),
 
     createConversation: builder.mutation<
@@ -159,6 +159,7 @@ export const chatApi = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
+      invalidatesTags: ['Chat'],
     }),
 
     createAdminConversation: builder.mutation<

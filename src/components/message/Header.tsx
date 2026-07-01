@@ -240,6 +240,12 @@ export default function Header() {
       ? activeConversation?.participant?.avatar_url
       : activeConversation?.creator?.avatar_url;
 
+  // ✅ Dynamic profile URL based on current user role
+  const isCurrentUserAdmin = me?.role === 'admin' || me?.type === 'admin';
+  const profileUrl = isCurrentUserAdmin
+    ? `/dashboard/admin/user-profile/${participantId}`
+    : `/dashboard/user/profile/${participantId}`;
+
   const isFollowing = useMemo(() => {
     if (!participantId) return false;
     return followState[participantId] ?? false;
@@ -347,7 +353,7 @@ export default function Header() {
             className="w-44 bg-background text-foreground"
           >
             
-            <Link href={`/dashboard/user/profile/${participantId}`}>
+            <Link href={profileUrl}>
               <DropdownMenuItem className="cursor-pointer font-[manrope]">
                 Profile
               </DropdownMenuItem>

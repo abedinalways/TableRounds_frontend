@@ -13,14 +13,15 @@ import {
   useSendAdminMessageMutation,
   useCreateConversationMutation,
   useCreateAdminConversationMutation,
+  chatApi,
   Conversation,
   Message,
 } from '@/app/redux/api/chat/chatApi';
 import {
   setActiveConversation,
   setTyping,
+  addAdminConversationId,
 } from '@/app/redux/api/chat/chatSlice';
-import { skipToken } from '@reduxjs/toolkit/query';
 import { useParams } from 'next/navigation';
 
 interface ChatContextType {
@@ -35,6 +36,11 @@ interface ChatContextType {
 }
 
 const ChatContext = createContext<ChatContextType | null>(null);
+
+function isAdminUser(user: unknown) {
+  const candidate = user as { role?: string; type?: string } | undefined;
+  return candidate?.role === 'admin' || candidate?.type === 'admin';
+}
 
 export const useChat = () => {
   const ctx = useContext(ChatContext);
@@ -66,8 +72,12 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
   const conversationId = activeConversationId ?? conversationIdFromUrl;
 
+  // Fetch messages for the active conversation on demand
   const { data: messagesData } = useGetMessagesQuery(
-    conversationId ? { conversationId, limit: 20 } : skipToken,
+    { conversationId: conversationId ?? '', limit: 20 },
+    { 
+      skip: !conversationId,
+    },
   );
 
   // debugging
@@ -108,6 +118,10 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       let response;
       if (isAdmin) {
         response = await createAdminChat({ participant_id: targetUserId }).unwrap();
+        const newConversationId = response.data.id;
+        dispatch(addAdminConversationId(newConversationId));
+        dispatch(setActiveConversation(newConversationId));
+        return newConversationId;
       } else {
         response = await createUserChat({
           participant_id: targetUserId,
@@ -127,6 +141,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   /**
    * Send Message Logic
    * ✅ Routes to /chat/message/admin for admins, /chat/message for regular users
+   * ✅ Optimistically adds the message to the cache so it shows immediately
    */
   async function sendMessage(text: string, attachments: File[] = []) {
     if (!conversationId) return;
@@ -145,15 +160,99 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       attachments,
     };
 
+    // ✅ Optimistic update — add the message to cache immediately so UI updates instantly
+    // This prevents the "message only shows after reload" bug
+    const tempId = `temp_${crypto.randomUUID()}`;
+    const now = new Date().toISOString();
+
+    const optimisticMessage: Message = {
+      id: tempId,
+      message: text || null,
+      created_at: now,
+      status: 'SENDING',
+      attachments: [], // attachments will appear after API confirms
+      sender: {
+        id: meId ?? '',
+        name: currentUser?.name ?? 'Me',
+        avatar_url: currentUser?.avatar ?? '',
+      },
+      receiver: {
+        id: receiverId,
+        name: '',
+        avatar_url: '',
+      },
+    };
+
+    // Add to messages cache immediately
+    dispatch(
+      chatApi.util.updateQueryData(
+        'getMessages',
+        { conversationId, limit: 20 },
+        draft => {
+          if (!draft?.data) draft.data = [];
+          draft.data.push(optimisticMessage);
+        },
+      ),
+    );
+
+    // Also update conversation list preview immediately
+    dispatch(
+      chatApi.util.updateQueryData('getConversations', undefined, draft => {
+        if (!draft?.data) return;
+        const c = draft.data.find(c => c.id === conversationId);
+        if (!c) return;
+        if (!c.messages) c.messages = [];
+        c.messages = [{ id: tempId, message: text, created_at: now }];
+        c.updated_at = now;
+      }),
+    );
+
     // ✅ Route by conversation type, NOT sender role
     // adminConversationIds covers: admin sender + user sending feedback to admin
     const isAdminConversation =
-      isAdmin || adminConversationIds.includes(conversationId);
+      isAdmin ||
+      adminConversationIds.includes(conversationId) ||
+      isAdminUser(conv.creator) ||
+      isAdminUser(conv.participant);
 
-    if (isAdminConversation) {
-      await sendAdminMessageApi(payload).unwrap(); // POST /chat/message/admin
-    } else {
-      await sendMessageApi(payload).unwrap(); // POST /chat/message
+    try {
+      let result;
+      if (isAdminConversation) {
+        result = await sendAdminMessageApi(payload).unwrap(); // POST /chat/message/admin
+      } else {
+        result = await sendMessageApi(payload).unwrap(); // POST /chat/message
+      }
+
+      // ✅ Replace temp message with real one from server response
+      if (result?.data) {
+        dispatch(
+          chatApi.util.updateQueryData(
+            'getMessages',
+            { conversationId, limit: 20 },
+            draft => {
+              if (!draft?.data) return;
+              const idx = draft.data.findIndex(m => m.id === tempId);
+              if (idx !== -1) {
+                draft.data[idx] = { ...result.data, status: 'SENT' };
+              }
+            },
+          ),
+        );
+      }
+    } catch (error) {
+      // On failure, remove the temp message from cache
+      dispatch(
+        chatApi.util.updateQueryData(
+          'getMessages',
+          { conversationId, limit: 20 },
+          draft => {
+            if (!draft?.data) return;
+            draft.data = draft.data.filter(m => m.id !== tempId);
+          },
+        ),
+      );
+      console.error('Send message failed:', error);
+      throw error;
     }
   }
 

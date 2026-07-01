@@ -298,9 +298,26 @@ import { toast } from 'sonner';
 
 // Module-level socket ref shared across all usages — prevents duplicate connections
 let sharedSocket: Socket | null = null;
+let pendingRoomJoins: string[] = [];
+
+function emitJoinRoom(socket: Socket, conversationId: string) {
+  const payload = { room_id: conversationId, conversation_id: conversationId };
+
+  // ✅ Only emit the event that backend is listening for
+  socket.emit('joinRoom', payload);
+}
 
 export function joinConversation(conversationId: string) {
-  sharedSocket?.emit('joinRoom', { room_id: conversationId });
+  // If socket is not connected yet, queue the room join
+  if (!sharedSocket?.connected) {
+    if (!pendingRoomJoins.includes(conversationId)) {
+      pendingRoomJoins.push(conversationId);
+    }
+    return;
+  }
+  
+  // Socket is connected, join immediately
+  emitJoinRoom(sharedSocket, conversationId);
 }
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -321,6 +338,109 @@ export type SocketMessage = {
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
+
+type NormalizedSocketMessage = {
+  message_id: string;
+  body_text: string | null;
+  from: string;
+  conversation_id: string;
+  created_at: string;
+  attachments: ChatAttachment[];
+};
+
+function firstString(...values: unknown[]): string | undefined {
+  return values.find(
+    value => typeof value === 'string' && value.trim().length > 0,
+  ) as string | undefined;
+}
+
+function normalizeSocketMessage(payload: any): NormalizedSocketMessage | null {
+  const data = payload?.data || payload;
+  const raw =
+    data?.message && typeof data.message === 'object' ? data.message : data;
+
+  const conversationId = firstString(
+    raw?.conversation_id,
+    raw?.conversationId,
+    raw?.room_id,
+    raw?.roomId,
+    data?.conversation_id,
+    data?.conversationId,
+    data?.room_id,
+    payload?.conversation_id,
+    payload?.conversationId,
+    payload?.room_id,
+  );
+
+  const senderId = firstString(
+    raw?.from,
+    raw?.sender_id,
+    raw?.senderId,
+    raw?.sender?.id,
+    data?.from,
+    data?.sender_id,
+    data?.senderId,
+    data?.sender?.id,
+    payload?.from,
+    payload?.sender_id,
+    payload?.senderId,
+    payload?.sender?.id,
+  );
+
+  const bodyText =
+    firstString(
+      raw?.body_text,
+      raw?.bodyText,
+      raw?.message,
+      raw?.text,
+      data?.body_text,
+      data?.bodyText,
+      typeof data?.message === 'string' ? data.message : undefined,
+      data?.text,
+      payload?.body_text,
+      payload?.message,
+      payload?.text,
+    ) ?? null;
+
+  const messageId =
+    firstString(
+      raw?.message_id,
+      raw?.messageId,
+      raw?.id,
+      data?.message_id,
+      data?.messageId,
+      data?.id,
+      payload?.message_id,
+      payload?.messageId,
+      payload?.id,
+    ) ||
+    (conversationId && senderId
+      ? `${conversationId}:${senderId}:${raw?.created_at || Date.now()}`
+      : undefined);
+
+  if (!conversationId || !senderId || !messageId) {
+    return null;
+  }
+
+  return {
+    message_id: messageId,
+    body_text: bodyText,
+    from: senderId,
+    conversation_id: conversationId,
+    created_at:
+      firstString(
+        raw?.created_at,
+        raw?.createdAt,
+        data?.created_at,
+        payload?.created_at,
+      ) || new Date().toISOString(),
+    attachments: Array.isArray(raw?.attachments)
+      ? raw.attachments
+      : Array.isArray(data?.attachments)
+        ? data.attachments
+        : [],
+  };
+}
 
 function getInitials(name: string): string {
   return name
@@ -451,9 +571,7 @@ export function useChatSocket() {
       return;
     }
 
-    convData.data.forEach(conv =>
-      socket.emit('joinRoom', { room_id: conv.id }),
-    );
+    convData.data.forEach(conv => emitJoinRoom(socket, conv.id));
 
     console.log(
       `[useChatSocket] Joined ${convData.data.length} rooms on convData update.`,
@@ -461,25 +579,67 @@ export function useChatSocket() {
   }, [convData]);
 
   useEffect(() => {
-    // Don't connect if not authenticated (token is null or false)
+    // Don't
     if (!token) {
+      console.log('[useChatSocket] No token found, skipping socket connection');
       return;
     }
 
     // Disconnect existing shared socket if it was created with a different token
     if (sharedSocket) {
+      console.log('[useChatSocket] Disconnecting existing socket');
       sharedSocket.disconnect();
       sharedSocket = null;
     }
 
-    const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL!, {
-      extraHeaders: {
-        authorization: `Bearer ${token}`,
-      },
+    const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL;
+    console.log('[useChatSocket] Attempting to connect to:', socketUrl);
+    console.log('[useChatSocket] Full token:', token);
+
+    // ✅ Send token ONLY in URL query parameter - most reliable method
+    const socket = io(`${socketUrl}?token=${encodeURIComponent(token)}`, {
+      transports: ['websocket', 'polling'],
+      reconnection: true,
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
     });
 
     sharedSocket = socket;
     socketRef.current = socket;
+
+    // ✅ Connection error handling
+    socket.on('connect_error', (error) => {
+      console.error('[useChatSocket] Connection error:', error);
+      console.error('[useChatSocket] Error details:', error.message);
+    });
+
+    socket.on('disconnect', (reason) => {
+      console.log('[useChatSocket] Disconnected:', reason);
+      if (reason === 'io server disconnect') {
+        console.error('[useChatSocket] Server disconnected the socket. This usually means:');
+        console.error('  1. Token validation failed on backend');
+        console.error('  2. CORS configuration issue');
+        console.error('  3. Backend socket middleware error');
+        console.error('  4. Server-side authentication failed');
+      }
+    });
+
+    socket.on('connect', () => {
+      console.log('[useChatSocket] Connected successfully:', socket.id);
+    });
+
+    socket.on('reconnect_attempt', (attemptNumber) => {
+      console.log(`[useChatSocket] Reconnection attempt ${attemptNumber}`);
+    });
+
+    socket.on('reconnect_error', (error) => {
+      console.error('[useChatSocket] Reconnection error:', error);
+    });
+
+    socket.on('reconnect_failed', () => {
+      console.error('[useChatSocket] Reconnection failed after maximum attempts');
+    });
 
     const joinAllRooms = () => {
       const state = store.getState() as any;
@@ -488,7 +648,7 @@ export function useChatSocket() {
         chatApi.endpoints.getConversations.select()(state)?.data?.data || [];
 
       if (cached.length > 0) {
-        cached.forEach(conv => socket.emit('joinRoom', { room_id: conv.id }));
+        cached.forEach(conv => emitJoinRoom(socket, conv.id));
         console.log(
           `[useChatSocket] Joined ${cached.length} rooms from cache.`,
         );
@@ -500,9 +660,7 @@ export function useChatSocket() {
         )
           .then((result: any) => {
             const convs: any[] = result?.data?.data || [];
-            convs.forEach(conv =>
-              socket.emit('joinRoom', { room_id: conv.id }),
-            );
+            convs.forEach(conv => emitJoinRoom(socket, conv.id));
             console.log(
               `[useChatSocket] Joined ${convs.length} rooms after fetch.`,
             );
@@ -514,6 +672,16 @@ export function useChatSocket() {
     socket.on('connect', () => {
       console.log('[useChatSocket] Connected:', socket.id);
       joinAllRooms();
+      
+      // Join any pending rooms that were requested before socket connected
+      if (pendingRoomJoins.length > 0) {
+        console.log(`[useChatSocket] Joining ${pendingRoomJoins.length} pending rooms`);
+        pendingRoomJoins.forEach(roomId => {
+          emitJoinRoom(socket, roomId);
+        });
+        pendingRoomJoins = [];
+      }
+      
       // Fetch fresh notifications from the API immediately so users who just
       // logged in or reconnected see missed notifications without waiting for
       // the 30-second polling interval. This is safe now because
@@ -582,27 +750,45 @@ export function useChatSocket() {
       handleNotification('user-registered', d),
     );
 
-    // ⚠️ Do NOT call handleNotification for the 'conversation' event.
-    // The backend also fires a 'message' event for the same message,
-    // and that event's handleNotification call creates the notification.
-    // Calling it here too would produce a SECOND notification (duplicate).
+    // Handle the 'conversation' event — also create a notification in case
+    // the backend does not also fire a 'message' event for this event.
     socket.on('conversation', d => {
       const p = d as any;
       const convId = p?.data?.id || p?.id;
 
       if (convId) {
-        socket.emit('joinRoom', { room_id: convId });
+        emitJoinRoom(socket, convId);
         dispatch(chatApi.util.invalidateTags(['Chat'] as any));
         console.log(`[useChatSocket] Joined new conversation room: ${convId}`);
       }
+      
+      // Always create a notification for conversation events so the bell badge updates.
+      // Deduplication in NotificationSlice will handle merging with the 'message' event
+      // if one also arrives for the same message.
+      handleNotification('conversation', d);
+    });
+
+    // ── Handle generic 'notification' event from backend ───────────────────
+    socket.on('notification', (d: any) => {
+      console.log('[useChatSocket] Notification event:', d);
+      const type = d?.type || d?.notification_type || 'conversation';
+      
+      handleNotification(type as any, d);
+      
+      // Also invalidate API notification cache so persisted state stays in sync
+      dispatch(notificationApi.util.invalidateTags(['notification', 'adminNotification'] as any));
     });
 
     socket.on('message', (payload: any) => {
-      const msg = payload?.data?.message;
+      console.log('[useChatSocket] Raw message event received:', payload);
+      
+      const msg = normalizeSocketMessage(payload);
+
+      console.log('[useChatSocket] Parsed msg:', msg, '| raw payload:', payload);
 
       if (!msg) {
-        // No structured message data — this might be a conversation-created event.
-        // Only create a notification if we know its ID is unique.
+        console.log('[useChatSocket] Message normalization failed, treating as notification');
+        // Not a chat message — might be a conversation-created event
         const notificationId = payload?.data?.id || payload?.id;
         if (notificationId && !notificationId.startsWith('temp_')) {
           handleNotification('conversation', payload);
@@ -610,9 +796,11 @@ export function useChatSocket() {
         dispatch(chatApi.util.invalidateTags(['Chat'] as any));
         return;
       }
+      
+      console.log('[useChatSocket] Processing message for conversation:', msg.conversation_id);
 
       const state = store.getState() as any;
-      const me = authApi.endpoints.me.select()(state)?.data;
+      const me = authApi.endpoints.me.select()(state)?.data || state.auth?.user;
 
       const conversations =
         chatApi.endpoints.getConversations.select()(state)?.data?.data || [];
@@ -651,6 +839,8 @@ export function useChatSocket() {
         },
       };
 
+      // Try to update the cache directly
+      // Pass the full query args object - RTK Query will serialize it using serializeQueryArgs
       dispatch(
         chatApi.util.updateQueryData(
           'getMessages',
@@ -658,34 +848,66 @@ export function useChatSocket() {
           draft => {
             if (!draft?.data) draft.data = [];
 
-            const exists = draft.data.some(m => m.id === newMessage.id);
+            if (me?.id === msg.from) {
+              draft.data = draft.data.filter(
+                (m: any) => !m.id?.startsWith('temp_'),
+              );
+            }
 
-            if (!exists) {
+            const existingIndex = draft.data.findIndex(
+              message => message.id === newMessage.id,
+            );
+
+            if (existingIndex > -1) {
+              draft.data[existingIndex] = {
+                ...draft.data[existingIndex],
+                ...newMessage,
+              };
+            } else {
               draft.data.push(newMessage);
             }
           },
         ),
       );
 
+      // Also invalidate the conversations list to update the sidebar
       dispatch(
         chatApi.util.updateQueryData('getConversations', undefined, draft => {
           if (!draft?.data) return;
 
-          const c = draft.data.find(c => c.id === msg.conversation_id);
+          const conversationIndex = draft.data.findIndex(
+            c => c.id === msg.conversation_id,
+          );
 
-          if (!c) return;
+          if (conversationIndex === -1) return;
+
+          const c = draft.data[conversationIndex];
 
           if (!c.messages) c.messages = [];
 
-          c.messages.push({
+          c.messages = [{
             id: msg.message_id,
-            message: msg.body_text,
+            message: msg.body_text ?? '',
             created_at: msg.created_at,
-          });
+          }];
 
-          c.messages = c.messages.slice(-1);
           c.updated_at = msg.created_at;
+
+          draft.data.splice(conversationIndex, 1);
+          draft.data.unshift(c);
         }),
+      );
+      
+      // Always invalidate as fallback to trigger refetch
+      dispatch(
+        chatApi.util.invalidateTags([
+          { type: 'Chat', id: msg.conversation_id },
+        ] as any),
+      );
+      
+      // Also invalidate the conversations list
+      dispatch(
+        chatApi.util.invalidateTags(['Chat'] as any),
       );
 
       // Create socket notification for real-time feedback
