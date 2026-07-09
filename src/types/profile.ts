@@ -118,6 +118,7 @@ export interface statisticsItems {
   complete_percentage: number;
   correct_percentage: number;
   ranking: number;
+  question_bank_usage: number;
   best_topic: topicItems | null;
 }
 

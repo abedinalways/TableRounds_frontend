@@ -56,17 +56,18 @@ export const metadata: Metadata = {
   title: 'TableRounds',
   description:
     'TableRounds is a clinician-built platform that brings board-style question banks and a vetted community of surgeons, dentists, and trainees into one place. Create a verified profile, work through specialty-tagged questions with detailed explanations, track your performance by topic, and connect with colleagues who are equally invested in maintaining a high standard of practice',
+  metadataBase: new URL('https://tablerounds.ai'),
   //preview for Facebook, WhatsApp, LinkedIn
   openGraph: {
     title: 'TableRounds',
     description:
       'TableRounds is a clinician-built platform that brings board-style question banks and a vetted community of surgeons, dentists, and trainees into one place.',
-    url: 'https://tablerounds.ai',
+    url: '/',  // ✅ Relative path — metadataBase converts it to absolute
     siteName: 'TableRounds',
     type: 'website',
     images: [
       {
-        url: 'https://tablerounds.ai/footer-logo.png',
+        url: '/footer-logo.png',  // ✅ Relative — metadataBase converts to absolute
         width: 600,
         height: 300,
         alt: 'TableRounds Logo',
@@ -79,7 +80,7 @@ export const metadata: Metadata = {
     title: 'TableRounds',
     description:
       'TableRounds is a clinician-built platform that brings board-style question banks and a vetted community of surgeons, dentists, and trainees into one place.',
-    images: ['https://tablerounds.ai/footer-logo.png'],
+    images: ['/footer-logo.png'],  // ✅ Relative — metadataBase converts to absolute
   },
 };
 

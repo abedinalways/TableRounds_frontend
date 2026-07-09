@@ -21,6 +21,7 @@ export default function QuestionBankSolved({ data }: Props) {
     correct_percentage = 0,
     ranking,
     best_topic,
+    question_bank_usage,
   } = data || {};
 
   // --- LINEAR GRADIENT & ARCS MATH UPDATE ---
@@ -114,7 +115,7 @@ export default function QuestionBankSolved({ data }: Props) {
         {/* Stats */}
         <div className="flex-1 w-full space-y-3">
           <StatRow label="Ranking" value={ranking} />
-          <StatRow label="Complete" value={`${complete_percentage}%`} />
+          <StatRow label="Complete" value={`${question_bank_usage}%`} />
           <StatRow
             label="Best Topic"
             value={formatTopicName(best_topic?.name)}

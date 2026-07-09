@@ -9,7 +9,7 @@ import {
 import { ProfileData as ProfileUIData } from '@/types/myProfile';
 
 export function mapProfileToUI(data: ProfileData): ProfileUIData {
-  // ✅ Get specialty from multiple sources with fallback
+  
   const specialty =
     data.specialty ??
    
@@ -39,7 +39,7 @@ export function mapProfileToUI(data: ProfileData): ProfileUIData {
       facebook: data.facebook ?? '',
       current_practice: data.current_practice ?? '',
       created_at: data.created_at ?? '',
-      specialty: specialty, // ✅ Add specialty here
+      specialty: specialty,
     },
 
     education: (data.educations ?? []).map((edu: Education) => ({
@@ -71,6 +71,7 @@ export function mapProfileToUI(data: ProfileData): ProfileUIData {
       correct_percentage: data.statistics?.correct_percentage ?? 0,
       ranking: data.statistics?.ranking ?? 0,
       best_topic: data.statistics?.best_topic ?? null,
+      question_bank_usage:data?.statistics?.question_bank_usage?? 0
     },
   };
 }
