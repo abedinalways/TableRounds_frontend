@@ -55,6 +55,7 @@ export interface statisticsItems {
   correct_percentage: number;
   ranking: number;
   best_topic: topicItems | null;
+  question_bank_usage: number;
 }
 export interface topicItems{
   name: string;

@@ -20,6 +20,7 @@ export default function QuestionBankSolved({ data }: Props) {
     correct_percentage = 0,
     ranking = 0,
     best_topic,
+    question_bank_usage,
   } = data || {};
 
   const radius = 100;
@@ -110,7 +111,7 @@ export default function QuestionBankSolved({ data }: Props) {
 
         <div className="w-full flex-1 space-y-3">
           <StatRow label="Ranking" value={ranking} />
-          <StatRow label="Complete" value={`${safeCompletePercentage}%`} />
+          <StatRow label="Complete" value={`${question_bank_usage}%`} />
           <StatRow
             label="Best Topic"
             value={formatTopicName(best_topic?.name)}

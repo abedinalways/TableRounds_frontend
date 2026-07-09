@@ -111,6 +111,7 @@ export default function ProfilePage({
       correct_percentage: apiData.statistics?.correct_percentage ?? 0,
       ranking: apiData.statistics?.ranking ?? 0,
       best_topic: apiData.statistics?.best_topic ?? null,
+      question_bank_usage:apiData?.statistics?.question_bank_usage?? 0
     },
 
     practiceName: apiData.current_practice ?? '',

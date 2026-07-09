@@ -60,10 +60,11 @@ export interface Experience {
   end_date: string;
 }
 
-export interface statisticsItems{
+export interface statisticsItems {
   complete_percentage: number;
   correct_percentage: number;
   ranking: number;
+  question_bank_usage?: number;
   best_topic: topicItems | null;
 }
 export interface topicItems {

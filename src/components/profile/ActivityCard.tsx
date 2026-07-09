@@ -18,8 +18,13 @@ function formatTopicName(name: string | undefined): string {
 }
 
 export default function QuestionBankSolved({ data }: Props) {
-  const { complete_percentage, correct_percentage, ranking, best_topic } =
-    data || {};
+  const {
+    complete_percentage,
+    correct_percentage,
+    ranking,
+    best_topic,
+    question_bank_usage,
+  } = data || {};
 
   const safeCorrectPercentage = Math.min(
     Math.max(Number(correct_percentage) || 0, 0),
@@ -104,7 +109,7 @@ export default function QuestionBankSolved({ data }: Props) {
 
         <div className="flex-1 w-full space-y-3">
           <StatRow label="Ranking" value={ranking} />
-          <StatRow label="Complete" value={`${complete_percentage || 0}%`} />
+          <StatRow label="Complete" value={`${question_bank_usage || 0}%`} />
           <StatRow
             label="Best Topic"
             value={formatTopicName(best_topic?.name)}
