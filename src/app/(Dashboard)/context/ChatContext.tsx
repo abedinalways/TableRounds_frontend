@@ -5,7 +5,7 @@
 import React, { createContext, useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { type AppDispatch, type RootState } from '@/app/redux/store';
-import { joinConversation } from '@/app/redux/api/chat/useChatSocket';
+import { joinConversation, useChatSocket } from '@/app/redux/api/chat/useChatSocket';
 import {
   useGetConversationsQuery,
   useGetMessagesQuery,
@@ -49,6 +49,10 @@ export const useChat = () => {
 };
 
 export function ChatProvider({ children }: { children: React.ReactNode }) {
+  // ✅ Initialize socket connection inside ChatProvider so it stays alive
+  // as long as the user is on any dashboard page
+  useChatSocket();
+
   const params = useParams();
   const conversationIdFromUrl = params?.id as string | undefined;
   const dispatch = useDispatch<AppDispatch>();

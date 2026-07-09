@@ -7,7 +7,6 @@ import { Menu } from 'lucide-react';
 import Link from 'next/link';
 
 import { useMeQuery } from '@/app/redux/api/authApi';
-import { useChatSocket } from '@/app/redux/api/chat/useChatSocket';
 import { useAppSelector } from '@/app/redux/hook';
 import { useGetAdminNotificationsQuery } from '@/app/redux/api/notificationApi';
 import { NotificationButton } from '@/components/admin-topbar/NotificationButton';
@@ -17,7 +16,6 @@ interface TopbarProps {
 }
 
 export default function Topbar({ onMenuClick }: TopbarProps = {}) {
-  useChatSocket();
   // Poll every 30 seconds so users who were offline catch up on missed notifications
   useGetAdminNotificationsQuery(undefined, { pollingInterval: 30000 });
 

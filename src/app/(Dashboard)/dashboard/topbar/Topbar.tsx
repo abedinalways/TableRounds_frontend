@@ -8,7 +8,6 @@ import Link from 'next/link';
 import { NotificationButton } from '@/components/topbar/NotificationButton';
 import { useMeQuery } from '@/app/redux/api/authApi';
 import { useGetUserNotificationsQuery } from '@/app/redux/api/notificationApi';
-import { useChatSocket } from '@/app/redux/api/chat/useChatSocket';
 
 import { useAppSelector } from '@/app/redux/hook';
 
@@ -17,8 +16,6 @@ interface TopbarProps {
 }
 
 export default function Topbar({ onMenuClick }: TopbarProps = {}) {
-  // sockets
-  useChatSocket();
   // Poll every 30 seconds so users who were offline catch up on missed notifications
   useGetUserNotificationsQuery(undefined, { pollingInterval: 30000 });
 
