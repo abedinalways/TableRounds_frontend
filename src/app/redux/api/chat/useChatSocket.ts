@@ -594,11 +594,17 @@ export function useChatSocket() {
 
     const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL;
     console.log('[useChatSocket] Attempting to connect to:', socketUrl);
-    console.log('[useChatSocket] Full token:', token);
 
-    // ✅ Send token ONLY in URL query parameter - most reliable method
-    const socket = io(`${socketUrl}?token=${encodeURIComponent(token)}`, {
-      transports: ['websocket', 'polling'],
+    // ✅ Send token via HTTP headers (extraHeaders) as per backend requirement
+    // The backend reads token from: socket.handshake.headers.authorization
+    const socket = io(socketUrl!, {
+      // ✅ Force polling transport only — extraHeaders only work with polling,
+      // NOT with WebSocket (browser WebSocket API doesn't support custom headers).
+      // The backend reads token from socket.handshake.headers.authorization.
+      transports: ['polling'],
+      extraHeaders: {
+        authorization: `Bearer ${token}`,
+      },
       reconnection: true,
       reconnectionAttempts: Infinity,
       reconnectionDelay: 1000,
