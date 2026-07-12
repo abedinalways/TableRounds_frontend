@@ -70,6 +70,7 @@ export interface CreateUpdatePlanPayload {
   price: number;
   billing_period: string;
   benefits: string[];
+  isPopular?: boolean;
 }
 
 /* ================= API INJECTION ================= */
