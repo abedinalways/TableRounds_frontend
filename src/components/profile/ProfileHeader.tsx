@@ -153,7 +153,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
                 <LocationIcon />
                 {user.state}, {user.country}
               </h4>
-              <h4 className="flex items-center gap-1 transition-colors duration-300 hover:text-[#01503b]">
+              <h4 className="flex items-center text-[#01503b] gap-1 transition-colors duration-300 hover:text-[#01503b]">
                 <StethoscopeIcon />
                 {user.specialty}
               </h4>

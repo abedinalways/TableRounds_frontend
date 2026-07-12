@@ -21,6 +21,7 @@ type DisplayPlan = {
   price: string;
   billing_period: string;
   benefits: string[];
+  isPopular?: boolean;
 };
 
 const FREE_PLAN_FALLBACK: DisplayPlan = {
@@ -309,7 +310,8 @@ export default function PricingSection() {
                 plan.billing_period?.toLowerCase(),
               ) || plan.id.includes('6');
 
-            const recommended = is6Months;
+            // Use backend isPopular field, fallback to 6-month plan for backward compatibility
+            const recommended = plan.isPopular || is6Months;
 
             const badgeText = recommended
               ? 'Most popular'
@@ -317,7 +319,7 @@ export default function PricingSection() {
                 ? 'Your plan'
                 : undefined;
 
-            // 1. TOP DYNAMIC LABELS
+            // 1. TOP DYNAMIC LABELS - Use backend price dynamically
             let topPriceInfo = (
               <p className="text-sm font-medium text-neutral-400">
                 Always free
@@ -327,7 +329,7 @@ export default function PricingSection() {
               topPriceInfo = (
                 <div>
                   <p className="text-xs font-bold text-[#B79E6B] tracking-wide">
-                    $149.99/yr
+                    ${price}/yr
                   </p>
                   <p className="text-[11px] font-bold text-emerald-500 uppercase tracking-wider">
                     Total charged up front for 1 year
@@ -338,7 +340,7 @@ export default function PricingSection() {
               topPriceInfo = (
                 <div>
                   <p className="text-xs font-bold text-amber-500 tracking-wide">
-                    $89.99/6 months
+                    ${price}/6 months
                   </p>
                   <p className="text-[11px] font-bold text-amber-500 uppercase tracking-wider">
                     Total charged up front for 6 months
@@ -354,17 +356,23 @@ export default function PricingSection() {
             }
 
             // 2. MAIN BIG PRICE REORGANIZATION
+            // Use backend price directly - admin can control from backend
             let mainPriceAmount = `$${price}`;
             const mainPriceSuffix = '/mo';
 
             if (isFree) {
               mainPriceAmount = '$0';
             } else if (isAnnual) {
-              mainPriceAmount = '$12.50';
+              // Annual plan: show monthly equivalent
+              const monthlyEquivalent = (Number(price) / 12).toFixed(2);
+              mainPriceAmount = `$${monthlyEquivalent}`;
             } else if (is6Months) {
-              mainPriceAmount = '$14.99';
+              // 6-month plan: show monthly equivalent
+              const monthlyEquivalent = (Number(price) / 6).toFixed(2);
+              mainPriceAmount = `$${monthlyEquivalent}`;
             } else {
-              mainPriceAmount = '$19.99';
+              // Monthly plan: use the price as-is
+              mainPriceAmount = `$${price}`;
             }
 
             const mainPriceNode = (
