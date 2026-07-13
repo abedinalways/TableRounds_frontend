@@ -21,7 +21,7 @@ type DisplayPlan = {
   price: string;
   billing_period: string;
   benefits: string[];
-  isPopular?: boolean;
+  is_popular?: boolean;
 };
 
 const FREE_PLAN_FALLBACK: DisplayPlan = {
@@ -36,7 +36,7 @@ const FREE_PLAN_FALLBACK: DisplayPlan = {
   ],
 };
 
-/* ─── Shared Card Shell (বাটন ও প্রাইস এক লাইনে লকড) ─────────────────────────────────── */
+
 interface CardProps {
   plan: DisplayPlan;
   isBadged: boolean;
@@ -81,7 +81,7 @@ function PlanCard({
         <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#B79E6B] to-[#00B977]" />
       )}
 
-      {/* ১. টপ সেকশন (টাইটেল ও চেঞ্জিং টেক্সট) */}
+   
       <div className="flex flex-col mb-4">
         <div className="h-8 flex items-center mb-2">
           {isBadged && badgeText && (
@@ -115,13 +115,13 @@ function PlanCard({
           {plan.name}
         </h3>
 
-        {/* টপ প্রাইস টেক্সটের হাইট ফিক্সড করা হলো যেন নিচের অংশগুলো না নড়ে */}
+  
         <div className="h-[48px] mt-1 flex flex-col justify-center">
           {topPriceInfo}
         </div>
       </div>
 
-      {/* ২. মিডল সেকশন (বেনিফিটস লিস্ট) - flex-grow ব্যবহার করে এটিকে বড় করা হয়েছে */}
+  
       <div className="flex-1 flex flex-col justify-start space-y-3 mb-6">
         {plan.benefits.map((benefit, i) => (
           <div key={i} className="flex items-start gap-3">
@@ -145,7 +145,6 @@ function PlanCard({
         ))}
       </div>
 
-      {/* ৩. বটম সেকশন (বাটন ও মেইন প্রাইস) - এগুলো সবসময় একদম নিচে এক লাইনে লক থাকবে */}
       <div className="mt-auto pt-4 border-t border-dashed border-neutral-200/50 dark:border-white/10">
         {/* Subscribe Button */}
         <Button
@@ -306,12 +305,12 @@ export default function PricingSection() {
               plan.billing_period?.toLowerCase(),
             );
             const is6Months =
-              ['6 months', '6-month', '6month'].includes(
+              ['6_months', '6 months', '6-month', '6month'].includes(
                 plan.billing_period?.toLowerCase(),
-              ) || plan.id.includes('6');
+              );
 
-            // Use backend isPopular field, fallback to 6-month plan for backward compatibility
-            const recommended = plan.isPopular || is6Months;
+            // Use backend is_popular field for recommendation
+            const recommended = plan.is_popular || false;
 
             const badgeText = recommended
               ? 'Most popular'
@@ -319,7 +318,7 @@ export default function PricingSection() {
                 ? 'Your plan'
                 : undefined;
 
-            // 1. TOP DYNAMIC LABELS - Use backend price dynamically
+            // 1. TOP DYNAMIC LABELS - Based on billing_period from API
             let topPriceInfo = (
               <p className="text-sm font-medium text-neutral-400">
                 Always free
@@ -336,7 +335,7 @@ export default function PricingSection() {
                   </p>
                 </div>
               );
-            } else if (is6Months || recommended) {
+            } else if (is6Months) {
               topPriceInfo = (
                 <div>
                   <p className="text-xs font-bold text-amber-500 tracking-wide">
@@ -347,7 +346,7 @@ export default function PricingSection() {
                   </p>
                 </div>
               );
-            } else if (!isFree) {
+            } else if (!isFree && plan.billing_period?.toLowerCase() === 'monthly') {
               topPriceInfo = (
                 <p className="text-xs font-bold text-neutral-400">
                   Billed monthly
@@ -355,19 +354,19 @@ export default function PricingSection() {
               );
             }
 
-            // 2. MAIN BIG PRICE REORGANIZATION
-            // Use backend price directly - admin can control from backend
-            let mainPriceAmount = `$${price}`;
-            const mainPriceSuffix = '/mo';
+            // 2. MAIN BIG PRICE DISPLAY - Calculate per-month equivalent for multi-month plans
+            let mainPriceAmount: string;
+            let mainPriceSuffix = '/mo';
 
             if (isFree) {
               mainPriceAmount = '$0';
+              mainPriceSuffix = '';
             } else if (isAnnual) {
               // Annual plan: show monthly equivalent
               const monthlyEquivalent = (Number(price) / 12).toFixed(2);
               mainPriceAmount = `$${monthlyEquivalent}`;
             } else if (is6Months) {
-              // 6-month plan: show monthly equivalent
+              // 6-month plan: show monthly equivalent (e.g., $20/6 months = $3.33/mo)
               const monthlyEquivalent = (Number(price) / 6).toFixed(2);
               mainPriceAmount = `$${monthlyEquivalent}`;
             } else {
