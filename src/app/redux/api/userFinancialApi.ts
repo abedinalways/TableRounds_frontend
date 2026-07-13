@@ -21,7 +21,7 @@ export interface BackendPlanData {
   price: string;
   billing_period: string;
   benefits: string[];
-  isPopular?: boolean; // Admin can set this to mark a plan as "Most popular"
+  is_popular?: boolean; // Admin can set this to mark a plan as "Most popular"
   created_at: string;
   updated_at: string;
 }
