@@ -89,24 +89,38 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
               </span>
             </h2>
 
-            <p className="text-[18px] text-[#047857]">{user.title}</p>
-
-            <div className="flex md:gap-[48px] gap-6 items-center text-xs md:text-[16px] font-light text-[#6b7280]">
-              <h4 className="flex items-center gap-2">
-                <LocationIcon />
-
-                {user?.state && ` ${user.state}`}
-                {user?.country && `, ${getFullCountryName(user.country)}`}
+            <div className="flex items-center justify-start gap-6 flex-wrap">
+              <h4 className="flex items-center text-sm md:text-[16px]  text-[#01503b] gap-1 transition-colors duration-300 hover:text-[#01503b]">
+                <Image src="/images/icon03.png" width={20} height={20} alt="" />
+                {user.specialty}
               </h4>
-              <h4 className="flex items-center gap-2">
+              <p className="text-sm md:text-[16px] leading-[160%] text-[#01503b] flex items-center gap-1">
+                <Image src="/images/icon01.png" width={20} height={20} alt="" />
+                {user.title}
+              </p>
+            </div>
+
+            <div className="md:flex md:gap-6 block py-2 md:py-0 items-center text-xs md:text-[16px] font-light text-[#6b7280]">
+              <h4 className="flex items-center gap-1 transition-transform duration-300 hover:translate-x-0.5">
                 <BagIcon />
                 {user.jobArea}
               </h4>
-              <h4 className="flex items-center gap-2">
+              <h4 className="flex items-center gap-1 transition-colors duration-300 hover:text-[#01503b]">
+                <LocationIcon />
+                {user.state}, {user.country}
+              </h4>
+
+              <h4 className="flex items-center gap-1 transition-colors duration-300 hover:text-[#01503b]">
                 <CalendarIconForProfile />
-                <span className="font-semibold">Joined</span> {normalizeDate}
+                <span className="font-semibold">Joined</span>{' '}
+                {new Date(user.created_at).toLocaleDateString('en-US', {
+                  month: 'long',
+                  year: 'numeric',
+                })}
               </h4>
             </div>
+
+            
 
             <p className="text-sm md:text-[18px] leading-[160%]">{user.bio}</p>
 

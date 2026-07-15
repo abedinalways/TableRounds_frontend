@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { FaXTwitter } from 'react-icons/fa6';
+import { FaMagnet, FaXTwitter } from 'react-icons/fa6';
 import { Facebook, Instagram, Linkedin, StethoscopeIcon } from 'lucide-react';
 import AttachImageIcon from '../reusable/icons/AttachImageIcon';
 import LocationIcon from '../ui/LocationIcon';
@@ -270,27 +270,38 @@ export default function ManageProfile({
                   {user.credentials}
                 </span>
               </h2>
-
-              <p className="text-[18px] text-[#047857]">
-                {user.training_practice}
-              </p>
-
-              <div className="flex  gap-4 items-center text-xs md:text-[16px] font-light text-[#6b7280]">
-                <h4 className="flex items-center gap-2 text-sm ">
-                  <LocationIcon />
-                  {user.state} , {getFullCountryName(user.country)}.
-                </h4>
-                <h4 className="flex items-center gap-2 text-sm">
-                  <StethoscopeIcon />
+              <div className="md:flex md:items-center gap-6 space-y-2 md:space-y-0">
+                <h4 className="flex items-center gap-1 text-sm md:text-[16px]">
+                  <Image
+                    src="/images/icon03.png"
+                    width={20}
+                    height={20}
+                    alt=""
+                  />
                   {user.specialty}
                 </h4>
+                <p className=" text-[#047857] text-sm md:text-[16px] flex items-center gap-1">
+                  <Image
+                    src="/images/icon01.png"
+                    width={20}
+                    height={20}
+                    alt=""
+                  />
+                  {user.training_practice}
+                </p>
+              </div>
 
-                <h4 className="md:flex items-center gap-2 text-sm">
+              <div className="md:flex md:gap-6 items-center text-xs md:text-[16px] font-light text-[#6b7280] space-y-2 md:space-y-0">
+                <h4 className="flex items-center gap-2 text-sm md:text-[16px] ">
                   <BagIcon />
                   {user.jobArea}
                 </h4>
+                <h4 className="flex items-center gap-2 text-sm md:text-[16px] ">
+                  <LocationIcon />
+                  {user.state} , {getFullCountryName(user.country)}.
+                </h4>
 
-                <h4 className="flex items-center gap-2 text-sm">
+                <h4 className="flex items-center gap-2 text-sm md:text-[16px] ">
                   <CalendarIconForProfile />
                   Joined{' '}
                   {new Date(user.created_at).toLocaleDateString('en-US', {
@@ -300,7 +311,8 @@ export default function ManageProfile({
                 </h4>
               </div>
 
-              <p className="text-sm md:text-[18px] leading-[160%]">
+              <p className="text-sm md:text-[18px] leading-[160%] flex gap-1">
+                
                 {user.bio}
               </p>
 
