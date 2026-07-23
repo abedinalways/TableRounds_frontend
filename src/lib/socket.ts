@@ -112,6 +112,7 @@ export const getSocket = (token?: string): Socket | null => {
     reconnectionAttempts: Infinity,
     reconnectionDelay: 1000,
     reconnectionDelayMax: 5000,
+    randomizationFactor: 0.5,
   });
 
   socket.on('connect', () => {
@@ -124,7 +125,11 @@ export const getSocket = (token?: string): Socket | null => {
     if (reason === 'io server disconnect') {
       joinedRooms.clear();
       pendingJoins.clear();
-      if (socket) socket.connect();
+      setTimeout(() => {
+        if (socket && socket.disconnected) {
+          socket.connect();
+        }
+      }, 500);
     }
   });
 

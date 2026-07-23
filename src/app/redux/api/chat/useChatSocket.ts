@@ -2,12 +2,12 @@
 
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Socket } from 'socket.io-client';
 import { disconnectSocket, getSocket, joinRoom, joinRooms, isRoomJoined } from '@/lib/socket';
 import { store, type AppDispatch, type RootState } from '../../store';
 import {
   chatApi,
   type ChatAttachment,
-  type Conversation,
   type Message,
   useGetConversationsQuery,
 } from './chatApi';
@@ -15,6 +15,8 @@ import { authApi } from '../authApi';
 import { notificationApi } from '../notificationApi';
 import { addNotification } from '@/store/NotificationSlice';
 import { toast } from 'sonner';
+
+const attachedSockets = new Set<Socket | null>();
 
 type SocketMessagePayload = {
   id?: string;
@@ -75,21 +77,21 @@ export function useChatSocket() {
 
   // Use ref to track if we've already synced rooms for this convData
   const syncedConvIdsRef = useRef<string[]>([]);
+  const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
     if (!token) {
       disconnectSocket();
       syncedConvIdsRef.current = [];
+      socketRef.current = null;
       return;
     }
 
     const socket = getSocket(token);
     if (!socket) return;
+    socketRef.current = socket;
 
-    // Check if we've already attached listeners to this socket
-    const listenersAttached = (socket as any)._listenersAttached;
-    if (listenersAttached) {
-      // Listeners already attached, just sync rooms on connect if needed
+    if (attachedSockets.has(socket)) {
       if (socket.connected && convData?.data) {
         const convIds = convData.data.map(c => c.id);
         const newConvIds = convIds.filter(id => !syncedConvIdsRef.current.includes(id));
@@ -101,8 +103,7 @@ export function useChatSocket() {
       return;
     }
 
-    // Mark that listeners are attached
-    (socket as any)._listenersAttached = true;
+    attachedSockets.add(socket);
 
     const syncAfterConnect = () => {
       console.log('[Chat Socket UI] Syncing after connection');
@@ -110,7 +111,6 @@ export function useChatSocket() {
       const cached =
         chatApi.endpoints.getConversations.select()(state)?.data?.data || [];
 
-      // Only join rooms that haven't been joined yet (check both syncedConvIdsRef and socket module)
       const convIds = cached.map(c => c.id);
       const newConvIds = convIds.filter(id =>
         !syncedConvIdsRef.current.includes(id) && !isRoomJoined(id)
@@ -207,14 +207,12 @@ export function useChatSocket() {
         chatApi.endpoints.getMessages.select(queryArgs)(store.getState())?.data,
       );
 
-      // Update cache
       dispatch(
         chatApi.util.updateQueryData('getMessages', queryArgs, draft => {
           if (!draft) return;
           if (!draft.data) draft.data = [];
 
           if (me?.id === senderId) {
-            // Remove optimistic temp message
             draft.data = draft.data.filter(message => !message.id?.startsWith('temp_'));
           }
 
@@ -243,7 +241,6 @@ export function useChatSocket() {
         );
       }
 
-      // Update conversations preview list in sidebar
       let isNewConv = true;
       dispatch(
         chatApi.util.updateQueryData('getConversations', undefined, draft => {
@@ -267,15 +264,12 @@ export function useChatSocket() {
         }),
       );
 
-      // Invalidate tags so UI updates completely
-      // If it's a new conversation or we need general refetch, invalidate the broad 'Chat' tag
       if (isNewConv) {
         dispatch(chatApi.util.invalidateTags(['Chat']));
       } else {
         dispatch(chatApi.util.invalidateTags([{ type: 'Chat', id: conversationId }]));
       }
 
-      // Handle notification
       if (me?.id !== senderId) {
         dispatch(
           addNotification({
@@ -310,17 +304,13 @@ export function useChatSocket() {
       dispatch(chatApi.util.invalidateTags(['Chat']));
     };
 
-    // Attach listeners only once
     socket.on('connect', syncAfterConnect);
     socket.on('message', handleMessage);
     socket.on('conversation', handleConversation);
 
-    // Only call syncAfterConnect if not already connected (let the connect event handle it)
     if (!socket.connected) {
       // Socket will connect and trigger syncAfterConnect
     } else {
-      // Already connected, but listeners were just attached
-      // Call syncAfterConnect to join rooms since we haven't synced yet
       syncAfterConnect();
     }
 
@@ -329,15 +319,14 @@ export function useChatSocket() {
       socket.off('connect', syncAfterConnect);
       socket.off('message', handleMessage);
       socket.off('conversation', handleConversation);
-      (socket as any)._listenersAttached = false;
+      attachedSockets.delete(socket);
+      socketRef.current = null;
     };
   }, [token, dispatch]);
 
-  // Separate effect to sync conversations when they load, but avoid duplicates
   useEffect(() => {
     if (!token || !convData?.data?.length) return;
 
-    // Only join rooms that haven't been synced yet and are not already joined in socket module
     const convIds = convData.data.map(conv => conv.id);
     const newConvIds = convIds.filter(id =>
       !syncedConvIdsRef.current.includes(id) && !isRoomJoined(id)
@@ -348,6 +337,12 @@ export function useChatSocket() {
       joinRooms(newConvIds);
       syncedConvIdsRef.current = [...syncedConvIdsRef.current, ...newConvIds];
     }
+
+    return () => {
+      if (!socketRef.current?.connected) {
+        syncedConvIdsRef.current = [];
+      }
+    };
   }, [convData, token]);
 }
 
