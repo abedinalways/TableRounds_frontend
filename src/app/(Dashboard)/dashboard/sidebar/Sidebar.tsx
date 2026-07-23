@@ -8,6 +8,8 @@ import { usePathname, useRouter } from 'next/navigation';
 import { X } from 'lucide-react';
 import OmsLogo from '@/components/reusable/icons/OmsLogo';
 import Cookies from 'js-cookie';
+import { useAppDispatch } from '@/app/redux/hook';
+import { clearUser } from '@/app/redux/authSlice';
 
 import ResetBankModal from '@/components/reset-bank/ResetModal';
 
@@ -25,6 +27,7 @@ export default function Sidebar({
 }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const role = Cookies.get('role');
   const menu: MenuItem[] = role === 'admin' ? adminMenu : userMenu;
@@ -59,8 +62,7 @@ export default function Sidebar({
   };
 
   const handleLogout = () => {
-    Cookies.remove('token');
-    Cookies.remove('role');
+    dispatch(clearUser());
     router.replace('/login');
   };
 

@@ -5,7 +5,7 @@
 import React, { createContext, useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { type AppDispatch, type RootState } from '@/app/redux/store';
-import { joinConversation, useChatSocket } from '@/app/redux/api/chat/useChatSocket';
+import { useChatSocket } from '@/app/redux/api/chat/useChatSocket';
 import {
   useGetConversationsQuery,
   useGetMessagesQuery,
@@ -79,7 +79,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   // Fetch messages for the active conversation on demand
   const { data: messagesData } = useGetMessagesQuery(
     { conversationId: conversationId ?? '', limit: 20 },
-    { 
+    {
       skip: !conversationId,
     },
   );
@@ -97,12 +97,8 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     }
   }, [conversationIdFromUrl, activeConversationId, dispatch]);
 
-  // Join socket room when active conversation changes
-  useEffect(() => {
-    if (!conversationId) return;
-    joinConversation(conversationId);
-  }, [conversationId]);
-
+  // Note: Socket room joining is handled by useChatSocket via convData loading
+  // No need to manually join rooms here
   /**
    * Start Conversation Logic
    */
@@ -135,7 +131,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       const newConversationId = response.data.id;
       dispatch(setActiveConversation(newConversationId));
       return newConversationId;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error('Start Conversation Error:', error);
       throw error;

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/app/redux/store';
 
-import { ChatProvider } from '@/app/(Dashboard)/context/ChatContext';
+
 import MessageListSection from '@/components/admin-message/MessageListSection';
 import UserListSection from '@/components/admin-message/UserListSection'; 
 import { MessageSquare, Users } from 'lucide-react';
@@ -18,7 +18,6 @@ export default function ChatLayout({ children }: React.PropsWithChildren) {
   );
 
   return (
-    <ChatProvider>
       <section className="grid md:h-[calc(100dvh-190px)] grid-cols-12 md:gap-4 font-[manrope]">
         {/* Main Chat Area */}
         <div className="md:h-[calc(100dvh-100px)] md:col-span-9 col-span-12 bg-white md:p-6 p-2 md:grid md:grid-rows-[100px_1fr_86px] rounded-2xl shadow-lg border border-gray-100">
@@ -78,6 +77,5 @@ export default function ChatLayout({ children }: React.PropsWithChildren) {
           </div>
         </aside>
       </section>
-    </ChatProvider>
   );
 }
