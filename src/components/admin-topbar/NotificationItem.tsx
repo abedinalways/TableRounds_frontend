@@ -145,7 +145,7 @@ export function NotificationItem({ notification, onDelete, onClick }: Props) {
       {/* Avatar */}
       <div className="relative shrink-0 mt-0.5">
         <Image
-          src={notification?.user?.avatar_url || '/images/footer_logo.png'}
+          src={notification.user.avatar || '/images/footer_logo.png'}
           width={38}
           height={38}
           alt={notification.user.name}

@@ -16,8 +16,8 @@ interface TopbarProps {
 }
 
 export default function Topbar({ onMenuClick }: TopbarProps = {}) {
-  // Poll every 30 seconds so users who were offline catch up on missed notifications
-  useGetAdminNotificationsQuery(undefined, { pollingInterval: 30000 });
+  // Load once; new notifications are delivered through the shared socket.
+  useGetAdminNotificationsQuery();
 
   const { data: user } = useMeQuery();
   const role = useAppSelector(state => state.auth.auth.role) || user?.type;
