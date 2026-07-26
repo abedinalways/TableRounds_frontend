@@ -33,18 +33,17 @@ export default function RegisterPage() {
           alt=""
           width={486}
           height={486}
-          className="absolute -top-14 left-5"
+          className="hidden md:block absolute -top-14 left-5"
         />
       </div>
 
-      <div className="text-center py-6 text-black font-[manrope]">
-        <h3 className="text-xl md:text-3xl lg:text-5xl font-bold">
+      <div className="text-center px-4 py-6 text-black font-[manrope]">
+        <h3 className="text-2xl md:text-3xl lg:text-5xl font-bold">
           Create your TableRounds profile
         </h3>
-        <p className="text-sm md:text-md text-gray-600 mt-4">
+        <p className="text-sm md:text-base text-gray-600 mt-4 max-w-2xl mx-auto">
           Join a verified network of surgeons and trainees. We manually review
-          every <br />
-          account to keep the community authentic and professional.
+          every account to keep the community authentic and professional.
         </p>
       </div>
 
