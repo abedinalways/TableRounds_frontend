@@ -25,6 +25,7 @@ import { Country, State } from 'country-state-city';
 
 import { toast } from 'sonner';
 import { RegisterPayload } from '@/app/redux/api/registerApi';
+import FileUpload from '../reusable/FileUpload';
 
 
 
@@ -178,14 +179,14 @@ export default function SignUpForm({
   const [showCreatePassword, setShowCreatePassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   return (
-    <div className="z-40  font-[manrope] py-6 mb-12">
+    <div className="z-40 font-[manrope] py-6 mb-12 px-4">
       <div
-        className="custom-container p-6 md:p-8 mx-auto gradient-bg rounded-md backdrop-blur  
+        className="custom-container w-full p-6 md:p-8 mx-auto gradient-bg rounded-md backdrop-blur  
 opacity-xl font-[manrope]"
       >
-        <div className="md:flex justify-between gap-10">
+        <div className="flex flex-col lg:flex-row justify-between gap-10">
           {/* Left Column - Credentials */}
-          <div className="space-y-1   rounded-lg">
+          <div className="space-y-1 w-full rounded-lg">
             <div className="space-y-[20px]">
               <div>
                 <Label
@@ -199,7 +200,7 @@ opacity-xl font-[manrope]"
                   placeholder="Enter your full name"
                   value={formData.name}
                   onChange={e => handleInputChange('name', e.target.value)}
-                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 rounded-[8px] md:w-[644px] md:h-[61px] placeholder:text-[18px]"
+                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-10 rounded-[8px] w-full lg:w-[644px] md:h-[61px] placeholder:text-[18px]"
                 />
                 {errors.name && (
                   <p className="text-red-300 text-xs mt-1">{errors.name}</p>
@@ -220,7 +221,7 @@ opacity-xl font-[manrope]"
                   onChange={e =>
                     handleInputChange('credentials', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-10 placeholder:text-[18px] rounded-[8px] w-full lg:w-[644px] md:h-[61px]"
                 />
                 {errors.credentials && (
                   <p className="text-red-300 text-xs mt-1">
@@ -243,7 +244,7 @@ opacity-xl font-[manrope]"
                   placeholder="Enter your email"
                   value={formData.email}
                   onChange={e => handleInputChange('email', e.target.value)}
-                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-10 placeholder:text-[18px] rounded-[8px] w-full lg:w-[644px] md:h-[61px]"
                 />
                 {errors.email && (
                   <p className="text-red-300 text-xs mt-1">{errors.email}</p>
@@ -258,7 +259,7 @@ opacity-xl font-[manrope]"
                   Create Password <span className="text-red-600">*</span>
                 </Label>
 
-                <div className="relative mt-1 w-full md:w-[644px]">
+                <div className="relative mt-1 w-full lg:w-[644px]">
                   <Input
                     id="createPassword"
                     type={showCreatePassword ? 'text' : 'password'}
@@ -267,7 +268,7 @@ opacity-xl font-[manrope]"
                     onChange={e =>
                       handleInputChange('createPassword', e.target.value)
                     }
-                    className="bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:h-[61px] pr-12"
+                    className="bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-10 placeholder:text-[18px] rounded-[8px] w-full md:h-[61px] pr-12"
                   />
 
                   <button
@@ -301,7 +302,7 @@ opacity-xl font-[manrope]"
                   Confirm Password <span className="text-red-600">*</span>
                 </Label>
 
-                <div className="relative mt-1 w-full md:w-[644px]">
+                <div className="relative mt-1 w-full lg:w-[644px]">
                   <Input
                     id="confirmPassword"
                     type={showConfirmPassword ? 'text' : 'password'}
@@ -310,7 +311,7 @@ opacity-xl font-[manrope]"
                     onChange={e =>
                       handleInputChange('confirmPassword', e.target.value)
                     }
-                    className="bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:h-[61px] pr-12"
+                    className="bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-10 placeholder:text-[18px] rounded-[8px] w-full md:h-[61px] pr-12"
                   />
 
                   <button
@@ -352,7 +353,7 @@ opacity-xl font-[manrope]"
                 >
                   <SelectTrigger
                     size="xl"
-                    className="mt-2  bg-[#1C765E] border-none md:p-4 rounded-[8px] cursor-pointer text-white text-[18px]! [&>span]:text-white [&_[data-placeholder]]:text-white [&_svg]:opacity-100 placeholder:text-[18px] rounded-[8px] md:w-[644px] w-[225px]"
+                    className="mt-2 bg-[#1C765E] border-none md:p-4 rounded-[8px] cursor-pointer text-white text-[18px]! [&>span]:text-white [&_[data-placeholder]]:text-white [&_svg]:opacity-100 placeholder:text-[18px] rounded-[8px] w-full lg:w-[644px]"
                   >
                     <SelectValue placeholder="Student, PGY, Attending" />
                   </SelectTrigger>
@@ -413,7 +414,7 @@ opacity-xl font-[manrope]"
                 >
                   <SelectTrigger
                     size="xl"
-                    className="mt-2  bg-[#1C765E] border-none md:p-4 rounded-[8px] cursor-pointer text-white text-[18px]! [&>span]:text-white [&_[data-placeholder]]:text-white [&_svg]:opacity-100 placeholder:text-[18px] rounded-[8px] md:w-[644px] w-[225px]"
+                    className="mt-2 bg-[#1C765E] border-none md:p-4 rounded-[8px] cursor-pointer text-white text-[18px]! [&>span]:text-white [&_[data-placeholder]]:text-white [&_svg]:opacity-100 placeholder:text-[18px] rounded-[8px] w-full lg:w-[644px]"
                   >
                     <SelectValue placeholder="Select a specialty" />
                   </SelectTrigger>
@@ -463,7 +464,7 @@ opacity-xl font-[manrope]"
                     handleInputChange('state', ''); // reset state
                   }}
                 >
-                  <SelectTrigger className="mt-2 bg-[#1C765E] border-none rounded-[8px] text-white md:w-[644px] py-6 data-[placeholder]:!text-white [&_svg]:text-white">
+                  <SelectTrigger className="mt-2 bg-[#1C765E] border-none rounded-[8px] text-white w-full lg:w-[644px] py-6 data-[placeholder]:!text-white [&_svg]:text-white">
                     <SelectValue placeholder="Select country" />
                   </SelectTrigger>
 
@@ -482,7 +483,7 @@ opacity-xl font-[manrope]"
                   onValueChange={value => handleInputChange('state', value)}
                   disabled={!formData.country}
                 >
-                  <SelectTrigger className="mt-3 bg-[#1C765E] border-none rounded-[8px] text-white md:w-[644px] py-6 data-[placeholder]:!text-white [&_svg]:text-white">
+                  <SelectTrigger className="mt-3 bg-[#1C765E] border-none rounded-[8px] text-white w-full lg:w-[644px] py-6 data-[placeholder]:!text-white [&_svg]:text-white">
                     <SelectValue placeholder="Select Region/State" />
                   </SelectTrigger>
 
@@ -517,7 +518,7 @@ opacity-xl font-[manrope]"
                   onChange={e =>
                     handleInputChange('currentPractice', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-10 placeholder:text-[18px] rounded-[8px] w-full lg:w-[644px] md:h-[61px]"
                 />
               </div>
 
@@ -533,7 +534,7 @@ opacity-xl font-[manrope]"
                   placeholder="Enter a brief bio about yourself"
                   value={formData.bio}
                   onChange={e => handleInputChange('bio', e.target.value)}
-                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-10 placeholder:text-[18px] rounded-[8px] w-full lg:w-[644px] md:h-[61px]"
                 />
               </div>
 
@@ -551,7 +552,7 @@ opacity-xl font-[manrope]"
                   onChange={e =>
                     handleInputChange('instagramUrl', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-10 placeholder:text-[18px] rounded-[8px] w-full lg:w-[644px] md:h-[61px]"
                 />
               </div>
 
@@ -569,7 +570,7 @@ opacity-xl font-[manrope]"
                   onChange={e =>
                     handleInputChange('linkedinUrl', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-10 placeholder:text-[18px] rounded-[8px] w-full lg:w-[644px] md:h-[61px]"
                 />
               </div>
 
@@ -587,7 +588,7 @@ opacity-xl font-[manrope]"
                   onChange={e =>
                     handleInputChange('twitterUrl', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-10 placeholder:text-[18px] rounded-[8px] w-full lg:w-[644px] md:h-[61px]"
                 />
               </div>
 
@@ -605,35 +606,14 @@ opacity-xl font-[manrope]"
                   onChange={e =>
                     handleInputChange('facebookUrl', e.target.value)
                   }
-                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-9 placeholder:text-[18px] rounded-[8px] md:w-[644px] md:h-[61px]"
+                  className="mt-1 bg-[#1C765E] border-none text-white text-[18px]! placeholder:text-[#F9FAFB7D] h-10 placeholder:text-[18px] rounded-[8px] w-full lg:w-[644px] md:h-[61px]"
                 />
               </div>
             </div>
           </div>
 
           {/* Right Column - Upload & Verification */}
-          <div className="space-y-6 md:p-6 flex flex-col ">
-            {/* Terms and Submit */}
-            <div className="mt-6 flex  items-center   gap-4 mx-6 space-x-6">
-              {/* submit button */}
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={isLoading}
-                className="bg-[#B79E6B] text-white hover:bg-[#a08c5f] transition-colors rounded-[8px] px-[24px] py-[14px]  w-full  h-[54px] font-medium cursor-pointer"
-              >
-                {isLoading ? 'Submitting...' : 'Submit'}
-              </button>
-              {/* <Link href='/login'>
-                  <button
-                    type="button"
-                    className="bg-white text-[#b79e6b] font-medium    hover:bg-white transition-colors rounded-[8px] px-[24px] py-[14px] w-[168px] h-[54px] cursor-pointer"
-                    onClick={onCancel}
-                  >
-                    Sign In
-                  </button>
-                </Link> */}
-            </div>
+          <div className="space-y-6 lg:p-6 flex flex-col w-full lg:w-auto">
             <div className=" border-none mt-2">
               <CardHeader>
                 <CardTitle className="text-white text-sm md:text-[18px]">
@@ -641,45 +621,14 @@ opacity-xl font-[manrope]"
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="border-2 border-dashed border-[#22BA92] bg-[#1C765E] rounded-lg py-8  text-center">
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
-                      <CloudUpload className="w-8 h-8 text-teal-700" />
-                    </div>
-                    <div className="text-white">
-                      <p className="text-white text-md md:text-[20px] font-semibold">
-                        Upload your professional headshot
-                      </p>
-                      <p className="text-xs md:text-sm text-teal-200">
-                        Supported format: JPG / PNG (up to 5 mb)
-                      </p>
-                    </div>
-                    <label htmlFor="profilePhoto">
-                      <Button
-                        type="button"
-                        className="bg-[#B79E6B] text-white w-fit h-10 hover:bg-[#a08c5f] transition-colors rounded-[8px] px-[32px] py-[14px] w-[150px] h-[54px] cursor-pointer"
-                        asChild
-                      >
-                        <span>Choose File</span>
-                      </Button>
-                      <input
-                        id="profilePhoto"
-                        type="file"
-                        className="hidden"
-                        accept="image/*"
-                        onChange={e =>
-                          handleFileUpload('photo', e.target.files?.[0] || null)
-                        }
-                      />
-                    </label>
-                    {profilePhoto && (
-                      <p className="text-teal-100 text-sm flex items-center gap-2">
-                        <CheckCircle2 className="w-4 h-4" />
-                        {profilePhoto.name}
-                      </p>
-                    )}
-                  </div>
-                </div>
+                <FileUpload
+                  id="profilePhoto"
+                  label="Upload your professional headshot"
+                  description="Supported format: JPG / PNG (up to 5 mb)"
+                  supportedFormats="Supported format: JPG / PNG (up to 5 mb)"
+                  selectedFile={profilePhoto}
+                  onFileSelect={file => handleFileUpload('photo', file)}
+                />
               </CardContent>
             </div>
 
@@ -690,51 +639,18 @@ opacity-xl font-[manrope]"
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="border-2 border-dashed border-[#22BA92] bg-[#1C765E] rounded-lg py-8 text-center">
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
-                      <CloudUpload className="w-8 h-8 text-teal-700" />
-                    </div>
-                    <div className="text-white">
-                      <p className="text-white text-md md:text-[20px] font-semibold">
-                        Upload verification document
-                      </p>
-                      <p className="text-xs md:text-sm text-teal-200">
-                        Supported format: JPG / PNG (up to 5 mb)
-                      </p>
-                    </div>
-                    <label htmlFor="verificationDoc">
-                      <Button
-                        type="button"
-                        className="bg-[#B79E6B] text-white w-fit h-10 hover:bg-[#a08c5f] transition-colors rounded-[8px] px-[32px] py-[14px] w-[150px] h-[54px] cursor-pointer"
-                        asChild
-                      >
-                        <span>Choose File</span>
-                      </Button>
-                      <input
-                        id="verificationDoc"
-                        type="file"
-                        className="hidden"
-                        onChange={e =>
-                          handleFileUpload(
-                            'document',
-                            e.target.files?.[0] || null,
-                          )
-                        }
-                      />
-                    </label>
-                    {verificationDoc && (
-                      <p className="text-teal-100 text-sm flex items-center gap-2">
-                        <CheckCircle2 className="w-4 h-4" />
-                        {verificationDoc.name}
-                      </p>
-                    )}
-                  </div>
-                </div>
+                <FileUpload
+                  id="verificationDoc"
+                  label="Upload verification document"
+                  description="Supported format: JPG / PNG (up to 5 mb)"
+                  supportedFormats="Supported format: JPG / PNG (up to 5 mb)"
+                  selectedFile={verificationDoc}
+                  onFileSelect={file => handleFileUpload('document', file)}
+                />
               </CardContent>
             </div>
 
-            <Card className="bg-[#F9F9F5] border-[#EFE8E8] mx-[22px]">
+            <Card className="bg-[#F9F9F5] border-[#EFE8E8] mx-0">
               <CardHeader>
                 <CardTitle className="text-teal-900 font-bold">
                   Verify your identity
@@ -803,6 +719,19 @@ opacity-xl font-[manrope]"
                 </div>
               </CardContent>
             </Card>
+
+            {/* Terms and Submit */}
+            <div className="mt-6 flex items-center gap-4 px-0">
+              {/* submit button */}
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={isLoading}
+                className="bg-[#B79E6B] text-white hover:bg-[#a08c5f] transition-colors rounded-[8px] px-6 py-3 w-full h-[54px] font-medium cursor-pointer"
+              >
+                {isLoading ? 'Submitting...' : 'Submit'}
+              </button>
+            </div>
           </div>
         </div>
       </div>
