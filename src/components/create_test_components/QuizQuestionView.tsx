@@ -432,7 +432,7 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
         testId={testId}
       />
 
-      <div className="background rounded-md grid grid-cols-1 md:grid-cols-12">
+      <div className="background rounded-md grid grid-cols-1 lg:grid-cols-12 gap-4 p-2 md:p-4  min-h-[400px]">
         <QuestionSidebar
           totalQuestions={totalQuestions}
           currentQuestion={currentQuestion}
@@ -441,10 +441,10 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
           onJumpTo={onJumpTo}
         />
 
-        <div className="col-span-11 mx-4 min-w-0">
+        <div className="md:col-span-11 mx-4 min-w-0">
           <div className="w-full overflow-auto">
             <div
-              className="flex flex-col md:flex-row gap-6 min-w-0 items-start"
+              className="flex flex-col lg:flex-row gap-6 w-full min-w-0 items-start"
               style={{
                 transform: `scale(${zoomLevel})`,
                 transformOrigin: 'top left',
