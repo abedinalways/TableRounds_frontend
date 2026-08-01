@@ -47,7 +47,7 @@ export default function Topbar({ onMenuClick }: TopbarProps = {}) {
       {onMenuClick && (
         <button
           onClick={onMenuClick}
-          className="lg:hidden p-2 hover:bg-gray-100 rounded-md"
+          className="xl:hidden p-2 hover:bg-gray-100 rounded-md"
         >
           <Menu className="w-5 h-5 text-gray-700" />
         </button>
