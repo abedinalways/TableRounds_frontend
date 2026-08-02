@@ -6,6 +6,7 @@ import { ReactNode } from 'react';
 import Topbar from '../topbar/Topbar';
 
 import Sidebar from '../sidebar/Sidebar';
+import Chatbot from '@/components/chatbot/Chatbot';
 
 
 interface UserLayoutProps {
@@ -34,6 +35,8 @@ export default function UserLayout({ children }: UserLayoutProps) {
         <Topbar onMenuClick={() => setOpen(true)} />
         <main className="p-4 sm:p-6 overflow-auto flex-1">{children}</main>
       </div>
+
+      <Chatbot />
     </div>
     
   );
