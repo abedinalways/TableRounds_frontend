@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Check, Loader2 } from 'lucide-react';
+import { Check, DollarSign, DollarSignIcon, Loader2, LucideDollarSign } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   useGetUserSubscriptionPlansQuery,
   useBuySubscriptionMutation,
 } from '@/app/redux/api/userFinancialApi';
+import { FaDollarSign } from 'react-icons/fa6';
 
 export default function UserSubscriptionTab() {
  
@@ -60,7 +61,6 @@ export default function UserSubscriptionTab() {
           key={plan.id}
           className="relative flex flex-col justify-between bg-white border border-gray-100 rounded-2xl p-6 shadow-xs min-h-[460px] w-full max-w-[320px]"
         >
-         
           {plan.name.toLowerCase().includes('professional') && (
             <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#bfa122] text-white text-[10px] font-bold px-4 py-1 rounded-full uppercase tracking-wider">
               Popular Plan
@@ -71,8 +71,14 @@ export default function UserSubscriptionTab() {
             <div className="text-center mt-3 space-y-4">
               <p className="text-sm font-semibold text-gray-700">{plan.name}</p>
               <div className="flex items-baseline justify-center gap-0.5">
-                <span className="text-4xl font-bold text-gray-900">
-                  £{Number(plan.price || 0).toFixed(2)}
+                <span className="text-4xl font-bold text-gray-900 flex items-center gap-1">
+                  <img
+                    width="32"
+                    height="32"
+                    src="https://img.icons8.com/material-outlined/48/us-dollar--v1.png"
+                    alt="us-dollar--v1"
+                  />{' '}
+                  {Number(plan.price || 0).toFixed(2)}
                 </span>
                 <span className="text-xs text-gray-400">
                   /{plan.billing_period}
