@@ -24,7 +24,7 @@ export default function UpdatePlansForm({
   const [updatePlan, { isLoading: isUpdating }] =
     useUpdateSubscriptionPlanMutation();
 
-  // ইনসোমনিয়া রিকোয়েস্ট বডি অনুযায়ী স্টেট ম্যানেজমেন্ট
+ 
   const [planName, setPlanName] = useState('New Custom Plan');
   const [planType, setPlanType] = useState<PlanType>(PlanType.MONTHLY);
   const [price, setPrice] = useState('45.00');
@@ -60,7 +60,7 @@ export default function UpdatePlansForm({
     }
   }, [editingPlan]);
 
-  // প্ল্যান টাইপ পরিবর্তনের সাথে সাথে অটোমেটিক নাম সিঙ্ক হওয়া
+ 
   const handleTypeChange = (type: PlanType) => {
     setPlanType(type);
     if (!editingPlan) {
@@ -83,14 +83,14 @@ export default function UpdatePlansForm({
   const handleSave = async () => {
     const finalPeriod = planType === PlanType.PAY_AS_YOU_GO ? 'post' : period;
 
-    // এপিআই টাইপস্ক্রিপ্ট রিকোয়েস্ট ডেটার সাথে ১০০% ম্যাচিং অবজেক্ট
+    
     const payload = {
       name: planName,
       type: planType,
       price: parseFloat(price) || 0,
       billing_period: finalPeriod,
       isPopular,
-      benefits: benefits, // পিওর স্ট্রিং অ্যারে string[]
+      benefits: benefits, 
     };
 
     try {
@@ -162,7 +162,14 @@ export default function UpdatePlansForm({
         <div className="space-y-1.5">
           <label className="text-xs font-semibold text-gray-500">Price</label>
           <div className="flex items-center border border-gray-200 rounded-xl px-3 py-2.5 focus-within:border-[#01503b] transition-all">
-            <span className="text-sm text-gray-500 mr-1">£</span>
+            <span className="text-sm text-gray-500 mr-1">
+              <img
+                width="16"
+                height="16"
+                src="https://img.icons8.com/material-outlined/48/us-dollar--v1.png"
+                alt="us-dollar--v1"
+              />{' '}
+            </span>
             <input
               type="number"
               value={price}

@@ -4,7 +4,7 @@ import React from 'react';
 import { DollarSign, Calendar, Clock } from 'lucide-react';
 import { useGetStatsQuery } from '@/app/redux/api/overviewStatsApi';
 
-// স্ট্যাটসের জন্য সঠিক টাইপ ডিফাইন
+
 interface FinancialStatsData {
   totalRevenue: number;
   yearlyPlansRevenue: number;
@@ -12,7 +12,7 @@ interface FinancialStatsData {
 }
 
 export default function StatsCards() {
-  // কুয়েরি রেসপন্সকে ফিন্যান্সিয়াল স্ট্যাটস ডেটা হিসেবে টাইপ কাস্ট করা হলো
+
   const { data, isLoading } = useGetStatsQuery();
   const stats = data as FinancialStatsData | undefined;
 

@@ -7,7 +7,7 @@ import SubscriptionPlans from './SubscriptionPlans';
 import UpdatePlansForm from './UpdatePlansForm';
 import BillingHistory from './BillingHistory';
 
-// আপনার এপিআই ফাইল থেকে সঠিক প্ল্যান ইন্টারফেসটি ইম্পোর্ট করুন
+
 import { BackendPlanData } from '@/app/redux/api/financialApi';
 
 type TabType = 'subscription' | 'update' | 'history';

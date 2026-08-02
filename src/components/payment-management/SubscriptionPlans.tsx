@@ -41,7 +41,6 @@ export default function SubscriptionPlans({
 
           <div>
             <div className="text-center mt-3 space-y-4">
-              
               <p className="text-sm font-semibold text-gray-700">
                 {plan.name ||
                   (plan.type === 'PAY_AS_YOU_GO'
@@ -49,8 +48,14 @@ export default function SubscriptionPlans({
                     : 'Monthly Professional')}
               </p>
               <div className="flex items-baseline justify-center gap-0.5">
-                <span className="text-4xl font-bold text-gray-900">
-                  £{Number(plan.price || 0).toFixed(2)}
+                <span className="text-4xl font-bold text-gray-900 flex items-center gap-1">
+                  <img
+                    width="32"
+                    height="32"
+                    src="https://img.icons8.com/material-outlined/48/us-dollar--v1.png"
+                    alt="us-dollar--v1"
+                  />{' '}
+                  {Number(plan.price || 0).toFixed(2)}
                 </span>
                 <span className="text-xs text-gray-400">
                   /{plan.billing_period === 'post' ? 'post' : 'month'}
@@ -63,7 +68,6 @@ export default function SubscriptionPlans({
                 Core includes
               </p>
               <ul className="space-y-3.5">
-                {/* স্ক্রিনশট ম্যাচিং: বেনিফিট এখন সরাসরি স্ট্রিং এর অ্যারে */}
                 {plan.benefits?.map((benefit, index) => (
                   <li
                     key={index}
