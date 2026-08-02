@@ -94,7 +94,7 @@ export const userMenu: MenuItem[] = [
     title: 'Payment & Billing',
     href: '/dashboard/user/payment',
     icon: '/images/dashboard/img33.png',
-    disabled: false,
+    disabled: true,
   },
   {
     title: 'Messages',
