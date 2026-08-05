@@ -19,7 +19,7 @@ export const WelcomeBanner = () => {
   const [modalType, setModalType] = useState<'follower' | 'following'>(
     'follower',
   );
-  const { data: value } = useMeQuery(); 
+  const { data: value } = useMeQuery();
   // console.log(value, "----------------------wefwfwfwfwefffffffff")
   const [toggleFollow] = useToggleFollowMutation();
   const { data: connectionsData, isLoading } = useGetConnectionsQuery(
@@ -50,10 +50,10 @@ export const WelcomeBanner = () => {
         filter: 'blur(0px)',
         duration: 0.55,
         ease: 'power3.out',
-        stagger: 0.12, 
+        stagger: 0.12,
       },
     );
-  }, [user?.name]); 
+  }, [user?.name]);
 
   const formattedDate = new Date().toLocaleDateString('en-US', {
     month: 'long',
@@ -68,7 +68,6 @@ export const WelcomeBanner = () => {
       ? new URL(user.avatar).href
       : '/images/navbar-logo.png';
 
-  
   const words = ['Welcome,', ...(user?.name ?? '').split(' ')];
 
   return (
@@ -77,13 +76,13 @@ export const WelcomeBanner = () => {
         <div className="md:flex items-center justify-evenly py-4 relative z-10">
           {/* Avatar */}
           <div className="flex  md:items-center items-start gap-4">
-            <div className="rounded-full border-4 border-[#B79E6B] w-fit">
+            <div className="rounded-full border-4 border-[#B79E6B] w-fit shrink-0">
               <Image
                 src={avatar}
                 width={160}
                 height={160}
                 alt=""
-                className="rounded-full object-cover aspect-square"
+                className="rounded-full object-cover aspect-square shrink-0"
                 unoptimized
               />
             </div>
@@ -95,6 +94,8 @@ export const WelcomeBanner = () => {
                 width={138}
                 height={138}
                 alt="doctor"
+                className="shrink-0"
+                style={{ width: 'auto', height: 'auto' }}
               />
             </div>
             <div></div>
@@ -215,6 +216,8 @@ export const WelcomeBanner = () => {
               width={138}
               height={138}
               alt="doctor"
+              className="shrink-0"
+              style={{ width: 'auto', height: 'auto' }}
             />
           </div>
         </div>

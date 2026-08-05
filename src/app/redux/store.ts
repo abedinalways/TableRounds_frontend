@@ -82,7 +82,7 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
-import storage from 'redux-persist/lib/storage'; // Use localStorage for persistence
+import { storage } from '@/lib/reduxStorage'; // SSR-safe storage (avoids localStorage warning during SSR)
 import { combineReducers } from 'redux'; // Ensure reducers are combined
 import authReducer from './authSlice';
 import chatReducer from './api/chat/chatSlice';

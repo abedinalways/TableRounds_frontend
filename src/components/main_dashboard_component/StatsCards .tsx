@@ -16,13 +16,14 @@ const StatsCards = () => {
       <Card className="border rounded-xl shadow-sm p-4 bg-white hover:scale-[1.02] transition-transform duration-300 cursor-pointer">
         <CardContent className="p-0">
           <div className="flex items-center gap-3">
-            <div className="icon-bg rounded-full w-[54px] h-[54px] flex items-center justify-center">
+            <div className="icon-bg rounded-full w-[54px] h-[54px] flex items-center justify-center shrink-0">
               <Image
                 src="/images/dashboard/main_dashboard/card001.png"
                 width={32}
                 height={32}
                 alt=""
-                className=""
+                className="shrink-0"
+                style={{ width: 'auto', height: 'auto' }}
               />
             </div>
             <h2 className="text-sm font-medium text-gray-600">
@@ -41,13 +42,14 @@ const StatsCards = () => {
       <Card className="border rounded-xl shadow-sm p-4 bg-white hover:scale-[1.02] transition-transform duration-300 cursor-pointer">
         <CardContent className="p-0">
           <div className="flex items-center gap-3">
-            <div className="icon-bg rounded-full w-[54px] h-[54px] flex items-center justify-center">
+            <div className="icon-bg rounded-full w-[54px] h-[54px] flex items-center justify-center shrink-0">
               <Image
                 src="/images/dashboard/main_dashboard/card002.png"
                 width={32}
                 height={32}
                 alt=""
-                className=""
+                className="shrink-0"
+                style={{ width: 'auto', height: 'auto' }}
               />
             </div>
             <h2 className="text-sm font-medium text-gray-600">
@@ -66,13 +68,14 @@ const StatsCards = () => {
       <Card className="border rounded-xl shadow-sm p-4 bg-white hover:scale-[1.02] transition-transform duration-300 cursor-pointer">
         <CardContent className="p-0">
           <div className="flex items-center gap-3">
-            <div className="icon-bg rounded-full w-[54px] h-[54px] flex items-center justify-center">
+            <div className="icon-bg rounded-full w-[54px] h-[54px] flex items-center justify-center shrink-0">
               <Image
                 src="/images/dashboard/main_dashboard/card003.png"
                 width={32}
                 height={32}
                 alt=""
-                className=""
+                className="shrink-0"
+                style={{ width: 'auto', height: 'auto' }}
               />
             </div>
             <h2 className="text-sm font-medium text-gray-600">Total Tests</h2>

@@ -1,110 +1,81 @@
+/**
+ * Socket.IO Client Manager
+ * 
+ * Features:
+ * - WebSocket-first with polling fallback
+ * - JWT authentication via headers
+ * - Room management for chat
+ * - Auto-reconnection with cleanup
+ * - Singleton pattern for single socket instance
+ * - Room join queue for when socket is disconnected
+ * - Exponential backoff for server-initiated disconnects
+ */
+
 import { io, Socket } from 'socket.io-client';
 
+// ============================================
+// Singleton Socket Instance
+// ============================================
+
 let socket: Socket | null = null;
-let socketToken: string | null = null;
-const pendingJoins = new Set<string>();
-const joinedRooms = new Set<string>(); // Track rooms already joined
+let currentToken: string | null = null;
 
-const roomJoinPayload = (conversationId: string) => ({
-  room_id: conversationId,
-  conversation_id: conversationId,
-});
+// Track joined rooms to prevent duplicate joins
+const activeRooms = new Set<string>();
 
-function emitJoinRoom(sock: Socket, conversationId: string) {
-  const payload = roomJoinPayload(conversationId);
-  console.log(`[Chat Socket] Emitting joinRoom for room: ${conversationId}`);
-  sock.emit('joinRoom', payload);
-}
+// Track rooms that need to be joined when the socket connects
+const pendingRooms = new Set<string>();
 
-function flushPendingJoins(sock: Socket) {
-  console.log(`[Chat Socket] Flushing ${pendingJoins.size} pending joins`);
-  const idsToJoin: string[] = [];
-  pendingJoins.forEach(id => {
-    if (!joinedRooms.has(id)) {
-      joinedRooms.add(id);
-      idsToJoin.push(id);
-    }
-  });
-  pendingJoins.clear();
+// Track reconnection attempts for server-initiated disconnects
+let reconnectAttempts = 0;
+const MAX_RECONNECT_ATTEMPTS = 10;
 
-  // Join rooms that were in pending joins
-  idsToJoin.forEach(id => emitJoinRoom(sock, id));
-}
+// Timer to reset reconnection attempts only after a stable connection
+let reconnectResetTimer: ReturnType<typeof setTimeout> | null = null;
+
+// ============================================
+// Public API
+// ============================================
 
 /**
- * Rejoin all rooms that were previously joined.
- * Used after a server-initiated disconnect to restore room subscriptions.
+ * Get or create socket connection
+ * @param token - JWT authentication token
+ * @returns Socket instance or null
  */
-function rejoinAllRooms(sock: Socket) {
-  if (joinedRooms.size === 0) {
-    console.log('[Chat Socket] No rooms to rejoin');
-    return;
-  }
-  console.log(`[Chat Socket] Rejoining ${joinedRooms.size} rooms after reconnect`);
-  joinedRooms.forEach(id => emitJoinRoom(sock, id));
-}
-
-export function joinRoom(conversationId: string) {
-  if (!conversationId) return;
-
-  // Prevent duplicate room joins
-  if (joinedRooms.has(conversationId)) {
-    console.log(`[Chat Socket] Room ${conversationId} already joined, skipping`);
-    return;
+export function getSocket(token: string): Socket | null {
+  // SSR safety check
+  if (typeof window === 'undefined') {
+    return null;
   }
 
-  if (!socket?.connected) {
-    console.log(`[Chat Socket] Socket not connected. Adding ${conversationId} to pending joins.`);
-    pendingJoins.add(conversationId);
-    return;
-  }
-
-  joinedRooms.add(conversationId);
-  emitJoinRoom(socket, conversationId);
-}
-
-export function joinRooms(conversationIds: string[]) {
-  conversationIds.forEach(joinRoom);
-}
-
-// Export function to check if room is already joined (for useChatSocket to use)
-export function isRoomJoined(conversationId: string): boolean {
-  return joinedRooms.has(conversationId);
-}
-
-// Export function to clear joined rooms (for testing/debugging)
-export function clearJoinedRooms() {
-  joinedRooms.clear();
-}
-
-export const getSocket = (token?: string): Socket | null => {
-  if (typeof window === 'undefined') return null; // Prevent SSR errors
-
-  // If no token provided, return existing socket or null
-  if (!token) return socket;
-
-  // If token changed, disconnect old socket
-  if (socket && socketToken !== token) {
-    console.log('[Chat Socket] Token changed, disconnecting old socket');
-    socket.removeAllListeners(); // Clean up all listeners to prevent duplicates
-    socket.disconnect();
-    socket = null;
-    pendingJoins.clear();
-    joinedRooms.clear();
-  }
-
-  // Return existing socket if already initialized with same token
-  if (socket) {
+  // Return existing socket if created with same token (connecting or connected)
+  if (socket && currentToken === token) {
     return socket;
   }
 
-  // Create new socket if we don't have one
-  socketToken = token;
-  const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL!;
-  console.log('[Chat Socket] Initializing connection to:', socketUrl);
+  // Cleanup old socket if switching token
+  cleanupSocket();
 
-  socket = io(socketUrl, {
+  // Create new connection
+  currentToken = token;
+  const rawUrl = process.env.NEXT_PUBLIC_SOCKET_URL || process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_ENDPOINT || '';
+  // Ensure base URL has no trailing slashes or appended query params
+  const baseUrl = rawUrl.replace(/\/+$/, '');
+
+  console.log('[Socket] Connecting to:', baseUrl);
+
+  socket = io(baseUrl, {
     transports: ['polling'],
+    // Send token in the auth object (socket.handshake.auth)
+    auth: {
+      token: token,
+      authorization: `Bearer ${token}`,
+    },
+    // Send token as query parameter (socket.handshake.query)
+    query: {
+      token: token,
+    },
+    // Send token as HTTP header (socket.handshake.headers)
     extraHeaders: {
       authorization: `Bearer ${token}`,
     },
@@ -112,53 +83,220 @@ export const getSocket = (token?: string): Socket | null => {
     reconnectionAttempts: Infinity,
     reconnectionDelay: 1000,
     reconnectionDelayMax: 5000,
-    randomizationFactor: 0.5,
+  });
+  setupEventHandlers();
+
+  return socket;
+}
+
+
+export function joinRoom(conversationId: string): void {
+  if (!conversationId) {
+    console.warn('[Socket] Cannot join room: No conversation ID provided');
+    return;
+  }
+
+  // Prevent duplicate joins
+  if (activeRooms.has(conversationId)) {
+    return;
+  }
+
+  if (!isSocketConnected()) {
+    pendingRooms.add(conversationId);
+    return;
+  }
+
+  // Join the room
+  socket!.emit('joinRoom', {
+    room_id: conversationId,
+    conversation_id: conversationId,
   });
 
+  activeRooms.add(conversationId);
+}
+
+/**
+ * Join multiple rooms at once
+ * @param conversationIds - Array of conversation IDs
+ */
+export function joinRooms(conversationIds: string[]): void {
+  if (!conversationIds.length) return;
+  conversationIds.forEach(id => joinRoom(id));
+}
+
+/**
+ * Leave a chat room
+ * @param conversationId - The conversation/room ID to leave
+ */
+export function leaveRoom(conversationId: string): void {
+  if (!conversationId) return;
+
+  // Remove from pending queue if present
+  pendingRooms.delete(conversationId);
+
+  if (!isSocketConnected()) return;
+
+  socket!.emit('leaveRoom', {
+    room_id: conversationId,
+    conversation_id: conversationId,
+  });
+
+  activeRooms.delete(conversationId);
+}
+
+/**
+ * Disconnect socket and cleanup all resources
+ */
+export function disconnectSocket(): void {
+  if (!socket) return;
+
+  console.log('[Socket] Disconnecting');
+  cleanupSocket();
+}
+
+/**
+ * Check if socket is currently connected
+ * @returns true if connected, false otherwise
+ */
+export function isSocketConnected(): boolean {
+  return socket?.connected ?? false;
+}
+
+/**
+ * Check if a room is currently joined
+ * @param conversationId - The conversation ID to check
+ * @returns true if joined, false otherwise
+ */
+export function isRoomJoined(conversationId: string): boolean {
+  return activeRooms.has(conversationId);
+}
+
+/**
+ * Clear all joined rooms (for testing/debugging)
+ */
+export function clearJoinedRooms(): void {
+  activeRooms.clear();
+  pendingRooms.clear();
+}
+
+// ============================================
+// Private Helper Functions
+// ============================================
+
+/**
+ * Setup socket event handlers
+ */
+function setupEventHandlers(): void {
+  if (!socket) return;
+
+  // Successful connection
   socket.on('connect', () => {
-    console.log('[Chat Socket] Connected successfully! ID:', socket?.id);
-    flushPendingJoins(socket!);
+    console.log('[Socket] Connected:', socket?.id);
+    if (reconnectResetTimer) clearTimeout(reconnectResetTimer);
+    reconnectResetTimer = setTimeout(() => {
+      reconnectAttempts = 0;
+      reconnectResetTimer = null;
+    }, 10000);
+    processPendingRooms();
   });
 
+  // Disconnection handler
   socket.on('disconnect', (reason) => {
-    console.warn('[Chat Socket] Disconnected! Reason:', reason);
+    console.warn('[Socket] Disconnected:', reason);
+
+    // Server-initiated disconnect - clear rooms and manually reconnect
+    // with exponential backoff
     if (reason === 'io server disconnect') {
-      joinedRooms.clear();
-      pendingJoins.clear();
+      activeRooms.clear();
+
+      // Cancel the stable-connection timer since the server disconnected
+      // before the connection was considered stable.
+      if (reconnectResetTimer) {
+        clearTimeout(reconnectResetTimer);
+        reconnectResetTimer = null;
+      }
+
+      // Socket.IO does NOT auto-reconnect on server-initiated disconnect.
+      // Only attempt reconnection if we haven't exceeded the max attempts.
+      reconnectAttempts++;
+
+      if (reconnectAttempts > MAX_RECONNECT_ATTEMPTS) {
+        console.error(
+          `[Socket] Max reconnection attempts (${MAX_RECONNECT_ATTEMPTS}) reached. ` +
+          'The server keeps disconnecting. Stopping reconnection attempts.'
+        );
+        return;
+      }
+
+      // Exponential backoff: 2s, 4s, 8s, 16s, 30s, 30s, ...
+      const delay = Math.min(
+        2000 * Math.pow(2, reconnectAttempts - 1),
+        30000,
+      );
+      console.log(
+        `[Socket] Server disconnect - reconnecting in ${delay}ms ` +
+        `(attempt ${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})`,
+      );
+
       setTimeout(() => {
-        if (socket && socket.disconnected) {
+        if (socket && currentToken && !socket.connected) {
           socket.connect();
         }
-      }, 500);
+      }, delay);
     }
   });
 
+  // Connection error handler
   socket.on('connect_error', (error) => {
-    console.error('[Chat Socket] Connection error:', error.message);
+    console.error('[Socket] Connection error:', error.message);
   });
+}
 
-  socket.on('reconnect', (attempt) => {
-    console.log('[Chat Socket] Reconnected after', attempt, 'attempts');
-    // Rejoin all previously joined rooms on reconnect
-    rejoinAllRooms(socket!);
+/**
+ * Process pending room joins (called on connect)
+ */
+function processPendingRooms(): void {
+  if (pendingRooms.size === 0) return;
+
+  const rooms = Array.from(pendingRooms);
+  pendingRooms.clear();
+
+  console.log('[Socket] Processing', rooms.length, 'pending room joins');
+
+  rooms.forEach(roomId => {
+    // Skip already-joined rooms
+    if (activeRooms.has(roomId)) return;
+
+    if (socket?.connected) {
+      socket.emit('joinRoom', {
+        room_id: roomId,
+        conversation_id: roomId,
+      });
+      activeRooms.add(roomId);
+    } else {
+      // Socket disconnected while processing - re-queue
+      pendingRooms.add(roomId);
+    }
   });
+}
 
-  return socket;
-};
-
-export const disconnectSocket = () => {
+/**
+ * Cleanup socket and reset state
+ */
+function cleanupSocket(): void {
   if (socket) {
-    console.log('[Chat Socket] Explicitly disconnecting socket');
-    socket.removeAllListeners(); // Clean up all listeners
+    socket.removeAllListeners();
     socket.disconnect();
     socket = null;
-    socketToken = null;
-    pendingJoins.clear();
-    joinedRooms.clear();
   }
-};
 
-// Add a function to remove duplicate pending joins
-export const clearPendingJoins = () => {
-  pendingJoins.clear();
-};
+  if (reconnectResetTimer) {
+    clearTimeout(reconnectResetTimer);
+    reconnectResetTimer = null;
+  }
+
+  currentToken = null;
+  activeRooms.clear();
+  pendingRooms.clear();
+  reconnectAttempts = 0;
+}
