@@ -10,7 +10,9 @@ export type PendingUser = {
   id: string;
   name: string;
   email: string;
-  address: string;
+  state?: string;
+  location?: string;
+  address?: string;
   document: string;
   avatar_url?: string | null;
   verifiy_document_url?: string | null;
@@ -31,6 +33,7 @@ export type VerifiedUser = {
   name: string;
   email: string;
   location: string;
+  state: string;
   document: string;
   avatar_url?: string | null;
   facebook: string;

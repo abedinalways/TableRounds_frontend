@@ -108,7 +108,7 @@ export function VerifiedUsers({
                   </td>
                   <td className="p-4">{user.email}</td>
                   <td className="p-4 truncate max-w-[150px]">
-                    {user.location}
+                    {user.state}, {user.location}
                   </td>
                   <td className="p-4">
                     <div className="flex gap-3 text-[#01503b]">

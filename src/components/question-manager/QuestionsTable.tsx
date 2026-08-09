@@ -340,39 +340,94 @@ export default function QuestionsTable({
       </div>
 
       {/* ✅ PAGINATION */}
-      {meta && (
-        <div className="flex justify-between items-center mt-4">
-          <p className="text-sm text-gray-500">
+      {meta && meta.totalPage > 0 && (
+        <div className="flex flex-col sm:flex-row justify-between items-center mt-4 gap-3">
+          <p className="text-xs sm:text-sm text-gray-500">
             Page {page} of {meta.totalPage}
           </p>
 
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex items-center gap-1 flex-wrap justify-center">
+            {/* Previous Button */}
             <button
               disabled={!meta.previous}
               onClick={() => setPage(page - 1)}
-              className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
+              className="px-2 sm:px-3 py-1 text-xs sm:text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               Prev
             </button>
 
-            {Array.from({ length: meta.totalPage }, (_, i) => i + 1).map(p => (
-              <button
-                key={p}
-                onClick={() => setPage(p)}
-                className={`px-3 py-1 rounded border ${
-                  p === page
-                    ? 'bg-[#01503b] text-white cursor-pointer'
-                    : 'bg-white text-black cursor-pointer'
-                }`}
-              >
-                {p}
-              </button>
-            ))}
+            {/* Smart Page Number Display */}
+            {(() => {
+              const pages: (number | string)[] = [];
+              const totalPages = meta.totalPage;
+              const current = page;
 
+              if (totalPages <= 7) {
+                // Show all pages if 7 or fewer
+                for (let i = 1; i <= totalPages; i++) {
+                  pages.push(i);
+                }
+              } else {
+                // Always show first page
+                pages.push(1);
+
+                if (current > 3) {
+                  pages.push('...');
+                }
+
+                // Show pages around current
+                const start = Math.max(2, current - 1);
+                const end = Math.min(totalPages - 1, current + 1);
+
+                for (let i = start; i <= end; i++) {
+                  if (!pages.includes(i)) {
+                    pages.push(i);
+                  }
+                }
+
+                if (current < totalPages - 2) {
+                  pages.push('...');
+                }
+
+                // Always show last page
+                if (!pages.includes(totalPages)) {
+                  pages.push(totalPages);
+                }
+              }
+
+              return pages.map((p, idx) => {
+                if (p === '...') {
+                  return (
+                    <span
+                      key={`ellipsis-${idx}`}
+                      className="px-2 sm:px-3 py-1 text-xs sm:text-sm text-gray-400 select-none"
+                    >
+                      ...
+                    </span>
+                  );
+                }
+
+                return (
+                  <button
+                    key={p}
+                    onClick={() => setPage(p as number)}
+                    className={`min-w-[32px] sm:min-w-[36px] px-2 sm:px-3 py-1 text-xs sm:text-sm rounded border transition-colors cursor-pointer ${
+                      p === page
+                        ? 'bg-[#01503b] text-white border-[#01503b] hover:bg-[#013d2e]'
+                        : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400'
+                    }`}
+                  >
+                    {p}
+                  </button>
+                );
+              });
+            })()}
+
+            {/* Next Button */}
             <button
               disabled={!meta.next}
               onClick={() => setPage(page + 1)}
-              className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
+              className="px-2 sm:px-3 py-1 text-xs sm:text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               Next
             </button>
