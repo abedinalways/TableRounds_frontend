@@ -239,7 +239,7 @@ export default function ManageProfile({
     <>
       <div className="bg-white rounded-2xl p-6 shadow-sm font-[manrope]">
         <Card className="bg-white w-full rounded-2xl md:p-6 p-2 mb-10">
-          <div className="md:flex justify-between items-start mb-8 gap-4">
+          <div className="lg:flex justify-between items-start mb-8 gap-4">
             <div className="relative w-[213px]">
               <Image
                 src={avatar}
@@ -312,7 +312,6 @@ export default function ManageProfile({
               </div>
 
               <p className="text-sm md:text-[18px] leading-[160%] flex gap-1">
-                
                 {user.bio}
               </p>
 
@@ -347,7 +346,7 @@ export default function ManageProfile({
               </div>
             </div>
 
-            <div className="flex flex-col items-start md:items-end gap-4">
+            <div className="flex lg:flex-col flex-col-reverse  items-start lg:items-end gap-4">
               <button
                 type="button"
                 disabled={isUpdating || (!isDirty && !imageFile)}
@@ -456,7 +455,7 @@ export default function ManageProfile({
           Contact Details
         </h3>
 
-        <div className="grid md:grid-cols-2 gap-6 text-[#4b5563]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 text-[#4b5563]">
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold md:text-lg!">
               Name <span className="text-red-600">*</span>
@@ -489,7 +488,7 @@ export default function ManageProfile({
                 setValue('state', '', { shouldDirty: true });
               }}
             >
-              <SelectTrigger className="bg-[#f9f9f5] border border-[rgba(68,68,68,0.1)] h-9 md:w-[620px] w-[225px]">
+              <SelectTrigger className="bg-[#f9f9f5] border border-[rgba(68,68,68,0.1)] h-9 w-[225px] md:w-full">
                 <SelectValue placeholder="Select country" />
               </SelectTrigger>
               <SelectContent className="max-h-[300px]">
@@ -513,7 +512,7 @@ export default function ManageProfile({
               }
               disabled={!watch('country')}
             >
-              <SelectTrigger className="bg-[#f9f9f5] border border-[rgba(68,68,68,0.1)] h-9 md:w-[620px] w-[225px]">
+              <SelectTrigger className="bg-[#f9f9f5] border border-[rgba(68,68,68,0.1)] h-9 w-[225px] md:w-full">
                 <SelectValue placeholder="Select Region/State" />
               </SelectTrigger>
               <SelectContent className="max-h-[300px]">
@@ -537,7 +536,7 @@ export default function ManageProfile({
                   setValue('training_practice', value, { shouldDirty: true })
                 }
               >
-                <SelectTrigger className="bg-[#f9f9f5] border border-[rgba(68,68,68,0.1)] h-9 md:w-[620px] w-[225px]">
+                <SelectTrigger className="bg-[#f9f9f5] border border-[rgba(68,68,68,0.1)] h-9 w-[225px] md:w-full">
                   <SelectValue placeholder="Student, PGY, or Attending" />
                 </SelectTrigger>
                 <SelectContent>
@@ -570,7 +569,7 @@ export default function ManageProfile({
 
           <div className="flex flex-col gap-[8px]">
             <Label className="font-bold md:text-lg!">Joining Date</Label>
-            <h3 className=" pl-2 border text-sm flex items-center border-gray-200 bg-[#f9f9f5] h-9 py-1 rounded-md">
+            <h3 className=" pl-2 border text-sm flex items-center border-gray-200 bg-[#f9f9f5] h-9 w-[225px] md:w-full py-1 rounded-md">
               {normalizeDate}
             </h3>
           </div>
@@ -586,7 +585,7 @@ export default function ManageProfile({
                   setValue('specialty', value, { shouldDirty: true })
                 }
               >
-                <SelectTrigger className="bg-[#f9f9f5] border border-[rgba(68,68,68,0.1)] h-9 md:w-[620px] w-[225px]">
+                <SelectTrigger className="bg-[#f9f9f5] border border-[rgba(68,68,68,0.1)] h-9 w-[225px] md:w-full">
                   <SelectValue placeholder="Select a specialty" />
                 </SelectTrigger>
                 <SelectContent>

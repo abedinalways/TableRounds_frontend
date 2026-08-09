@@ -17,7 +17,7 @@ export default function PerformanceSummary() {
 
   return (
     <section className="grid gap-6 mt-6 font-[manrope]">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Performance Card */}
         <Card className="rounded-2xl border shadow-sm">
           <CardHeader className="pb-3">

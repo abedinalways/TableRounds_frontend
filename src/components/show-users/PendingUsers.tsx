@@ -74,7 +74,7 @@ export function PendingUsers({
                   <td className="p-4 align-middle">{user.email}</td>
 
                   <td className="p-4 truncate max-w-[200px]">
-                    {user.address ?? 'Unknown'}
+                    {user.state}, {user.location}
                   </td>
 
                   <td className="p-4 align-middle">

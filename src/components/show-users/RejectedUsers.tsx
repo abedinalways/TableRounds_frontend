@@ -11,6 +11,7 @@ type RejectedUser = {
   image?: string | null;
   email: string;
   location: string;
+  state:string;
   verifiy_document_url?: string | null;
 };
 
@@ -94,7 +95,7 @@ export function RejectedUsers({
                   <td className="p-4">{user.email}</td>
 
                   <td className="p-4 truncate max-w-[200px]">
-                    {user.location}
+                    {user.state}, {user.location}
                   </td>
 
                   <td className="p-4">

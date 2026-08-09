@@ -145,6 +145,8 @@ export default function Sidebar({
                   width={40}
                   height={40}
                   alt="Logo"
+                  className="shrink-0"
+                  style={{ width: 'auto', height: 'auto' }}
                 />
                 <h1 className="relative font-bold text-lg sm:text-xl lg:text-3xl text-white font-[manrope] mb-4">
                   <div className="flex items-center justify-center gap-1">
@@ -209,6 +211,8 @@ export default function Sidebar({
                   width={40}
                   height={40}
                   alt="Logo"
+                  className="shrink-0"
+                  style={{ width: 'auto', height: 'auto' }}
                 />
                 <h1 className="relative font-bold text-lg sm:text-xl lg:text-3xl text-white font-[manrope] mb-4">
                   <div className="flex items-center justify-center gap-1">

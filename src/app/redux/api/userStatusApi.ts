@@ -9,6 +9,8 @@ export interface AdminUser {
   email: string;
   phone_number: string | null;
   address: string;
+  country?: string;
+  state?: string;
   type: string;
   approved_at: string | null;
   approved: boolean;

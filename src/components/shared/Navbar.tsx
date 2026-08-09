@@ -59,7 +59,7 @@ export default function Navbar({ isOms = false }) {
       await logout().unwrap();
       dispatch(clearUser());
       toast.success('Logged out successfully');
-     window.location.href = '/login';
+      window.location.href = '/login';
       setOpen(false);
     } catch {
       toast.error('Failed to logout');
@@ -238,9 +238,10 @@ export default function Navbar({ isOms = false }) {
                 width={40}
                 height={40}
                 alt="TableRounds Logo"
-                className="w-8 h-8 sm:w-10 sm:h-10"
+                className="w-8 h-8 sm:w-10 sm:h-10 shrink-0"
+                style={{ width: 'auto', height: 'auto' }}
               />
-              {isOms ? (
+              {/* {isOms ? (
                 <h1 className="relative font-bold text-lg sm:text-xl lg:text-3xl text-white font-[manrope] mb-4">
                   <div className="flex items-center justify-center gap-1">
                     Table
@@ -251,10 +252,11 @@ export default function Navbar({ isOms = false }) {
                   <span className="absolute top-6">Rounds</span>
                 </h1>
               ) : (
-                <h1 className="font-bold text-lg sm:text-xl lg:text-3xl text-white font-[manrope]">
-                  TableRounds
-                </h1>
-              )}
+                
+              )} */}
+              <h1 className="font-bold text-lg sm:text-xl lg:text-3xl text-white font-[manrope]">
+                TableRounds
+              </h1>
             </div>
           </Link>
 
@@ -325,6 +327,8 @@ export default function Navbar({ isOms = false }) {
                     width={30}
                     height={30}
                     alt="T"
+                    className="shrink-0"
+                    style={{ width: 'auto', height: 'auto' }}
                   />
                   <span className="font-bold text-xl text-white font-[manrope]">
                     TableRounds

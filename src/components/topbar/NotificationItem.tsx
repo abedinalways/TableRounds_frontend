@@ -171,7 +171,7 @@ export function NotificationItem({ notification, onDelete, onClick }: Props) {
               width={32}
               height={32}
               alt="profile"
-              className="rounded-full aspect-square object-cover"
+              className="rounded-full aspect-square object-cover shrink-0"
               unoptimized
             />
           </AvatarFallback>
