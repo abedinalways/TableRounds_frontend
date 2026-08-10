@@ -47,13 +47,12 @@ const prepareEditorHtmlForPayload = (
 
 export default function CreateQuestionForm() {
   const { register, control, handleSubmit, watch, setValue, reset } =
-    useForm<QuestionFormValues & { combinedExplanation?: string }>({
+    useForm<QuestionFormValues>({
       defaultValues: {
         difficulty: '',
         topic: '',
         questionStem: '',
         memoryTrick: '',
-        combinedExplanation: '',
         answers: [
           { id: '1', text: '', isCorrect: true },
           { id: '2', text: '', isCorrect: false },
@@ -76,103 +75,6 @@ export default function CreateQuestionForm() {
   const [explanationImageFile, setExplanationImageFile] =
     React.useState<File | null>(null);
 
-  const parseCombinedExplanation = (html: string) => {
-    if (!html) {
-      return {
-        explanation: '',
-        keyPoints: '',
-        keepingPoint: '',
-        memoryTrick: '',
-        referance: '',
-      };
-    }
-
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    const headings = doc.querySelectorAll('h1, h2, h3, h4, h5, h6');
-    
-    const sections: { heading: string; content: string }[] = [];
-    let currentContent: string[] = [];
-    let foundFirstHeading = false;
-
-    const processNode = (node: Node) => {
-      if (node.nodeType === Node.ELEMENT_NODE) {
-        const el = node as HTMLElement;
-        const tagName = el.tagName.toLowerCase();
-        if (['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(tagName)) {
-          foundFirstHeading = true;
-          if (currentContent.length > 0 || sections.length > 0) {
-            sections.push({
-              heading: sections.length > 0 ? sections[sections.length - 1].heading : '',
-              content: currentContent.join('').trim(),
-            });
-          }
-          sections.push({
-            heading: el.textContent?.trim() || '',
-            content: '',
-          });
-          currentContent = [];
-        } else {
-          currentContent.push(el.outerHTML);
-        }
-      } else if (node.nodeType === Node.TEXT_NODE) {
-        const text = node.textContent?.trim();
-        if (text) {
-          currentContent.push(`<p>${text}</p>`);
-        }
-      }
-    };
-
-    Array.from(doc.body.childNodes).forEach(processNode);
-
-    if (currentContent.length > 0) {
-      if (sections.length > 0) {
-        sections[sections.length - 1].content = currentContent.join('').trim();
-      } else {
-        sections.push({
-          heading: '',
-          content: currentContent.join('').trim(),
-        });
-      }
-    }
-
-    const result = {
-      explanation: '',
-      keyPoints: '',
-      keepingPoint: '',
-      memoryTrick: '',
-      referance: '',
-    };
-
-    const headingLower = (h: string) => h.toLowerCase();
-
-    sections.forEach(section => {
-      const h = headingLower(section.heading);
-      if (h.includes('why the other options are incorrect') || h.includes('incorrect')) {
-        result.keyPoints = section.content;
-      } else if (h.includes('pimping point')) {
-        result.keepingPoint = section.content;
-      } else if (h.includes('memory trick')) {
-        result.memoryTrick = section.content;
-      } else if (h.includes('references')) {
-        result.referance = section.content;
-      } else if (section.heading && !result.explanation) {
-        result.explanation = section.content;
-      } else if (!section.heading && !result.explanation && section.content) {
-        result.explanation = section.content;
-      }
-    });
-
-    if (!result.explanation && sections.length > 0) {
-      const firstContent = sections[0].content;
-      if (firstContent) {
-        result.explanation = firstContent;
-      }
-    }
-
-    return result;
-  };
-
   const onSubmit = async (data: QuestionFormValues) => {
     if (!data.difficulty) {
       toast.error('Please select a difficulty level');
@@ -192,18 +94,15 @@ export default function CreateQuestionForm() {
         prepareEditorHtmlForPayload(data.questionStem, questionStemImageFile),
       );
 
-      const combinedExplanation = (data as QuestionFormValues & { combinedExplanation?: string }).combinedExplanation || '';
-      const parsedExplanation = parseCombinedExplanation(combinedExplanation);
-
       formData.append(
         'explanation',
-        prepareEditorHtmlForPayload(parsedExplanation.explanation || combinedExplanation, explanationImageFile),
+        prepareEditorHtmlForPayload(data.explanation, explanationImageFile),
       );
 
-      formData.append('why_incorrect', parsedExplanation.keyPoints || '');
-      formData.append('pimping_point', parsedExplanation.keepingPoint || '');
-      formData.append('memory_trick', parsedExplanation.memoryTrick || '');
-      formData.append('referance', parsedExplanation.referance || '');
+      formData.append('why_incorrect', data.keyPoints || '');
+      formData.append('pimping_point', data.keepingPoint || '');
+      formData.append('memory_trick', data.memoryTrick || '');
+      formData.append('referance', data.referance || '');
       formData.append('difficulty', data.difficulty);
 
       formData.append('topic', JSON.stringify([data.topic]));
@@ -344,18 +243,55 @@ export default function CreateQuestionForm() {
       </div>
 
       <h2 className="text-lg md:text-[24px] font-bold text-[#01281e]">
-        Explanation & Additional Notes
+        Explanation
       </h2>
-      <p className="text-sm text-gray-500 mb-2">
-        Use headings (H1-H6) to separate sections: Why The Other Options Are Incorrect, Pimping Point, Memory Trick, References
-      </p>
 
       <RichTextEditor
-        key={`combinedExplanation-${editorKey}`}
-        value={watch('combinedExplanation') || ''}
-        onChange={v => setValue('combinedExplanation', v)}
+        key={`explanation-${editorKey}`}
+        value={watch('explanation') || ''}
+        onChange={v => setValue('explanation', v)}
         allowImageUpload
         onImageFileChange={setExplanationImageFile}
+      />
+
+      <h2 className="text-lg md:text-[24px] font-bold text-[#01281e]">
+        Why The Other Options Are Incorrect
+      </h2>
+
+      <RichTextEditor
+        key={`keyPoints-${editorKey}`}
+        value={watch('keyPoints') || ''}
+        onChange={v => setValue('keyPoints', v)}
+      />
+
+      <h2 className="text-lg md:text-[24px] font-bold text-[#01281e]">
+        Pimping Point
+      </h2>
+
+      <RichTextEditor
+        key={`keepingPoint-${editorKey}`}
+        value={watch('keepingPoint') || ''}
+        onChange={v => setValue('keepingPoint', v)}
+      />
+
+      <h2 className="text-lg md:text-[24px] font-bold text-[#01281e]">
+        Memory Trick
+      </h2>
+
+      <RichTextEditor
+        key={`memoryTrick-${editorKey}`}
+        value={watch('memoryTrick') || ''}
+        onChange={v => setValue('memoryTrick', v)}
+      />
+
+      <h2 className="text-lg md:text-[24px] font-bold text-[#01281e]">
+        References
+      </h2>
+
+      <RichTextEditor
+        key={`references-${editorKey}`}
+        value={watch('referance') || ''}
+        onChange={v => setValue('referance', v)}
       />
 
       <button
