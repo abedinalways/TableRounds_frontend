@@ -162,7 +162,6 @@ export function ResultSummary({
         colleagues={colleagues}
         testCardData={testCardData}
         onSendTestCard={(selectedUser, testCardData) => {
-          console.log('TestCard sent to:', selectedUser);
           // Handle sending the test card to the selected user
         }}
       />

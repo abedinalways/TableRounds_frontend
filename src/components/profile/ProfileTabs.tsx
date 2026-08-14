@@ -49,7 +49,6 @@ export default function ProfileTabs({
     // );
   
   const profileStatistics = user?.statistics;
-  console.log(profileStatistics, '=====================sefghewkgf=================')
   // const { data: statisticsData, isLoading: statisticsLoading } =
   //   useGetStatisticsQuery(profileUserId);
 

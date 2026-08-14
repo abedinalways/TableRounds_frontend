@@ -204,8 +204,6 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 
       const answerOptionsResponse = res.data.answerOptions ?? [];
 
-      console.log('Answer response:', answerOptionsResponse);
-
       const totalSelectsFromResponse = answerOptionsResponse.reduce(
         (sum: number, o: any) => sum + Number(o.total_select ?? 0),
         0,

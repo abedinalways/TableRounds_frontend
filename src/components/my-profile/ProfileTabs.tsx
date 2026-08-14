@@ -41,7 +41,6 @@ export default function ProfileTabs({
   // );
 
   const profileStatistics = user?.statistics;
-  console.log(profileStatistics, 'llllllll');
   
   useEffect(() => {
     if (!contentRef.current) return;

@@ -62,19 +62,9 @@ export function getSocket(token: string): Socket | null {
   // Ensure base URL has no trailing slashes or appended query params
   const baseUrl = rawUrl.replace(/\/+$/, '');
 
-  console.log('[Socket] Connecting to:', baseUrl);
-
   socket = io(baseUrl, {
-    transports: ['polling'],
-    // Send token in the auth object (socket.handshake.auth)
-    auth: {
-      token: token,
-      authorization: `Bearer ${token}`,
-    },
-    // Send token as query parameter (socket.handshake.query)
-    query: {
-      token: token,
-    },
+    transports: ['polling', 'websocket'],
+    upgrade:true,
     // Send token as HTTP header (socket.handshake.headers)
     extraHeaders: {
       authorization: `Bearer ${token}`,
@@ -150,7 +140,6 @@ export function leaveRoom(conversationId: string): void {
 export function disconnectSocket(): void {
   if (!socket) return;
 
-  console.log('[Socket] Disconnecting');
   cleanupSocket();
 }
 
@@ -191,7 +180,6 @@ function setupEventHandlers(): void {
 
   // Successful connection
   socket.on('connect', () => {
-    console.log('[Socket] Connected:', socket?.id);
     if (reconnectResetTimer) clearTimeout(reconnectResetTimer);
     reconnectResetTimer = setTimeout(() => {
       reconnectAttempts = 0;
@@ -230,15 +218,10 @@ function setupEventHandlers(): void {
 
       // Exponential backoff: 2s, 4s, 8s, 16s, 30s, 30s, ...
       const delay = Math.min(
-        2000 * Math.pow(2, reconnectAttempts - 1),
-        30000,
-      );
-      console.log(
-        `[Socket] Server disconnect - reconnecting in ${delay}ms ` +
-        `(attempt ${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})`,
-      );
-
-      setTimeout(() => {
+      2000 * Math.pow(2, reconnectAttempts - 1),
+      30000,
+     );
+     setTimeout(() => {
         if (socket && currentToken && !socket.connected) {
           socket.connect();
         }
@@ -260,8 +243,6 @@ function processPendingRooms(): void {
 
   const rooms = Array.from(pendingRooms);
   pendingRooms.clear();
-
-  console.log('[Socket] Processing', rooms.length, 'pending room joins');
 
   rooms.forEach(roomId => {
     // Skip already-joined rooms

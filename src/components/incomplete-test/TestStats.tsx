@@ -23,9 +23,6 @@ export function TestStats() {
   }
 
   const stats = data.metadata;
-  console.log(stats.total, '++++++++++++++++=================afefewwwwwwwww---==')
-
-  
 
   return (
     <div className="grid grid-cols-1  gap-4 mt-8 font-[manrope]">

@@ -8,9 +8,7 @@ export default function PrivacyPolicyPage() {
   if (isLoading) {
     return <p className="p-10">Loading...</p>;
   }
-  console.log(data, 'data=================')
   const helpData = data?.data?.[0];
-  console.log(helpData, 'jjj===============')
   return (
     <div className="custom-container">
       <PrivacyPolicy html={helpData?.privacy_policy ?? ''} />

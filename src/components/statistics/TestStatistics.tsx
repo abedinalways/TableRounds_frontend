@@ -32,7 +32,6 @@ const formatDifficultyName = (difficulty: string) => {
 
 const TestStatistics: React.FC = () => {
   const { data, isLoading, isError } = useGetStatisticsQuery();
-  console.log(data);
 
   if (isLoading) {
     return <TestStatisticsSkeleton />;

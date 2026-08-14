@@ -12,14 +12,6 @@ export default function MessageSection() {
   const { messages } = useChat();
   const endRef = useRef<HTMLDivElement>(null);
   const me = useMeQuery();
-  console.log(
-    me.data,
-    'my datya===============================+++++++++++++++',
-  );
-  console.log(
-    messages,
-    'messages===============================+++++++++++++++===========',
-  );
   const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001';
 
   const [viewerOpen, setViewerOpen] = useState(false);
