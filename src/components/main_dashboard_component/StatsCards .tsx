@@ -7,7 +7,6 @@ import { DashboardStatsSkeleton } from './DashboardStatsSkeleton';
 
 const StatsCards = () => {
   const { data: value, error, isLoading } = useGetProfileQuery(); 
-  console.log(value)
   if (isLoading) {
     return <DashboardStatsSkeleton />;
   }

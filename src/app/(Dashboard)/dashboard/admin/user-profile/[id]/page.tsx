@@ -21,8 +21,6 @@ export default function ProfilePage({
 
   const apiData = data;
 
-  console.log(apiData, '=======colleague data');
-
   if (isLoading)
     return <div className="p-10 text-center">Loading profile...</div>;
 

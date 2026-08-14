@@ -17,8 +17,6 @@ export default function Header() {
   const activeConversation = conversations.find(
     conv => conv.id === activeConversationId,
   );
-  console.log(activeConversation, 'activeConversation=====================++++++++++++++++',);
-
   if (!activeConversation) return null;
 
   

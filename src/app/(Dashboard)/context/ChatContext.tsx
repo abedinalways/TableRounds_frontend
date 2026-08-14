@@ -84,11 +84,6 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     },
   );
 
-  // debugging
-  useEffect(() => {
-    console.log('Chat Context User:', currentUser);
-  }, [currentUser]);
-
   // Restore active chat from URL
   useEffect(() => {
     if (!conversationIdFromUrl) return;
@@ -96,6 +91,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       dispatch(setActiveConversation(conversationIdFromUrl));
     }
   }, [conversationIdFromUrl, activeConversationId, dispatch]);
+
 
   // Note: Socket room joining is handled by useChatSocket via convData loading
   // No need to manually join rooms here
@@ -113,8 +109,6 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
-      console.log('Initiating chat as:', isAdmin ? 'ADMIN' : 'USER');
-
       let response;
       if (isAdmin) {
         response = await createAdminChat({ participant_id: targetUserId }).unwrap();

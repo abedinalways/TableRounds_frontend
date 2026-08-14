@@ -318,7 +318,6 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
           question_id: questionID,
         }).unwrap();
       } catch {
-        console.log('skip failed');
       }
     }
 
@@ -330,16 +329,12 @@ const QuizQuestionView: React.FC<QuizQuestionViewProps> = ({
   };
 
   const handleSkip = async () => {
-    try {
-      await skipQuestionApi({
-        test_id: testId,
-        question_id: questionID,
-      }).unwrap();
+    await skipQuestionApi({
+      test_id: testId,
+      question_id: questionID,
+    }).unwrap();
 
-      onNext();
-    } catch {
-      console.log('skip failed');
-    }
+    onNext();
   };
 
   const handleToggleHide = () => {

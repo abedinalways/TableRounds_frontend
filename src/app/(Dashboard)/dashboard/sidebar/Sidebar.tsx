@@ -178,7 +178,6 @@ export default function Sidebar({
           open={openResetModal}
           onClose={() => setOpenResetModal(false)}
           onConfirm={() => {
-            console.log('Reset confirmed');
           }}
         />
       </>
@@ -241,7 +240,6 @@ export default function Sidebar({
         open={openResetModal}
         onClose={() => setOpenResetModal(false)}
         onConfirm={() => {
-          console.log('Reset confirmed');
         }}
       />
     </>

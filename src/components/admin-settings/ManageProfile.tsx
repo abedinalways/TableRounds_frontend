@@ -56,8 +56,6 @@ export default function ManageProfile() {
 
   const preview = localPreview || getImageUrl(profile?.avatar);
   
-  console.log('avatar:', profile?.avatar);
-  console.log('preview:', preview);
   const onSubmit = async (data: ProfileFormData) => {
     try {
       const formData = new FormData();

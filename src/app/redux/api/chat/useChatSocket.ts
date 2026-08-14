@@ -84,7 +84,6 @@ export function useChatSocket() {
     // Handle incoming messages
     // ----------------------------------------
     const handleMessage = (payload: unknown) => {
-      console.log('[Chat] New message/notification received:', payload);
 
       // Extract message data from payload
       const data = extractMessageData(payload);
@@ -119,7 +118,6 @@ export function useChatSocket() {
       const convId = (nestedData?.id || data?.id) as string | undefined;
       
       if (convId) {
-        console.log('[Chat] New conversation created:', convId);
         joinRoom(convId);
         
         // Refresh conversations list
@@ -131,7 +129,6 @@ export function useChatSocket() {
     // Sync conversations when socket connects
     // ----------------------------------------
     const syncConversations = () => {
-      console.log('[Chat] Socket connected - syncing conversations');
       
       // Get cached conversations from Redux
       const cached = chatApi.endpoints.getConversations.select()(store.getState())?.data?.data || [];
@@ -141,7 +138,6 @@ export function useChatSocket() {
       const newConvs = convIds.filter(id => !isRoomJoined(id));
 
       if (newConvs.length > 0) {
-        console.log('[Chat] Joining', newConvs.length, 'conversations');
         joinRooms(newConvs);
       }
 
@@ -202,7 +198,6 @@ export function useChatSocket() {
     );
 
     if (newConvs.length > 0) {
-      console.log('[Chat] Joining new conversations:', newConvs);
       joinRooms(newConvs);
       joinedConvsRef.current = [...joinedConvsRef.current, ...newConvs];
     }
