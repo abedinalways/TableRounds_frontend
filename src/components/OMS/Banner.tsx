@@ -11,8 +11,12 @@ import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 
 gsap.registerPlugin(ScrollToPlugin);
 
+interface BannerProps {
+  specialtyName: string;
+  specialtyBannerImg: string;
+}
 
-export default function Banner() {
+export default function Banner({ specialtyName, specialtyBannerImg }: BannerProps) {
    const handleExploreMore = useCallback(() => {
      const target = document.querySelector('#features');
      if (!target) return;
@@ -40,7 +44,7 @@ export default function Banner() {
 
       {/*Banner Image */}
       <Image
-        src="/images/osm/banner.png"
+        src={specialtyBannerImg || "/images/osm/banner.png"}
         alt=""
         width={826}
         height={820}
@@ -87,7 +91,7 @@ export default function Banner() {
         
           <h2 className="font-bold text-3xl md:text-[40px] xl:text-[48px]  leading-tight">
             Mastering Every Aspect of<br />
-            Oral and Maxillofacial Surgery
+            {specialtyName}
           </h2>
 
           <p className="mt-4 text-sm md:text-[24px] text-white/90">
@@ -97,7 +101,7 @@ export default function Banner() {
           <div className="mt-16 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
           <Btn
               onClick={handleExploreMore}
-              text="Explore OMS Features"
+              text={`Explore ${specialtyName} Features`}
               className="bg-white text-green-700 md:w-[217px] w-full h-[54px]"
             />
           </div>

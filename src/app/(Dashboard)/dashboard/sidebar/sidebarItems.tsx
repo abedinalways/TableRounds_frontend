@@ -23,10 +23,15 @@ export const adminMenu: MenuItem[] = [
     href: '/dashboard/admin/create-questions',
     icon: '/images/dashboard/img03.png',
   },
-  {
+   {
     title: 'Question Manager',
     href: '/dashboard/admin/question-manager',
     icon: '/images/dashboard/img04.png',
+  },
+  {
+    title: 'Specialties',
+    href: '/dashboard/admin/specialties',
+    icon: '/images/dashboard/main_dashboard/qns.png',
   },
 
   {

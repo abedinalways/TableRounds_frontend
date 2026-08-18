@@ -1,9 +1,18 @@
 import Image from 'next/image';
 import React from 'react';
 
-// JSON Data
-const specialtiesData = {
-  specialties: [
+interface Topic {
+  topic_name: string;
+  topic_img: string;
+}
+
+interface SpecialtyCardProps {
+  topics?: Topic[];
+}
+
+const SpecialtyCard = ({ topics }: SpecialtyCardProps) => {
+  // Default static data if no topics provided
+  const defaultTopics = [
     {
       id: 1,
       name: 'Anesthesia/Medicine',
@@ -70,15 +79,23 @@ const specialtiesData = {
       icon: '/images/specialty/img11.png',
       label: 'Trauma',
     },
-  ],
-};
+  ];
 
-const SpecialtyCard = () => {
+  // Use dynamic topics if provided, otherwise use default
+  const displayTopics = topics && topics.length > 0 
+    ? topics.map((topic, index) => ({
+        id: index,
+        name: topic.topic_name,
+        icon: topic.topic_img,
+        label: topic.topic_name,
+      }))
+    : defaultTopics;
+
   return (
     <div className="w-full px-4 py-12 font-[manrope]">
       <div className=" mx-auto">
         <div className="flex items-center justify-center flex-wrap max-w-7xl mx-auto gap-4 md:gap-x-26 md:gap-y-9">
-          {specialtiesData.specialties.map(specialty => (
+          {displayTopics.map(specialty => (
             <div
               key={specialty.id}
               className="flex flex-col items-center justify-center gap-4 cursor-pointer transition-transform hover:scale-105"

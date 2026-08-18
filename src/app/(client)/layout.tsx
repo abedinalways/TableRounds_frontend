@@ -11,7 +11,7 @@ export default function ClientLayout({children}: {children: React.ReactNode}){
 
   return (
     <>
-      <SmoothScroll>
+      {/* <SmoothScroll> */}
 
     <div className="overflow-hidden">
       
@@ -21,7 +21,7 @@ export default function ClientLayout({children}: {children: React.ReactNode}){
         <Footer />
     
     </div>
-      </SmoothScroll>
+      {/* </SmoothScroll> */}
     </>
   );
 }

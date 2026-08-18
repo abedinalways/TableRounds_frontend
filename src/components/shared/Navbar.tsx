@@ -22,6 +22,7 @@ import { useAppSelector, useAppDispatch } from '@/app/redux/hook';
 import { useMeQuery, useLogoutMutation } from '@/app/redux/api/authApi';
 import { toast } from 'sonner';
 import { clearUser } from '@/app/redux/authSlice';
+import { useAllSpecialties } from '@/hooks/useSpecialtyData';
 
 const navItems = [
   { label: 'Home', href: '/' },
@@ -31,15 +32,15 @@ const navItems = [
   { label: 'Contact', href: '/contact' },
 ];
 
-const specialtyOptions = [
-  { value: 'oms', label: 'OMS', href: '/oms' },
-];
-
 const legalOptions = [
   { label: 'Privacy Policy', href: '/privacy-policy' },
   { label: 'Disclaimer', href: '/disclaimer' },
   { label: 'Terms of Use', href: '/terms-conditions' },
 ];
+
+function slugify(name: string): string {
+  return name.toLowerCase().replace(/[\s-]+/g, '-').replace(/[^a-z0-9-]/g, '');
+}
 
 export default function Navbar({ isOms = false }) {
   const [open, setOpen] = useState(false);
@@ -48,6 +49,8 @@ export default function Navbar({ isOms = false }) {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const token = useAppSelector(state => state.auth.auth.token);
+  const { data: allSpecialtiesData, isLoading: isLoadingSpecialties } = useAllSpecialties();
+  const specialties: { specialty_name: string }[] = allSpecialtiesData?.data || [];
 
   const { data: currentUser } = useMeQuery(undefined, {
     skip: !token,
@@ -72,7 +75,17 @@ export default function Navbar({ isOms = false }) {
     return pathname === href || pathname.startsWith(href + '/');
   };
 
-  const SpecialtyDropdown = ({ isMobile = false }) => (
+  const SpecialtyDropdown = ({ isMobile = false }) => {
+    const specialtyOptions = specialties.map(s => {
+      const slug = slugify(s.specialty_name);
+      return {
+        value: slug,
+        label: s.specialty_name,
+        href: `/${slug}`,
+      };
+    });
+
+    return (
     <DropdownMenu modal={!isMobile}>
       <DropdownMenuTrigger asChild>
         <button
@@ -89,29 +102,34 @@ export default function Navbar({ isOms = false }) {
       >
         <DropdownMenuLabel>Select Specialty</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuRadioGroup value={specialty} onValueChange={setSpecialty}>
-          {specialtyOptions.map(option => (
-            <Link
-              key={option.value}
-              href={option.href || '#'}
-              onClick={() => {
-                if (isMobile) setOpen(false);
-              }}
-            >
-              <DropdownMenuRadioItem
-                value={option.value}
-                className={`cursor-pointer ${
-                  isActive(option.href) ? 'text-[#B79E6B] font-semibold' : ''
-                }`}
+        {isLoadingSpecialties ? (
+          <div className="px-3 py-2 text-sm text-gray-500">Loading specialties...</div>
+        ) : (
+          <DropdownMenuRadioGroup value={specialty} onValueChange={setSpecialty}>
+            {specialtyOptions.map(option => (
+              <Link
+                key={option.value}
+                href={option.href || '#'}
+                onClick={() => {
+                  if (isMobile) setOpen(false);
+                }}
               >
-                {option.label}
-              </DropdownMenuRadioItem>
-            </Link>
-          ))}
-        </DropdownMenuRadioGroup>
+                <DropdownMenuRadioItem
+                  value={option.value}
+                  className={`cursor-pointer ${
+                    isActive(option.href) ? 'text-[#B79E6B] font-semibold' : ''
+                  }`}
+                >
+                  {option.label}
+                </DropdownMenuRadioItem>
+              </Link>
+            ))}
+          </DropdownMenuRadioGroup>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
+  }
 
   const LegalDropdown = ({ isMobile = false }) => (
     <DropdownMenu modal={!isMobile}>
