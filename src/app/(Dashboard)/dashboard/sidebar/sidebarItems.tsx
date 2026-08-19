@@ -31,7 +31,7 @@ export const adminMenu: MenuItem[] = [
   {
     title: 'Specialties',
     href: '/dashboard/admin/specialties',
-    icon: '/images/dashboard/main_dashboard/qns.png',
+    icon: '/images/dashboard/main_dashboard/img45.png',
   },
 
   {
