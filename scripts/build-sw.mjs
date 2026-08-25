@@ -29,6 +29,12 @@ const apiBase = (
   process.env.NEXT_PUBLIC_API_ENDPOINT ?? 'https://backend.tablerounds.ai/api'
 ).replace(/\/+$/, '');
 
+// Each `next build` emits a new BUILD_ID; chunk filenames change with it.
+// We scope the runtime PAGES_CACHE to this build so the service worker never
+// serves HTML from a previous build that references old (now-absent) chunks —
+// which would otherwise render a blank/black screen when offline.
+const buildId = (await readFile(path.join(root, '.next', 'BUILD_ID'), 'utf8')).trim();
+
 try {
   console.log('[build-sw] bundling src/sw.ts …');
   await rm(tmpDir, { recursive: true, force: true });
@@ -42,6 +48,7 @@ try {
     define: {
       'process.env.NODE_ENV': '"production"',
       __API_BASE__: JSON.stringify(apiBase),
+      __BUILD_ID__: JSON.stringify(buildId),
     },
     logLevel: 'warning',
   });
