@@ -61,13 +61,23 @@ declare const self: ServiceWorkerGlobalScope;
  */
 declare const __API_BASE__: string;
 
+/**
+ * Inlined at build time by scripts/build-sw.mjs from .next/BUILD_ID.
+ * Each `next build` produces new hashed JS chunks; scoping the runtime page
+ * cache to the build ID prevents serving stale HTML that references chunks
+ * which no longer exist after a deploy (blank/black screen offline).
+ */
+declare const __BUILD_ID__: string;
+
 // ---------------------------------------------------------------------------
 // Cache naming — project-specific, easy to find in DevTools.
 // Bump VERSION when a runtime cache's schema/contents change meaningfully;
 // Workbox handles precache revisioning on its own.
 // ---------------------------------------------------------------------------
 const VERSION = 'v1';
-const PAGES_CACHE = `tablerounds-runtime-pages-${VERSION}`;
+// Pages cache is scoped to the current build (BUILD_ID) so HTML from an old
+// build — whose chunk URLs no longer exist — is never served offline.
+const PAGES_CACHE = `tablerounds-runtime-pages-${VERSION}-${__BUILD_ID__}`;
 const IMAGES_CACHE = `tablerounds-runtime-images-${VERSION}`;
 const FONTS_CACHE = `tablerounds-runtime-fonts-${VERSION}`;
 const API_CACHE = `tablerounds-api-readonly-${VERSION}`;
@@ -257,6 +267,10 @@ registerRoute(({ request }) => request.mode === 'navigate', handleNavigation);
 // Legacy vanilla-SW caches from earlier deployments — removed once, then gone.
 const LEGACY_CACHE_RE = /^tablerounds-(shell|assets|api)-v\d+$/;
 
+// Stale runtime page caches from a previous build — drop them all, but keep
+// the cache scoped to the current BUILD_ID.
+const OLD_PAGES_PREFIX = `tablerounds-runtime-pages-${VERSION}-`;
+
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     (async () => {
@@ -264,9 +278,15 @@ self.addEventListener('activate', (event) => {
       await Promise.all(
         keys
           .filter((key) => LEGACY_CACHE_RE.test(key))
+          .concat(
+            keys.filter(
+              (key) =>
+                key.startsWith(OLD_PAGES_PREFIX) && key !== PAGES_CACHE,
+            ),
+          )
           .map((key) => caches.delete(key)),
       );
-      console.log(`[SW] active (${VERSION})`);
+      console.log(`[SW] active (${VERSION}, ${__BUILD_ID__})`);
     })(),
   );
 });
