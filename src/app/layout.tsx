@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import {
   EB_Garamond,
   Fraunces,
@@ -15,6 +15,9 @@ import { Toaster } from 'sonner';
 
 import { Providers } from './Providers';
 import AuthProvider from './AuthProvider';
+import { OfflineBanner } from '@/components/pwa/offline-banner';
+import { ServiceWorkerRegister } from '@/components/pwa/service-worker-register';
+import { InstallPrompt } from '@/components/pwa/install-prompt';
 ;
 
 const fraunces = Fraunces({
@@ -57,6 +60,22 @@ export const metadata: Metadata = {
   description:
     'TableRounds is a clinician-built platform that brings board-style question banks and a vetted community of surgeons, dentists, and trainees into one place. Create a verified profile, work through specialty-tagged questions with detailed explanations, track your performance by topic, and connect with colleagues who are equally invested in maintaining a high standard of practice',
   metadataBase: new URL('https://tablerounds.ai'),
+  manifest: '/manifest.webmanifest',
+  applicationName: 'TableRounds',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'TableRounds',
+  },
+  formatDetection: { telephone: false },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any', type: 'image/x-icon' },
+      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: [{ url: '/icons/apple-touch-icon.png', sizes: '180x180' }],
+  },
   //preview for Facebook, WhatsApp, LinkedIn
   openGraph: {
     title: 'TableRounds',
@@ -83,6 +102,11 @@ export const metadata: Metadata = {
     images: ['/footer-logo.png'],  // ✅ Relative — metadataBase converts to absolute
   },
 };
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#01503b',
+};
 
 export default function RootLayout({
   children,
@@ -95,6 +119,9 @@ export default function RootLayout({
         className={`${manrope.variable} ${outfit.variable} ${inter.variable} ${fraunces.variable} ${garamond.variable} ${roboto.variable} ${jakarta.variable} antialiased`}
       >
           <Providers>
+        <OfflineBanner />
+        <ServiceWorkerRegister />
+        <InstallPrompt />
         <AuthProvider>
             <Toaster
               position="top-center"

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>You're offline · TableRounds</title>
+  <meta name="robots" content="noindex" />
+  <style>
+    /* TableRounds offline fallback — fully standalone (no network requests):
+       precached by the service worker and served whenever a navigation fails.
+       Keep dependencies at zero. */
+    :root {
+      --brand: #01503b;
+      --bg: #ffffff;
+      --ink: #18181b;
+      --muted: #71717a;
+      --card: #ffffff;
+      --border: #e4e4e7;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-align: center;
+    }
+    .card {
+      width: 100%;
+      max-width: 26rem;
+      padding: 2.5rem 2rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1.25rem;
+      box-shadow: 0 8px 30px rgba(24, 24, 27, 0.06);
+    }
+    .mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 1rem;
+      background: var(--brand);
+      color: #fff;
+      margin-bottom: 1.25rem;
+    }
+    h1 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; }
+    p  { margin-top: 0.5rem; font-size: 0.9rem; line-height: 1.55; color: var(--muted); }
+    button {
+      margin-top: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      height: 2.75rem;
+      padding: 0 1.25rem;
+      font: inherit;
+      font-weight: 600;
+      color: #fff;
+      background: var(--brand);
+      border: none;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: background-color 150ms ease;
+    }
+    button:hover { background: #01644a; }
+    button:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(1, 80, 59, 0.3); }
+    .hint { margin-top: 1.25rem; font-size: 0.75rem; color: #a1a1aa; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <span class="mark" aria-hidden="true">
+      <!-- Brand mark: medical cross -->
+      <svg width="28" height="28" viewBox="0 0 512 512" fill="none"
+           xmlns="http://www.w3.org/2000/svg">
+        <rect x="224" y="96" width="64" height="320" rx="20" fill="currentColor"/>
+        <rect x="96" y="224" width="320" height="64" rx="20" fill="currentColor"/>
+      </svg>
+    </span>
+    <h1>You're offline</h1>
+    <p>TableRounds needs an internet connection to load this page.<br />
+       Your previously synced data is safe.</p>
+    <button type="button" id="retry">Try again</button>
+    <p class="hint">Tip: pages you visited recently may still be available<br />from the app's back navigation.</p>
+  </main>
+
+  <script>
+    // Reload the current URL when retrying; if history state is unavailable,
+    // fall back to navigating to the app start page.
+    document.getElementById('retry').addEventListener('click', function () {
+      if (window.history && window.history.length > 1) {
+        window.location.reload();
+      } else {
+        window.location.assign('/');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -4,3 +4,22 @@
  
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# ── PWA / service worker ─────────────────────────────────────────────
+# Never let the browser HTTP-cache sw.js: a new deployment must be
+# discovered on the next check, not after cache expiry.
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    Service-Worker-Allowed = "/"
+
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/icons/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
