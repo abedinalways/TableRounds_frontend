@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -H 0.0.0.0",
-    "build": "next build && node scripts/build-sw.mjs",
-    "start": "next start",
+    "dev": "node init && next dev -H 0.0.0.0",
+    "build": "node init && next build && node scripts/build-sw.mjs",
+    "start": "node init && next start",
     "lint": "eslint",
     "icons": "node scripts/generate-icons.mjs"
   },
