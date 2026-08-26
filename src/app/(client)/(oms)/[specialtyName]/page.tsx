@@ -6,15 +6,14 @@ import Elevate from '@/components/OMS/Elevate'
 import Features from '@/components/OMS/Features'
 import Specialty from '@/components/OMS/Specialty'
 import React from 'react'
-import { useSpecialtyByName } from '@/hooks/useSpecialtyData'
+import { useAllSpecialties } from '@/hooks/useSpecialtyData'
 import { useParams } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 
 export default function OmsPage() {
   const params = useParams();
   const specialtyName = params.specialtyName as string;
-  
-  const { data: specialtyData, isLoading, error } = useSpecialtyByName(specialtyName);
+  const { data: specialtiesData, isLoading, error } = useAllSpecialties();
 
   if (isLoading) {
     return (
@@ -24,7 +23,13 @@ export default function OmsPage() {
     );
   }
 
-  if (error || !specialtyData?.data) {
+  const specialties = specialtiesData?.data || [];
+  const specialty = specialties.find(s => 
+    s.specialty_name.toLowerCase().replace(/\s+/g, '-') === specialtyName.toLowerCase().replace(/\s+/g, '-') ||
+    s.specialty_name.toLowerCase().replace(/[\s-]+/g, '') === specialtyName.toLowerCase().replace(/[\s-]+/g, '')
+  );
+
+  if (error || !specialty) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="text-center">
@@ -34,8 +39,6 @@ export default function OmsPage() {
       </div>
     );
   }
-
-  const specialty = specialtyData.data;
 
   return (
     <div>

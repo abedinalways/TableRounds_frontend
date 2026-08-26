@@ -7,8 +7,10 @@ import {
   useSpecialtyMutations,
 } from '@/hooks/useSpecialtyData';
 import { Loader2, Plus, Trash2, Edit2, X, ChevronDown, ExternalLink } from 'lucide-react';
+import Image from 'next/image';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import ImageUpload from '@/components/reusable/ImageUpload';
 
 interface TopicInput {
   topic_name: string;
@@ -46,7 +48,7 @@ export default function SpecialtiesAdminPage() {
   const [selectedSpecialty, setSelectedSpecialty] = useState<Specialty | null>(null);
   const router = useRouter();
 
-  const { register, control, handleSubmit, reset } = useForm<SpecialtyForm>({
+  const { register, control, handleSubmit, reset, setValue, watch } = useForm<SpecialtyForm>({
     defaultValues: {
       specialty_name: '',
       specialty_banner_img: '',
@@ -59,6 +61,10 @@ export default function SpecialtiesAdminPage() {
     control,
     name: 'topics',
   });
+
+  const watchedBanner = watch('specialty_banner_img');
+  const watchedBrand = watch('brand_img');
+  const watchedTopics = watch('topics');
 
   useEffect(() => {
     if (editingSpecialty) {
@@ -76,9 +82,14 @@ export default function SpecialtiesAdminPage() {
 
   const onSubmit = async (data: SpecialtyForm) => {
     if (editingSpecialty) {
+      const specialtyId = editingSpecialty.id || editingSpecialty._id;
+      if (!specialtyId) {
+        toast.error('Specialty ID is missing');
+        return;
+      }
       try {
         await updateSpecialtyMut({
-          id: editingSpecialty.id || editingSpecialty._id,
+          id: specialtyId,
           ...data,
         }).unwrap();
         toast.success('Specialty updated successfully!');
@@ -171,7 +182,7 @@ export default function SpecialtiesAdminPage() {
 
       {isFormOpen && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 overflow-y-auto py-8">
-          <div className="bg-white p-6 rounded-lg w-[600px] max-h-[90vh] overflow-y-auto space-y-6">
+          <div className="bg-white p-6 rounded-lg w-[700px] max-h-[90vh] overflow-y-auto space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-[#01281e]">
                 {editingSpecialty ? 'Edit Specialty' : 'Create New Specialty'}
@@ -188,7 +199,7 @@ export default function SpecialtiesAdminPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Specialty Name
+                    Specialty Name <span className="text-red-500">*</span>
                   </label>
                   <input
                     {...register('specialty_name', { required: true })}
@@ -196,24 +207,28 @@ export default function SpecialtiesAdminPage() {
                     className="w-full border border-gray-300 rounded-[8px] p-2 focus:outline-none focus:ring-2 focus:ring-[#01503b]"
                   />
                 </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Banner Image URL
+                    {/* Banner Image <span className="text-red-500">*</span> */}
                   </label>
-                  <input
-                    {...register('specialty_banner_img', { required: true })}
-                    placeholder="https://..."
-                    className="w-full border border-gray-300 rounded-[8px] p-2 focus:outline-none focus:ring-2 focus:ring-[#01503b]"
+                  <ImageUpload
+                    value={watchedBanner}
+                    onChange={(url) => setValue('specialty_banner_img', url)}
+                    label="Banner Image"
+                    description="Drag & drop or click to upload banner"
                   />
                 </div>
-                <div>
+
+                <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Brand Image URL
+                    {/* Brand Image */}
                   </label>
-                  <input
-                    {...register('brand_img')}
-                    placeholder="https://... or /images/..."
-                    className="w-full border border-gray-300 rounded-[8px] p-2 focus:outline-none focus:ring-2 focus:ring-[#01503b]"
+                  <ImageUpload
+                    value={watchedBrand}
+                    onChange={(url) => setValue('brand_img', url)}
+                    label="Brand Image"
+                    description="Drag & drop or click to upload brand logo"
                   />
                 </div>
               </div>
@@ -221,7 +236,7 @@ export default function SpecialtiesAdminPage() {
               <div>
                 <div className="flex justify-between items-center mb-2">
                   <label className="block text-sm font-medium text-gray-700">
-                    Topics / Categories
+                    Topics / Categories <span className="text-red-500">*</span>
                   </label>
                   <button
                     type="button"
@@ -234,16 +249,18 @@ export default function SpecialtiesAdminPage() {
                 <div className="space-y-3">
                   {fields.map((field, index) => (
                     <div key={field.id} className="flex gap-4 items-start">
-                      <div className="flex-1">
+                      <div className="flex-1 space-y-2">
                         <input
                           {...register(`topics.${index}.topic_name`, { required: true })}
                           placeholder="Topic Name (e.g. Cancer)"
-                          className="w-full border border-gray-300 rounded-[8px] p-2 mb-2 focus:outline-none focus:ring-2 focus:ring-[#01503b]"
-                        />
-                        <input
-                          {...register(`topics.${index}.topic_img`, { required: true })}
-                          placeholder="Topic Image URL"
                           className="w-full border border-gray-300 rounded-[8px] p-2 focus:outline-none focus:ring-2 focus:ring-[#01503b]"
+                        />
+                        <ImageUpload
+                          value={watchedTopics[index]?.topic_img}
+                          onChange={(url) => setValue(`topics.${index}.topic_img`, url)}
+                          label={`Topic ${index + 1} Image`}
+                          description="Drag & drop or click to upload topic image"
+                          className="max-w-[300px]"
                         />
                       </div>
                       {fields.length > 1 && (
@@ -350,31 +367,37 @@ export default function SpecialtiesAdminPage() {
                     <label className="block text-sm font-medium text-gray-700">
                       Banner Image
                     </label>
-                  {selectedSpecialty.specialty_banner_img && (
-                    <img
-                      src={selectedSpecialty.specialty_banner_img}
-                      alt="banner"
-                      className="h-16 w-40 object-cover rounded border"
-                    />
-                  )}
-                </div>
+                    {selectedSpecialty.specialty_banner_img ? (
+                      <div className="relative w-full max-w-[200px] aspect-video">
+                        <Image
+                          src={selectedSpecialty.specialty_banner_img}
+                          alt="banner"
+                          fill
+                          className="object-cover rounded border"
+                        />
+                      </div>
+                    ) : (
+                      <span className="text-xs text-gray-400">No banner image set</span>
+                    )}
+                  </div>
 
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Brand Image
-                  </label>
-                  {selectedSpecialty.brand_img && (
-                    <img
-                      src={selectedSpecialty.brand_img}
-                      alt="brand"
-                      className="h-16 w-40 object-cover rounded border"
-                    />
-                  )}
-                  {(!selectedSpecialty.brand_img) && (
-                    <span className="text-xs text-gray-400">No brand image set</span>
-                  )}
-                </div>
-
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Brand Image
+                    </label>
+                    {selectedSpecialty.brand_img ? (
+                      <div className="relative w-full max-w-[200px] aspect-video">
+                        <Image
+                          src={selectedSpecialty.brand_img}
+                          alt="brand"
+                          fill
+                          className="object-cover rounded border"
+                        />
+                      </div>
+                    ) : (
+                      <span className="text-xs text-gray-400">No brand image set</span>
+                    )}
+                  </div>
 
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-700">
@@ -388,11 +411,14 @@ export default function SpecialtiesAdminPage() {
                         >
                           <span className="text-sm text-[#01281e]">{topic.topic_name}</span>
                           {topic.topic_img && (
-                            <img
-                              src={topic.topic_img}
-                              alt={topic.topic_name}
-                              className="h-6 w-6 object-cover rounded"
-                            />
+                            <div className="relative w-8 h-8">
+                              <Image
+                                src={topic.topic_img}
+                                alt={topic.topic_name}
+                                fill
+                                className="object-cover rounded"
+                              />
+                            </div>
                           )}
                         </div>
                       ))}
