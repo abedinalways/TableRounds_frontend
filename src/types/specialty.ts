@@ -1,15 +1,16 @@
 export interface specialityTopic {
-  topic_name: string;
+  name: string;
   topic_img: string;
 }
 
 export interface speciality {
   id?: string;
   _id?: string;
-  speciality_name: string;
+  name: string;
   speciality_banner_img: string;
   brand_img?: string;
   topics?: specialityTopic[];
+  total_topics?: number;
   is_active?: boolean;
   created_at?: string;
   updated_at?: string;

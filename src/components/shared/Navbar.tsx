@@ -54,7 +54,7 @@ export default function Navbar({ isOms = false }) {
   const token = useAppSelector(state => state.auth.auth.token);
   const { data: allSpecialtiesData, isLoading: isLoadingSpecialties } =
     useAllSpecialties();
-  const specialties: { speciality_name: string }[] =
+  const specialties: { name: string }[] =
     allSpecialtiesData?.data || [];
 
   const { data: currentUser } = useMeQuery(undefined, {
@@ -82,10 +82,10 @@ export default function Navbar({ isOms = false }) {
 
   const SpecialityDropdown = ({ isMobile = false }) => {
     const specialityOptions = specialties.map(s => {
-      const slug = slugify(s.speciality_name);
+      const slug = slugify(s.name);
       return {
         value: slug,
-        label: s.speciality_name,
+        label: s.name,
         href: `/${slug}`,
       };
     });

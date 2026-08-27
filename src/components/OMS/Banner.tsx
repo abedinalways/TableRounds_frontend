@@ -41,6 +41,7 @@ export default function Banner({
         fill
         className="object-cover brightness-90"
         priority
+        unoptimized
       />
 
       {/* === Decorative Elements === */}

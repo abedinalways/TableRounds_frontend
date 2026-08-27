@@ -3,17 +3,18 @@ import { baseApi } from './baseApi';
 /* ================= TYPES ================= */
 
 export interface specialityTopic {
-  topic_name: string;
+  name: string;
   topic_img: string;
 }
 
 export interface speciality {
   id: string;
   _id?: string;
-  speciality_name: string;
+  name: string;
   speciality_banner_img: string;
   brand_img?: string;
   topics?: specialityTopic[];
+  total_topics?: number;
   is_active?: boolean;
   created_at?: string;
   updated_at?: string;
@@ -47,22 +48,22 @@ export interface TopicResponse {
 }
 
 export interface CreatespecialityPayload {
-  speciality_name: string;
+  name: string;
   speciality_banner_img?: string | File;
   brand_img?: string | File;
   topics: Array<{
-    topic_name: string;
+    name: string;
     topic_img?: string | File;
   }>;
 }
 
 export interface UpdatespecialityPayload {
   id: string;
-  speciality_name?: string;
+  name?: string;
   speciality_banner_img?: string | File;
   brand_img?: string | File;
   topics?: Array<{
-    topic_name: string;
+    name: string;
     topic_img?: string | File;
   }>;
 }
@@ -88,35 +89,44 @@ function toFormValue(value?: string | File): string | Blob | null {
 
 function toFrontendspeciality(data: Record<string, unknown>): speciality {
   const topics = Array.isArray(data.topics)
-    ? (data.topics as Array<{ name: string; is_active: boolean }>).map(
-        (topic, index) => ({
-          topic_name: String(topic.name ?? ''),
-          topic_img: String(data[`topic_image_${index}`] ?? ''),
-        }),
-      )
+    ? (
+        data.topics as Array<{
+          name: string;
+          is_active: boolean;
+          image_url?: string;
+        }>
+      ).map((topic, index) => ({
+        name: String(topic.name ?? ''),
+        topic_img: String(topic.image_url ?? data[`topic_image_${index}`] ?? ''),
+      }))
     : [];
 
   return {
     id: String(data.id ?? data._id ?? ''),
     _id: data._id ? String(data._id) : undefined,
-    speciality_name: String(data.name ?? ''),
-    speciality_banner_img: String(data.banner ?? ''),
-    brand_img: data.image ? String(data.image) : undefined,
+    name: String(data.name ?? ''),
+    speciality_banner_img: String(data.banner_url ?? data.banner ?? ''),
+    brand_img: data.image_url
+      ? String(data.image_url)
+      : data.image
+        ? String(data.image)
+        : undefined,
     is_active: typeof data.is_active === 'boolean' ? data.is_active : false,
     topics,
+    total_topics: typeof data.total_topics === 'number' ? data.total_topics : topics.length,
     created_at: data.created_at ? String(data.created_at) : undefined,
     updated_at: data.updated_at ? String(data.updated_at) : undefined,
   };
 }
 
 function buildspecialityFormData(payload: {
-  speciality_name: string;
+  name: string;
   speciality_banner_img?: string | File;
   brand_img?: string | File;
-  topics: Array<{ topic_name: string; topic_img?: string | File }>;
+  topics: Array<{ name: string; topic_img?: string | File }>;
 }) {
   const form = new FormData();
-  form.append('name', payload.speciality_name);
+  form.append('name', payload.name);
   form.append('is_active', 'true');
 
   const banner = toFormValue(payload.speciality_banner_img);
@@ -130,7 +140,7 @@ function buildspecialityFormData(payload: {
   }
 
   payload.topics.forEach((topic, index) => {
-    form.append(`topics[${index}][name]`, topic.topic_name);
+    form.append(`topics[${index}][name]`, topic.name);
     form.append(`topics[${index}][is_active]`, 'true');
     const topicImg = toFormValue(topic.topic_img);
     if (topicImg instanceof File) {
@@ -165,10 +175,21 @@ function buildTopicFormData(payload: {
 export const specialityApi = baseApi.injectEndpoints({
   overrideExisting: true,
   endpoints: builder => ({
-    getAllSpecialties: builder.query<specialityListResponse, void>({
-      query: () => ({
+    getAllSpecialties: builder.query<
+      specialityListResponse,
+      { page?: number; limit?: number; search?: string } | void
+    >({
+      query: params => ({
         url: '/admin/speciality',
         method: 'GET',
+        params:
+          params && (params.page || params.limit || params.search)
+            ? {
+                ...(params.page ? { page: params.page } : {}),
+                ...(params.limit ? { limit: params.limit } : {}),
+                ...(params.search ? { search: params.search } : undefined),
+              }
+            : undefined,
       }),
       transformResponse: (response: Record<string, unknown>) => {
         const rawData = response.data;
@@ -198,7 +219,9 @@ export const specialityApi = baseApi.injectEndpoints({
         method: 'GET',
       }),
       transformResponse: (response: Record<string, unknown>) =>
-        toFrontendspeciality(response),
+        toFrontendspeciality(
+          (response.data ?? response) as Record<string, unknown>,
+        ),
       providesTags: (result, error, id) => [{ type: 'speciality', id }],
     }),
 
@@ -208,7 +231,9 @@ export const specialityApi = baseApi.injectEndpoints({
         method: 'GET',
       }),
       transformResponse: (response: Record<string, unknown>) =>
-        toFrontendspeciality(response),
+        toFrontendspeciality(
+          (response.data ?? response) as Record<string, unknown>,
+        ),
       providesTags: (result, error, name) => [{ type: 'speciality', id: name }],
     }),
 
@@ -229,14 +254,16 @@ export const specialityApi = baseApi.injectEndpoints({
         url: `/admin/speciality/${encodeURIComponent(id)}`,
         method: 'PATCH',
         body: buildspecialityFormData({
-          speciality_name: data.speciality_name ?? '',
+          name: data.name ?? '',
           speciality_banner_img: data.speciality_banner_img ?? '',
           brand_img: data.brand_img,
           topics: data.topics ?? [],
         }),
       }),
       transformResponse: (response: Record<string, unknown>) =>
-        toFrontendspeciality(response),
+        toFrontendspeciality(
+          (response.data ?? response) as Record<string, unknown>,
+        ),
       invalidatesTags: (result, error, { id }) => [
         'speciality',
         { type: 'speciality', id },

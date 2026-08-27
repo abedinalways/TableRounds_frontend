@@ -1,5 +1,6 @@
 import {
   useGetAllSpecialtiesQuery,
+  useGetspecialityByIdQuery,
   useGetspecialityByNameQuery,
   useCreatespecialityMutation,
   useUpdatespecialityMutation,
@@ -26,8 +27,10 @@ interface MutationWithUnwrap<T> {
   (arg: T): Promise<unknown> & { unwrap: () => Promise<unknown> };
 }
 
-export function useAllSpecialties() {
-  const realQuery = useGetAllSpecialtiesQuery(undefined, {
+export function useAllSpecialties(
+  params?: { page?: number; limit?: number; search?: string },
+) {
+  const realQuery = useGetAllSpecialtiesQuery(params, {
     skip: USE_MOCK,
   });
 
@@ -69,23 +72,40 @@ export function useSpecialityByName(name: string) {
   return realQuery;
 }
 
+export function useSpecialityById(id: string | null) {
+  const realQuery = useGetspecialityByIdQuery(id ?? '', {
+    skip: USE_MOCK || !id,
+  });
+
+  if (USE_MOCK || !id) {
+    return {
+      data: undefined,
+      isLoading: false,
+      isError: false,
+      error: undefined,
+      refetch: () => {},
+    };
+  }
+  return realQuery;
+}
+
 interface specialityMutations {
   createspeciality: [
     MutationWithUnwrap<{
-      speciality_name: string;
+      name: string;
       speciality_banner_img?: string | File;
       brand_img?: string | File;
-      topics: Array<{ topic_name: string; topic_img?: string | File }>;
+      topics: Array<{ name: string; topic_img?: string | File }>;
     }>,
     MutationMeta,
   ];
   updatespeciality: [
     MutationWithUnwrap<{
       id: string;
-      speciality_name?: string;
+      name?: string;
       speciality_banner_img?: string | File;
       brand_img?: string | File;
-      topics?: Array<{ topic_name: string; topic_img?: string | File }>;
+      topics?: Array<{ name: string; topic_img?: string | File }>;
     }>,
     MutationMeta,
   ];
@@ -119,10 +139,10 @@ export function useSpecialityMutations(): specialityMutations {
 
   const mockCreate = useCallback(
     (data: {
-      speciality_name: string;
+      name: string;
       speciality_banner_img?: string | File;
       brand_img?: string | File;
-      topics: Array<{ topic_name: string; topic_img?: string | File }>;
+      topics: Array<{ name: string; topic_img?: string | File }>;
     }) => {
       setMockLoading(true);
       const result = mockspecialityService.create(
@@ -139,10 +159,10 @@ export function useSpecialityMutations(): specialityMutations {
   const mockUpdate = useCallback(
     (args: {
       id: string;
-      speciality_name?: string;
+      name?: string;
       speciality_banner_img?: string | File;
       brand_img?: string | File;
-      topics?: Array<{ topic_name: string; topic_img?: string | File }>;
+      topics?: Array<{ name: string; topic_img?: string | File }>;
     }) => {
       setMockLoading(true);
       const { id, ...data } = args;
@@ -233,20 +253,20 @@ export function useSpecialityMutations(): specialityMutations {
   return {
     createspeciality: [
       createReal as MutationWithUnwrap<{
-        speciality_name: string;
+        name: string;
         speciality_banner_img?: string | File;
         brand_img?: string | File;
-        topics: Array<{ topic_name: string; topic_img?: string | File }>;
+        topics: Array<{ name: string; topic_img?: string | File }>;
       }>,
       { ...createMeta },
     ],
     updatespeciality: [
       updateReal as MutationWithUnwrap<{
         id: string;
-        speciality_name?: string;
+        name?: string;
         speciality_banner_img?: string | File;
         brand_img?: string | File;
-        topics?: Array<{ topic_name: string; topic_img?: string | File }>;
+        topics?: Array<{ name: string; topic_img?: string | File }>;
       }>,
       { ...updateMeta },
     ],
