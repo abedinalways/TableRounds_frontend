@@ -9,12 +9,8 @@ import {
 import { ProfileData as ProfileUIData } from '@/types/myProfile';
 
 export function mapProfileToUI(data: ProfileData): ProfileUIData {
-  
-  const specialty =
-    data.specialty ??
-   
-    data.current_practice ??
-    'Medical Professional';
+  const speciality =
+    data.speciality ?? data.current_practice ?? 'Medical Professional';
 
   return {
     user: {
@@ -39,7 +35,7 @@ export function mapProfileToUI(data: ProfileData): ProfileUIData {
       facebook: data.facebook ?? '',
       current_practice: data.current_practice ?? '',
       created_at: data.created_at ?? '',
-      specialty: specialty,
+      speciality: speciality,
     },
 
     education: (data.educations ?? []).map((edu: Education) => ({
@@ -71,7 +67,7 @@ export function mapProfileToUI(data: ProfileData): ProfileUIData {
       correct_percentage: data.statistics?.correct_percentage ?? 0,
       ranking: data.statistics?.ranking ?? 0,
       best_topic: data.statistics?.best_topic ?? null,
-      question_bank_usage:data?.statistics?.question_bank_usage?? 0
+      question_bank_usage: data?.statistics?.question_bank_usage ?? 0,
     },
   };
 }

@@ -1,8 +1,8 @@
-'use client'
+'use client';
 import Btn from '@/components/reusable/button/Btn';
 
 import Image from 'next/image';
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import MotionPathPlugin from 'gsap/MotionPathPlugin';
 
@@ -20,13 +20,13 @@ export default function Elevate() {
       motionPath: {
         path: [
           { x: 0, y: 0 },
-          { x: 50, y: -80 }, 
-          { x: 100, y: -100 }, 
+          { x: 50, y: -80 },
+          { x: 100, y: -100 },
           { x: 150, y: -80 },
-          { x: 200, y: -40 }, 
+          { x: 200, y: -40 },
         ],
-        curviness: 1.5, 
-        autoRotate: false, 
+        curviness: 1.5,
+        autoRotate: false,
       },
     });
 
@@ -34,8 +34,8 @@ export default function Elevate() {
     return () => {
       tl.kill();
     };
-  }, [])
-  
+  }, []);
+
   return (
     <div className="relative  flex flex-col items-center justify-center gap-6 max-w-[1920px] h-[492px]  text-white text-center bg-[url('/images/elevate/bg.png')] bg-cover bg-no-repeat backdrop-blur-xs font-[manrope]">
       <div className="absolute top-5 left-0">
@@ -76,7 +76,8 @@ export default function Elevate() {
       </div>
 
       <h2 className="text-xl md:text-3xl lg:text-[60px] px-4 md:px-0 font-bold">
-        Ready to Elevate Your Medical <br /> Practice and Master Your Specialty?
+        Ready to Elevate Your Medical <br /> Practice and Master Your
+        speciality?
       </h2>
       <p className="text-sm sm:text-lg px-4 md:px-0 text-[#f2e9ed]">
         Achieve unmatched clinical mastery and accelerate your professional

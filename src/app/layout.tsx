@@ -12,11 +12,8 @@ import '../styles/globals.css';
 
 import { Toaster } from 'sonner';
 
-
 import { Providers } from './Providers';
 import AuthProvider from './AuthProvider';
-;
-
 const fraunces = Fraunces({
   subsets: ['latin'],
   weight: ['600', '700'],
@@ -55,19 +52,19 @@ const garamond = EB_Garamond({
 export const metadata: Metadata = {
   title: 'TableRounds',
   description:
-    'TableRounds is a clinician-built platform that brings board-style question banks and a vetted community of surgeons, dentists, and trainees into one place. Create a verified profile, work through specialty-tagged questions with detailed explanations, track your performance by topic, and connect with colleagues who are equally invested in maintaining a high standard of practice',
+    'TableRounds is a clinician-built platform that brings board-style question banks and a vetted community of surgeons, dentists, and trainees into one place. Create a verified profile, work through speciality-tagged questions with detailed explanations, track your performance by topic, and connect with colleagues who are equally invested in maintaining a high standard of practice',
   metadataBase: new URL('https://tablerounds.ai'),
   //preview for Facebook, WhatsApp, LinkedIn
   openGraph: {
     title: 'TableRounds',
     description:
       'TableRounds is a clinician-built platform that brings board-style question banks and a vetted community of surgeons, dentists, and trainees into one place.',
-    url: '/',  // ✅ Relative path — metadataBase converts it to absolute
+    url: '/', // ✅ Relative path — metadataBase converts it to absolute
     siteName: 'TableRounds',
     type: 'website',
     images: [
       {
-        url: '/footer-logo.png',  // ✅ Relative — metadataBase converts to absolute
+        url: '/footer-logo.png', // ✅ Relative — metadataBase converts to absolute
         width: 600,
         height: 300,
         alt: 'TableRounds Logo',
@@ -80,7 +77,7 @@ export const metadata: Metadata = {
     title: 'TableRounds',
     description:
       'TableRounds is a clinician-built platform that brings board-style question banks and a vetted community of surgeons, dentists, and trainees into one place.',
-    images: ['/footer-logo.png'],  // ✅ Relative — metadataBase converts to absolute
+    images: ['/footer-logo.png'], // ✅ Relative — metadataBase converts to absolute
   },
 };
 
@@ -94,8 +91,8 @@ export default function RootLayout({
       <body
         className={`${manrope.variable} ${outfit.variable} ${inter.variable} ${fraunces.variable} ${garamond.variable} ${roboto.variable} ${jakarta.variable} antialiased`}
       >
-          <Providers>
-        <AuthProvider>
+        <Providers>
+          <AuthProvider>
             <Toaster
               position="top-center"
               richColors
@@ -105,8 +102,8 @@ export default function RootLayout({
               }}
             />
             {children}
-        </AuthProvider>
-          </Providers>
+          </AuthProvider>
+        </Providers>
       </body>
     </html>
   );

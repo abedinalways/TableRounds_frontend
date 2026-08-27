@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import Image from 'next/image';
@@ -45,7 +43,7 @@ type ProfileFormData = {
   linkedin: string;
   twitter: string;
   facebook: string;
-  specialty: string;
+  speciality: string;
   bio: string;
   current_practice: string;
   is_public: boolean;
@@ -98,7 +96,7 @@ export default function ManageProfile({
       instagram: '',
       linkedin: '',
       twitter: '',
-      specialty: '',
+      speciality: '',
       facebook: '',
       bio: '',
       current_practice: '',
@@ -112,7 +110,6 @@ export default function ManageProfile({
       c => c.name === user?.country || c.isoCode === user?.country,
     );
     const isoCode = matchedCountry?.isoCode || '';
-
 
     const matchedState = State.getStatesOfCountry(isoCode).find(
       s => s.name === user?.state || s.isoCode === user?.state,
@@ -129,7 +126,7 @@ export default function ManageProfile({
       linkedin: user?.linkedin || '',
       twitter: user?.twitter || '',
       facebook: user?.facebook || '',
-      specialty: user?.specialty || '',
+      speciality: user?.speciality || '',
       bio: user?.bio || '',
       current_practice: user?.current_practice || '',
       is_public: Boolean(user?.is_public),
@@ -150,7 +147,8 @@ export default function ManageProfile({
 
   const onSubmit = async (data: ProfileFormData) => {
     try {
-      const countryName = Country.getCountryByCode(data.country)?.name || data.country;
+      const countryName =
+        Country.getCountryByCode(data.country)?.name || data.country;
       const formData = new FormData();
 
       formData.append('name', data.name || '');
@@ -166,7 +164,7 @@ export default function ManageProfile({
       formData.append('facebook', data.facebook || '');
       formData.append('bio', data.bio || '');
       formData.append('current_practice', data.current_practice || '');
-      formData.append('specialty', data.specialty || '');
+      formData.append('speciality', data.speciality || '');
       formData.append('is_public', String(data.is_public));
 
       if (imageFile) {
@@ -278,7 +276,7 @@ export default function ManageProfile({
                     height={20}
                     alt=""
                   />
-                  {user.specialty}
+                  {user.speciality}
                 </h4>
                 <p className=" text-[#047857] text-sm md:text-[16px] flex items-center gap-1">
                   <Image
@@ -576,17 +574,17 @@ export default function ManageProfile({
 
           <div className="flex flex-col gap-[8px] w-full">
             <Label className="font-bold md:text-lg!">
-              Specialty <span className="text-red-600">*</span>
+              speciality <span className="text-red-600">*</span>
             </Label>
             <div className="w-full">
               <Select
-                value={watch('specialty')}
+                value={watch('speciality')}
                 onValueChange={value =>
-                  setValue('specialty', value, { shouldDirty: true })
+                  setValue('speciality', value, { shouldDirty: true })
                 }
               >
                 <SelectTrigger className="bg-[#f9f9f5] border border-[rgba(68,68,68,0.1)] h-9 w-[225px] md:w-full">
-                  <SelectValue placeholder="Select a specialty" />
+                  <SelectValue placeholder="Select a speciality" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="Oral and Maxillofacial Surgery">

@@ -1,10 +1,9 @@
-
 // import { ProfileData } from '@/types/profile';
 
 // export const profileData: ProfileData = {
 //   user: {
 //     name: 'Jordan Nguyen, DMD, MD',
-//     title: 'Oral and Maxillofacial Surgery, PGY-5 Resident', //this will be linked to Specialty when create profile
+//     title: 'Oral and Maxillofacial Surgery, PGY-5 Resident', //this will be linked to speciality when create profile
 //     avatar: '/images/dashboard/profile/img01.png',
 //     location: 'New York, USA',
 //     jobArea: 'Bellevue Hospital',
@@ -48,7 +47,7 @@
 //       hospital: 'Mayo Clinic',
 //       location: 'Rochester, MN',
 //       period: '2019 - Present',
-//       specialty:
+//       speciality:
 //         'Practicing oral and maxillofacial surgery with focus on reconstructive procedures and TMJ surgery',
 //     },
 //     {
@@ -56,7 +55,7 @@
 //       hospital: 'Harvard Hospital',
 //       location: 'Boston-900, MA',
 //       period: '2018 - 2020',
-//       specialty:
+//       speciality:
 //         'Led a team of residents in managing complex maxillofacial trauma cases and surgical education',
 //     },
 //   ],

@@ -12,7 +12,7 @@ export interface AuthUser {
   followers: number;
   current_practice: string;
   training_practice: string;
-  specialty: string;
+  speciality: string;
   followings: number;
   instagram: string;
   linkedin: string;

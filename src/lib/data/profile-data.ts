@@ -1,4 +1,3 @@
-
 // import { ProfileData } from '@/types/profile';
 
 // export const profileData: ProfileData = {
@@ -48,7 +47,7 @@
 //       hospital: 'Mayo Clinic',
 //       location: 'Rochester, MN',
 //       period: '2019 - Present',
-//       specialty:
+//       speciality:
 //         'Practicing oral and maxillofacial surgery with focus on reconstructive procedures and TMJ surgery',
 //     },
 //     {
@@ -56,7 +55,7 @@
 //       hospital: 'Harvard Hospital',
 //       location: 'Boston, MA',
 //       period: '2018 - 2020',
-//       specialty:
+//       speciality:
 //         'Led a team of residents in managing complex maxillofacial trauma cases and surgical education',
 //     },
 //   ],

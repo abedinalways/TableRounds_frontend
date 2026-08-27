@@ -13,7 +13,11 @@ import { usePathname } from 'next/navigation'; // Import this hook to get the cu
 gsap.registerPlugin(ScrollToPlugin);
 gsap.registerPlugin(MotionPathPlugin);
 
-export default function Elevate() {
+interface ElevateProps {
+  specialityName: string;
+}
+
+export default function Elevate({ specialityName }: ElevateProps) {
   const router = useRouter();
   const pathname = usePathname(); // Get the current path
   const isHomepage = pathname === '/'; // Check if we're on the homepage
@@ -95,11 +99,12 @@ export default function Elevate() {
       </div>
 
       <h2 className="text-[28px] md:text-3xl lg:text-5xl px-4 md:px-0 font-bold">
-        Ready to Elevate Your OMS <br />
+        Ready to Elevate Your {specialityName} <br />
         Training?
       </h2>
       <p className="text-sm sm:text-lg px-4 md:px-0">
-        Join our growing community of OMS trainees and surgeons dedicated to
+        Join our growing community of {specialityName} trainees and surgeons
+        dedicated to
         <br />
         improving everyday practice.
       </p>
@@ -113,7 +118,6 @@ export default function Elevate() {
 
         <Btn
           text="Learn More About TableRounds"
-          
           className="bg-white text-[#B79E6B] w-full h-10 transition-colors rounded-xl md:w-[305px] md:h-[54px] cursor-pointer z-30 text-sm"
           onClick={handleScrollToSection}
         />

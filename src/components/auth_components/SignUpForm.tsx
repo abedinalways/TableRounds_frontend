@@ -27,8 +27,6 @@ import { toast } from 'sonner';
 import { RegisterPayload } from '@/app/redux/api/registerApi';
 import FileUpload from '../reusable/FileUpload';
 
-
-
 export interface SignUpFormData {
   name: string;
   credentials: string;
@@ -37,7 +35,7 @@ export interface SignUpFormData {
   createPassword: string;
   confirmPassword: string;
   yearInTraining: string;
-  specialty: string;
+  speciality: string;
   country: string;
   state: string;
   location: string;
@@ -59,7 +57,7 @@ interface SignUpFormProps {
 export default function SignUpForm({
   onSubmit,
   onCancel,
-  
+
   isLoading = false,
 }: SignUpFormProps) {
   const [formData, setFormData] = useState<SignUpFormData>({
@@ -69,7 +67,7 @@ export default function SignUpForm({
     createPassword: '',
     confirmPassword: '',
     yearInTraining: '',
-    specialty: '',
+    speciality: '',
     country: '',
     state: '',
     location: '',
@@ -128,8 +126,8 @@ export default function SignUpForm({
       newErrors.confirmPassword = 'Passwords do not match';
     }
 
-    if (!formData.specialty.trim())
-      newErrors.specialty = 'Specialty is required';
+    if (!formData.speciality.trim())
+      newErrors.speciality = 'speciality is required';
 
     // if (!formData.agreeToTerms) {
     //   newErrors.agreeToTerms = 'You must agree to the terms';
@@ -149,33 +147,33 @@ export default function SignUpForm({
     return Object.keys(newErrors).length === 0;
   };
 
- const handleSubmit = async () => {
-   if (!validateForm()) return;
+  const handleSubmit = async () => {
+    if (!validateForm()) return;
 
-   const payload: RegisterPayload = {
-     name: formData.name,
-     email: formData.email,
-     country: formData.country,
-     state: formData.state,
-     password: formData.createPassword,
-     credentials: formData.credentials,
-     training_practice: formData.yearInTraining,
-     address: formData.location,
-     current_practice: formData.currentPractice,
-     bio: formData.bio,
-     specialty: formData.specialty,
-     instagram: formData.instagramUrl || undefined,
-     linkedin: formData.linkedinUrl || undefined,
-     twitter_x: formData.twitterUrl || undefined,
-     facebook: formData.facebookUrl || undefined,
-     avatar: profilePhoto,
-     verification_doc: verificationDoc,
-     type: 'user',
-   };
+    const payload: RegisterPayload = {
+      name: formData.name,
+      email: formData.email,
+      country: formData.country,
+      state: formData.state,
+      password: formData.createPassword,
+      credentials: formData.credentials,
+      training_practice: formData.yearInTraining,
+      address: formData.location,
+      current_practice: formData.currentPractice,
+      bio: formData.bio,
+      speciality: formData.speciality,
+      instagram: formData.instagramUrl || undefined,
+      linkedin: formData.linkedinUrl || undefined,
+      twitter_x: formData.twitterUrl || undefined,
+      facebook: formData.facebookUrl || undefined,
+      avatar: profilePhoto,
+      verification_doc: verificationDoc,
+      type: 'user',
+    };
 
-   await onSubmit?.(payload);
- };
-  
+    await onSubmit?.(payload);
+  };
+
   const [showCreatePassword, setShowCreatePassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   return (
@@ -392,31 +390,33 @@ opacity-xl font-[manrope]"
                   </SelectContent>
                 </Select>
 
-                {errors.specialty && (
+                {errors.speciality && (
                   <p className="text-red-300 text-xs mt-1">
-                    {errors.specialty}
+                    {errors.speciality}
                   </p>
                 )}
               </div>
 
-              {/* specialty */}
+              {/* speciality */}
               <div>
                 <Label
-                  htmlFor="Specialty"
+                  htmlFor="speciality"
                   className="text-white text-sm md:text-[18px] font-bold"
                 >
-                  Specialty <span className="text-red-600">*</span>
+                  speciality <span className="text-red-600">*</span>
                 </Label>
 
                 <Select
-                  value={formData.specialty}
-                  onValueChange={value => handleInputChange('specialty', value)}
+                  value={formData.speciality}
+                  onValueChange={value =>
+                    handleInputChange('speciality', value)
+                  }
                 >
                   <SelectTrigger
                     size="xl"
                     className="mt-2 bg-[#1C765E] border-none md:p-4 rounded-[8px] cursor-pointer text-white text-[18px]! [&>span]:text-white [&_[data-placeholder]]:text-white [&_svg]:opacity-100 placeholder:text-[18px] rounded-[8px] w-full lg:w-[644px]"
                   >
-                    <SelectValue placeholder="Select a specialty" />
+                    <SelectValue placeholder="Select a speciality" />
                   </SelectTrigger>
 
                   <SelectContent className="bg-[#1C765E] border-none text-white">
@@ -441,9 +441,9 @@ opacity-xl font-[manrope]"
                   </SelectContent>
                 </Select>
 
-                {errors.specialty && (
+                {errors.speciality && (
                   <p className="text-red-300 text-xs mt-1">
-                    {errors.specialty}
+                    {errors.speciality}
                   </p>
                 )}
               </div>

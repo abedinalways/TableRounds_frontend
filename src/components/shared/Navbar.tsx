@@ -22,17 +22,14 @@ import { useAppSelector, useAppDispatch } from '@/app/redux/hook';
 import { useMeQuery, useLogoutMutation } from '@/app/redux/api/authApi';
 import { toast } from 'sonner';
 import { clearUser } from '@/app/redux/authSlice';
+import { useAllSpecialties } from '@/hooks/useSpecialtyData';
 
 const navItems = [
   { label: 'Home', href: '/' },
-  { label: 'Specialties', hasDropdown: true, dropdownKey: 'specialty' },
+  { label: 'Specialties', hasDropdown: true, dropdownKey: 'speciality' },
   { label: 'Pricing', href: '/pricing' },
   { label: 'Legal', hasDropdown: true, dropdownKey: 'legal' },
   { label: 'Contact', href: '/contact' },
-];
-
-const specialtyOptions = [
-  { value: 'oms', label: 'OMS', href: '/oms' },
 ];
 
 const legalOptions = [
@@ -41,13 +38,24 @@ const legalOptions = [
   { label: 'Terms of Use', href: '/terms-conditions' },
 ];
 
+function slugify(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[\s-]+/g, '-')
+    .replace(/[^a-z0-9-]/g, '');
+}
+
 export default function Navbar({ isOms = false }) {
   const [open, setOpen] = useState(false);
-  const [specialty, setSpecialty] = useState('');
+  const [speciality, setspeciality] = useState('');
   const pathname = usePathname();
   const router = useRouter();
   const dispatch = useAppDispatch();
   const token = useAppSelector(state => state.auth.auth.token);
+  const { data: allSpecialtiesData, isLoading: isLoadingSpecialties } =
+    useAllSpecialties();
+  const specialties: { speciality_name: string }[] =
+    allSpecialtiesData?.data || [];
 
   const { data: currentUser } = useMeQuery(undefined, {
     skip: !token,
@@ -72,46 +80,68 @@ export default function Navbar({ isOms = false }) {
     return pathname === href || pathname.startsWith(href + '/');
   };
 
-  const SpecialtyDropdown = ({ isMobile = false }) => (
-    <DropdownMenu modal={!isMobile}>
-      <DropdownMenuTrigger asChild>
-        <button
-          className={`flex items-center cursor-pointer gap-1 focus:outline-none hover:text-[#B79E6B] transition-colors ${
-            isMobile ? 'w-full justify-between' : ''
-          }`}
+  const SpecialityDropdown = ({ isMobile = false }) => {
+    const specialityOptions = specialties.map(s => {
+      const slug = slugify(s.speciality_name);
+      return {
+        value: slug,
+        label: s.speciality_name,
+        href: `/${slug}`,
+      };
+    });
+
+    return (
+      <DropdownMenu modal={!isMobile}>
+        <DropdownMenuTrigger asChild>
+          <button
+            className={`flex items-center cursor-pointer gap-1 focus:outline-none hover:text-[#B79E6B] transition-colors ${
+              isMobile ? 'w-full justify-between' : ''
+            }`}
+          >
+            Specialties
+            <ChevronDown className="w-4 h-4" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          className={`bg-white font-[manrope] ${isMobile ? 'w-full' : 'w-56'}`}
         >
-          Specialties
-          <ChevronDown className="w-4 h-4" />
-        </button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className={`bg-white font-[manrope] ${isMobile ? 'w-full' : 'w-56'}`}
-      >
-        <DropdownMenuLabel>Select Specialty</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuRadioGroup value={specialty} onValueChange={setSpecialty}>
-          {specialtyOptions.map(option => (
-            <Link
-              key={option.value}
-              href={option.href || '#'}
-              onClick={() => {
-                if (isMobile) setOpen(false);
-              }}
+          <DropdownMenuLabel>Select speciality</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          {isLoadingSpecialties ? (
+            <div className="px-3 py-2 text-sm text-gray-500">
+              Loading specialties...
+            </div>
+          ) : (
+            <DropdownMenuRadioGroup
+              value={speciality}
+              onValueChange={setspeciality}
             >
-              <DropdownMenuRadioItem
-                value={option.value}
-                className={`cursor-pointer ${
-                  isActive(option.href) ? 'text-[#B79E6B] font-semibold' : ''
-                }`}
-              >
-                {option.label}
-              </DropdownMenuRadioItem>
-            </Link>
-          ))}
-        </DropdownMenuRadioGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
+              {specialityOptions.map(option => (
+                <Link
+                  key={option.value}
+                  href={option.href || '#'}
+                  onClick={() => {
+                    if (isMobile) setOpen(false);
+                  }}
+                >
+                  <DropdownMenuRadioItem
+                    value={option.value}
+                    className={`cursor-pointer ${
+                      isActive(option.href)
+                        ? 'text-[#B79E6B] font-semibold'
+                        : ''
+                    }`}
+                  >
+                    {option.label}
+                  </DropdownMenuRadioItem>
+                </Link>
+              ))}
+            </DropdownMenuRadioGroup>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  };
 
   const LegalDropdown = ({ isMobile = false }) => (
     <DropdownMenu modal={!isMobile}>
@@ -265,8 +295,8 @@ export default function Navbar({ isOms = false }) {
             {navItems.map(item => (
               <li key={item.label}>
                 {item.hasDropdown ? (
-                  item.dropdownKey === 'specialty' ? (
-                    <SpecialtyDropdown />
+                  item.dropdownKey === 'speciality' ? (
+                    <SpecialityDropdown />
                   ) : (
                     <LegalDropdown />
                   )
@@ -341,8 +371,8 @@ export default function Navbar({ isOms = false }) {
                     {navItems.map(item => (
                       <li key={item.label}>
                         {item.hasDropdown ? (
-                          item.dropdownKey === 'specialty' ? (
-                            <SpecialtyDropdown isMobile />
+                          item.dropdownKey === 'speciality' ? (
+                            <SpecialityDropdown isMobile />
                           ) : (
                             <LegalDropdown isMobile />
                           )

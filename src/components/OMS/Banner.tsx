@@ -11,20 +11,27 @@ import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 
 gsap.registerPlugin(ScrollToPlugin);
 
+interface BannerProps {
+  specialityName: string;
+  specialityBannerImg: string;
+}
 
-export default function Banner() {
-   const handleExploreMore = useCallback(() => {
-     const target = document.querySelector('#features');
-     if (!target) return;
+export default function Banner({
+  specialityName,
+  specialityBannerImg,
+}: BannerProps) {
+  const handleExploreMore = useCallback(() => {
+    const target = document.querySelector('#features');
+    if (!target) return;
 
-     const offsetY = 40;
+    const offsetY = 40;
 
-     gsap.to(window, {
-       duration: 1,
-       ease: 'power2.out',
-       scrollTo: { y: target, offsetY },
-     });
-   }, []);
+    gsap.to(window, {
+      duration: 1,
+      ease: 'power2.out',
+      scrollTo: { y: target, offsetY },
+    });
+  }, []);
   return (
     <section className="relative font-[manrope] py-10 px-4 md:px-0">
       {/* Background Image */}
@@ -40,7 +47,7 @@ export default function Banner() {
 
       {/*Banner Image */}
       <Image
-        src="/images/osm/banner.png"
+        src={specialityBannerImg || '/images/osm/banner.png'}
         alt=""
         width={826}
         height={820}
@@ -70,8 +77,6 @@ export default function Banner() {
         "
       />
 
-     
-
       {/* === TEXT + BUTTONS === */}
       <div
         className="
@@ -84,23 +89,23 @@ export default function Banner() {
           text-white custom-container
         "
       >
-        
-          <h2 className="font-bold text-3xl md:text-[40px] xl:text-[48px]  leading-tight">
-            Mastering Every Aspect of<br />
-            Oral and Maxillofacial Surgery
-          </h2>
+        <h2 className="font-bold text-3xl md:text-[40px] xl:text-[48px]  leading-tight">
+          Mastering Every Aspect of
+          <br />
+          {specialityName}
+        </h2>
 
-          <p className="mt-4 text-sm md:text-[24px] text-white/90">
-            Built by surgeons. <br /> Evidence-based. <br /> Specialty-driven.
-          </p>
+        <p className="mt-4 text-sm md:text-[24px] text-white/90">
+          Built by surgeons. <br /> Evidence-based. <br /> speciality-driven.
+        </p>
 
-          <div className="mt-16 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+        <div className="mt-16 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
           <Btn
-              onClick={handleExploreMore}
-              text="Explore OMS Features"
-              className="bg-white text-green-700 md:w-[217px] w-full h-[54px]"
-            />
-          </div>
+            onClick={handleExploreMore}
+            text={`Explore ${specialityName} Features`}
+            className="bg-white text-green-700 md:w-[217px] w-full h-[54px]"
+          />
+        </div>
       </div>
     </section>
   );
