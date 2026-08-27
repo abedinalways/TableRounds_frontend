@@ -38,18 +38,14 @@ export default function ProfilePage({
     if (countryCode.length !== 2) return countryCode;
 
     try {
-      
       const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
       return regionNames.of(countryCode.toUpperCase()) || countryCode;
     } catch (error) {
       return countryCode;
     }
   };
-  const specialty =
-    apiData.specialty ??
-    
-    apiData.current_practice ??
-    'Medical Professional';
+  const speciality =
+    apiData.speciality ?? apiData.current_practice ?? 'Medical Professional';
 
   const formattedData = {
     user: {
@@ -79,7 +75,7 @@ export default function ProfilePage({
       twitter: apiData.twitter_x ?? '',
       facebook: apiData.facebook ?? '',
       current_practice: apiData.current_practice ?? '',
-      specialty: specialty,
+      speciality: speciality,
     },
 
     education: (apiData.educations ?? []).map((edu: any) => ({
@@ -94,7 +90,7 @@ export default function ProfilePage({
       hospital: exp.company,
       location: exp.location,
       period: `${exp.start_date} - ${exp.end_date}`,
-      specialty: exp.specialty ?? '',
+      speciality: exp.speciality ?? '',
     })),
 
     publications: (apiData.publications ?? []).map((pub: any) => ({
@@ -111,13 +107,12 @@ export default function ProfilePage({
       correct_percentage: apiData.statistics?.correct_percentage ?? 0,
       ranking: apiData.statistics?.ranking ?? 0,
       best_topic: apiData.statistics?.best_topic ?? null,
-      question_bank_usage:apiData?.statistics?.question_bank_usage?? 0
+      question_bank_usage: apiData?.statistics?.question_bank_usage ?? 0,
     },
 
     practiceName: apiData.current_practice ?? '',
   };
 
-  
   return (
     <div>
       <div className="w-full rounded-2xl background h-[383px]" />

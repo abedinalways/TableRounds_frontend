@@ -1,24 +1,24 @@
-export interface SpecialtyTopic {
+export interface specialityTopic {
   topic_name: string;
   topic_img: string;
 }
 
-export interface Specialty {
+export interface speciality {
   id?: string;
   _id?: string;
-  specialty_name: string;
-  specialty_banner_img: string;
+  speciality_name: string;
+  speciality_banner_img: string;
   brand_img?: string;
-  topics?: SpecialtyTopic[];
+  topics?: specialityTopic[];
   is_active?: boolean;
   created_at?: string;
   updated_at?: string;
 }
 
-export interface SpecialtyListResponse {
+export interface specialityListResponse {
   success: boolean;
   message: string;
-  data: Specialty[];
+  data: speciality[];
   meta: {
     total: number;
     page: number;

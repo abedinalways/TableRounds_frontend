@@ -12,6 +12,8 @@ interface ImageUploadProps {
   description?: string;
   className?: string;
   disabled?: boolean;
+  /** Optional callback to receive the actual File object selected by the user */
+  onFileChange?: (file: File | null) => void;
 }
 
 export default function ImageUpload({
@@ -21,6 +23,7 @@ export default function ImageUpload({
   description = 'Drag & drop or click to upload',
   className,
   disabled = false,
+  onFileChange,
 }: ImageUploadProps) {
   const [isDragging, setIsDragging] = useState(false);
   const preview = value || null;
@@ -37,7 +40,10 @@ export default function ImageUpload({
     const url = URL.createObjectURL(file);
     blobUrlRef.current = url;
     onChange(url);
-  }, [onChange]);
+    if (onFileChange) {
+      onFileChange(file);
+    }
+  }, [onChange, onFileChange]);
 
   const handleRemove = () => {
     if (blobUrlRef.current) {
@@ -45,6 +51,9 @@ export default function ImageUpload({
       blobUrlRef.current = null;
     }
     onChange('');
+    if (onFileChange) {
+      onFileChange(null);
+    }
   };
 
   const handleDragOver = useCallback((e: React.DragEvent) => {

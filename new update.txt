@@ -1,18 +1,18 @@
-TableRounds Multi-Specialty Platform
+TableRounds Multi-speciality Platform
 Architecture Upgrade Proposal
 Prepared for: TableRounds
 Project Investment: $2,350 USD
 Estimated Timeline: 25 Days
 Project Overview
 The objective of this project is to transform the existing OMS-focused TableRounds platform into
-a reusable multi-specialty architecture.
-Instead of creating separate pages, question banks, and application logic for every specialty, the
+a reusable multi-speciality architecture.
+Instead of creating separate pages, question banks, and application logic for every speciality, the
 platform will use one centralized architecture where specialties, topics, questions, subscriptions,
 and related platform functionality are dynamically connected.
 This approach will allow the currently planned specialties to operate within the same system
 while creating a reusable foundation for future expansion.
 The goal is to build the underlying system once, rather than repeatedly rebuilding similar
-functionality for each new specialty.
+functionality for each new speciality.
 Specialties Included in This Project
 The following 20 specialties are specifically included in the current project scope:
 1. Pediatric Dentistry
@@ -36,10 +36,10 @@ The following 20 specialties are specifically included in the current project sc
 19. Neurological Surgery
 20. Plastic Surgery
 The associated topics for these specialties will be provided by TableRounds and incorporated
-into the reusable Specialty → Topic → Question structure.
+into the reusable speciality → Topic → Question structure.
 Core Architecture
 The platform will move toward the following structure:
-Specialty
+speciality
 ↓
 Topics
 ↓
@@ -49,34 +49,34 @@ Difficulty
 ↓
 Tests / Results / Statistics
 Each question will be associated with its appropriate:
-● Specialty
+● speciality
 ● Topic
 ● Difficulty
-When an administrator or user selects a specialty, the available topics and related content will
-automatically correspond to that specialty.
-This eliminates the need to build separate question-bank systems for every specialty.
+When an administrator or user selects a speciality, the available topics and related content will
+automatically correspond to that speciality.
+This eliminates the need to build separate question-bank systems for every speciality.
 Public Website Structure
-The current OMS specialty page will be converted into a reusable Specialties structure.
+The current OMS speciality page will be converted into a reusable Specialties structure.
 The navigation will provide access to the available specialties, including the 20 specialties listed
 above.
-Rather than creating a completely separate webpage for every specialty, the same reusable
-page/component structure will dynamically display the relevant specialty information.
-This keeps the public website easier to maintain and makes future specialty expansion much
+Rather than creating a completely separate webpage for every speciality, the same reusable
+page/component structure will dynamically display the relevant speciality information.
+This keeps the public website easier to maintain and makes future speciality expansion much
 simpler.
 Platform Integration
-The reusable specialty architecture will be integrated throughout the existing TableRounds
+The reusable speciality architecture will be integrated throughout the existing TableRounds
 platform.
 This includes:
 Question Management
 ● Create Questions
 ● Edit Questions
 ● Question Manager
-● Specialty filtering
-● Topic filtering based on selected specialty
+● speciality filtering
+● Topic filtering based on selected speciality
 ● Difficulty management
 Testing System
 ● Create Test
-● Specialty-based question selection
+● speciality-based question selection
 ● Topic filtering
 ● Test generation
 ● Review Test
@@ -85,12 +85,12 @@ User Platform
 ● Question Bank
 ● Statistics
 ● Leaderboard
-● Specialty selection
-● Specialty-specific content
+● speciality selection
+● speciality-specific content
 The existing platform infrastructure will be reused wherever possible rather than rebuilding
 existing functionality.
-Specialty-Based Subscription Access
-Subscription access will become specialty-based.
+speciality-Based Subscription Access
+Subscription access will become speciality-based.
 A user's account will only be able to access the specialties included in their subscription.
 For example:
 User with OMS Access
@@ -98,11 +98,11 @@ User with OMS Access
 ✗ Pediatric Dentistry
 ✗ Orthodontics
 ✗ Internal Medicine
-User with Multiple Specialty Access
+User with Multiple speciality Access
 ✓ OMS
 ✓ Pediatric Dentistry
 ✓ Orthodontics
-The backend will enforce these permissions so users cannot retrieve restricted specialty
+The backend will enforce these permissions so users cannot retrieve restricted speciality
 questions or data simply by bypassing the frontend.
 The system will also be structured to support users who eventually have access to multiple
 specialties.
@@ -110,22 +110,22 @@ Administration System
 Administrators will be able to work across all specialties from the existing administration
 environment.
 The system will support:
-● Specialty management
+● speciality management
 ● Topic management
 ● Question management
-● Specialty filtering
+● speciality filtering
 ● Topic filtering
 ● Question creation
 ● Question editing
-● User specialty access
-● Subscription-related specialty permissions
+● User speciality access
+● Subscription-related speciality permissions
 Admin accounts will have access to all specialties, while regular users will only see specialties
 available to their accounts.
 Previous Structure vs. Current Architecture
 Previous Approach
 The original plan was primarily focused on adding Pediatric Dentistry to the existing OMS
 system.
-That approach would have required specialty-specific implementation across areas such as:
+That approach would have required speciality-specific implementation across areas such as:
 ● Landing page
 ● Question bank
 ● Topics
@@ -135,10 +135,10 @@ That approach would have required specialty-specific implementation across areas
 ● Leaderboard
 ● Admin
 ● Access control
-While this would work for one additional specialty, repeating the same approach for every new
-specialty would gradually increase development and maintenance costs.
+While this would work for one additional speciality, repeating the same approach for every new
+speciality would gradually increase development and maintenance costs.
 Current Approach
-The updated architecture treats Specialty as a reusable parent category.
+The updated architecture treats speciality as a reusable parent category.
 Instead of:
 OMS System
 ●
@@ -152,7 +152,7 @@ etc.
 The platform becomes:
 One TableRounds Platform
 ↓
-Specialty
+speciality
 ↓
 Topics
 ↓
@@ -163,19 +163,19 @@ This means the same application components can serve all specialties.
 The 20 specialties listed in this proposal will be configured within this architecture rather than
 receiving separate duplicated systems.
 Why This Architecture Is Valuable
-The main value of this project is not simply adding 20 specialty names.
+The main value of this project is not simply adding 20 speciality names.
 The primary investment is in creating the reusable infrastructure behind those specialties.
-Once the architecture is established, future specialty expansion can be significantly more
+Once the architecture is established, future speciality expansion can be significantly more
 efficient because the core system will already understand:
-● Specialty relationships
+● speciality relationships
 ● Topic relationships
 ● Question relationships
-● Specialty-based permissions
-● Specialty-based subscriptions
-● Specialty filtering
-● Specialty-specific testing
-● Specialty-specific statistics
-● Specialty-specific leaderboards
+● speciality-based permissions
+● speciality-based subscriptions
+● speciality filtering
+● speciality-specific testing
+● speciality-specific statistics
+● speciality-specific leaderboards
 This reduces the need for repeated development and makes the platform easier to maintain as
 TableRounds grows.
 It also provides a consistent experience across specialties instead of maintaining multiple
@@ -183,12 +183,12 @@ versions of the same application logic.
 Project Deliverables
 The project will include:
 Architecture & Backend
-● Reusable multi-specialty architecture
-● Specialty/topic/question relationships
+● Reusable multi-speciality architecture
+● speciality/topic/question relationships
 ● Database restructuring and migration
 ● Backend/API updates
-● Specialty-based access control
-● Specialty-based subscription logic
+● speciality-based access control
+● speciality-based subscription logic
 Platform
 ● Create Questions integration
 ● Question Manager integration
@@ -199,14 +199,14 @@ Platform
 ● Leaderboard integration
 ● Question Bank integration
 Administration
-● Specialty management
+● speciality management
 ● Topic management
-● Specialty filtering
-● Question management by specialty
-● User specialty access management
+● speciality filtering
+● Question management by speciality
+● User speciality access management
 Website
 ● Reusable Specialties structure
-● Dynamic specialty content
+● Dynamic speciality content
 ● Integration of the 20 listed specialties
 Finalization
 ● Data migration
@@ -219,27 +219,27 @@ Estimated Completion: 25 Days
 The 25-day timeline covers the development, integration, testing, bug fixing, and deployment of
 the agreed architecture and the 20 listed specialties.
 The exact implementation sequence may be adjusted during development based on the existing
-codebase and the specialty/topic data provided by TableRounds.
+codebase and the speciality/topic data provided by TableRounds.
 Project Investment
 Total Price: $2,350 USD
-This price includes the reusable multi-specialty architecture and implementation of the 20
+This price includes the reusable multi-speciality architecture and implementation of the 20
 specialties specifically listed in this proposal, along with their associated topics provided by
 TableRounds.
 The purpose of this pricing structure is to keep the project cost-effective while building the
 foundation needed for TableRounds' future growth.
 Scope Transparency
 To keep the contract completely transparent, this proposal specifically covers:
-20 listed specialties + their provided topics + reusable specialty architecture + integration
+20 listed specialties + their provided topics + reusable speciality architecture + integration
 throughout the existing platform + testing and deployment.
 The architecture itself will be designed to support future specialties, but adding additional
 specialties beyond the 20 listed above can be handled separately in the future if needed.
 No separate UI/UX redesign is included in this project. The existing platform design and
 components will be reused wherever practical, with the necessary frontend changes made to
-integrate the new specialty functionality.
+integrate the new speciality functionality.
 Final Objective
 The ultimate goal is to give TableRounds a stronger foundation for expansion.
-Instead of treating every new specialty as a separate development project, the platform will
-have one reusable system capable of handling specialty-specific content, questions, topics,
+Instead of treating every new speciality as a separate development project, the platform will
+have one reusable system capable of handling speciality-specific content, questions, topics,
 subscriptions, permissions, tests, statistics, and leaderboards.
 This allows TableRounds to focus future investment on content and growth rather than
 repeatedly rebuilding technology.

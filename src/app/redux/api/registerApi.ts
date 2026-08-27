@@ -7,12 +7,12 @@ export interface RegisterPayload {
   password: string;
   credentials: string;
   training_practice: string;
-  country: string,
-  state:string,
+  country: string;
+  state: string;
   address: string;
   current_practice: string;
   bio: string;
-  specialty: string;
+  speciality: string;
   instagram?: string;
   linkedin?: string;
   twitter_x?: string;

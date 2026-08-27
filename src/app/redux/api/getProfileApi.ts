@@ -1,4 +1,3 @@
-
 import { baseApi } from './baseApi';
 
 /* ================= TYPES ================= */
@@ -26,7 +25,7 @@ export interface ProfileData {
   twitter_x: string;
   facebook: string;
   type: string;
-  specialty: string;
+  speciality: string;
   cv: string | null;
   is_public: boolean;
   created_at: string;
@@ -78,7 +77,6 @@ export interface Publication {
   topic: string;
   link: string;
   year: string;
-
 }
 
 export interface Skill {

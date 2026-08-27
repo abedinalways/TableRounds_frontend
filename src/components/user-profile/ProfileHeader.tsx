@@ -15,8 +15,6 @@ import { useToggleFollowMutation } from '@/app/redux/api/followApi';
 import ProfileFollowersFollowingModal from './FollowersFollowingModal';
 import { getFullCountryName } from '@/lib/country';
 
-
-
 interface ProfileHeaderProps {
   user: UserProfile;
 }
@@ -30,7 +28,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
 
   const [createConversation] = useCreateAdminConversationMutation();
   const [toggleFollow] = useToggleFollowMutation();
-  
+
   const hasSocialLink = (url?: string | null) => {
     return Boolean(url && url.trim() !== '');
   };
@@ -92,7 +90,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
             <div className="flex items-center justify-start gap-6 flex-wrap">
               <h4 className="flex items-center text-sm md:text-[16px]  text-[#01503b] gap-1 transition-colors duration-300 hover:text-[#01503b]">
                 <Image src="/images/icon03.png" width={20} height={20} alt="" />
-                {user.specialty}
+                {user.speciality}
               </h4>
               <p className="text-sm md:text-[16px] leading-[160%] text-[#01503b] flex items-center gap-1">
                 <Image src="/images/icon01.png" width={20} height={20} alt="" />
@@ -119,8 +117,6 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
                 })}
               </h4>
             </div>
-
-            
 
             <p className="text-sm md:text-[18px] leading-[160%]">{user.bio}</p>
 

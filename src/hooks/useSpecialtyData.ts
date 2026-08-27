@@ -1,15 +1,15 @@
 import {
   useGetAllSpecialtiesQuery,
-  useGetSpecialtyByNameQuery,
-  useCreateSpecialtyMutation,
-  useUpdateSpecialtyMutation,
-  useDeleteSpecialtyMutation,
+  useGetspecialityByNameQuery,
+  useCreatespecialityMutation,
+  useUpdatespecialityMutation,
+  useDeletespecialityMutation,
   useAddTopicMutation,
   useUpdateTopicMutation,
   useDeleteTopicMutation,
-} from '@/app/redux/api/specialtyApi';
-import { mockSpecialtyService } from '@/lib/mockSpecialtyData';
-import type { Specialty, SpecialtyTopic } from '@/types/specialty';
+} from '@/app/redux/api/specialityApi';
+import { mockspecialityService } from '@/lib/mockSpecialtyData';
+import type { speciality } from '@/types/specialty';
 import { useCallback, useState } from 'react';
 
 const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK_DATA === 'true';
@@ -32,7 +32,7 @@ export function useAllSpecialties() {
   });
 
   if (USE_MOCK) {
-    const result = mockSpecialtyService.getAll();
+    const result = mockspecialityService.getAll();
     return {
       data: result.data,
       isLoading: false,
@@ -44,8 +44,8 @@ export function useAllSpecialties() {
   return realQuery;
 }
 
-export function useSpecialtyByName(name: string) {
-  const realQuery = useGetSpecialtyByNameQuery(name, {
+export function useSpecialityByName(name: string) {
+  const realQuery = useGetspecialityByNameQuery(name, {
     skip: USE_MOCK || !name,
   });
 
@@ -58,9 +58,9 @@ export function useSpecialtyByName(name: string) {
         error: undefined,
       };
     }
-    const result = mockSpecialtyService.getByName(name);
+    const result = mockspecialityService.getByName(name);
     return {
-      data: result.data as Specialty | undefined,
+      data: result.data as speciality | undefined,
       isLoading: false,
       isError: false,
       error: undefined,
@@ -69,29 +69,65 @@ export function useSpecialtyByName(name: string) {
   return realQuery;
 }
 
-interface SpecialtyMutations {
-  createSpecialty: [MutationWithUnwrap<{ specialty_name: string; specialty_banner_img: string; brand_img?: string; topics: SpecialtyTopic[] }>, MutationMeta];
-  updateSpecialty: [MutationWithUnwrap<{ id: string; specialty_name?: string; specialty_banner_img?: string; brand_img?: string; topics?: SpecialtyTopic[] }>, MutationMeta];
-  deleteSpecialty: [MutationWithUnwrap<string>, MutationMeta];
-  addTopic: [MutationWithUnwrap<{ specialtyId: string; data: { name: string; is_active: boolean; topic_image?: string } }>, MutationMeta];
-  updateTopic: [MutationWithUnwrap<{ topicId: string; data: { name?: string; is_active?: boolean; topic_image?: string } }>, MutationMeta];
+interface specialityMutations {
+  createspeciality: [
+    MutationWithUnwrap<{
+      speciality_name: string;
+      speciality_banner_img?: string | File;
+      brand_img?: string | File;
+      topics: Array<{ topic_name: string; topic_img?: string | File }>;
+    }>,
+    MutationMeta,
+  ];
+  updatespeciality: [
+    MutationWithUnwrap<{
+      id: string;
+      speciality_name?: string;
+      speciality_banner_img?: string | File;
+      brand_img?: string | File;
+      topics?: Array<{ topic_name: string; topic_img?: string | File }>;
+    }>,
+    MutationMeta,
+  ];
+  deletespeciality: [MutationWithUnwrap<string>, MutationMeta];
+  addTopic: [
+    MutationWithUnwrap<{
+      specialityId: string;
+      data: { name: string; is_active: boolean; topic_image?: string | File };
+    }>,
+    MutationMeta,
+  ];
+  updateTopic: [
+    MutationWithUnwrap<{
+      topicId: string;
+      data: { name?: string; is_active?: boolean; topic_image?: string | File };
+    }>,
+    MutationMeta,
+  ];
   deleteTopic: [MutationWithUnwrap<string>, MutationMeta];
   refetch: () => void;
 }
 
-export function useSpecialtyMutations(): SpecialtyMutations {
-  const [createReal, createMeta] = useCreateSpecialtyMutation();
-  const [updateReal, updateMeta] = useUpdateSpecialtyMutation();
-  const [deleteReal, deleteMeta] = useDeleteSpecialtyMutation();
+export function useSpecialityMutations(): specialityMutations {
+  const [createReal, createMeta] = useCreatespecialityMutation();
+  const [updateReal, updateMeta] = useUpdatespecialityMutation();
+  const [deleteReal, deleteMeta] = useDeletespecialityMutation();
   const [addTopicReal, addTopicMeta] = useAddTopicMutation();
   const [updateTopicReal, updateTopicMeta] = useUpdateTopicMutation();
   const [deleteTopicReal, deleteTopicMeta] = useDeleteTopicMutation();
   const [mockLoading, setMockLoading] = useState(false);
 
   const mockCreate = useCallback(
-    (data: { specialty_name: string; specialty_banner_img: string; brand_img?: string; topics: SpecialtyTopic[] }) => {
+    (data: {
+      speciality_name: string;
+      speciality_banner_img?: string | File;
+      brand_img?: string | File;
+      topics: Array<{ topic_name: string; topic_img?: string | File }>;
+    }) => {
       setMockLoading(true);
-      const result = mockSpecialtyService.create(data);
+      const result = mockspecialityService.create(
+        data as Parameters<typeof mockspecialityService.create>[0],
+      );
       setMockLoading(false);
       return Object.assign(Promise.resolve({ data: result.data }), {
         unwrap: () => Promise.resolve(result.data),
@@ -101,10 +137,19 @@ export function useSpecialtyMutations(): SpecialtyMutations {
   );
 
   const mockUpdate = useCallback(
-    (args: { id: string; specialty_name?: string; specialty_banner_img?: string; brand_img?: string; topics?: SpecialtyTopic[] }) => {
+    (args: {
+      id: string;
+      speciality_name?: string;
+      speciality_banner_img?: string | File;
+      brand_img?: string | File;
+      topics?: Array<{ topic_name: string; topic_img?: string | File }>;
+    }) => {
       setMockLoading(true);
       const { id, ...data } = args;
-      const result = mockSpecialtyService.update(id, data);
+      const result = mockspecialityService.update(
+        id,
+        data as Parameters<typeof mockspecialityService.update>[1],
+      );
       setMockLoading(false);
       return Object.assign(Promise.resolve({ data: result.data }), {
         unwrap: () => Promise.resolve(result.data),
@@ -113,22 +158,25 @@ export function useSpecialtyMutations(): SpecialtyMutations {
     [],
   );
 
-  const mockDelete = useCallback(
-    (id: string) => {
-      setMockLoading(true);
-      const result = mockSpecialtyService.delete(id);
-      setMockLoading(false);
-      return Object.assign(Promise.resolve({ data: result.data }), {
-        unwrap: () => Promise.resolve(result.data),
-      }) as Promise<unknown> & { unwrap: () => Promise<unknown> };
-    },
-    [],
-  );
+  const mockDelete = useCallback((id: string) => {
+    setMockLoading(true);
+    const result = mockspecialityService.delete(id);
+    setMockLoading(false);
+    return Object.assign(Promise.resolve({ data: result.data }), {
+      unwrap: () => Promise.resolve(result.data),
+    }) as Promise<unknown> & { unwrap: () => Promise<unknown> };
+  }, []);
 
   const mockAddTopic = useCallback(
-    (args: { specialtyId: string; data: { name: string; is_active: boolean; topic_image?: string } }) => {
+    (args: {
+      specialityId: string;
+      data: { name: string; is_active: boolean; topic_image?: string | File };
+    }) => {
       setMockLoading(true);
-      const result = mockSpecialtyService.addTopic(args.specialtyId, args.data);
+      const result = mockspecialityService.addTopic(
+        args.specialityId,
+        args.data as Parameters<typeof mockspecialityService.addTopic>[1],
+      );
       setMockLoading(false);
       return Object.assign(Promise.resolve({ data: result.data }), {
         unwrap: () => Promise.resolve(result.data),
@@ -138,9 +186,15 @@ export function useSpecialtyMutations(): SpecialtyMutations {
   );
 
   const mockUpdateTopic = useCallback(
-    (args: { topicId: string; data: { name?: string; is_active?: boolean; topic_image?: string } }) => {
+    (args: {
+      topicId: string;
+      data: { name?: string; is_active?: boolean; topic_image?: string | File };
+    }) => {
       setMockLoading(true);
-      const result = mockSpecialtyService.updateTopic(args.topicId, args.data);
+      const result = mockspecialityService.updateTopic(
+        args.topicId,
+        args.data as Parameters<typeof mockspecialityService.updateTopic>[1],
+      );
       setMockLoading(false);
       return Object.assign(Promise.resolve({ data: result.data }), {
         unwrap: () => Promise.resolve(result.data),
@@ -149,17 +203,14 @@ export function useSpecialtyMutations(): SpecialtyMutations {
     [],
   );
 
-  const mockDeleteTopic = useCallback(
-    (topicId: string) => {
-      setMockLoading(true);
-      const result = mockSpecialtyService.deleteTopic(topicId);
-      setMockLoading(false);
-      return Object.assign(Promise.resolve({ data: result.data }), {
-        unwrap: () => Promise.resolve(result.data),
-      }) as Promise<unknown> & { unwrap: () => Promise<unknown> };
-    },
-    [],
-  );
+  const mockDeleteTopic = useCallback((topicId: string) => {
+    setMockLoading(true);
+    const result = mockspecialityService.deleteTopic(topicId);
+    setMockLoading(false);
+    return Object.assign(Promise.resolve({ data: result.data }), {
+      unwrap: () => Promise.resolve(result.data),
+    }) as Promise<unknown> & { unwrap: () => Promise<unknown> };
+  }, []);
 
   const mockMeta: MutationMeta = {
     isLoading: mockLoading,
@@ -169,23 +220,58 @@ export function useSpecialtyMutations(): SpecialtyMutations {
 
   if (USE_MOCK) {
     return {
-      createSpecialty: [mockCreate, mockMeta],
-      updateSpecialty: [mockUpdate, mockMeta],
-      deleteSpecialty: [mockDelete, mockMeta],
+      createspeciality: [mockCreate, mockMeta],
+      updatespeciality: [mockUpdate, mockMeta],
+      deletespeciality: [mockDelete, mockMeta],
       addTopic: [mockAddTopic, mockMeta],
       updateTopic: [mockUpdateTopic, mockMeta],
       deleteTopic: [mockDeleteTopic, mockMeta],
-      refetch: mockSpecialtyService.reset,
+      refetch: mockspecialityService.reset,
     };
   }
 
   return {
-    createSpecialty: [createReal as MutationWithUnwrap<{ specialty_name: string; specialty_banner_img: string; brand_img?: string; topics: SpecialtyTopic[] }>, { ...createMeta }],
-    updateSpecialty: [updateReal as MutationWithUnwrap<{ id: string; specialty_name?: string; specialty_banner_img?: string; brand_img?: string; topics?: SpecialtyTopic[] }>, { ...updateMeta }],
-    deleteSpecialty: [deleteReal as MutationWithUnwrap<string>, { ...deleteMeta }],
-    addTopic: [addTopicReal as MutationWithUnwrap<{ specialtyId: string; data: { name: string; is_active: boolean; topic_image?: string } }>, { ...addTopicMeta }],
-    updateTopic: [updateTopicReal as MutationWithUnwrap<{ topicId: string; data: { name?: string; is_active?: boolean; topic_image?: string } }>, { ...updateTopicMeta }],
-    deleteTopic: [deleteTopicReal as MutationWithUnwrap<string>, { ...deleteTopicMeta }],
+    createspeciality: [
+      createReal as MutationWithUnwrap<{
+        speciality_name: string;
+        speciality_banner_img?: string | File;
+        brand_img?: string | File;
+        topics: Array<{ topic_name: string; topic_img?: string | File }>;
+      }>,
+      { ...createMeta },
+    ],
+    updatespeciality: [
+      updateReal as MutationWithUnwrap<{
+        id: string;
+        speciality_name?: string;
+        speciality_banner_img?: string | File;
+        brand_img?: string | File;
+        topics?: Array<{ topic_name: string; topic_img?: string | File }>;
+      }>,
+      { ...updateMeta },
+    ],
+    deletespeciality: [
+      deleteReal as MutationWithUnwrap<string>,
+      { ...deleteMeta },
+    ],
+    addTopic: [
+      addTopicReal as MutationWithUnwrap<{
+        specialityId: string;
+        data: { name: string; is_active: boolean; topic_image?: string | File };
+      }>,
+      { ...addTopicMeta },
+    ],
+    updateTopic: [
+      updateTopicReal as MutationWithUnwrap<{
+        topicId: string;
+        data: { name?: string; is_active?: boolean; topic_image?: string | File };
+      }>,
+      { ...updateTopicMeta },
+    ],
+    deleteTopic: [
+      deleteTopicReal as MutationWithUnwrap<string>,
+      { ...deleteTopicMeta },
+    ],
     refetch: () => {},
   };
 }

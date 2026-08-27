@@ -1,4 +1,3 @@
-
 export interface UserProfile {
   id: string;
   name: string;
@@ -22,7 +21,7 @@ export interface UserProfile {
   twitter: string;
   facebook: string;
   current_practice: string;
-  specialty: string;
+  speciality: string;
 }
 
 export interface EducationItem {
@@ -39,9 +38,8 @@ export interface ExperienceItem {
   location: string;
   period: string;
   description?: string;
-  specialty?: string;
+  speciality?: string;
   id?: string;
-  
 }
 
 export interface PublicationItem {
@@ -57,7 +55,7 @@ export interface statisticsItems {
   best_topic: topicItems | null;
   question_bank_usage: number;
 }
-export interface topicItems{
+export interface topicItems {
   name: string;
   correct_percentage: number;
 }
@@ -69,7 +67,6 @@ export interface ProfileData {
   statistics: statisticsItems;
   skills: string[];
   // questionBank: QuestionBankStats;
-
 }
 export interface QuestionBankStats {
   completion: number;

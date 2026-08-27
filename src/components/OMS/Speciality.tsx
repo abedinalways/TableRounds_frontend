@@ -1,24 +1,24 @@
-'use client'
-import React from 'react'
-import Image from 'next/image'
-import SpecialtyCard from '../reusable/SpecialtyCard'
+'use client';
+import React from 'react';
+import Image from 'next/image';
+
 import Lottie from 'lottie-react';
 import heartbeat from '../../../public/images/Heartbeat.json';
+import SpecialityCard from '../reusable/SpecialityCard';
 
 interface Topic {
   topic_name: string;
   topic_img: string;
 }
 
-interface SpecialtyProps {
+interface specialityProps {
   topics?: Topic[];
-  specialtyImg?: string;
+  specialityImg?: string;
 }
 
-export default function Specialty({ topics, specialtyImg }: SpecialtyProps) {
+export default function Speciality({ topics, specialityImg }: specialityProps) {
   return (
     <div className="background py-[120px] font-[manrope] overflow-hidden">
-
       {/* Heartbeat Animation */}
       <div className="relative">
         <Lottie
@@ -34,9 +34,9 @@ export default function Specialty({ topics, specialtyImg }: SpecialtyProps) {
         />
       </div>
       <h1 className="text-3xl sm:text-[48px] custom-container text-start  px-4 font-bold text-white font-[roboto]">
-        Specialty Level Content
+        speciality Level Content
       </h1>
-      <SpecialtyCard topics={topics} />
+      <SpecialityCard topics={topics} />
 
       {/* Heartbeat Animation */}
       <div className="relative">

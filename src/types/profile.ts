@@ -1,4 +1,3 @@
-
 import { Education, Publication } from './../app/redux/api/getProfileApi';
 
 // export interface UserProfile {
@@ -33,7 +32,7 @@ import { Education, Publication } from './../app/redux/api/getProfileApi';
 //   hospital: string;
 //   location: string;
 //   period: string;
-//   specialty: string;
+//   speciality: string;
 // }
 
 // export interface PublicationItem {
@@ -82,7 +81,7 @@ export interface UserProfile {
   twitter: string;
   facebook: string;
   current_practice: string;
-  specialty: string;
+  speciality: string;
 }
 
 export interface EducationItem {
@@ -92,15 +91,15 @@ export interface EducationItem {
   year: string;
 }
 
-export interface ExperienceItem{
+export interface ExperienceItem {
   role: string;
   hospital: string;
   location: string;
   period: string;
-  specialty: string;
+  speciality: string;
 }
 
-export interface PublicationItem{
+export interface PublicationItem {
   title: string;
   year: string;
   author: string;
@@ -121,7 +120,6 @@ export interface statisticsItems {
   question_bank_usage: number;
   best_topic: topicItems | null;
 }
-
 
 export interface topicItems {
   name: string;

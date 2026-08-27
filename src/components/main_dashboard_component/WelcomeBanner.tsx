@@ -122,13 +122,13 @@ export const WelcomeBanner = () => {
               <p className="md:text-[18px] text-xs">
                 Stay up to date on your current progress
               </p>
-              {/* ── Specialty & Training ── */}
-              {(user?.specialty || user?.training_practice) && (
+              {/* ── speciality & Training ── */}
+              {(user?.speciality || user?.training_practice) && (
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-sm md:text-base opacity-90">
-                  {user?.specialty && (
+                  {user?.speciality && (
                     <span className="flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded-full text-xs md:text-sm border border-white/5">
                       <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse" />
-                      {user.specialty}
+                      {user.speciality}
                     </span>
                   )}
                   {user?.training_practice && (

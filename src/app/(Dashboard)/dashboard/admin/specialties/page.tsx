@@ -4,9 +4,17 @@ import React, { useEffect, useState } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import {
   useAllSpecialties,
-  useSpecialtyMutations,
+  useSpecialityMutations,
 } from '@/hooks/useSpecialtyData';
-import { Loader2, Plus, Trash2, Edit2, X, ChevronDown, ExternalLink } from 'lucide-react';
+import {
+  Loader2,
+  Plus,
+  Trash2,
+  Edit2,
+  X,
+  ChevronDown,
+  ExternalLink,
+} from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
@@ -17,108 +25,156 @@ interface TopicInput {
   topic_img: string;
 }
 
-interface SpecialtyForm {
-  specialty_name: string;
-  specialty_banner_img: string;
+interface specialityForm {
+  speciality_name: string;
+  speciality_banner_img: string;
   brand_img?: string;
   topics: TopicInput[];
 }
 
-interface Specialty {
+interface speciality {
   id?: string;
   _id?: string;
-  specialty_name: string;
-  specialty_banner_img: string;
+  speciality_name: string;
+  speciality_banner_img: string;
   brand_img?: string;
   topics?: TopicInput[];
 }
 
 export default function SpecialtiesAdminPage() {
   const { data: specialtiesData, isLoading, refetch } = useAllSpecialties();
-  const { createSpecialty, updateSpecialty, deleteSpecialty } = useSpecialtyMutations();
-  const [createSpecialtyMut, createMeta] = createSpecialty;
-  const [updateSpecialtyMut, updateMeta] = updateSpecialty;
-  const [deleteSpecialtyMut] = deleteSpecialty;
+  const { createspeciality, updatespeciality, deletespeciality } =
+    useSpecialityMutations();
+  const [createspecialityMut, createMeta] = createspeciality;
+  const [updatespecialityMut, updateMeta] = updatespeciality;
+  const [deletespecialityMut] = deletespeciality;
 
   const isCreating = createMeta.isLoading;
   const isUpdating = updateMeta.isLoading;
 
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingSpecialty, setEditingSpecialty] = useState<Specialty | null>(null);
-  const [selectedSpecialty, setSelectedSpecialty] = useState<Specialty | null>(null);
+  const [editingspeciality, setEditingspeciality] = useState<speciality | null>(
+    null,
+  );
+  const [selectedspeciality, setSelectedspeciality] =
+    useState<speciality | null>(null);
+  const [bannerFile, setBannerFile] = useState<File | null>(null);
+  const [brandFile, setBrandFile] = useState<File | null>(null);
+  const [topicFiles, setTopicFiles] = useState<(File | null)[]>([]);
   const router = useRouter();
 
-  const { register, control, handleSubmit, reset, setValue, watch } = useForm<SpecialtyForm>({
-    defaultValues: {
-      specialty_name: '',
-      specialty_banner_img: '',
-      brand_img: '',
-      topics: [{ topic_name: '', topic_img: '' }],
-    },
-  });
+  const { register, control, handleSubmit, reset, setValue, watch } =
+    useForm<specialityForm>({
+      defaultValues: {
+        speciality_name: '',
+        speciality_banner_img: '',
+        brand_img: '',
+        topics: [{ topic_name: '', topic_img: '' }],
+      },
+    });
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'topics',
   });
 
-  const watchedBanner = watch('specialty_banner_img');
+  const watchedBanner = watch('speciality_banner_img');
   const watchedBrand = watch('brand_img');
   const watchedTopics = watch('topics');
 
   useEffect(() => {
-    if (editingSpecialty) {
-      const existingTopics = editingSpecialty.topics && editingSpecialty.topics.length > 0
-        ? editingSpecialty.topics
-        : [{ topic_name: '', topic_img: '' }];
+    if (editingspeciality) {
+      const existingTopics =
+        editingspeciality.topics && editingspeciality.topics.length > 0
+          ? editingspeciality.topics
+          : [{ topic_name: '', topic_img: '' }];
       reset({
-        specialty_name: editingSpecialty.specialty_name,
-        specialty_banner_img: editingSpecialty.specialty_banner_img,
-        brand_img: editingSpecialty.brand_img || '',
+        speciality_name: editingspeciality.speciality_name,
+        speciality_banner_img: editingspeciality.speciality_banner_img,
+        brand_img: editingspeciality.brand_img || '',
         topics: existingTopics,
       });
     }
-  }, [editingSpecialty, reset]);
+  }, [editingspeciality, reset]);
 
-  const onSubmit = async (data: SpecialtyForm) => {
-    if (editingSpecialty) {
-      const specialtyId = editingSpecialty.id || editingSpecialty._id;
-      if (!specialtyId) {
-        toast.error('Specialty ID is missing');
+  const onSubmit = async (data: specialityForm) => {
+    if (editingspeciality) {
+      const specialityId = editingspeciality.id || editingspeciality._id;
+      if (!specialityId) {
+        toast.error('speciality ID is missing');
         return;
       }
       try {
-        await updateSpecialtyMut({
-          id: specialtyId,
+        const topics = data.topics.map((topic, index) => ({
+          topic_name: topic.topic_name,
+          topic_img: topicFiles[index]
+            ? topicFiles[index]!
+            : topic.topic_img || undefined,
+        }));
+        await updatespecialityMut({
+          id: specialityId,
           ...data,
+          speciality_banner_img:
+            bannerFile ?? (data.speciality_banner_img || undefined),
+          brand_img: brandFile ?? (data.brand_img || undefined),
+          topics,
         }).unwrap();
-        toast.success('Specialty updated successfully!');
-        setEditingSpecialty(null);
+        toast.success('speciality updated successfully!');
+        setEditingspeciality(null);
         setIsFormOpen(false);
         reset();
+        setBannerFile(null);
+        setBrandFile(null);
+        setTopicFiles([]);
         refetch();
       } catch {
-        toast.error('Failed to update specialty');
+        toast.error('Failed to update speciality');
       }
     } else {
+      if (!brandFile && !data.brand_img) {
+        toast.error('Speciality image is required');
+        return;
+      }
+      const missingTopicIndex = data.topics.findIndex(
+        (topic, index) => !topicFiles[index] && !topic.topic_img,
+      );
+      if (missingTopicIndex !== -1) {
+        toast.error(`Image for topic "${data.topics[missingTopicIndex].topic_name}" is required`);
+        return;
+      }
       try {
-        await createSpecialtyMut(data).unwrap();
-        toast.success('Specialty created successfully!');
+        const topics = data.topics.map((topic, index) => ({
+          topic_name: topic.topic_name,
+          topic_img: topicFiles[index]
+            ? topicFiles[index]!
+            : topic.topic_img || undefined,
+        }));
+        await createspecialityMut({
+          speciality_name: data.speciality_name,
+          speciality_banner_img:
+            bannerFile ?? (data.speciality_banner_img || undefined),
+          brand_img: brandFile ?? (data.brand_img || undefined),
+          topics,
+        }).unwrap();
+        toast.success('speciality created successfully!');
         setIsFormOpen(false);
         reset();
+        setBannerFile(null);
+        setBrandFile(null);
+        setTopicFiles([]);
         refetch();
       } catch {
-        toast.error('Failed to create specialty');
+        toast.error('Failed to create speciality');
       }
     }
   };
 
   const handleDelete = async (id: string) => {
     toast.custom(
-      (t) => (
+      t => (
         <div className="bg-white shadow-lg rounded-lg p-4 w-[350px] space-y-4 font-[manrope]">
           <p className="text-sm font-medium text-[#01281e]">
-            Are you sure you want to delete this specialty?
+            Are you sure you want to delete this speciality?
           </p>
           <div className="flex justify-end gap-3">
             <button
@@ -130,11 +186,11 @@ export default function SpecialtiesAdminPage() {
             <button
               onClick={async () => {
                 try {
-                  await deleteSpecialtyMut(id).unwrap();
-                  toast.success('Specialty deleted successfully');
+                  await deletespecialityMut(id).unwrap();
+                  toast.success('speciality deleted successfully');
                   refetch();
                 } catch {
-                  toast.error('Failed to delete specialty');
+                  toast.error('Failed to delete speciality');
                 } finally {
                   toast.dismiss(t);
                 }
@@ -150,15 +206,19 @@ export default function SpecialtiesAdminPage() {
     );
   };
 
-  const handleEdit = (specialty: Specialty) => {
-    setEditingSpecialty(specialty);
+  const handleEdit = (speciality: speciality) => {
+    setEditingspeciality(speciality);
     setIsFormOpen(true);
+    setBannerFile(null);
+    setBrandFile(null);
   };
 
   const handleCloseForm = () => {
     setIsFormOpen(false);
-    setEditingSpecialty(null);
+    setEditingspeciality(null);
     reset();
+    setBannerFile(null);
+    setBrandFile(null);
   };
 
   const specialties = specialtiesData?.data || [];
@@ -166,17 +226,21 @@ export default function SpecialtiesAdminPage() {
   return (
     <div className="p-6 font-[manrope]">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-[#01281e] text-2xl font-bold">Specialties Management</h1>
+        <h1 className="text-[#01281e] text-2xl font-bold">
+          Specialties Management
+        </h1>
         <button
-          onClick={() => !editingSpecialty && setIsFormOpen(!isFormOpen)}
+          onClick={() => !editingspeciality && setIsFormOpen(!isFormOpen)}
           className="bg-[#01503b] text-white px-4 py-2 rounded-[8px] flex items-center gap-2 hover:bg-[#01281e] transition"
         >
-          {isFormOpen && !editingSpecialty ? (
+          {isFormOpen && !editingspeciality ? (
             <X size={18} />
           ) : (
             <Plus size={18} />
           )}
-          <span>{isFormOpen && !editingSpecialty ? 'Close' : 'Add New Specialty'}</span>
+          <span>
+            {isFormOpen && !editingspeciality ? 'Close' : 'Add New speciality'}
+          </span>
         </button>
       </div>
 
@@ -185,7 +249,9 @@ export default function SpecialtiesAdminPage() {
           <div className="bg-white p-6 rounded-lg w-[700px] max-h-[90vh] overflow-y-auto space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-[#01281e]">
-                {editingSpecialty ? 'Edit Specialty' : 'Create New Specialty'}
+                {editingspeciality
+                  ? 'Edit speciality'
+                  : 'Create New speciality'}
               </h2>
               <button
                 onClick={handleCloseForm}
@@ -199,10 +265,10 @@ export default function SpecialtiesAdminPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Specialty Name <span className="text-red-500">*</span>
+                    speciality Name <span className="text-red-500">*</span>
                   </label>
                   <input
-                    {...register('specialty_name', { required: true })}
+                    {...register('speciality_name', { required: true })}
                     placeholder="e.g. OMS, Dentistry"
                     className="w-full border border-gray-300 rounded-[8px] p-2 focus:outline-none focus:ring-2 focus:ring-[#01503b]"
                   />
@@ -214,7 +280,8 @@ export default function SpecialtiesAdminPage() {
                   </label>
                   <ImageUpload
                     value={watchedBanner}
-                    onChange={(url) => setValue('specialty_banner_img', url)}
+                    onChange={url => setValue('speciality_banner_img', url)}
+                    onFileChange={file => setBannerFile(file)}
                     label="Banner Image"
                     description="Drag & drop or click to upload banner"
                   />
@@ -226,7 +293,8 @@ export default function SpecialtiesAdminPage() {
                   </label>
                   <ImageUpload
                     value={watchedBrand}
-                    onChange={(url) => setValue('brand_img', url)}
+                    onChange={url => setValue('brand_img', url)}
+                    onFileChange={file => setBrandFile(file)}
                     label="Brand Image"
                     description="Drag & drop or click to upload brand logo"
                   />
@@ -251,13 +319,24 @@ export default function SpecialtiesAdminPage() {
                     <div key={field.id} className="flex gap-4 items-start">
                       <div className="flex-1 space-y-2">
                         <input
-                          {...register(`topics.${index}.topic_name`, { required: true })}
+                          {...register(`topics.${index}.topic_name`, {
+                            required: true,
+                          })}
                           placeholder="Topic Name (e.g. Cancer)"
                           className="w-full border border-gray-300 rounded-[8px] p-2 focus:outline-none focus:ring-2 focus:ring-[#01503b]"
                         />
                         <ImageUpload
                           value={watchedTopics[index]?.topic_img}
-                          onChange={(url) => setValue(`topics.${index}.topic_img`, url)}
+                          onChange={url =>
+                            setValue(`topics.${index}.topic_img`, url)
+                          }
+                          onFileChange={file => {
+                            setTopicFiles(prev => {
+                              const next = [...prev];
+                              next[index] = file;
+                              return next;
+                            });
+                          }}
                           label={`Topic ${index + 1} Image`}
                           description="Drag & drop or click to upload topic image"
                           className="max-w-[300px]"
@@ -266,7 +345,14 @@ export default function SpecialtiesAdminPage() {
                       {fields.length > 1 && (
                         <button
                           type="button"
-                          onClick={() => remove(index)}
+                          onClick={() => {
+                            remove(index);
+                            setTopicFiles(prev => {
+                              const next = [...prev];
+                              next.splice(index, 1);
+                              return next;
+                            });
+                          }}
                           className="p-2 text-red-500 hover:bg-red-50 rounded mt-1"
                         >
                           <Trash2 size={20} />
@@ -290,9 +376,13 @@ export default function SpecialtiesAdminPage() {
                   disabled={isCreating || isUpdating}
                   className="bg-[#01503b] text-white px-6 py-2 rounded-[8px] hover:bg-[#01281e] transition flex items-center gap-2"
                 >
-                  {(isCreating || isUpdating) ? (
+                  {isCreating || isUpdating ? (
                     <Loader2 className="animate-spin" size={18} />
-                  ) : editingSpecialty ? 'Update Specialty' : 'Save Specialty'}
+                  ) : editingspeciality ? (
+                    'Update speciality'
+                  ) : (
+                    'Save speciality'
+                  )}
                 </button>
               </div>
             </form>
@@ -314,48 +404,60 @@ export default function SpecialtiesAdminPage() {
             <div className="p-6 space-y-4">
               <div className="relative">
                 <select
-                  value={selectedSpecialty ? selectedSpecialty.specialty_name : ''}
-                  onChange={(e) => {
+                  value={
+                    selectedspeciality ? selectedspeciality.speciality_name : ''
+                  }
+                  onChange={e => {
                     const found = specialties.find(
-                      (s: Specialty) => s.specialty_name === e.target.value
+                      (s: speciality) => s.speciality_name === e.target.value,
                     );
-                    setSelectedSpecialty(found || null);
+                    setSelectedspeciality(found || null);
                   }}
                   className="w-full border border-gray-300 rounded-[8px] p-3 pr-10 text-[#01281e] focus:outline-none focus:ring-2 focus:ring-[#01503b] appearance-none cursor-pointer"
                 >
                   <option value="" disabled className="text-gray-500">
-                    Select a specialty...
+                    Select a speciality...
                   </option>
-                  {specialties.map((specialty: Specialty) => (
-                    <option key={specialty.id || specialty._id} value={specialty.specialty_name}>
-                      {specialty.specialty_name}
+                  {specialties.map((speciality: speciality) => (
+                    <option
+                      key={speciality.id || speciality._id}
+                      value={speciality.speciality_name}
+                    >
+                      {speciality.speciality_name}
                     </option>
                   ))}
                 </select>
-                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={20} />
+                <ChevronDown
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                  size={20}
+                />
               </div>
 
-              {selectedSpecialty && (
+              {selectedspeciality && (
                 <div className="border border-gray-200 rounded-lg p-4 space-y-4">
                   <div className="flex justify-between items-start">
                     <div className="space-y-1">
                       <h3 className="text-lg font-semibold text-[#01281e]">
-                        {selectedSpecialty.specialty_name}
+                        {selectedspeciality.speciality_name}
                       </h3>
                       <p className="text-sm text-gray-500">
-                        {selectedSpecialty.topics?.length || 0} topics
+                        {selectedspeciality.topics?.length || 0} topics
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => router.push(`/oms/${selectedSpecialty.specialty_name.toLowerCase().replace(/\s+/g, '-')}`)}
+                        onClick={() =>
+                          router.push(
+                            `/oms/${selectedspeciality.speciality_name.toLowerCase().replace(/\s+/g, '-')}`,
+                          )
+                        }
                         className="p-2 text-[#01503b] hover:bg-gray-50 rounded cursor-pointer"
                         title="View on OMS page"
                       >
                         <ExternalLink size={18} />
                       </button>
                       <button
-                        onClick={() => setSelectedSpecialty(null)}
+                        onClick={() => setSelectedspeciality(null)}
                         className="p-1 text-gray-400 hover:bg-gray-100 rounded"
                       >
                         <X size={16} />
@@ -367,17 +469,19 @@ export default function SpecialtiesAdminPage() {
                     <label className="block text-sm font-medium text-gray-700">
                       Banner Image
                     </label>
-                    {selectedSpecialty.specialty_banner_img ? (
+                    {selectedspeciality.speciality_banner_img ? (
                       <div className="relative w-full max-w-[200px] aspect-video">
                         <Image
-                          src={selectedSpecialty.specialty_banner_img}
+                          src={selectedspeciality.speciality_banner_img}
                           alt="banner"
                           fill
                           className="object-cover rounded border"
                         />
                       </div>
                     ) : (
-                      <span className="text-xs text-gray-400">No banner image set</span>
+                      <span className="text-xs text-gray-400">
+                        No banner image set
+                      </span>
                     )}
                   </div>
 
@@ -385,17 +489,19 @@ export default function SpecialtiesAdminPage() {
                     <label className="block text-sm font-medium text-gray-700">
                       Brand Image
                     </label>
-                    {selectedSpecialty.brand_img ? (
+                    {selectedspeciality.brand_img ? (
                       <div className="relative w-full max-w-[200px] aspect-video">
                         <Image
-                          src={selectedSpecialty.brand_img}
+                          src={selectedspeciality.brand_img}
                           alt="brand"
                           fill
                           className="object-cover rounded border"
                         />
                       </div>
                     ) : (
-                      <span className="text-xs text-gray-400">No brand image set</span>
+                      <span className="text-xs text-gray-400">
+                        No brand image set
+                      </span>
                     )}
                   </div>
 
@@ -404,12 +510,14 @@ export default function SpecialtiesAdminPage() {
                       Topics
                     </label>
                     <div className="flex flex-wrap gap-2">
-                      {selectedSpecialty.topics?.map((topic, i) => (
+                      {selectedspeciality.topics?.map((topic, i) => (
                         <div
                           key={i}
                           className="flex items-center gap-2 bg-gray-50 rounded px-3 py-2"
                         >
-                          <span className="text-sm text-[#01281e]">{topic.topic_name}</span>
+                          <span className="text-sm text-[#01281e]">
+                            {topic.topic_name}
+                          </span>
                           {topic.topic_img && (
                             <div className="relative w-8 h-8">
                               <Image
@@ -422,7 +530,8 @@ export default function SpecialtiesAdminPage() {
                           )}
                         </div>
                       ))}
-                      {(!selectedSpecialty.topics || selectedSpecialty.topics.length === 0) && (
+                      {(!selectedspeciality.topics ||
+                        selectedspeciality.topics.length === 0) && (
                         <span className="text-xs text-gray-400">No topics</span>
                       )}
                     </div>
@@ -430,18 +539,22 @@ export default function SpecialtiesAdminPage() {
 
                   <div className="flex gap-2 pt-2">
                     <button
-                      onClick={() => handleEdit(selectedSpecialty)}
+                      onClick={() => handleEdit(selectedspeciality)}
                       className="px-4 py-2 border border-[#01503b] text-[#01503b] rounded-[8px] hover:bg-[#01503b]/10 transition flex items-center gap-2"
                     >
                       <Edit2 size={16} />
-                      Edit Specialty
+                      Edit speciality
                     </button>
                     <button
-                      onClick={() => handleDelete(selectedSpecialty.id || selectedSpecialty._id!)}
+                      onClick={() =>
+                        handleDelete(
+                          selectedspeciality.id || selectedspeciality._id!,
+                        )
+                      }
                       className="px-4 py-2 border border-red-600 text-red-600 rounded-[8px] hover:bg-red-50 transition flex items-center gap-2"
                     >
                       <Trash2 size={16} />
-                      Delete Specialty
+                      Delete speciality
                     </button>
                   </div>
                 </div>

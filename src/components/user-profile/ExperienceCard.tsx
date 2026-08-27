@@ -49,7 +49,7 @@ export default function ExperienceCard({ data }: ExperienceCardProps) {
                   <LocationIcon /> {item.location}
                 </h4>
                 <p className="text-sm text-[16px] text-muted-foreground">
-                  {item.specialty}
+                  {item.speciality}
                 </p>
               </div>
             </div>
