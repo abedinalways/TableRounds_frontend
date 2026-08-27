@@ -4,7 +4,7 @@ export interface Mockspeciality {
   banner: string;
   image?: string;
   is_active?: boolean;
-  topics: Array<{ topic_name: string; topic_img: string }>;
+  topics: Array<{ name: string; topic_img: string }>;
   topic_images?: string[];
 }
 
@@ -47,17 +47,17 @@ export const mockSpecialties: Mockspeciality[] = [
     image: '/images/osm/osm.png',
     is_active: true,
     topics: [
-      { topic_name: 'Anesthesia/Medicine', topic_img: '' },
-      { topic_name: 'Cancer', topic_img: '' },
-      { topic_name: 'Cleft/Craniofacial', topic_img: '' },
-      { topic_name: 'Cosmetics', topic_img: '' },
-      { topic_name: 'Dentoalveolar', topic_img: '' },
-      { topic_name: 'Implants', topic_img: '' },
-      { topic_name: 'Orthognathic', topic_img: '' },
-      { topic_name: 'Pathology', topic_img: '' },
-      { topic_name: 'Reconstruction', topic_img: '' },
-      { topic_name: 'TMJ', topic_img: '' },
-      { topic_name: 'Trauma', topic_img: '' },
+      { name: 'Anesthesia/Medicine', topic_img: '' },
+      { name: 'Cancer', topic_img: '' },
+      { name: 'Cleft/Craniofacial', topic_img: '' },
+      { name: 'Cosmetics', topic_img: '' },
+      { name: 'Dentoalveolar', topic_img: '' },
+      { name: 'Implants', topic_img: '' },
+      { name: 'Orthognathic', topic_img: '' },
+      { name: 'Pathology', topic_img: '' },
+      { name: 'Reconstruction', topic_img: '' },
+      { name: 'TMJ', topic_img: '' },
+      { name: 'Trauma', topic_img: '' },
     ],
     topic_images: topicImageMap.OMS,
   },
@@ -68,11 +68,11 @@ export const mockSpecialties: Mockspeciality[] = [
     image: '/images/osm/osm.png',
     is_active: true,
     topics: [
-      { topic_name: 'Restorative', topic_img: '' },
-      { topic_name: 'Endodontics', topic_img: '' },
-      { topic_name: 'Periodontics', topic_img: '' },
-      { topic_name: 'Prosthodontics', topic_img: '' },
-      { topic_name: 'Pediatric Dentistry', topic_img: '' },
+      { name: 'Restorative', topic_img: '' },
+      { name: 'Endodontics', topic_img: '' },
+      { name: 'Periodontics', topic_img: '' },
+      { name: 'Prosthodontics', topic_img: '' },
+      { name: 'Pediatric Dentistry', topic_img: '' },
     ],
     topic_images: topicImageMap.Dentistry,
   },
@@ -83,12 +83,12 @@ export const mockSpecialties: Mockspeciality[] = [
     image: '/images/osm/TR Emergency Medicine logo.png',
     is_active: true,
     topics: [
-      { topic_name: 'Cardiology', topic_img: '' },
-      { topic_name: 'Gastroenterology', topic_img: '' },
-      { topic_name: 'Neurology', topic_img: '' },
-      { topic_name: 'Pulmonology', topic_img: '' },
-      { topic_name: 'Rheumatology', topic_img: '' },
-      { topic_name: 'Infectious Disease', topic_img: '' },
+      { name: 'Cardiology', topic_img: '' },
+      { name: 'Gastroenterology', topic_img: '' },
+      { name: 'Neurology', topic_img: '' },
+      { name: 'Pulmonology', topic_img: '' },
+      { name: 'Rheumatology', topic_img: '' },
+      { name: 'Infectious Disease', topic_img: '' },
     ],
     topic_images: topicImageMap.Medicine,
   },
@@ -98,18 +98,19 @@ let mockStore: Mockspeciality[] = [...mockSpecialties];
 
 function toFrontendspeciality(data: Mockspeciality) {
   const topics = (data.topics || []).map((topic, index) => ({
-    topic_name: topic.topic_name,
+    name: topic.name,
     topic_img: data.topic_images?.[index] || topic.topic_img || '',
   }));
 
   return {
     id: data.id,
     _id: undefined,
-    speciality_name: data.name,
+    name: data.name,
     speciality_banner_img: data.banner,
     brand_img: data.image,
     is_active: data.is_active,
     topics,
+    total_topics: data.topics.length,
   };
 }
 
@@ -142,19 +143,19 @@ export const mockspecialityService = {
   },
 
   create: (data: {
-    speciality_name: string;
+    name: string;
     speciality_banner_img: string;
     brand_img?: string;
-    topics: { topic_name: string; topic_img: string }[];
+    topics: { name: string; topic_img: string }[];
   }) => {
     const topics = (data.topics || []).map(topic => ({
-      topic_name: topic.topic_name,
+      name: topic.name,
       topic_img: topic.topic_img,
     }));
 
     const newspeciality: Mockspeciality = {
       id: `mock-${Date.now()}`,
-      name: data.speciality_name,
+      name: data.name,
       banner: data.speciality_banner_img,
       image: data.brand_img,
       is_active: true,
@@ -170,10 +171,10 @@ export const mockspecialityService = {
   update: (
     id: string,
     data: {
-      speciality_name?: string;
+      name?: string;
       speciality_banner_img?: string;
       brand_img?: string;
-      topics?: { topic_name: string; topic_img: string }[];
+      topics?: { name: string; topic_img: string }[];
     },
   ) => {
     const index = mockStore.findIndex(s => s.id === id);
@@ -181,14 +182,14 @@ export const mockspecialityService = {
       const existing = mockStore[index];
       const updated: Mockspeciality = {
         ...existing,
-        ...(data.speciality_name ? { name: data.speciality_name } : {}),
+        ...(data.name ? { name: data.name } : {}),
         ...(data.speciality_banner_img
           ? { banner: data.speciality_banner_img }
           : {}),
         ...(data.brand_img ? { image: data.brand_img } : {}),
         topics: data.topics
           ? data.topics.map(topic => ({
-              topic_name: topic.topic_name,
+              name: topic.name,
               topic_img: topic.topic_img,
             }))
           : existing.topics,
@@ -215,7 +216,7 @@ export const mockspecialityService = {
     if (index >= 0) {
       const speciality = mockStore[index];
       const newTopic = {
-        topic_name: data.name,
+        name: data.name,
         topic_img: data.topic_image || '',
       };
       const updatedTopics = [...speciality.topics, newTopic];
@@ -253,13 +254,13 @@ export const mockspecialityService = {
     for (let i = 0; i < mockStore.length; i++) {
       const speciality = mockStore[i];
       const topicIndex = speciality.topics.findIndex(
-        t => t.topic_name === topicId,
+        t => t.name === topicId,
       );
       if (topicIndex >= 0) {
         const updatedTopics = [...speciality.topics];
         updatedTopics[topicIndex] = {
           ...updatedTopics[topicIndex],
-          ...(data.name ? { topic_name: data.name } : {}),
+          ...(data.name ? { name: data.name } : {}),
         };
         const updatedImages = [...(speciality.topic_images || [])];
         if (data.topic_image !== undefined) {
@@ -276,7 +277,7 @@ export const mockspecialityService = {
             message: 'Topic updated successfully',
             data: {
               id: topicId,
-              name: data.name || updatedTopics[topicIndex].topic_name,
+              name: data.name || updatedTopics[topicIndex].name,
               is_active: data.is_active ?? true,
               topic_image: data.topic_image || updatedImages[topicIndex] || '',
               created_at: new Date().toISOString(),
@@ -293,7 +294,7 @@ export const mockspecialityService = {
     for (let i = 0; i < mockStore.length; i++) {
       const speciality = mockStore[i];
       const topicIndex = speciality.topics.findIndex(
-        t => t.topic_name === topicId,
+        t => t.name === topicId,
       );
       if (topicIndex >= 0) {
         const updatedTopics = speciality.topics.filter(

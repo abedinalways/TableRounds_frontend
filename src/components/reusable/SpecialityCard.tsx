@@ -2,7 +2,7 @@ import Image from 'next/image';
 import React from 'react';
 
 interface Topic {
-  topic_name: string;
+  name: string;
   topic_img: string;
 }
 
@@ -86,9 +86,9 @@ const SpecialityCard = ({ topics }: specialityCardProps) => {
     topics && topics.length > 0
       ? topics.map((topic, index) => ({
           id: index,
-          name: topic.topic_name,
+          name: topic.name,
           icon: topic.topic_img,
-          label: topic.topic_name,
+          label: topic.name,
         }))
       : defaultTopics;
 

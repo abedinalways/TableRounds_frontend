@@ -7,7 +7,7 @@ import heartbeat from '../../../public/images/Heartbeat.json';
 import SpecialityCard from '../reusable/SpecialityCard';
 
 interface Topic {
-  topic_name: string;
+  name: string;
   topic_img: string;
 }
 
