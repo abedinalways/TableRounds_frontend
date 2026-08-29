@@ -42,6 +42,8 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --animate-row-fade-in: row-fade-in 0.4s ease-out both;
+  --animate-modal-pop: modal-pop 0.25s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 html,
 body {
@@ -84,6 +86,9 @@ body {
   --sidebar-ring: oklch(0.708 0 0);
   --shadow-sm: 0 1px 2px -1px rgba(0, 0, 0, 0.1), 
                0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  --animate-row-fade-in: row-fade-in 0.4s ease-out both;
+  --animate-modal-pop: modal-pop 0.25s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
 }
 
 .dark {
@@ -118,6 +123,9 @@ body {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --animate-row-fade-in: row-fade-in 0.4s ease-out both;
+  --animate-modal-pop: modal-pop 0.25s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
 }
 
 @layer base {
@@ -893,6 +901,30 @@ background: rgba(183, 158, 107, 0.14)
     transform: scale(1);
   }
 }
+
+ @keyframes row-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes modal-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.96) translateY(8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
 
 .animate-toast-in {
   animation: toast-in 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
