@@ -8,6 +8,7 @@ import heartbeat from '../../../public/images/Heartbeat.json';
 import { useCallback } from 'react';
 import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+import ImageSkeleton from '../reusable/ImageSkeleton';
 
 gsap.registerPlugin(ScrollToPlugin);
 
@@ -33,70 +34,56 @@ export default function Banner({
     });
   }, []);
   return (
-    <section className="relative font-[manrope] py-10 px-4 md:px-0">
+    <section className="relative font-[manrope] py-10 px-10">
       {/* Background Image */}
       <Image
         src="/images/banner.png"
         alt="Banner background"
         fill
-        className="object-cover brightness-90"
+        className="object-cover brightness-100"
         priority
-        unoptimized
       />
-
-      {/* === Decorative Elements === */}
 
       {/*Banner Image */}
-      <Image
-        src={specialityBannerImg || '/images/osm/banner.png'}
-        alt=""
-        width={826}
-        height={820}
-        className="
-    absolute 
-    right-[-60px]
-    top-5
-    w-[500px] 
-    
-    md:w-[730px] 
-    md:-right-10 
-    md:top-4
-    z-10 opacity-50 md:opacity-100
-  "
-      />
-
+      {specialityBannerImg ? (
+        <Image
+          src={specialityBannerImg || '/images/osm/banner.png'}
+          alt={`${specialityName} speciality`}
+          width={826}
+          height={820}
+         
+          priority
+          className="absolute right-[-60px] top-5 w-[500px] md:w-[730px] md:-right-10 md:top-4 z-10 opacity-80 md:opacity-100"
+        />
+      ) : (
+        <ImageSkeleton className="w-full h-full" />
+      )}
       {/* Heartbeat Animation */}
       <Lottie
         animationData={heartbeat}
         loop
         autoplay
-        className="
-          absolute -left-[30px] md:top-[200px]
-          md:left-[-130px] top-[300px]
-          w-[200px] md:w-[400px]
-          opacity-20
-        "
+        className="absolute -left-[60px] top-[340px] md:top-[60px] md:left-[-120px] w-[400px] md:w-[600px] opacity-40 **:stroke-[8px]"
       />
-
       {/* === TEXT + BUTTONS === */}
       <div
         className="
           relative z-20 md:bottom-18
           max-w-3xl 
-          mx-auto md:mx-0 md:ml-40
+          mx-auto  md:ml-40
            md:text-left
           pt-[100px] md:pt-[210px]
           
           text-white custom-container
         "
       >
-        <h2 className="font-bold text-3xl md:text-[40px] xl:text-[48px]  leading-tight">
+        <h2 className="font-bold text-3xl md:text-[40px] bg-blend-darken xl:text-[48px] leading-tight [-webkit-text-stroke:0.5px_rgba(0,0,0,0.35)] drop-shadow-[0_2px_4px_rgba(0,0,0,0.55)]">
           Mastering Every Aspect of
           <br />
           {specialityName}
         </h2>
 
-        <p className="mt-4 text-sm md:text-[24px] text-white/90">
+        <p className="mt-4 text-sm md:text-[24px] text-white/90 [-webkit-text-stroke:0.3px_rgba(0,0,0,0.25)] drop-shadow-[0_2px_4px_rgba(0,0,0,0.45)]">
           Built by surgeons. <br /> Evidence-based. <br /> speciality-driven.
         </p>
 
@@ -104,7 +91,7 @@ export default function Banner({
           <Btn
             onClick={handleExploreMore}
             text={`Explore ${specialityName} Features`}
-            className="bg-white text-green-700 md:w-[217px] w-full h-[54px]"
+            className="bg-white text-green-700  w-fit h-[54px] px-4"
           />
         </div>
       </div>

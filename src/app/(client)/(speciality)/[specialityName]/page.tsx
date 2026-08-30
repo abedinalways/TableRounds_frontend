@@ -59,7 +59,7 @@ export default function OmsPage() {
         specialityName={speciality.name}
         specialityBannerImg={speciality.speciality_banner_img}
       />
-      <Features />
+      <Features specialityName={speciality.name} />
       <Speciality
         topics={speciality.topics}
         specialityImg={speciality.speciality_banner_img}

@@ -1,24 +1,38 @@
 import Image from 'next/image'
 import React from 'react'
+import ImageSkeleton from '../reusable/ImageSkeleton';
 
 interface BrandProps {
   brandImg?: string;
 }
 
 export default function Brand({ brandImg }: BrandProps) {
-  const brandImage = brandImg || '/images/osm/osm.png';
+  
   return (
     <div className="card-bg relative py-[100px] md:flex items-center">
       <div className="absolute top-5 left-0">
-              <Image
-                src="/images/elevate/background.png"
-                width={1920}
-                height={404}
-                alt=""
-              />
-            </div>
+        <Image
+          src="/images/elevate/background.png"
+          width={1920}
+          height={404}
+          alt=""
+        />
+      </div>
       <div className="custom-container px-4 md:px-20 py-10 md:py-0 z-20">
-        <Image src={brandImage} width={578} height={190} alt="" />
+       
+        <div className="relative w-[578px] h-[190px]">
+          {brandImg ? (
+            <Image
+              src={brandImg}
+              alt="Brand"
+              fill
+              loading="lazy"
+              className="object-contain"
+            />
+          ) : (
+            <ImageSkeleton className='w-full h-full'/>
+          )}
+        </div>
       </div>
       <div className="custom-container px-4 md:px-0 z-20">
         <Image src="/images/osm/elevate.png" width={926} height={466} alt="" />

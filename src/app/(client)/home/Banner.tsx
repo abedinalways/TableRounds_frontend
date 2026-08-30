@@ -38,7 +38,7 @@ export default function Banner() {
       />
 
       {/* Dark overlay for text clarity */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/35 to-transparent z-10" />
+      {/* <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/35 to-transparent z-10" /> */}
 
       {/* === Decorative Elements === */}
 
@@ -48,7 +48,7 @@ export default function Banner() {
         alt="DNA"
         width={1024}
         height={1536}
-        className="absolute top-10 right-10 md:-right-10 lg:right-10 md:top-23 lg:-top-20 w-[1024px] opacity-90 md:opacity-100 rotate-7  md:rotate-0 "
+        className="absolute top-6 right-4 md:-right-10 lg:right-10 md:top-23 lg:-top-20  opacity-100 rotate-12 w-fit md:rotate-0 "
       />
 
       {/* Small DNA */}
@@ -65,7 +65,7 @@ export default function Banner() {
         animationData={heartbeat}
         loop
         autoplay
-        className="absolute -left-[60px] top-[340px] md:top-[170px] md:left-[-120px] w-[400px] md:w-[600px] opacity-40 **:stroke-[8px]"
+        className="absolute -left-[80px] top-[360px] lg:top-[180px] md:top-[120px] md:left-[-180px] w-[350px] md:w-[600px] opacity-40 **:stroke-[8px]"
       />
       {/* === TEXT + BUTTONS === */}
       <div className="relative z-20 md:space-y-6 max-w-3xl mx-auto md:mx-0 md:ml-[160px] md:text-left pt-[200px] md:pt-[270px] px-4 ms:px-0 text-white custom-container">

@@ -103,7 +103,7 @@ export default function Navbar({ isOms = false }) {
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          className={`bg-white font-[manrope] ${isMobile ? 'w-full' : 'w-56'}`}
+          className={`bg-white z-[70] font-[manrope] ${isMobile ? 'w-full' : 'w-56'}`}
         >
           <DropdownMenuLabel>Select speciality</DropdownMenuLabel>
           <DropdownMenuSeparator />
@@ -219,7 +219,8 @@ export default function Navbar({ isOms = false }) {
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          className={`bg-white font-[manrope] ${isMobile ? 'w-full' : 'w-56'}`}
+          className={`bg-white z-[999] font-[manrope] ${isMobile ? 'w-full' : 'w-56'}`}
+          sideOffset={8}
           align={isMobile ? 'start' : 'end'}
         >
           <DropdownMenuLabel className="truncate">
