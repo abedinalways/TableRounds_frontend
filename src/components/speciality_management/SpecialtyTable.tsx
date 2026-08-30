@@ -196,14 +196,14 @@ export default function SpecialtyTable({
                             <Eye size={17} />
                           </button>
 
-                          <button
+                          {/* <button
                             type="button"
                             onClick={() => onEdit(specialty)}
                             className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition cursor-pointer"
                             title="Edit"
                           >
                             <Edit2 size={17} />
-                          </button>
+                          </button> */}
 
                           <button
                             type="button"
