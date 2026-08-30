@@ -51,8 +51,8 @@ export default function Banner({
           alt={`${specialityName} speciality`}
           width={826}
           height={820}
-         
           priority
+          unoptimized
           className="absolute right-[-60px] top-5 w-[500px] md:w-[730px] md:-right-10 md:top-4 z-10 opacity-80 md:opacity-100"
         />
       ) : (
@@ -63,7 +63,7 @@ export default function Banner({
         animationData={heartbeat}
         loop
         autoplay
-        className="absolute -left-[60px] top-[340px] md:top-[60px] md:left-[-120px] w-[400px] md:w-[600px] opacity-40 **:stroke-[8px]"
+        className="absolute -left-[60px] top-[240px] md:top-[60px] md:left-[-120px] w-[400px] md:w-[600px] opacity-40 **:stroke-[8px]"
       />
       {/* === TEXT + BUTTONS === */}
       <div
@@ -77,7 +77,7 @@ export default function Banner({
           text-white custom-container
         "
       >
-        <h2 className="font-bold text-3xl md:text-[40px] bg-blend-darken xl:text-[48px] leading-tight [-webkit-text-stroke:0.5px_rgba(0,0,0,0.35)] drop-shadow-[0_2px_4px_rgba(0,0,0,0.55)]">
+        <h2 className="font-bold text-3xl md:text-[40px] bg-blend-darken xl:text-[48px] leading-tight  drop-shadow-[0_2px_4px_rgba(0,0,0,0.55)]">
           Mastering Every Aspect of
           <br />
           {specialityName}

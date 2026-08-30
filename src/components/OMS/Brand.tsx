@@ -9,7 +9,7 @@ interface BrandProps {
 export default function Brand({ brandImg }: BrandProps) {
   
   return (
-    <div className="card-bg relative py-[100px] md:flex items-center">
+    <div className="card-bg relative md:py-[100px] py-[70px] md:flex items-center">
       <div className="absolute top-5 left-0">
         <Image
           src="/images/elevate/background.png"
@@ -20,14 +20,14 @@ export default function Brand({ brandImg }: BrandProps) {
       </div>
       <div className="custom-container px-4 md:px-20 py-10 md:py-0 z-20">
        
-        <div className="relative w-[578px] h-[190px]">
+        <div className="relative md:w-[578px] md:h-[190px] w-[280px] h-[100px]">
           {brandImg ? (
             <Image
               src={brandImg}
               alt="Brand"
               fill
               loading="lazy"
-              className="object-contain"
+              className="object-contain w-fit"
             />
           ) : (
             <ImageSkeleton className='w-full h-full'/>
