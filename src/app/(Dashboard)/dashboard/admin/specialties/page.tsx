@@ -15,6 +15,7 @@ import SpecialtyFormModal, { Specialty } from '@/components/speciality_managemen
 import { getApiErrorMessage } from '@/utils/apiError';
 import SpecialtyTable from '@/components/speciality_management/SpecialtyTable';
 import SpecialtyDetailsModal from '@/components/speciality_management/SpecialtyDetailsModal';
+import DeleteSpecialityModal from '@/components/speciality_management/DeleteSpecialityModal';
 
 export default function SpecialtiesAdminPage() {
   /* =========================================================
@@ -47,6 +48,11 @@ export default function SpecialtiesAdminPage() {
   const [deletingId, setDeletingId] = useState<string | null>(
     null,
   );
+
+  const [deleteTarget, setDeleteTarget] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   /* =========================================================
      GET SPECIALTIES
@@ -233,78 +239,41 @@ export default function SpecialtiesAdminPage() {
       return;
     }
 
-    toast.custom(
-      toastId => (
-        <div className="bg-white shadow-lg rounded-lg p-4 w-[350px] space-y-4 font-[manrope]">
-          <p className="text-sm font-medium text-[#01281e]">
-            Are you sure you want to delete this speciality?
-          </p>
+    const matched = specialties.find(s => s.id === id || s._id === id);
 
-          <div className="flex justify-end gap-3">
-            {/* Cancel */}
-            <button
-              type="button"
-              onClick={() => {
-                toast.dismiss(toastId);
-              }}
-              className="px-3 py-1 border rounded text-[#01281e] hover:bg-gray-50"
-            >
-              Cancel
-            </button>
+    setDeleteTarget({
+      id,
+      name: matched?.name || viewingSpecialty?.name || 'this speciality',
+    });
+  };
 
-            {/* Delete */}
-            <button
-              type="button"
-              disabled={isDeleting}
-              onClick={async () => {
-                setDeletingId(id);
+  const handleCloseDelete = () => {
+    if (isDeleting) return;
 
-                try {
-                  await deleteSpeciality(id).unwrap();
+    setDeleteTarget(null);
+  };
 
-                  toast.dismiss(toastId);
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget || isDeleting) return;
 
-                  toast.success(
-                    'Speciality deleted successfully',
-                  );
+    try {
+      setDeletingId(deleteTarget.id);
 
-                  setViewingId(null);
+      await deleteSpeciality(deleteTarget.id).unwrap();
 
-                  await refetch();
-                } catch (error: unknown) {
-                  toast.dismiss(toastId);
+      toast.success('Speciality deleted successfully');
 
-                  toast.error(
-                    getApiErrorMessage(
-                      error,
-                      'Failed to delete speciality',
-                    ),
-                  );
-                } finally {
-                  setDeletingId(null);
-                }
-              }}
-              className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
-            >
-              {isDeleting ? (
-                <>
-                  <Loader2
-                    className="animate-spin"
-                    size={14}
-                  />
-                  Deleting...
-                </>
-              ) : (
-                'Delete'
-              )}
-            </button>
-          </div>
-        </div>
-      ),
-      {
-        duration: 10000,
-      },
-    );
+      setViewingId(null);
+      setDeleteTarget(null);
+
+      await refetch();
+    } catch (error: unknown) {
+      toast.error(
+        getApiErrorMessage(error, 'Failed to delete speciality'),
+      );
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   /* =========================================================
@@ -427,6 +396,18 @@ export default function SpecialtiesAdminPage() {
           onDelete={handleDelete}
         />
       )}
+
+      {/* =====================================================
+          DELETE CONFIRMATION MODAL
+      ===================================================== */}
+
+      <DeleteSpecialityModal
+        open={Boolean(deleteTarget)}
+        specialityName={deleteTarget?.name ?? ''}
+        isDeleting={isDeleting}
+        onCancel={handleCloseDelete}
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   );
 }

@@ -6,11 +6,10 @@ import Image from 'next/image';
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import MotionPathPlugin from 'gsap/MotionPathPlugin';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation'; // Import this hook to get the current path
+import { getLenis } from '@/utils/SmoothScroll';
 
-gsap.registerPlugin(ScrollToPlugin);
 gsap.registerPlugin(MotionPathPlugin);
 
 interface ElevateProps {
@@ -28,8 +27,16 @@ export default function Elevate({ specialityName }: ElevateProps) {
     router.push('/'); // Navigate to homepage
     setTimeout(() => {
       const el = document.querySelector('#welcome');
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (!el) return;
+
+      const lenis = getLenis();
+      if (lenis) {
+        lenis.scrollTo(el as HTMLElement, { offset: 0, force: true });
+      } else {
+        (el as HTMLElement).scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
       }
     }, 200);
   };
@@ -63,11 +70,16 @@ export default function Elevate({ specialityName }: ElevateProps) {
 
   // Scroll to the "Welcome" section after the homepage is loaded
   useEffect(() => {
-    if (isHomepage) {
-      const section = document.getElementById('welcome');
-      if (section) {
-        section.scrollIntoView({ behavior: 'smooth' }); // Smooth scroll to the #welcome section
-      }
+    if (!isHomepage) return;
+
+    const section = document.getElementById('welcome');
+    if (!section) return;
+
+    const lenis = getLenis();
+    if (lenis) {
+      lenis.scrollTo(section, { force: true });
+    } else {
+      section.scrollIntoView({ behavior: 'smooth' }); // Smooth scroll to the #welcome section
     }
   }, [isHomepage]); // Trigger when we are on the homepage
 

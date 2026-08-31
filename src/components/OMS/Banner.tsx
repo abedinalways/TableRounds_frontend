@@ -6,11 +6,8 @@ import Btn from '@/components/reusable/button/Btn';
 
 import heartbeat from '../../../public/images/Heartbeat.json';
 import { useCallback } from 'react';
-import { gsap } from 'gsap';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+import { getLenis } from '@/utils/SmoothScroll';
 import ImageSkeleton from '../reusable/ImageSkeleton';
-
-gsap.registerPlugin(ScrollToPlugin);
 
 interface BannerProps {
   specialityName: string;
@@ -25,12 +22,16 @@ export default function Banner({
     const target = document.querySelector('#features');
     if (!target) return;
 
-    const offsetY = 40;
+    const lenis = getLenis();
+    if (lenis) {
+      lenis.scrollTo('#features', { offset: 40 });
+      return;
+    }
 
-    gsap.to(window, {
-      duration: 1,
-      ease: 'power2.out',
-      scrollTo: { y: target, offsetY },
+    // Fallback when Lenis is not active (e.g. reduced motion)
+    (target as HTMLElement).scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
     });
   }, []);
   return (

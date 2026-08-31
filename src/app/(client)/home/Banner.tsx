@@ -7,22 +7,23 @@ import Btn from '@/components/reusable/button/Btn';
 import heartbeat from '../../../../public/images/Heartbeat.json';
 // import loadingAnim from '../../../../public/images/loading.json';
 import { useCallback } from 'react';
-import { gsap } from 'gsap';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
-
-gsap.registerPlugin(ScrollToPlugin);
+import { getLenis } from '@/utils/SmoothScroll';
 
 export default function Banner() {
   const handleLearnMore = useCallback(() => {
     const target = document.querySelector('#details');
     if (!target) return;
 
-    const offsetY = 80;
+    const lenis = getLenis();
+    if (lenis) {
+      lenis.scrollTo('#details', { offset: 80 });
+      return;
+    }
 
-    gsap.to(window, {
-      duration: 1,
-      ease: 'power2.out',
-      scrollTo: { y: target, offsetY },
+    // Fallback when Lenis is not active (e.g. reduced motion)
+    (target as HTMLElement).scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
     });
   }, []);
 
