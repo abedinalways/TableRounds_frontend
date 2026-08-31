@@ -1,5 +1,7 @@
 import {
   useGetAllSpecialtiesQuery,
+  useGetPublicSpecialitiesQuery,
+  useGetPublicSpecialityByIdQuery,
   useGetspecialityByIdQuery,
   useGetspecialityByNameQuery,
   useCreatespecialityMutation,
@@ -42,6 +44,43 @@ export function useAllSpecialties(
       isError: false,
       error: undefined,
       refetch: () => Promise.resolve(result),
+    };
+  }
+  return realQuery;
+}
+
+export function usePublicSpecialties(
+  params?: { page?: number; limit?: number },
+) {
+  const realQuery = useGetPublicSpecialitiesQuery(params, {
+    skip: USE_MOCK,
+  });
+
+  if (USE_MOCK) {
+    const result = mockspecialityService.getAll();
+    return {
+      data: result.data,
+      isLoading: false,
+      isError: false,
+      error: undefined,
+      refetch: () => Promise.resolve(result),
+    };
+  }
+  return realQuery;
+}
+
+export function usePublicSpecialityById(id: string | null) {
+  const realQuery = useGetPublicSpecialityByIdQuery(id ?? '', {
+    skip: USE_MOCK || !id,
+  });
+
+  if (USE_MOCK || !id) {
+    return {
+      data: undefined,
+      isLoading: false,
+      isError: false,
+      error: undefined,
+      refetch: () => {},
     };
   }
   return realQuery;

@@ -6,7 +6,10 @@ import Elevate from '@/components/OMS/Elevate';
 import Features from '@/components/OMS/Features';
 
 import React from 'react';
-import { useAllSpecialties, useSpecialityById } from '@/hooks/useSpecialtyData';
+import {
+  usePublicSpecialties,
+  usePublicSpecialityById,
+} from '@/hooks/useSpecialtyData';
 import { useParams } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import Speciality from '@/components/OMS/Speciality';
@@ -14,7 +17,7 @@ import Speciality from '@/components/OMS/Speciality';
 export default function OmsPage() {
   const params = useParams();
   const specialityName = params.specialityName as string;
-  const { data: specialtiesData, isLoading, error } = useAllSpecialties();
+  const { data: specialtiesData, isLoading, error } = usePublicSpecialties();
 
   const specialties = specialtiesData?.data || [];
   const match = specialties.find(
@@ -28,7 +31,7 @@ export default function OmsPage() {
   // Fetch the full single-specialty data (banner/brand/topic images) by ID,
   // instead of relying only on the list which doesn't include the images.
   const { data: speciality, isLoading: isSpecialityLoading } =
-    useSpecialityById(match?.id || match?._id || null);
+    usePublicSpecialityById(match?.id || match?._id || null);
 
   if (isLoading || isSpecialityLoading) {
     return (

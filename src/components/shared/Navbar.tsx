@@ -1,6 +1,6 @@
 
 'use client';
-import { useAllSpecialties } from '@/hooks/useSpecialtyData';
+import { usePublicSpecialties } from '@/hooks/useSpecialtyData';
 import { useState } from 'react';
 import { useNavbarAuth } from '../navbar/useNavbarAuth';
 import { slugify } from '../navbar/navbar.utils';
@@ -16,7 +16,7 @@ export default function Navbar({ isOms = false }) {
   const [open, setOpen] = useState(false);
   const [speciality, setSpeciality] = useState('');
 
-  const { data: allSpecialtiesData, isLoading: isLoadingSpecialties } = useAllSpecialties();
+  const { data: allSpecialtiesData, isLoading: isLoadingSpecialties } = usePublicSpecialties();
   const specialties: { name: string }[] = allSpecialtiesData?.data || [];
   const specialityOptions = specialties.map(s => {
     const slug = slugify(s.name);

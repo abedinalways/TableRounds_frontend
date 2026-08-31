@@ -213,6 +213,57 @@ export const specialityApi = baseApi.injectEndpoints({
       providesTags: ['speciality'],
     }),
 
+    /* ================= PUBLIC API ================= */
+
+    getPublicSpecialities: builder.query<
+      specialityListResponse,
+      { page?: number; limit?: number } | void
+    >({
+      query: params => ({
+        url: '/public/specialities',
+        method: 'GET',
+        params:
+          params && (params.page || params.limit)
+            ? {
+                ...(params.page ? { page: params.page } : {}),
+                ...(params.limit ? { limit: params.limit } : {}),
+              }
+            : undefined,
+      }),
+      transformResponse: (response: Record<string, unknown>) => {
+        const rawData = response.data;
+        const data = (Array.isArray(rawData) ? rawData : []).map(item =>
+          toFrontendspeciality(item as Record<string, unknown>),
+        );
+        return {
+          success: Boolean(response.success),
+          message: typeof response.message === 'string' ? response.message : '',
+          data,
+          meta: (response.meta as specialityListResponse['meta']) ?? {
+            total: data.length,
+            page: 1,
+            limit: data.length || 1,
+            totalPage: data.length ? 1 : 0,
+            next: null,
+            previous: null,
+          },
+        };
+      },
+      providesTags: ['speciality'],
+    }),
+
+    getPublicSpecialityById: builder.query<speciality, string>({
+      query: id => ({
+        url: `/public/speciality/${encodeURIComponent(id)}`,
+        method: 'GET',
+      }),
+      transformResponse: (response: Record<string, unknown>) =>
+        toFrontendspeciality(
+          (response.data ?? response) as Record<string, unknown>,
+        ),
+      providesTags: (result, error, id) => [{ type: 'speciality', id }],
+    }),
+
     getspecialityById: builder.query<speciality, string>({
       query: id => ({
         url: `/admin/speciality/${encodeURIComponent(id)}`,
@@ -323,6 +374,8 @@ export const specialityApi = baseApi.injectEndpoints({
 
 export const {
   useGetAllSpecialtiesQuery,
+  useGetPublicSpecialitiesQuery,
+  useGetPublicSpecialityByIdQuery,
   useGetspecialityByIdQuery,
   useGetspecialityByNameQuery,
   useCreatespecialityMutation,
