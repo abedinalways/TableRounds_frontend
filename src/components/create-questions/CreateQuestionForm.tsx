@@ -8,22 +8,9 @@ import { TagSelector } from './TagSelector';
 
 import { QuestionFormValues, Difficulty } from '@/types/createQuestion';
 import { RichTextEditor } from './RichTextEditor';
+import { SpecialtyTopicSelector } from './SpecialtyTopicSelector';
 import { toast } from 'sonner';
 import { useCreateQuestionMutation } from '@/app/redux/api/createQuestionsApi';
-
-const TOPICS = [
-  { value: 'Anesthesia_Medicine', label: 'Anesthesia / Medicine' },
-  { value: 'Cancer', label: 'Cancer' },
-  { value: 'Cleft_Craniofacial', label: 'Cleft / Craniofacial' },
-  { value: 'Cosmetics', label: 'Cosmetics' },
-  { value: 'Dentoalveolar', label: 'Dentoalveolar' },
-  { value: 'Implants', label: 'Implants' },
-  { value: 'Orthognathic', label: 'Orthognathic' },
-  { value: 'Pathology', label: 'Pathology' },
-  { value: 'Recontraction', label: 'Reconstruction' },
-  { value: 'TMJ', label: 'TMJ' },
-  { value: 'Trauma', label: 'Trauma' },
-];
 
 const DIFFICULTIES: Difficulty[] = ['Intern', 'Senior', 'Board'];
 
@@ -50,7 +37,7 @@ export default function CreateQuestionForm() {
     useForm<QuestionFormValues>({
       defaultValues: {
         difficulty: '',
-        topic: '',
+        specialtyTopics: [],
         questionStem: '',
         memoryTrick: '',
         answers: [
@@ -80,8 +67,16 @@ export default function CreateQuestionForm() {
       toast.error('Please select a difficulty level');
       return;
     }
-    if (!data.topic) {
-      toast.error('Please select a topic');
+
+    const specialtyTopicPairs = data.specialtyTopics;
+
+    if (specialtyTopicPairs.length === 0) {
+      toast.error('Please add at least one speciality');
+      return;
+    }
+
+    if (specialtyTopicPairs.some(pair => !pair.topicId)) {
+      toast.error('Please select a topic for every speciality');
       return;
     }
 
@@ -105,7 +100,22 @@ export default function CreateQuestionForm() {
       formData.append('referance', data.referance || '');
       formData.append('difficulty', data.difficulty);
 
-      formData.append('topic', JSON.stringify([data.topic]));
+      // Legacy single-topic field — keep for backward compatibility.
+      formData.append(
+        'topic',
+        JSON.stringify(specialtyTopicPairs.map(pair => pair.topicName)),
+      );
+
+      // Link every selected speciality to exactly one topic.
+      formData.append(
+        'specialty_topics',
+        JSON.stringify(
+          specialtyTopicPairs.map(pair => ({
+            speciality_id: pair.specialityId,
+            topic_id: pair.topicId,
+          })),
+        ),
+      );
 
       formData.append(
         'answerOptions',
@@ -163,11 +173,9 @@ export default function CreateQuestionForm() {
         onChange={val => setValue('difficulty', val as Difficulty)}
       />
 
-      <TagSelector
-        label="Topic"
-        options={TOPICS}
-        selected={watch('topic')}
-        onChange={val => setValue('topic', val)}
+      <SpecialtyTopicSelector
+        value={watch('specialtyTopics')}
+        onChange={pairs => setValue('specialtyTopics', pairs)}
       />
 
       <h2 className="text-lg md:text-[24px] font-bold text-[#01281e]">

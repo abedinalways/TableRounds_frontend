@@ -1,5 +1,12 @@
 export type Difficulty = 'Intern' | 'Senior' | 'Board' | '';
 
+export interface SpecialtyTopicPair {
+  specialityId: string;
+  specialityName: string;
+  topicId: string;
+  topicName: string;
+}
+
 export interface AnswerChoice {
   id: string;
   text: string;
@@ -8,7 +15,7 @@ export interface AnswerChoice {
 
 export interface QuestionFormValues {
   difficulty: Difficulty;
-  topic: string;
+  specialtyTopics: SpecialtyTopicPair[];
   questionStem: string;
   questionId: number;
   questionTitle: string;

@@ -45,6 +45,7 @@ export const baseApi = createApi({
     'Leaderboard',
     'PreviousTestHistory',
     'speciality',
+    'QuestionSpeciality',
   ],
   endpoints: () => ({}),
 });
