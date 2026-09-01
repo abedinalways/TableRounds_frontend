@@ -26,14 +26,20 @@ export interface BackendPlanData {
   updated_at: string;
 }
 
+export interface TransactionPlan {
+  id: string;
+  name: string;
+  price: string | number;
+}
+
 export interface TransactionItem {
   id: string;
-  plan_id: string;
-  user_id: string;
+  plan_type: string;
   status: string;
   current_period_end: string;
   created_at: string;
   updated_at: string;
+  plan: TransactionPlan;
 }
 
 export interface GenericUserResponse<T> {

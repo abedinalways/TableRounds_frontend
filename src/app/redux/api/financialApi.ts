@@ -28,14 +28,27 @@ export interface FinancialStatsData {
   monthlyPlansRevenue: number;
 }
 
+export interface TransactionUser {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export interface TransactionPlan {
+  id: string;
+  name: string;
+  price: string | number;
+}
+
 export interface TransactionItem {
   id: string;
-  plan_id: string;
-  user_id: string;
+  plan_type: string;
   status: string;
   current_period_end: string;
   created_at: string;
   updated_at: string;
+  user: TransactionUser;
+  plan: TransactionPlan;
 }
 
 /* ---------- API Response Wrappers ---------- */
