@@ -34,7 +34,7 @@ export default function Speciality({ topics, specialityImg }: specialityProps) {
         />
       </div>
       <h1 className="text-3xl sm:text-[48px] custom-container text-start  px-4 font-bold text-white font-[roboto]">
-        speciality Level Content
+        Speciality Level Content
       </h1>
       <SpecialityCard topics={topics} />
 

@@ -18,6 +18,8 @@ import QuestionsTable, {
 import StatsCard from '@/components/question-manager/StatsCard';
 import { toast } from 'sonner';
 import { RichTextEditor } from '@/components/create-questions/RichTextEditor';
+import { SpecialtyTopicSelector } from '@/components/create-questions/SpecialtyTopicSelector';
+import type { SpecialtyTopicPair } from '@/types/createQuestion';
 import { X } from 'lucide-react';
 
 const TOPICS = [
@@ -90,6 +92,9 @@ export default function QuestionManagerPage() {
   // Form state for editing
   const [editFormData, setEditFormData] = useState<UpdateQuestionData>({});
   const [answerOptions, setAnswerOptions] = useState<AnswerOption[]>([]);
+  const [specialtyTopicPairs, setSpecialtyTopicPairs] = useState<
+    SpecialtyTopicPair[]
+  >([]);
   const [explanationImageFile, setExplanationImageFile] = useState<File | null>(
     null,
   );
@@ -111,6 +116,14 @@ export default function QuestionManagerPage() {
       });
 
       setAnswerOptions(q.answerOptions || []);
+      setSpecialtyTopicPairs(
+        (q.specialty_topics ?? []).map(link => ({
+          specialityId: link.speciality.id,
+          specialityName: link.speciality.name,
+          topicId: link.topic.id,
+          topicName: link.topic.name,
+        })),
+      );
       setExplanationImageFile(null);
     }
   }, [singleQuestionData]);
@@ -120,6 +133,7 @@ export default function QuestionManagerPage() {
     setEditingQuestionId(null);
     setEditFormData({});
     setAnswerOptions([]);
+    setSpecialtyTopicPairs([]);
     setQuestionStemImageFile(null);
     setExplanationImageFile(null);
   };
@@ -135,6 +149,7 @@ export default function QuestionManagerPage() {
       text: q.question_title,
       topic: (q.topic ?? []).map(toDisplayLabel),
       difficulty: q.difficulty,
+      connect_speciality: q.connect_speciality,
       total_attempts: q.total_attempts,
       correct_percentage: q.correct_percentage,
     })) ?? [];
@@ -224,6 +239,16 @@ export default function QuestionManagerPage() {
             id: option.id || '',
             option_text: option.option_text,
             is_correct: option.is_correct,
+          })),
+        ),
+      );
+
+      formData.append(
+        'specialty_topics',
+        JSON.stringify(
+          specialtyTopicPairs.map(pair => ({
+            speciality_id: pair.specialityId,
+            topic_id: pair.topicId,
           })),
         ),
       );
@@ -407,6 +432,14 @@ export default function QuestionManagerPage() {
                       </label>
                     ))}
                   </div>
+                </div>
+
+                {/* Speciality & Topic (connect speciality) */}
+                <div className="space-y-2">
+                  <SpecialtyTopicSelector
+                    value={specialtyTopicPairs}
+                    onChange={setSpecialtyTopicPairs}
+                  />
                 </div>
 
                 {/* Answer Options */}

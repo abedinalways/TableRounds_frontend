@@ -77,7 +77,7 @@ export default function Elevate() {
 
       <h2 className="text-xl md:text-3xl lg:text-[60px] px-4 md:px-0 font-bold">
         Ready to Elevate Your Medical <br /> Practice and Master Your
-        speciality?
+        Speciality?
       </h2>
       <p className="text-sm sm:text-lg px-4 md:px-0 text-[#f2e9ed]">
         Achieve unmatched clinical mastery and accelerate your professional

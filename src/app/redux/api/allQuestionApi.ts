@@ -4,12 +4,23 @@ import { baseApi } from './baseApi';
 
 export type Difficulty = 'Intern' | 'Senior' | 'Board' | 'Boards';
 
+export interface SpecialtyNested {
+  id: string;
+  name: string;
+}
+
+export interface SpecialtyTopicLink {
+  speciality: SpecialtyNested;
+  topic: SpecialtyNested;
+}
+
 export interface Question {
   id: string;
   question_title: string;
   question_id: string;
   difficulty: Difficulty;
   topic: string[];
+  connect_speciality: boolean;
   total_attempts: number;
   correct_percentage: number;
 }
@@ -52,6 +63,8 @@ export interface SingleQuestionResponse {
     question_title: string;
     difficulty: Difficulty;
     topic: string[];
+    connect_speciality: boolean;
+    specialty_topics: SpecialtyTopicLink[];
     answerOptions: AnswerOption[];
     explanation: string;
     explanation_image: string | null;
@@ -63,10 +76,16 @@ export interface SingleQuestionResponse {
   };
 }
 
+export interface SpecialtyTopicPayload {
+  speciality_id: string;
+  topic_id: string;
+}
+
 export interface UpdateQuestionData {
   question_steam?: string;
   difficulty?: Difficulty;
   topic?: string[];
+  specialty_topics?: SpecialtyTopicPayload[];
   answerOptions?: AnswerOption[];
   explanation?: string;
   why_incorrect?: string;

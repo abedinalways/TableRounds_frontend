@@ -196,6 +196,7 @@ export type Question = {
   text: string;
   topic: string[];
   difficulty: Difficulty;
+  connect_speciality: boolean;
   total_attempts: number;
   correct_percentage: number;
 };
@@ -292,6 +293,7 @@ export default function QuestionsTable({
               >
                 Difficulty
               </th>
+              <th className="px-4 py-3 text-center">Connect Speciality</th>
               <th className="px-4 py-3 text-center">Attempts</th>
               <th className="px-4 py-3 text-center">% Correct</th>
               <th className="px-4 py-3 text-center">Action</th>
@@ -310,6 +312,17 @@ export default function QuestionsTable({
                 </td>
                 <td className="px-4 py-4 text-center">
                   {displayDifficulty(question.difficulty)}
+                </td>
+                <td className="px-4 py-4 text-center">
+                  <span
+                    className={
+                      question.connect_speciality
+                        ? 'inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-[#01503b] text-white'
+                        : 'inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-500'
+                    }
+                  >
+                    {question.connect_speciality ? 'Yes' : 'No'}
+                  </span>
                 </td>
                 <td className="px-4 py-4 text-center">
                   {question.total_attempts}

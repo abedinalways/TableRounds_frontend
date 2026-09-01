@@ -85,7 +85,7 @@ export default function Banner({
         </h2>
 
         <p className="mt-4 text-sm md:text-[24px] text-white/90 [-webkit-text-stroke:0.3px_rgba(0,0,0,0.25)] drop-shadow-[0_2px_4px_rgba(0,0,0,0.45)]">
-          Built by surgeons. <br /> Evidence-based. <br /> speciality-driven.
+          Built by surgeons. <br /> Evidence-based. <br /> Speciality-driven.
         </p>
 
         <div className="mt-16 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">

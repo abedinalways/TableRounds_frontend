@@ -34,7 +34,7 @@ export default function SpecialityDropdown({
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <button className="flex items-center cursor-pointer gap-1 focus:outline-none hover:text-[#B79E6B] transition-colors">
-          Specialties
+          Specialities
           <ChevronDown className="w-4 h-4" />
         </button>
       </DropdownMenuTrigger>
@@ -43,7 +43,7 @@ export default function SpecialityDropdown({
         <DropdownMenuSeparator />
         {isLoading ? (
           <div className="px-3 py-2 text-sm text-gray-500">
-            Loading specialties...
+            Loading specialities...
           </div>
         ) : (
           <DropdownMenuRadioGroup value={value} onValueChange={onValueChange}>
