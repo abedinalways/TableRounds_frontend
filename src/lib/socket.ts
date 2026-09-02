@@ -14,6 +14,68 @@
 import { io, Socket } from 'socket.io-client';
 
 // ============================================
+// Session Expiry Handling
+// ============================================
+
+/**
+ * App-level callback invoked when the socket detects the JWT is expired
+ * (either before connecting or on a failed handshake). The app layer
+ * (AuthProvider) registers a handler that logs the user out.
+ */
+let sessionExpiredHandler: (() => void) | null = null;
+let sessionExpiredNotified = false;
+
+export function setSessionExpiredHandler(handler: (() => void) | null): void {
+  sessionExpiredHandler = handler;
+}
+
+function notifySessionExpired(): void {
+  if (sessionExpiredNotified) return;
+  sessionExpiredNotified = true;
+  console.warn('[Socket] Session expired — notifying app layer.');
+  sessionExpiredHandler?.();
+}
+
+// Auth-related handshake failures (never auto-retry these with the same token)
+const AUTH_ERROR_PATTERN =
+  /expired|unauthori[sz]ed|invalid token|jwt|401|forbidden/i;
+
+function isAuthError(message: string): boolean {
+  return AUTH_ERROR_PATTERN.test(message);
+}
+
+// ============================================
+// JWT Helpers
+// ============================================
+
+/**
+ * Decode a JWT payload without verification (client-side check only).
+ */
+function decodeJwtPayload(token: string): { exp?: number } | null {
+  try {
+    const payloadPart = token.split('.')[1];
+    if (!payloadPart) return null;
+    const base64 = payloadPart.replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(atob(base64));
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Check whether a JWT is expired (with a 30s safety buffer).
+ * Tokens without an `exp` claim are treated as valid (backend decides).
+ */
+export function isTokenExpired(
+  token: string | null | false | undefined,
+): boolean {
+  if (!token) return true;
+  const payload = decodeJwtPayload(token);
+  if (!payload?.exp) return false;
+  return Date.now() >= payload.exp * 1000 - 30_000;
+}
+
+// ============================================
 // Singleton Socket Instance
 // ============================================
 
@@ -45,6 +107,15 @@ let reconnectResetTimer: ReturnType<typeof setTimeout> | null = null;
 export function getSocket(token: string): Socket | null {
   // SSR safety check
   if (typeof window === 'undefined') {
+    return null;
+  }
+
+  // Refuse to connect with an expired token — this is what caused the
+  // TokenExpiredError spam on the backend socket gateway.
+  if (isTokenExpired(token)) {
+    console.warn('[Socket] JWT is expired — refusing to connect.');
+    cleanupSocket();
+    notifySessionExpired();
     return null;
   }
 
@@ -180,6 +251,8 @@ function setupEventHandlers(): void {
 
   // Successful connection
   socket.on('connect', () => {
+    // Successfully (re)connected — allow future session-expiry notifications.
+    sessionExpiredNotified = false;
     if (reconnectResetTimer) clearTimeout(reconnectResetTimer);
     reconnectResetTimer = setTimeout(() => {
       reconnectAttempts = 0;
@@ -232,6 +305,17 @@ function setupEventHandlers(): void {
   // Connection error handler
   socket.on('connect_error', (error) => {
     console.error('[Socket] Connection error:', error.message);
+
+    // Auth failure (expired/invalid token): stop socket.io's infinite
+    // auto-reconnect with the same stale token and trigger the
+    // session-expiry flow (logout) instead of hammering the backend.
+    if (isAuthError(error.message)) {
+      console.error(
+        '[Socket] Authentication failed — stopping reconnection and triggering session expiry flow.'
+      );
+      notifySessionExpired();
+      socket?.disconnect();
+    }
   });
 }
 
@@ -280,4 +364,5 @@ function cleanupSocket(): void {
   activeRooms.clear();
   pendingRooms.clear();
   reconnectAttempts = 0;
+  sessionExpiredNotified = false;
 }

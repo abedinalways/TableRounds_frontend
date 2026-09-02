@@ -19,6 +19,7 @@ import {
   joinRooms,
   isRoomJoined,
   disconnectSocket,
+  isTokenExpired,
 } from '@/lib/socket';
 import { store, type AppDispatch, type RootState } from '../../store';
 import {
@@ -71,6 +72,15 @@ export function useChatSocket() {
   useEffect(() => {
     // No token? Disconnect and cleanup
     if (!token) {
+      disconnectSocket();
+      joinedConvsRef.current = [];
+      return;
+    }
+
+    // Expired token? Never connect with stale credentials — the backend
+    // socket gateway rejects it with TokenExpiredError. Disconnect and let
+    // the global session-expiry handler (AuthProvider) log the user out.
+    if (isTokenExpired(token)) {
       disconnectSocket();
       joinedConvsRef.current = [];
       return;
