@@ -84,12 +84,24 @@ function shouldShowDateSeparator(
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function MessageSection() {
-  const { messages, conversations, activeConversationId } = useChat();
+interface MessageSectionProps {
+  /** Message id from a notification deep-link (?messageId=) to scroll to & highlight. */
+  highlightMessageId?: string | null;
+}
+
+export default function MessageSection({
+  highlightMessageId,
+}: MessageSectionProps) {
+  const { messages, activeConversationId } = useChat();
   const endRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const { data: me } = useMeQuery();
   const prevMessagesLengthRef = useRef(0);
+
+  // Deep-link highlight state (notification → jump to message)
+  const [highlightId, setHighlightId] = useState<string | null>(null);
+  const suppressAutoScrollRef = useRef(false);
+  const highlightAppliedRef = useRef(false);
 
   const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001';
 
@@ -98,6 +110,9 @@ export default function MessageSection() {
 
   // ── Force scroll to bottom whenever messages change ──────────────────
   useEffect(() => {
+    // While a deep-linked message highlight is active, it controls scrolling
+    if (suppressAutoScrollRef.current) return;
+
     const isNewMessage = messages.length > prevMessagesLengthRef.current;
     prevMessagesLengthRef.current = messages.length;
 
@@ -105,6 +120,32 @@ export default function MessageSection() {
       endRef.current?.scrollIntoView({ behavior: isNewMessage ? 'smooth' : 'auto', block: 'end' });
     });
   }, [messages, activeConversationId]);
+
+  // ── Deep-link: scroll to & highlight the message from ?messageId= ────
+  useEffect(() => {
+    if (!highlightMessageId || highlightAppliedRef.current) return;
+    if (!messages.length) return;
+
+    highlightAppliedRef.current = true;
+    suppressAutoScrollRef.current = true;
+
+    const scrollTimer = setTimeout(() => {
+      setHighlightId(highlightMessageId);
+      document
+        .getElementById(`msg-${highlightMessageId}`)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 350);
+
+    const clearTimer = setTimeout(() => {
+      setHighlightId(null);
+      suppressAutoScrollRef.current = false;
+    }, 3500);
+
+    return () => {
+      clearTimeout(scrollTimer);
+      clearTimeout(clearTimer);
+    };
+  }, [highlightMessageId, messages]);
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -175,7 +216,7 @@ export default function MessageSection() {
           );
 
           return (
-            <div key={msg.id}>
+            <div key={msg.id} id={`msg-${msg.id}`}>
               {/* ── Date separator ─────────────────────────────────────────── */}
               {showDateSeparator && (
                 <div className="flex items-center justify-center my-4">
@@ -203,10 +244,14 @@ export default function MessageSection() {
                 )}
 
                 <div
-                  className={`relative px-4 py-3 rounded-2xl max-w-[70%] shadow-sm text-sm ${
+                  className={`relative px-4 py-3 rounded-2xl max-w-[70%] shadow-sm text-sm transition-all duration-300 ${
                     isMe
                       ? 'bg-[#095f48] text-white rounded-br-sm'
                       : 'bg-gray-100 text-[#003329] rounded-bl-sm'
+                  } ${
+                    highlightId === msg.id
+                      ? 'ring-2 ring-amber-400 ring-offset-2'
+                      : ''
                   }`}
                 >
                   {msg.message ? renderMessage(msg) : null}

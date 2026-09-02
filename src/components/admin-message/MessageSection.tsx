@@ -8,7 +8,14 @@ import { useMeQuery } from '@/app/redux/api/authApi';
 import { FileIcon, X } from 'lucide-react';
 import TestResultCard from '../test-complete/TestResultCard';
 
-export default function MessageSection() {
+interface MessageSectionProps {
+  /** Message id from a notification deep-link (?messageId=) to scroll to & highlight. */
+  highlightMessageId?: string | null;
+}
+
+export default function MessageSection({
+  highlightMessageId,
+}: MessageSectionProps) {
   const { messages } = useChat();
   const endRef = useRef<HTMLDivElement>(null);
   const me = useMeQuery();
@@ -17,9 +24,43 @@ export default function MessageSection() {
   const [viewerOpen, setViewerOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
+  // Deep-link highlight state (notification → jump to message)
+  const [highlightId, setHighlightId] = useState<string | null>(null);
+  const suppressAutoScrollRef = useRef(false);
+  const highlightAppliedRef = useRef(false);
+
   useEffect(() => {
+    // While a deep-linked message highlight is active, it controls scrolling
+    if (suppressAutoScrollRef.current) return;
+
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages.length]);
+
+  // ── Deep-link: scroll to & highlight the message from ?messageId= ────
+  useEffect(() => {
+    if (!highlightMessageId || highlightAppliedRef.current) return;
+    if (!messages.length) return;
+
+    highlightAppliedRef.current = true;
+    suppressAutoScrollRef.current = true;
+
+    const scrollTimer = setTimeout(() => {
+      setHighlightId(highlightMessageId);
+      document
+        .getElementById(`msg-${highlightMessageId}`)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 350);
+
+    const clearTimer = setTimeout(() => {
+      setHighlightId(null);
+      suppressAutoScrollRef.current = false;
+    }, 3500);
+
+    return () => {
+      clearTimeout(scrollTimer);
+      clearTimeout(clearTimer);
+    };
+  }, [highlightMessageId, messages]);
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -40,7 +81,7 @@ export default function MessageSection() {
     };
   }, [viewerOpen]);
 
-  const renderMessage = (msg: any) => {
+  const renderMessage = (msg: { message: string | null }) => {
     if (!msg.message) return null;
 
     try {
@@ -49,7 +90,9 @@ export default function MessageSection() {
       if (parsed?.type === 'test_result') {
         return <TestResultCard {...parsed.data} />;
       }
-    } catch {}
+    } catch {
+      // Not JSON — render as plain text
+    }
 
     return (
       <p className="whitespace-pre-wrap break-words leading-relaxed">
@@ -83,6 +126,7 @@ export default function MessageSection() {
             return (
               <div
                 key={msg.id}
+                id={`msg-${msg.id}`}
                 className={`flex items-end gap-2 ${
                   isMe ? 'justify-end' : 'justify-start'
                 }`}
@@ -103,17 +147,27 @@ export default function MessageSection() {
                 )}
 
                 <div
-                  className={`relative px-4 py-3 rounded-2xl max-w-[70%] shadow-sm text-sm ${
+                  className={`relative px-4 py-3 rounded-2xl max-w-[70%] shadow-sm text-sm transition-all duration-300 ${
                     isMe
                       ? 'bg-[#095f48] text-white rounded-br-sm'
                       : 'bg-gray-100 text-[#003329] rounded-bl-sm'
+                  } ${
+                    highlightId === msg.id
+                      ? 'ring-2 ring-amber-400 ring-offset-2'
+                      : ''
                   }`}
                 >
                   {msg.message ? renderMessage(msg) : null}
 
                   {msg.attachments?.length > 0 && (
                     <div className={`space-y-2 ${msg.message ? 'mt-2' : ''}`}>
-                      {msg.attachments.map((file: any) => {
+                      {msg.attachments.map(
+                        (file: {
+                          id: string;
+                          file_url: string;
+                          type: string;
+                          name: string;
+                        }) => {
                         const fileUrl = file.file_url?.startsWith('http')
                           ? file.file_url
                           : `${BASE_URL}/${file.file_url}`;

@@ -1,30 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { Bell } from 'lucide-react';
-import { NotificationSheet } from './NotificationSheet';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../app/redux/store';
-
-export function NotificationButton() {
-  const [open, setOpen] = useState(false);
-
-  const unreadCount = useSelector(
-    (state: RootState) => state.notifications.unreadCount,
-  );
-
-  return (
-    <>
-      <button onClick={() => setOpen(true)} className="relative cursor-pointer">
-        <Bell className="w-5 h-5 text-gray-700" />
-        {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs min-w-5 h-5 px-1 rounded-full flex items-center justify-center">
-            {unreadCount}
-          </span>
-        )}
-      </button>
-
-      <NotificationSheet open={open} onClose={() => setOpen(false)} />
-    </>
-  );
-}
+/**
+ * Deprecated wrapper - the shared implementation lives in
+ * `@/components/notifications/NotificationButton` and is used by both the
+ * user and admin dashboards (see the `role` prop).
+ */
+export { NotificationButton } from '../notifications/NotificationButton';

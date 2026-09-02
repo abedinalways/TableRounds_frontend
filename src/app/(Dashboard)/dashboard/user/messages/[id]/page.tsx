@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { setActiveConversation } from '@/app/redux/api/chat/chatSlice';
 
@@ -12,8 +12,13 @@ import ChatSkeleton from '@/components/message/ChatSkeleton';
 
 export default function ChatPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const dispatch = useDispatch();
   const conversationId = params.id as string;
+
+  // Deep-link from a notification (?messageId=) — MessageSection scrolls to
+  // and highlights this message after the conversation loads.
+  const highlightMessageId = searchParams.get('messageId');
 
   const [isLoading, setIsLoading] = useState(true); 
 
@@ -37,7 +42,7 @@ export default function ChatPage() {
   return (
     <>
       <Header />
-      <MessageSection />
+      <MessageSection highlightMessageId={highlightMessageId} />
       <MessageInput />
     </>
   );

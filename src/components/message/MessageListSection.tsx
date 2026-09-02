@@ -124,10 +124,15 @@
 
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import { useChat } from '@/app/(Dashboard)/context/ChatContext';
 import { useRouter } from 'next/navigation';
 import { useMeQuery } from '@/app/redux/api/authApi';
+import { useDeleteConversationMutation } from '@/app/redux/api/chat/chatApi';
+import { Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
+import DeleteNotificationModal from '@/components/notifications/DeleteNotificationModal';
 
 function getMessagePreview(message: string): { text: string; icon?: string } {
   if (!message) return { text: 'No messages yet' };
@@ -169,6 +174,30 @@ export default function MessageListSection() {
   const { conversations, selectConversation, activeConversationId } = useChat();
   const { data: me } = useMeQuery();
   const router = useRouter();
+  const [deleteConversation, { isLoading: isDeleting }] =
+    useDeleteConversationMutation();
+  const [deleteTarget, setDeleteTarget] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget) return;
+
+    try {
+      await deleteConversation(deleteTarget.id).unwrap();
+      toast.success('Conversation deleted');
+
+      // If the deleted conversation was open, go back to the message list
+      if (activeConversationId === deleteTarget.id) {
+        router.push('/dashboard/user/messages');
+      }
+    } catch {
+      toast.error('Failed to delete conversation. Please try again.');
+    } finally {
+      setDeleteTarget(null);
+    }
+  };
 
   return (
     <>
@@ -199,7 +228,7 @@ export default function MessageListSection() {
                 selectConversation(conv.id);
                 router.push(`/dashboard/user/messages/${conv.id}`);
               }}
-              className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors ${
+              className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors group ${
                 activeConversationId === conv.id
                   ? 'bg-gray-100'
                   : 'hover:bg-gray-50'
@@ -221,10 +250,37 @@ export default function MessageListSection() {
                   {preview.text}
                 </p>
               </div>
+
+              {/* Delete button — opens the confirmation modal */}
+              <button
+                type="button"
+                aria-label="Delete conversation"
+                onClick={e => {
+                  e.stopPropagation();
+                  setDeleteTarget({
+                    id: conv.id,
+                    name: participantName,
+                  });
+                }}
+                className="shrink-0 w-8 h-8 cursor-pointer rounded-full flex items-center justify-center transition-all bg-gray-100 text-gray-400 hover:text-red-500 hover:bg-red-50 opacity-0 group-hover:opacity-100"
+              >
+                <Trash2 size={14} />
+              </button>
             </div>
           );
         })}
       </div>
+
+      <DeleteNotificationModal
+        open={!!deleteTarget}
+        mode="single"
+        title="Delete Conversation"
+        description={`Are you sure you want to delete the conversation with ${deleteTarget?.name ?? 'this user'}? All messages will be permanently removed. This action cannot be undone.`}
+        confirmLabel="Delete Conversation"
+        isDeleting={isDeleting}
+        onCancel={() => setDeleteTarget(null)}
+        onConfirm={handleConfirmDelete}
+      />
     </>
   );
 }

@@ -114,9 +114,16 @@ export function useChatSocket() {
         }
       }
 
-      // Always invalidate RTK Query tags to ensure fresh data in UI
-      dispatch(chatApi.util.invalidateTags(['Chat']));
-      dispatch(notificationApi.util.invalidateTags(['notification', 'adminNotification']));
+        // Always invalidate RTK Query tags to ensure fresh data in UI.
+        // Only invalidate the tag for the current role to avoid useless
+        // (and unauthorized) refetches of the other role's endpoint.
+        const currentRole = store.getState().auth.auth.role;
+        const notificationTags =
+          currentRole === 'admin'
+            ? (['adminNotification'] as const)
+            : (['notification'] as const);
+        dispatch(chatApi.util.invalidateTags(['Chat']));
+        dispatch(notificationApi.util.invalidateTags([...notificationTags]));
     };
 
     // ----------------------------------------
@@ -343,7 +350,10 @@ function showMessageNotification(
 ): void {
   dispatch(
     addNotification({
-      id: message.id,
+      // temp_ prefix: the next API fetch returns the real notification
+      // (with its real id) and the merge replaces this optimistic entry.
+      // This prevents duplicates and broken deletes.
+      id: `temp_${message.id}`,
       type: 'conversation',
       message: message.message || 'New message',
       timestamp: data.timestamp,
@@ -360,7 +370,9 @@ function showMessageNotification(
     })
   );
 
-  toast.info('New message received');
+  toast.message(data.senderName || 'New message', {
+    description: message.message || 'You have a new message',
+  });
 }
 
 /**

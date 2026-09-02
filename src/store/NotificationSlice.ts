@@ -59,20 +59,26 @@ const mergeApiNotifications = (
   const apiItems = raw.map(mapApiNotification);
   const apiIds = new Set(apiItems.map(n => n.id));
 
-  const socketOnly = state.notifications.filter(
-    n => !apiIds.has(n.id) && !n.id.startsWith('temp_'),
+  // Keep ONLY optimistic socket notifications (temp_ ids) that the API
+  // hasn't confirmed yet. Everything else is replaced by server truth —
+  // this prevents deleted notifications from resurrecting on refetch.
+  const pendingSocketItems = state.notifications.filter(
+    n => !apiIds.has(n.id) && n.id.startsWith('temp_'),
   );
 
-  const existingIds = new Set(state.notifications.map(n => n.id));
+  const existingById = new Map(state.notifications.map(n => [n.id, n]));
   const mergedItems = apiItems.map(item => {
-    if (existingIds.has(item.id)) {
-      const oldItem = state.notifications.find(n => n.id === item.id);
-      return { ...item, isNew: oldItem?.isNew ?? false };
-    }
-    return item;
+    const existing = existingById.get(item.id);
+    if (!existing) return item;
+    return {
+      ...item,
+      // preserve locally-read state (no mark-as-read API yet)
+      isRead: existing.isRead || item.isRead,
+      isNew: existing.isNew,
+    };
   });
 
-  state.notifications = [...socketOnly, ...mergedItems];
+  state.notifications = [...pendingSocketItems, ...mergedItems];
   state.unreadCount = recalcUnread(state.notifications);
 };
 
@@ -80,7 +86,8 @@ const mapApiNotification = (item: ApiNotificationItem): AppNotification => {
   const name = item.sender?.name ?? 'System';
   return {
     id: item.id,
-    type: (item.notification_event?.type as any) || 'conversation',
+    type:
+      (item.notification_event?.type as NotificationType) || 'conversation',
     message: item.notification_event?.text || 'New notification',
     timestamp: item.created_at,
     isRead: item.is_read || false,
@@ -105,9 +112,15 @@ const notificationSlice = createSlice({
     addNotification: (state, action: PayloadAction<AppNotification>) => {
       const exists = state.notifications.find(n => n.id === action.payload.id);
       if (!exists) {
-        state.notifications.unshift({ ...action.payload, isNew: true });
-        state.unreadCount += 1;
+        state.notifications.unshift({ ...action.payload });
+        state.unreadCount = recalcUnread(state.notifications);
       }
+    },
+    removeNotification: (state, action: PayloadAction<string>) => {
+      state.notifications = state.notifications.filter(
+        n => n.id !== action.payload,
+      );
+      state.unreadCount = recalcUnread(state.notifications);
     },
     markAsRead: (state, action: PayloadAction<string>) => {
       const n = state.notifications.find(n => n.id === action.payload);
@@ -148,6 +161,7 @@ const notificationSlice = createSlice({
 
 export const {
   addNotification,
+  removeNotification,
   markAllAsRead,
   clearNotifications,
   markAsRead,
