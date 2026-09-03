@@ -230,7 +230,6 @@ export default function QuestionManagerPage() {
       formData.append('memory_trick', editFormData.memory_trick || '');
       formData.append('referance', editFormData.referance || '');
       formData.append('difficulty', editFormData.difficulty || 'Intern');
-      formData.append('topic', JSON.stringify(editFormData.topic || []));
 
       formData.append(
         'answerOptions',
@@ -243,6 +242,10 @@ export default function QuestionManagerPage() {
         ),
       );
 
+      // Update: specialty_topics is OPTIONAL — the field must still be
+      // present as an array, so we ALWAYS send it (empty array when the user
+      // removed every speciality — this intentionally clears the links).
+      // IDs only, no names.
       formData.append(
         'specialty_topics',
         JSON.stringify(

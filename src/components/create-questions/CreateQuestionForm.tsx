@@ -70,6 +70,8 @@ export default function CreateQuestionForm() {
 
     const specialtyTopicPairs = data.specialtyTopics;
 
+    // Create: specialty_topics is REQUIRED — at least one speciality, and
+    // every selected speciality needs a topic.
     if (specialtyTopicPairs.length === 0) {
       toast.error('Please add at least one speciality');
       return;
@@ -100,13 +102,7 @@ export default function CreateQuestionForm() {
       formData.append('referance', data.referance || '');
       formData.append('difficulty', data.difficulty);
 
-      // Legacy single-topic field — keep for backward compatibility.
-      formData.append(
-        'topic',
-        JSON.stringify(specialtyTopicPairs.map(pair => pair.topicName)),
-      );
-
-      // Link every selected speciality to exactly one topic.
+      // Create: specialty_topics is REQUIRED — always sent, IDs only.
       formData.append(
         'specialty_topics',
         JSON.stringify(
