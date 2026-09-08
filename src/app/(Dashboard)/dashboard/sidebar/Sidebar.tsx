@@ -7,8 +7,7 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { X } from 'lucide-react';
 import OmsLogo from '@/components/reusable/icons/OmsLogo';
-import Cookies from 'js-cookie';
-import { useAppDispatch } from '@/app/redux/hook';
+import { useAppDispatch, useAppSelector } from '@/app/redux/hook';
 import { clearUser } from '@/app/redux/authSlice';
 
 import ResetBankModal from '@/components/reset-bank/ResetModal';
@@ -29,7 +28,9 @@ export default function Sidebar({
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const role = Cookies.get('role');
+  const user = useAppSelector(state => state.auth.user);
+  const authRole = useAppSelector(state => state.auth.auth?.role);
+  const role = user?.role || user?.type || authRole;
   const menu: MenuItem[] = role === 'admin' ? adminMenu : userMenu;
 
   const [openResetModal, setOpenResetModal] = useState(false);

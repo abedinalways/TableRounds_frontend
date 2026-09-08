@@ -50,6 +50,25 @@ const initialState: AuthState = {
   auth: { token: false },
 };
 
+function getJwtExpiry(token: string): Date | undefined {
+  try {
+    const payloadPart = token.split('.')[1];
+    if (!payloadPart) return undefined;
+    const base64 = payloadPart.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonStr =
+      typeof atob !== 'undefined'
+        ? atob(base64)
+        : Buffer.from(base64, 'base64').toString('utf-8');
+    const payload = JSON.parse(jsonStr);
+    if (payload?.exp && typeof payload.exp === 'number') {
+      return new Date(payload.exp * 1000);
+    }
+  } catch {
+    return undefined;
+  }
+  return undefined;
+}
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -60,25 +79,32 @@ const authSlice = createSlice({
     setAuth(state, action: PayloadAction<Credential>) {
       state.auth = action.payload;
 
+      const expires =
+        state.auth.token ? getJwtExpiry(state.auth.token) : undefined;
+
       if (state.auth.token) {
         Cookies.set('token', state.auth.token, {
+          path: '/',
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'Lax',
+          expires,
         });
       }
 
       if (state.auth.role) {
         Cookies.set('role', state.auth.role, {
+          path: '/',
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'Lax',
+          expires,
         });
       }
     },
     clearUser(state) {
       state.user = null;
       state.auth = { token: false };
-      Cookies.remove('token');
-      Cookies.remove('role');
+      Cookies.remove('token', { path: '/' });
+      Cookies.remove('role', { path: '/' });
     },
   },
 });
