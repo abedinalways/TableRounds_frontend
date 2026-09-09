@@ -137,7 +137,7 @@ export function UserVerification({ users, onAction, loading }: Props) {
             ) : (
               <Image
                 src={previewImage}
-                alt="Verification Document"
+                alt=""
                 width={700}
                 height={700}
                 className="object-contain rounded-lg max-w-[80vw] max-h-[80vh]"

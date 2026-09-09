@@ -35,14 +35,16 @@ export function SpecialtyTopicSelector({
     isLoading: loadingSpecialities,
   } = useGetQuestionSpecialitiesQuery();
 
-  const specialities = specialitiesData?.data ?? [];
+  const specialities = Array.isArray(specialitiesData?.data)
+    ? specialitiesData.data
+    : [];
 
   const selectedIds = useMemo(
     () => new Set(value.map(pair => pair.specialityId)),
     [value],
   );
 
-  const availableSpecialities = specialities.filter(
+  const availableSpecialities = specialities?.filter(
     speciality => !selectedIds.has(speciality.id),
   );
 
@@ -60,7 +62,9 @@ export function SpecialtyTopicSelector({
     skip: !activeId,
   });
 
-  const activeTopics = activeSpecialityData?.data.topics ?? [];
+  const activeTopics = Array.isArray(activeSpecialityData?.data?.topics)
+    ? activeSpecialityData.data.topics
+    : [];
 
   const handleAddSpeciality = (id: string) => {
     if (selectedIds.has(id)) return;

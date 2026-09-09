@@ -41,6 +41,12 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'tablerounds.anikstudio.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   async headers() {
