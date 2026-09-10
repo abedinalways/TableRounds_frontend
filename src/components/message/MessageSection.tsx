@@ -103,7 +103,10 @@ export default function MessageSection({
   const suppressAutoScrollRef = useRef(false);
   const highlightAppliedRef = useRef(false);
 
-  const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001';
+  const BASE_URL =
+    process.env.NEXT_PUBLIC_API_URL ||
+    process.env.NEXT_PUBLIC_API_ENDPOINT ||
+    'http://localhost:4001';
 
   const [viewerOpen, setViewerOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);

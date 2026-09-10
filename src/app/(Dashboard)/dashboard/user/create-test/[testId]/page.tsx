@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 
 import QuizQuestionView from '@/components/create_test_components/QuizQuestionView';
@@ -194,7 +194,6 @@ export default function CreateTestPage() {
   const hasInitializedRef = useRef<boolean>(false);
 
   const [questions, setQuestions] = useState<QuizQuestionDataUI[]>([]);
-  const [markedQuestions, setMarkedQuestions] = useState<MarkedQuestion[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [selectedAnswerId, setSelectedAnswer] = useState<string | null>(null);
 
@@ -225,18 +224,20 @@ export default function CreateTestPage() {
     if (hasInitializedRef.current) return;
 
     const mapped = mapTestDataToQuestions(testResponse.data);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setQuestions(mapped);
     hasInitializedRef.current = true;
 
     const firstUnansweredIndex = mapped.findIndex(question => !question.quizDetails.userAnswerId);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrentQuestion(firstUnansweredIndex >= 0 ? firstUnansweredIndex + 1 : 1);
   }, [testResponse, testId]);
 
  
-  useEffect(() => {
-    if (questions.length === 0) return;
+  const markedQuestions = useMemo<MarkedQuestion[]>(() => {
+    if (questions.length === 0) return [];
     
-    const updatedMarkedList = questions
+    return questions
       .map((q, idx) => {
         if (!q.quizDetails?.is_marked) return null;
         return {
@@ -248,8 +249,6 @@ export default function CreateTestPage() {
         };
       })
       .filter((m): m is MarkedQuestion => m !== null);
-
-    setMarkedQuestions(updatedMarkedList);
   }, [questions]);
 
   const totalQuestions = questions.length;

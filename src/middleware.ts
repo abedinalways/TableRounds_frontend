@@ -32,9 +32,9 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // Parse JWT and check expiration
+  // Parse JWT and check validity & expiration
   const jwtPayload = parseJwt(token);
-  if (jwtPayload && jwtPayload.exp && Math.floor(Date.now() / 1000) >= jwtPayload.exp) {
+  if (!jwtPayload || (jwtPayload.exp && Math.floor(Date.now() / 1000) >= jwtPayload.exp)) {
     const loginUrl = new URL('/login', req.url);
     const response = NextResponse.redirect(loginUrl);
     response.cookies.delete('token');

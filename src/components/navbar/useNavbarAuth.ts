@@ -14,11 +14,14 @@ export function useNavbarAuth() {
   const handleLogout = async () => {
     try {
       await logout().unwrap();
-      dispatch(clearUser());
       toast.success('Logged out successfully');
-      window.location.href = '/login';
     } catch {
-      toast.error('Failed to logout');
+      // Backend logout request failed (e.g. expired session or offline)
+    } finally {
+      dispatch(clearUser());
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login';
+      }
     }
   };
 
