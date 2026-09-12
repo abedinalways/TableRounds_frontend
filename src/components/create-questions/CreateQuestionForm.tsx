@@ -13,20 +13,73 @@ import { toast } from 'sonner';
 import { useCreateQuestionMutation } from '@/app/redux/api/createQuestionsApi';
 import {
   CheckCircle2,
-  AlertCircle,
   ChevronDown,
   ChevronUp,
   RotateCcw,
-  Zap,
+  Lightbulb,
+  XCircle,
+  Target,
+  Brain,
+  BookOpen,
 } from 'lucide-react';
-import {
-  parseAllInOneExplanation,
-  parseMasterQuestion,
-  getSectionMetas,
-  ParsedExplanation,
-} from '@/utils/explanationParser';
+import { parseMasterQuestion } from '@/utils/explanationParser';
 
 const DIFFICULTIES: Difficulty[] = ['Intern', 'Senior', 'Board'];
+
+type ExplanationTabKey =
+  | 'explanation'
+  | 'keyPoints'
+  | 'keepingPoint'
+  | 'memoryTrick'
+  | 'referance';
+
+interface HighYieldTabConfig {
+  key: ExplanationTabKey;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  description: string;
+  fieldName: 'explanation' | 'keyPoints' | 'keepingPoint' | 'memoryTrick' | 'referance';
+  allowImageUpload?: boolean;
+}
+
+const HIGH_YIELD_TABS: HighYieldTabConfig[] = [
+  {
+    key: 'explanation',
+    label: 'General Explanation',
+    icon: Lightbulb,
+    description: 'Clinical reasoning, key principles, and why the correct answer is right.',
+    fieldName: 'explanation',
+    allowImageUpload: true,
+  },
+  {
+    key: 'keyPoints',
+    label: 'Why Incorrect',
+    icon: XCircle,
+    description: 'Detailed explanation of why each incorrect distractor is wrong.',
+    fieldName: 'keyPoints',
+  },
+  {
+    key: 'keepingPoint',
+    label: 'Pimping Point',
+    icon: Target,
+    description: 'High-yield clinical pearl or attending rounds question for fast recall.',
+    fieldName: 'keepingPoint',
+  },
+  {
+    key: 'memoryTrick',
+    label: 'Memory Trick',
+    icon: Brain,
+    description: 'Mnemonic, acronym, or memory anchor to easily recall the concept.',
+    fieldName: 'memoryTrick',
+  },
+  {
+    key: 'referance',
+    label: 'References',
+    icon: BookOpen,
+    description: 'Medical guidelines, textbooks, PubMed IDs, or study citations.',
+    fieldName: 'referance',
+  },
+];
 
 const prepareEditorHtmlForPayload = (
   html?: string | null,
@@ -76,12 +129,8 @@ export default function CreateQuestionForm() {
   const [explanationImageFile, setExplanationImageFile] =
     React.useState<File | null>(null);
 
-  const [inputMode, setInputMode] = React.useState<'allInOne' | 'separate'>(
-    'allInOne',
-  );
-  const [allInOneText, setAllInOneText] = React.useState<string>('');
-  const [activePreviewTab, setActivePreviewTab] =
-    React.useState<keyof ParsedExplanation>('explanation');
+  const [activeTab, setActiveTab] =
+    React.useState<ExplanationTabKey>('explanation');
 
   // Master 1-Click Importer state
   const [masterPasteText, setMasterPasteText] = React.useState<string>('');
@@ -93,17 +142,38 @@ export default function CreateQuestionForm() {
     hasExplanation: boolean;
   } | null>(null);
 
-  const parsedAllInOne = React.useMemo(() => {
-    return parseAllInOneExplanation(allInOneText);
-  }, [allInOneText]);
+  const activeTabConfig = React.useMemo(() => {
+    return (
+      HIGH_YIELD_TABS.find(t => t.key === activeTab) || HIGH_YIELD_TABS[0]
+    );
+  }, [activeTab]);
 
-  const sectionMetas = React.useMemo(() => {
-    return getSectionMetas(parsedAllInOne);
-  }, [parsedAllInOne]);
+  const watchedExplanation = watch('explanation');
+  const watchedKeyPoints = watch('keyPoints');
+  const watchedKeepingPoint = watch('keepingPoint');
+  const watchedMemoryTrick = watch('memoryTrick');
+  const watchedReferance = watch('referance');
 
-  const detectedCount = React.useMemo(() => {
-    return sectionMetas.filter(m => m.detected).length;
-  }, [sectionMetas]);
+  const filledSectionsCount = React.useMemo(() => {
+    const list = [
+      watchedExplanation,
+      watchedKeyPoints,
+      watchedKeepingPoint,
+      watchedMemoryTrick,
+      watchedReferance,
+    ];
+    return list.filter(
+      val =>
+        typeof val === 'string' &&
+        val.replace(/<[^>]+>/g, '').trim().length > 0,
+    ).length;
+  }, [
+    watchedExplanation,
+    watchedKeyPoints,
+    watchedKeepingPoint,
+    watchedMemoryTrick,
+    watchedReferance,
+  ]);
 
   const handleApplyMasterImport = (text: string) => {
     if (!text.trim()) {
@@ -138,7 +208,6 @@ export default function CreateQuestionForm() {
 
     // 3. Populate Explanation sections
     if (parsed.rawExplanationHtml) {
-      setAllInOneText(parsed.rawExplanationHtml);
       setValue('explanation', parsed.explanation.explanation, {
         shouldDirty: true,
       });
@@ -203,30 +272,15 @@ export default function CreateQuestionForm() {
         prepareEditorHtmlForPayload(data.questionStem, questionStemImageFile),
       );
 
-      let finalExplanation = data.explanation || '';
-      let finalWhyIncorrect = data.keyPoints || '';
-      let finalPimpingPoint = data.keepingPoint || '';
-      let finalMemoryTrick = data.memoryTrick || '';
-      let finalReference = data.referance || '';
-
-      if (inputMode === 'allInOne') {
-        const parsed = parseAllInOneExplanation(allInOneText);
-        finalExplanation = parsed.explanation;
-        finalWhyIncorrect = parsed.keyPoints;
-        finalPimpingPoint = parsed.keepingPoint;
-        finalMemoryTrick = parsed.memoryTrick;
-        finalReference = parsed.referance;
-      }
-
       formData.append(
         'explanation',
-        prepareEditorHtmlForPayload(finalExplanation, explanationImageFile),
+        prepareEditorHtmlForPayload(data.explanation || '', explanationImageFile),
       );
 
-      formData.append('why_incorrect', finalWhyIncorrect);
-      formData.append('pimping_point', finalPimpingPoint);
-      formData.append('memory_trick', finalMemoryTrick);
-      formData.append('referance', finalReference);
+      formData.append('why_incorrect', data.keyPoints || '');
+      formData.append('pimping_point', data.keepingPoint || '');
+      formData.append('memory_trick', data.memoryTrick || '');
+      formData.append('referance', data.referance || '');
       formData.append('difficulty', data.difficulty);
 
       // Create: specialty_topics is REQUIRED — always sent, IDs only.
@@ -263,7 +317,7 @@ export default function CreateQuestionForm() {
       toast.success('Question created successfully!');
 
       reset();
-      setAllInOneText('');
+      setActiveTab('explanation');
       setMasterPasteText('');
       setLastImportedStats(null);
       setEditorKey(prev => prev + 1);
@@ -511,210 +565,115 @@ References:
         ))}
       </div>
 
-      {/* ── Explanation & High-Yield Sections Header ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-6 border-t font-[manrope]">
-        <div>
-          <h2 className="text-lg md:text-[22px] font-bold text-[#01281e] flex items-center gap-2">
-            Explanation & High-Yield Information
-          </h2>
-          <p className="text-xs sm:text-sm text-gray-500 mt-0.5 md:mr-40 outline-6">
-            {inputMode === 'allInOne'
-              ? 'Paste your complete explanation block below. Sections (Explanation, Incorrect Answers, Pimping Point, Memory Trick, References) are automatically detected.'
-              : 'Enter each section individually in its dedicated editor.'}
-          </p>
+      {/* ── Explanation & High-Yield Sections ── */}
+      <div className="pt-6 border-t font-[manrope] space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h2 className="text-lg md:text-[22px] font-bold text-[#01281e] flex items-center gap-2">
+              Explanation & High-Yield Sections
+            </h2>
+            <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
+              Select any tab below to review or fine-tune each section. Auto-populated instantly from the Master Importer.
+            </p>
+          </div>
+
+          {/* Quick summary badge */}
+          <div className="flex items-center gap-1.5 self-start sm:self-auto px-3 py-1 bg-[#f0f9f6] border border-[#a3ded0] rounded-full text-xs font-semibold text-[#01503b]">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+            <span>{filledSectionsCount} of 5 Sections Populated</span>
+          </div>
         </div>
 
-        {/* Mode Toggle Button */}
-        <div className="inline-flex self-start sm:self-auto rounded-lg border border-gray-200 bg-gray-100 p-1">
-          <button
-            type="button"
-            onClick={() => setInputMode('allInOne')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer ${
-              inputMode === 'allInOne'
-                ? 'bg-[#01503b] text-white shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            {/* <Sparkles className="w-3.5 h-3.5" /> */}
-            <span>All-in-One Box</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              // Prepopulate separate fields with current parsed content when switching
-              if (allInOneText.trim()) {
-                if (parsedAllInOne.explanation) {
-                  setValue('explanation', parsedAllInOne.explanation);
-                }
-                if (parsedAllInOne.keyPoints) {
-                  setValue('keyPoints', parsedAllInOne.keyPoints);
-                }
-                if (parsedAllInOne.keepingPoint) {
-                  setValue('keepingPoint', parsedAllInOne.keepingPoint);
-                }
-                if (parsedAllInOne.memoryTrick) {
-                  setValue('memoryTrick', parsedAllInOne.memoryTrick);
-                }
-                if (parsedAllInOne.referance) {
-                  setValue('referance', parsedAllInOne.referance);
-                }
-              }
-              setInputMode('separate');
-            }}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer ${
-              inputMode === 'separate'
-                ? 'bg-[#01503b] text-white shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            <span>Separate Fields</span>
-          </button>
-        </div>
-      </div>
+        {/* Tab Navigation Buttons */}
+        <div className="flex flex-wrap gap-2 border-b border-gray-200 pb-3">
+          {HIGH_YIELD_TABS.map(tab => {
+            const isSelected = activeTab === tab.key;
+            const content = watch(tab.fieldName);
+            const hasContent = Boolean(
+              content &&
+                typeof content === 'string' &&
+                content.replace(/<[^>]+>/g, '').trim().length > 0,
+            );
 
-      {inputMode === 'allInOne' ? (
-        <div className="space-y-4">
-          <RichTextEditor
-            key={`allInOne-${editorKey}`}
-            value={allInOneText}
-            onChange={setAllInOneText}
-            allowImageUpload
-            onImageFileChange={setExplanationImageFile}
-          />
-
-          {/* Live Section Detection Preview */}
-          <div className="p-4 bg-[#f8faf9] border border-[#cdebe3] rounded-xl space-y-3 font-[manrope]">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-bold text-[#01281e]">
-                  Preview Sections ({detectedCount}/5)
-                </span>
-                <span className="text-xs text-gray-500">
-                  (Click any badge to preview extracted content)
-                </span>
-              </div>
-              <span className="text-xs text-gray-400">
-                Matches: Explanation, Incorrect Answers, Pimping Point, Memory Trick, References
-              </span>
-            </div>
-
-            {/* Badges / Tabs */}
-            <div className="flex flex-wrap gap-2">
-              {sectionMetas.map(meta => {
-                const isSelected = activePreviewTab === meta.key;
-                return (
-                  <button
-                    key={meta.key}
-                    type="button"
-                    onClick={() => setActivePreviewTab(meta.key)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border transition-all cursor-pointer ${
-                      meta.detected
-                        ? isSelected
-                          ? 'bg-[#01503b] text-white border-[#01503b] shadow-sm'
-                          : 'bg-[#e6f4f0] text-[#01503b] border-[#a3ded0] hover:bg-[#d5eee7]'
-                        : isSelected
-                          ? 'bg-gray-200 text-gray-700 border-gray-400'
-                          : 'bg-white text-gray-400 border-gray-200 hover:bg-gray-50'
+            return (
+              <button
+                key={tab.key}
+                type="button"
+                onClick={() => setActiveTab(tab.key)}
+                className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl border transition-all cursor-pointer ${
+                  isSelected
+                    ? 'bg-[#01503b] text-white border-[#01503b] shadow-sm'
+                    : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                }`}
+              >
+                <tab.icon
+                  className={`w-4 h-4 ${
+                    isSelected ? 'text-amber-300' : 'text-gray-500'
+                  }`}
+                />
+                <span>{tab.label}</span>
+                {hasContent ? (
+                  <span
+                    className={`inline-flex items-center px-1.5 py-0.5 text-[10px] font-bold rounded-full ${
+                      isSelected
+                        ? 'bg-white/20 text-white'
+                        : 'bg-emerald-100 text-emerald-800'
                     }`}
                   >
-                    {meta.detected ? (
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                    ) : (
-                      <span className="w-2.5 h-2.5 rounded-full border border-gray-300 inline-block" />
-                    )}
-                    <span>{meta.label}</span>
-                    {meta.detected && (
-                      <span className="opacity-70 text-[10px]">
-                        ({meta.length} chars)
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Active Section Preview Box */}
-            <div className="bg-white border rounded-lg p-3.5 text-sm text-gray-700 min-h-20 max-h-56 overflow-y-auto">
-              <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 flex items-center justify-between">
-                <span>
-                  Preview: {sectionMetas.find(s => s.key === activePreviewTab)?.label}
-                </span>
-                {/* <span className="text-[10px] text-gray-400 font-normal">
-                  Backend Field: {activePreviewTab === 'keyPoints' ? 'why_incorrect' : activePreviewTab === 'keepingPoint' ? 'pimping_point' : activePreviewTab === 'referance' ? 'referance' : activePreviewTab === 'memoryTrick' ? 'memory_trick' : 'explanation'}
-                </span> */}
-              </div>
-              {parsedAllInOne[activePreviewTab] ? (
-                <div
-                  className="prose prose-sm max-w-none text-gray-800"
-                  dangerouslySetInnerHTML={{
-                    __html: parsedAllInOne[activePreviewTab],
-                  }}
-                />
-              ) : (
-                <div className="flex items-center gap-2 text-gray-400 italic text-xs py-2">
-                  <AlertCircle className="w-4 h-4 text-amber-500 shrink-0" />
-                  <span>
-                    No content detected for {sectionMetas.find(s => s.key === activePreviewTab)?.label}. Include the heading (e.g.{' '}
-                    <strong>{sectionMetas.find(s => s.key === activePreviewTab)?.label}:</strong>) in your pasted text.
+                    ✓ Filled
                   </span>
-                </div>
-              )}
+                ) : (
+                  <span
+                    className={`text-[10px] ${
+                      isSelected ? 'text-white/60' : 'text-gray-400'
+                    }`}
+                  >
+                    Optional
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Active Tab Helper / Description bar */}
+        {activeTabConfig && (
+          <div className="flex items-center justify-between gap-3 p-3 bg-[#f8faf9] border border-gray-200/70 rounded-xl text-xs text-gray-600">
+            <div className="flex items-center gap-2">
+              <activeTabConfig.icon className="w-4 h-4 text-[#01503b] shrink-0" />
+              <span>{activeTabConfig.description}</span>
             </div>
+            <span className="hidden sm:inline-block text-[11px] font-mono px-2 py-0.5 bg-gray-100 text-gray-500 rounded">
+              Field:{' '}
+              {activeTabConfig.fieldName === 'keyPoints'
+                ? 'why_incorrect'
+                : activeTabConfig.fieldName === 'keepingPoint'
+                  ? 'pimping_point'
+                  : activeTabConfig.fieldName}
+            </span>
           </div>
-        </div>
-      ) : (
-        /* Separate fields view */
-        <div className="space-y-6 font-[manrope]">
-          <div>
-            <h3 className="text-md font-bold text-[#01281e] mb-2">Explanation</h3>
-            <RichTextEditor
-              key={`explanation-${editorKey}`}
-              value={watch('explanation') || ''}
-              onChange={v => setValue('explanation', v)}
-              allowImageUpload
-              onImageFileChange={setExplanationImageFile}
-            />
-          </div>
+        )}
 
-          <div>
-            <h3 className="text-md font-bold text-[#01281e] mb-2">
-              Why The Other Options Are Incorrect
-            </h3>
-            <RichTextEditor
-              key={`keyPoints-${editorKey}`}
-              value={watch('keyPoints') || ''}
-              onChange={v => setValue('keyPoints', v)}
-            />
-          </div>
-
-          <div>
-            <h3 className="text-md font-bold text-[#01281e] mb-2">Pimping Point</h3>
-            <RichTextEditor
-              key={`keepingPoint-${editorKey}`}
-              value={watch('keepingPoint') || ''}
-              onChange={v => setValue('keepingPoint', v)}
-            />
-          </div>
-
-          <div>
-            <h3 className="text-md font-bold text-[#01281e] mb-2">Memory Trick</h3>
-            <RichTextEditor
-              key={`memoryTrick-${editorKey}`}
-              value={watch('memoryTrick') || ''}
-              onChange={v => setValue('memoryTrick', v)}
-            />
-          </div>
-
-          <div>
-            <h3 className="text-md font-bold text-[#01281e] mb-2">References</h3>
-            <RichTextEditor
-              key={`references-${editorKey}`}
-              value={watch('referance') || ''}
-              onChange={v => setValue('referance', v)}
-            />
-          </div>
-        </div>
-      )}
+        {/* Tab Editor Display */}
+        {HIGH_YIELD_TABS.map(tab => {
+          if (tab.key !== activeTab) return null;
+          return (
+            <div key={tab.key} className="space-y-2">
+              <RichTextEditor
+                key={`${tab.key}-${editorKey}`}
+                value={watch(tab.fieldName) || ''}
+                onChange={v =>
+                  setValue(tab.fieldName, v, { shouldDirty: true })
+                }
+                allowImageUpload={tab.allowImageUpload}
+                onImageFileChange={
+                  tab.allowImageUpload ? setExplanationImageFile : undefined
+                }
+              />
+            </div>
+          );
+        })}
+      </div>
 
       <button
         type="submit"
