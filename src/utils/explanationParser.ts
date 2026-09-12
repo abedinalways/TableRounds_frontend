@@ -170,3 +170,155 @@ export function getSectionMetas(parsed: ParsedExplanation): SectionMeta[] {
     };
   });
 }
+
+export interface ParsedAnswerOption {
+  letter: string;
+  text: string;
+  isCorrect: boolean;
+}
+
+export interface ParsedMasterQuestion {
+  stemHtml: string;
+  options: ParsedAnswerOption[];
+  explanation: ParsedExplanation;
+  rawExplanationHtml: string;
+  hasMasterContent: boolean;
+  correctLetter: string | null;
+}
+
+/**
+ * Parses an entire question (Stem + Options + Explanation block) from 1 large paste.
+ */
+export function parseMasterQuestion(raw: string): ParsedMasterQuestion {
+  if (!raw || typeof raw !== 'string') {
+    return {
+      stemHtml: '',
+      options: [],
+      explanation: parseAllInOneExplanation(''),
+      rawExplanationHtml: '',
+      hasMasterContent: false,
+      correctLetter: null,
+    };
+  }
+
+  const trimmed = raw.trim();
+  if (!trimmed || trimmed === '<p></p>') {
+    return {
+      stemHtml: '',
+      options: [],
+      explanation: parseAllInOneExplanation(''),
+      rawExplanationHtml: '',
+      hasMasterContent: false,
+      correctLetter: null,
+    };
+  }
+
+  // 1. Find where Explanation block starts
+  const explanationPattern =
+    /(?:^|\n|<p[^>]*>|<h[1-6][^>]*>|<div[^>]*>)?\s*(?:<strong>|<b>)?\s*(?:(?:1|step\s*1)\.\s*)?Explanation\s*[:：]?(?:\s*<\/strong>|\s*<\/b>)?(?:\s*<\/p>|\s*<\/h[1-6]>)?/i;
+
+  const explanationMatch = raw.match(explanationPattern);
+
+  let questionPart = raw;
+  let rawExplanationHtml = '';
+
+  if (explanationMatch && explanationMatch.index !== undefined) {
+    questionPart = raw.slice(0, explanationMatch.index).trim();
+    rawExplanationHtml = raw.slice(explanationMatch.index).trim();
+  }
+
+  // 2. Parse answer choices (A-G) from questionPart
+  const optionRegex =
+    /(?:<p[^>]*>|<li[^>]*>|^|\n)\s*([*•\s]*)\(?([A-Ga-g])[\.\)\:-]\s*([\s\S]*?)(?=(?:<\/p>|<\/li>|<p[^>]*>|<li[^>]*>|\n\s*[*•\s]*\(?[A-Ga-g][\.\)\:-]|$))(?:\s*<\/p>|\s*<\/li>)?/gi;
+
+  const options: ParsedAnswerOption[] = [];
+  let firstOptionIndex = -1;
+  let match: RegExpExecArray | null;
+
+  while ((match = optionRegex.exec(questionPart)) !== null) {
+    const rawMatchIndex = match.index;
+    const marker = match[1] || '';
+    const letter = match[2].toUpperCase();
+    let text = match[3].replace(/<[^>]+>/g, '').trim();
+    if (!text) continue;
+
+    if (firstOptionIndex === -1) {
+      firstOptionIndex = rawMatchIndex;
+    }
+
+    const isExplicitCorrect =
+      marker.includes('*') ||
+      text.toLowerCase().includes('(correct)') ||
+      text.toLowerCase().includes('[correct]');
+
+    // Strip trailing markers from choice text
+    text = text
+      .replace(/\s*\((?:correct|answer)\)\s*$/i, '')
+      .replace(/\s*\[(?:correct|answer)\]\s*$/i, '')
+      .trim();
+
+    options.push({
+      letter,
+      text,
+      isCorrect: isExplicitCorrect,
+    });
+  }
+
+  // 3. Extract Stem (everything before first option)
+  let stemHtml = questionPart;
+  if (firstOptionIndex !== -1) {
+    stemHtml = questionPart.slice(0, firstOptionIndex).trim();
+  }
+
+  // Clean trailing empty tags or linebreaks from stem
+  stemHtml = stemHtml
+    .replace(/(?:<p>\s*<\/p>\s*)+$/i, '')
+    .replace(/(?:<br\s*\/?>\s*)+$/i, '')
+    .trim();
+
+  // If stem is plain text without HTML paragraph tags, format with paragraphs
+  if (stemHtml.length > 0 && !stemHtml.startsWith('<')) {
+    stemHtml = stemHtml
+      .split(/\n{2,}/)
+      .map(para => `<p>${para.trim().replace(/\n/g, '<br/>')}</p>`)
+      .join('');
+  }
+
+  // 4. Check for answer designation at bottom or in text (e.g. "Answer: B" or "Correct Answer: C")
+  const answerKeyMatch = raw.match(
+    /(?:Correct\s+Answer|Answer|Key)\s*[:：]\s*([A-Ga-g])/i,
+  );
+  let resolvedCorrectLetter: string | null = null;
+
+  if (answerKeyMatch && answerKeyMatch[1]) {
+    resolvedCorrectLetter = answerKeyMatch[1].toUpperCase();
+    options.forEach(opt => {
+      opt.isCorrect = opt.letter === resolvedCorrectLetter;
+    });
+  } else {
+    const explicitCorrect = options.find(o => o.isCorrect);
+    if (explicitCorrect) {
+      resolvedCorrectLetter = explicitCorrect.letter;
+    } else if (options.length > 0) {
+      // Default to first choice if no choice was explicitly marked
+      options[0].isCorrect = true;
+      resolvedCorrectLetter = options[0].letter;
+    }
+  }
+
+  const parsedExplanation = parseAllInOneExplanation(rawExplanationHtml);
+
+  const hasMasterContent =
+    stemHtml.length > 0 ||
+    options.length > 0 ||
+    rawExplanationHtml.length > 0;
+
+  return {
+    stemHtml,
+    options,
+    explanation: parsedExplanation,
+    rawExplanationHtml,
+    hasMasterContent,
+    correctLetter: resolvedCorrectLetter,
+  };
+}

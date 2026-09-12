@@ -11,9 +11,17 @@ import { RichTextEditor } from './RichTextEditor';
 import { SpecialtyTopicSelector } from './SpecialtyTopicSelector';
 import { toast } from 'sonner';
 import { useCreateQuestionMutation } from '@/app/redux/api/createQuestionsApi';
-import { Sparkles, CheckCircle2, AlertCircle } from 'lucide-react';
+import {
+  CheckCircle2,
+  AlertCircle,
+  ChevronDown,
+  ChevronUp,
+  RotateCcw,
+  Zap,
+} from 'lucide-react';
 import {
   parseAllInOneExplanation,
+  parseMasterQuestion,
   getSectionMetas,
   ParsedExplanation,
 } from '@/utils/explanationParser';
@@ -75,6 +83,16 @@ export default function CreateQuestionForm() {
   const [activePreviewTab, setActivePreviewTab] =
     React.useState<keyof ParsedExplanation>('explanation');
 
+  // Master 1-Click Importer state
+  const [masterPasteText, setMasterPasteText] = React.useState<string>('');
+  const [isMasterOpen, setIsMasterOpen] = React.useState<boolean>(true);
+  const [lastImportedStats, setLastImportedStats] = React.useState<{
+    optionsCount: number;
+    correctLetter: string | null;
+    stemWords: number;
+    hasExplanation: boolean;
+  } | null>(null);
+
   const parsedAllInOne = React.useMemo(() => {
     return parseAllInOneExplanation(allInOneText);
   }, [allInOneText]);
@@ -86,6 +104,75 @@ export default function CreateQuestionForm() {
   const detectedCount = React.useMemo(() => {
     return sectionMetas.filter(m => m.detected).length;
   }, [sectionMetas]);
+
+  const handleApplyMasterImport = (text: string) => {
+    if (!text.trim()) {
+      toast.error('Please paste your question text into the box first');
+      return;
+    }
+
+    const parsed = parseMasterQuestion(text);
+
+    if (!parsed.hasMasterContent) {
+      toast.error('Could not detect question content from the pasted text');
+      return;
+    }
+
+    // 1. Populate Question Stem
+    if (parsed.stemHtml) {
+      setValue('questionStem', parsed.stemHtml, { shouldDirty: true });
+    }
+
+    // 2. Populate Answer Choices (A, B, C, D, E...)
+    if (parsed.options.length > 0) {
+      setValue(
+        'answers',
+        parsed.options.map((opt, index) => ({
+          id: (Date.now() + index).toString(),
+          text: opt.text,
+          isCorrect: opt.isCorrect,
+        })),
+        { shouldDirty: true },
+      );
+    }
+
+    // 3. Populate Explanation sections
+    if (parsed.rawExplanationHtml) {
+      setAllInOneText(parsed.rawExplanationHtml);
+      setValue('explanation', parsed.explanation.explanation, {
+        shouldDirty: true,
+      });
+      setValue('keyPoints', parsed.explanation.keyPoints, {
+        shouldDirty: true,
+      });
+      setValue('keepingPoint', parsed.explanation.keepingPoint, {
+        shouldDirty: true,
+      });
+      setValue('memoryTrick', parsed.explanation.memoryTrick, {
+        shouldDirty: true,
+      });
+      setValue('referance', parsed.explanation.referance, {
+        shouldDirty: true,
+      });
+    }
+
+    // Re-mount editors to reflect newly imported HTML immediately
+    setEditorKey(prev => prev + 1);
+
+    const plainStem = parsed.stemHtml.replace(/<[^>]+>/g, '').trim();
+    const stemWordCount = plainStem ? plainStem.split(/\s+/).length : 0;
+
+    setLastImportedStats({
+      optionsCount: parsed.options.length,
+      correctLetter: parsed.correctLetter,
+      stemWords: stemWordCount,
+      hasExplanation: Boolean(parsed.rawExplanationHtml),
+    });
+
+    toast.success(
+      `Imported! Stem, ${parsed.options.length} options, and explanations populated below.`,
+    );
+  };
 
   const onSubmit = async (data: QuestionFormValues) => {
     if (!data.difficulty) {
@@ -177,6 +264,8 @@ export default function CreateQuestionForm() {
 
       reset();
       setAllInOneText('');
+      setMasterPasteText('');
+      setLastImportedStats(null);
       setEditorKey(prev => prev + 1);
       setQuestionStemImageFile(null);
       setExplanationImageFile(null);
@@ -214,6 +303,141 @@ export default function CreateQuestionForm() {
         value={watch('specialtyTopics')}
         onChange={pairs => setValue('specialtyTopics', pairs)}
       />
+
+      {/* ── Master 1-Click Question Importer ── */}
+      <div className="rounded-2xl border-2 border-[#01503b]/20 bg-gradient-to-br from-[#f0f9f6] via-white to-[#f0f9f6] p-5 shadow-sm transition-all font-[manrope]">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+           
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-base md:text-lg font-bold text-[#01281e]">
+                  Master 1-Click Question Importer
+                </h3>
+                <span className="hidden sm:inline-flex px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase bg-[#cdebe3] text-[#01503b] rounded-md">
+                  All-in-One Paste
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 mt-0.5">
+                Paste the entire question (Stem + Choices A-E + Full Explanation) here. We will auto-fill every field below instantly.
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setIsMasterOpen(prev => !prev)}
+            className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700 transition-colors cursor-pointer"
+            title={isMasterOpen ? 'Collapse Importer' : 'Expand Importer'}
+          >
+            {isMasterOpen ? (
+              <ChevronUp className="w-5 h-5" />
+            ) : (
+              <ChevronDown className="w-5 h-5" />
+            )}
+          </button>
+        </div>
+
+        {isMasterOpen && (
+          <div className="mt-4 space-y-3 pt-3 border-t border-gray-200/60">
+            <textarea
+              value={masterPasteText}
+              onChange={e => setMasterPasteText(e.target.value)}
+              placeholder={`Paste your entire question block here... e.g.:
+
+A 45-year-old woman presents with tingling and numbness in her right hand...
+Which of the following is the most likely diagnosis?
+
+A. Median neuropathy at the wrist
+*B. C6 radiculopathy
+C. Lower trunk brachial plexopathy
+D. Ulnar neuropathy at the elbow
+E. Upper trunk brachial plexopathy
+
+Explanation:
+This presentation is most consistent with median neuropathy...
+
+Incorrect Answers:
+• C6 radiculopathy: ...
+• Lower trunk brachial plexopathy: ...
+
+Pimping Point:
+...
+
+Memory Trick:
+...
+
+References:
+...`}
+              rows={8}
+              className="w-full text-xs sm:text-sm font-mono p-3.5 bg-white border border-gray-200 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-[#01503b] focus:border-transparent resize-y"
+            />
+
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleApplyMasterImport(masterPasteText)}
+                  className="flex items-center gap-2 px-4 py-2 bg-[#01503b] hover:bg-[#013d2d] text-white text-xs sm:text-sm font-semibold rounded-lg shadow transition-all cursor-pointer"
+                >
+               
+                  <span>Auto-Fill Entire Form</span>
+                </button>
+
+                {masterPasteText && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMasterPasteText('');
+                      setLastImportedStats(null);
+                    }}
+                    className="flex items-center gap-1.5 px-3 py-2 text-xs text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    <span>Clear</span>
+                  </button>
+                )}
+              </div>
+
+              <span className="text-[11px] text-gray-400">
+                Tip: Use *A. or (Correct) to mark the right answer automatically
+              </span>
+            </div>
+
+            {/* Confirmation summary when imported */}
+            {lastImportedStats && (
+              <div className="p-3 bg-white border border-[#a3ded0] rounded-xl flex flex-wrap items-center justify-between gap-2 text-xs">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="flex items-center gap-1 font-bold text-[#01503b]">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    Successfully Populated:
+                  </span>
+                  <span className="px-2 py-0.5 bg-[#e6f4f0] text-[#01503b] rounded-md font-semibold">
+                    Stem ({lastImportedStats.stemWords} words)
+                  </span>
+                  <span className="px-2 py-0.5 bg-[#e6f4f0] text-[#01503b] rounded-md font-semibold">
+                    {lastImportedStats.optionsCount} Options (A-
+                    {String.fromCharCode(64 + lastImportedStats.optionsCount)})
+                  </span>
+                  {lastImportedStats.correctLetter && (
+                    <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-md font-bold">
+                      Correct: Option {lastImportedStats.correctLetter}
+                    </span>
+                  )}
+                  {lastImportedStats.hasExplanation && (
+                    <span className="px-2 py-0.5 bg-[#e6f4f0] text-[#01503b] rounded-md font-semibold">
+                      Explanations Split
+                    </span>
+                  )}
+                </div>
+                <span className="text-[11px] text-gray-500 italic">
+                  Scroll down to review and adjust any field!
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
       <h2 className="text-lg md:text-[24px] font-bold text-[#01281e]">
         Question Stem
@@ -293,7 +517,7 @@ export default function CreateQuestionForm() {
           <h2 className="text-lg md:text-[22px] font-bold text-[#01281e] flex items-center gap-2">
             Explanation & High-Yield Information
           </h2>
-          <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
+          <p className="text-xs sm:text-sm text-gray-500 mt-0.5 md:mr-40 outline-6">
             {inputMode === 'allInOne'
               ? 'Paste your complete explanation block below. Sections (Explanation, Incorrect Answers, Pimping Point, Memory Trick, References) are automatically detected.'
               : 'Enter each section individually in its dedicated editor.'}
