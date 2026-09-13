@@ -19,6 +19,7 @@ export interface Question {
   question_title: string;
   question_id: string;
   difficulty: Difficulty;
+  speciality?: string[];
   topic: string[];
   connect_speciality: boolean;
   total_attempts: number;

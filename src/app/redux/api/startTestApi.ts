@@ -6,7 +6,8 @@ export interface StartTestPayload {
   total_questions: number;
   test_mode: string[];
   difficulty: string[];
-  topic: string[];
+  topic_ids: string[];
+  topic?: string[];
 }
 
 export interface AnswerQuestionPayload {

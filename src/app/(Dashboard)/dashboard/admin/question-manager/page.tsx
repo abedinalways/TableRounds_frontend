@@ -147,6 +147,11 @@ export default function QuestionManagerPage() {
       id: q.id,
       question_id: q.question_id,
       text: q.question_title,
+      speciality: Array.isArray(q.speciality)
+        ? q.speciality
+        : typeof q.speciality === 'string' && (q.speciality as string).trim()
+          ? [(q.speciality as string).trim()]
+          : [],
       topic: (q.topic ?? []).map(toDisplayLabel),
       difficulty: q.difficulty,
       connect_speciality: q.connect_speciality,

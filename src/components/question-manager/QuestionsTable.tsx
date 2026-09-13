@@ -194,6 +194,7 @@ export type Question = {
   id: string;
   question_id: string;
   text: string;
+  speciality?: string[];
   topic: string[];
   difficulty: Difficulty;
   connect_speciality: boolean;
@@ -280,67 +281,92 @@ export default function QuestionsTable({
           <thead className="bg-[#01503b] text-white">
             <tr>
               <th
-                className="px-4 py-3 cursor-pointer"
+                className="px-5 py-3.5 cursor-pointer text-left font-semibold"
                 onClick={() => handleSort('id')}
               >
                 Question ID
               </th>
               {/* <th className="px-4 py-3">Question Stem</th> */}
-              <th className="px-4 py-3">Topic</th>
+              <th className="px-5 py-3.5 text-left font-semibold">Speciality</th>
+              <th className="px-5 py-3.5 text-left font-semibold">Topic</th>
               <th
-                className="px-4 py-3 cursor-pointer"
+                className="px-4 py-3.5 cursor-pointer text-center font-semibold"
                 onClick={() => handleSort('difficulty')}
               >
                 Difficulty
               </th>
-              <th className="px-4 py-3 text-center">Connect Speciality</th>
-              <th className="px-4 py-3 text-center">Attempts</th>
-              <th className="px-4 py-3 text-center">% Correct</th>
-              <th className="px-4 py-3 text-center">Action</th>
+              <th className="px-4 py-3.5 text-center font-semibold">Connect Speciality</th>
+              <th className="px-4 py-3.5 text-center font-semibold">Attempts</th>
+              <th className="px-4 py-3.5 text-center font-semibold">% Correct</th>
+              <th className="px-4 py-3.5 text-center font-semibold">Action</th>
             </tr>
           </thead>
 
-          <tbody>
+          <tbody className="divide-y divide-gray-100">
             {sortedData.map(question => (
-              <tr key={question.id}>
-                <td className="px-4 py-4 text-center">
-                  {question.question_id}
+              <tr
+                key={question.id}
+                className="hover:bg-[#fbfcfb] transition-colors"
+              >
+                <td className="px-5 py-4 text-left">
+                  <span className="font-mono text-xs font-semibold text-gray-700 bg-gray-50 border border-gray-200/80 px-2 py-1 rounded-[5px]">
+                    {question.question_id}
+                  </span>
                 </td>
                 {/* <td className="px-4 py-4 text-center">{question.text}</td> */}
-                <td className="px-4 py-4 text-center">
-                  {question.topic.join(', ')}
+                <td className="px-5 py-4 text-left">
+                  {question.speciality && question.speciality.length > 0 ? (
+                    <div className="flex flex-wrap items-center gap-1.5 max-w-[280px]">
+                      {question.speciality.map((spec, idx) => (
+                        <span
+                          key={idx}
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs font-medium bg-[#f0f9f5] text-[#01503b] border border-[#01503b]/20 shadow-2xs capitalize whitespace-nowrap"
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#01503b] shrink-0" />
+                          {spec}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="text-gray-300 font-mono text-xs">—</span>
+                  )}
+                </td>
+                <td className="px-5 py-4 text-left text-gray-600 text-xs font-medium max-w-[220px]">
+                  {question.topic.length > 0 ? question.topic.join(', ') : '—'}
                 </td>
                 <td className="px-4 py-4 text-center">
-                  {displayDifficulty(question.difficulty)}
+                  <span className="text-xs font-medium text-gray-700">
+                    {displayDifficulty(question.difficulty)}
+                  </span>
                 </td>
                 <td className="px-4 py-4 text-center">
                   <span
                     className={
                       question.connect_speciality
-                        ? 'inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-[#01503b] text-white'
-                        : 'inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-500'
+                        ? 'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-[#01503b] border border-emerald-200'
+                        : 'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-500 border border-gray-200'
                     }
                   >
                     {question.connect_speciality ? 'Yes' : 'No'}
                   </span>
                 </td>
-                <td className="px-4 py-4 text-center">
+                <td className="px-4 py-4 text-center text-xs text-gray-600 font-medium">
                   {question.total_attempts}
                 </td>
-                <td className="px-4 py-4 text-center">
+                <td className="px-4 py-4 text-center text-xs text-gray-600 font-medium">
                   {question.correct_percentage}
                 </td>
                 <td className="px-4 py-4 text-center">
                   <div className="flex justify-center gap-3">
                     <button
                       onClick={() => onEdit?.(question)}
-                      className="cursor-pointer"
+                      className="cursor-pointer hover:opacity-80 transition-opacity"
                     >
                       <EditIconAdmin />
                     </button>
                     <button
                       onClick={() => onDelete?.(question)}
-                      className="cursor-pointer"
+                      className="cursor-pointer hover:opacity-80 transition-opacity"
                     >
                       <DeleteIcon />
                     </button>

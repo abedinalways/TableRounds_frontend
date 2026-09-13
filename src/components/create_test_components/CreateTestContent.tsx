@@ -1,8 +1,6 @@
-
-
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Label } from '@/components/ui/label';
@@ -23,20 +21,6 @@ import { cn } from '@/lib/utils';
 
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
 
-const TOPICS = [
-  { label: 'Anesthesia/Medicine', value: 'Anesthesia_Medicine' },
-  { label: 'Dentoalveolar', value: 'Dentoalveolar' },
-  { label: 'Reconstruction', value: 'Recontraction' },
-  { label: 'Cancer', value: 'Cancer' },
-  { label: 'Implants', value: 'Implants' },
-  { label: 'TMJ', value: 'TMJ' },
-  { label: 'Cleft/Craniofacial', value: 'Cleft_Craniofacial' },
-  { label: 'Orthognathic', value: 'Orthognathic' },
-  { label: 'Trauma', value: 'Trauma' },
-  { label: 'Cosmetics', value: 'Cosmetics' },
-  { label: 'Pathology', value: 'Pathology' },
-] as const;
-
 const DIFFICULTY_LEVELS = ['Intern', 'Senior', 'Board'] as const;
 
 type DifficultyLevel = (typeof DIFFICULTY_LEVELS)[number];
@@ -53,9 +37,8 @@ export function CreateTestContent() {
 
   const [isStarted, setIsStarted] = useState(false);
 
-  const [selectedTopics, setSelectedTopics] = useState<string[]>(
-    TOPICS.map(topic => topic.value),
-  );
+  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+  const [hasInitializedTopics, setHasInitializedTopics] = useState(false);
 
   const [selectedDifficulty, setSelectedDifficulty] = useState<
     DifficultyLevel[]
@@ -81,21 +64,40 @@ export function CreateTestContent() {
     refetchQuestionCount();
   }, [refetchQuestionCount]);
 
-  const handleTopicToggle = (topicValue: string, checked: boolean) => {
+  const dynamicTopics = useMemo(
+    () => questionCountData?.data?.topics || [],
+    [questionCountData?.data?.topics]
+  );
+  const modesData = questionCountData?.data?.modes || [];
+  const difficultiesData = questionCountData?.data?.difficulties || [];
+  const totalAvailableQuestions =
+    questionCountData?.data?.total_questions ?? 0;
+
+  // Initialize selectedTopics when dynamicTopics first load
+  useEffect(() => {
+    if (!hasInitializedTopics && dynamicTopics.length > 0) {
+      setSelectedTopics(dynamicTopics.map(t => t.id));
+      setHasInitializedTopics(true);
+    }
+  }, [dynamicTopics, hasInitializedTopics]);
+
+  const handleTopicToggle = (topicId: string, checked: boolean) => {
     setSelectedTopics(prev =>
       checked
-        ? prev.includes(topicValue)
+        ? prev.includes(topicId)
           ? prev
-          : [...prev, topicValue]
-        : prev.filter(t => t !== topicValue),
+          : [...prev, topicId]
+        : prev.filter(t => t !== topicId),
     );
   };
 
-  const allTopicsSelected = selectedTopics.length === TOPICS.length;
+  const allTopicsSelected =
+    dynamicTopics.length > 0 &&
+    selectedTopics.length === dynamicTopics.length;
 
   const handleToggleAllTopics = () => {
     setSelectedTopics(
-      allTopicsSelected ? [] : TOPICS.map(topic => topic.value),
+      allTopicsSelected ? [] : dynamicTopics.map(t => t.id),
     );
   };
 
@@ -123,85 +125,29 @@ export function CreateTestContent() {
   const isQuestionCountUpdating =
     isQuestionCountLoading || isQuestionCountFetching;
 
-  // --- CLIENT-SIDE DEDUPLICATION CALCULATION ENGINE ---
-
-  // Helper mapping to grab state segments from server payload safely
-  const getStatusArray = (status: string) => {
-    if (!questionCountData?.data) return [];
-    switch (status) {
-      case 'Used':
-        return questionCountData.data.used_questions || [];
-      case 'Unused':
-        return questionCountData.data.unused_questions || [];
-      case 'Correct':
-        return questionCountData.data.correct_count || [];
-      case 'Incorrect':
-        return questionCountData.data.incorrect_count || [];
-      case 'Marked':
-        return questionCountData.data.mark_count || [];
-      default:
-        return [];
-    }
-  };
-
-  // 1. Calculate unique question counts for a Test Mode pill based on selected Difficulties + Topics
+  // Dynamic status count directly from API modes
   const getDynamicStatusCount = (statusName: string): number => {
-    const statusGroups = getStatusArray(statusName);
-    const uniqueIds = new Set<string>();
-
-    statusGroups.forEach(group => {
-      if (selectedDifficulty.includes(group.difficulty)) {
-        group.topic_wise_count.forEach(t => {
-          if (selectedTopics.includes(t.name) && t.ids) {
-            t.ids.forEach(id => uniqueIds.add(id));
-          }
-        });
-      }
-    });
-    return uniqueIds.size;
+    const matched = modesData.find(
+      m => m.key.toLowerCase() === statusName.toLowerCase(),
+    );
+    return matched ? matched.count : 0;
   };
 
-  // 2. Calculate unique question counts for a Difficulty item based on selected Test Modes + Topics
+  // Dynamic difficulty count directly from API difficulties
   const getDynamicDifficultyCount = (level: DifficultyLevel): number => {
-    const uniqueIds = new Set<string>();
-
-    selectedStatus.forEach(status => {
-      const statusGroups = getStatusArray(status);
-      const targetGroup = statusGroups.find(g => g.difficulty === level);
-      if (targetGroup) {
-        targetGroup.topic_wise_count.forEach(t => {
-          if (selectedTopics.includes(t.name) && t.ids) {
-            t.ids.forEach(id => uniqueIds.add(id));
-          }
-        });
-      }
-    });
-    return uniqueIds.size;
-  };
-
-  // 3. Calculate unique question counts for a Topic item based on selected Test Modes + Difficulties
-  const getDynamicTopicCount = (topicValue: string): number => {
-    const uniqueIds = new Set<string>();
-
-    selectedStatus.forEach(status => {
-      const statusGroups = getStatusArray(status);
-      statusGroups.forEach(group => {
-        if (selectedDifficulty.includes(group.difficulty)) {
-          const matchedTopic = group.topic_wise_count.find(
-            t => t.name === topicValue,
-          );
-          if (matchedTopic && matchedTopic.ids) {
-            matchedTopic.ids.forEach(id => uniqueIds.add(id));
-          }
-        }
-      });
-    });
-    return uniqueIds.size;
+    const matched = difficultiesData.find(
+      d => d.key.toLowerCase() === level.toLowerCase(),
+    );
+    return matched ? matched.count : 0;
   };
 
   const handleStartTest = async (): Promise<boolean> => {
     if (!numQuestions || selectedTopics.length === 0) {
-      toast.error('Please select Question Count');
+      toast.error(
+        !numQuestions
+          ? 'Please select Question Count'
+          : 'Please select at least one topic',
+      );
       return false;
     }
 
@@ -213,6 +159,7 @@ export function CreateTestContent() {
         )
         .map(s => s.toLowerCase()),
       difficulty: selectedDifficulty,
+      topic_ids: selectedTopics,
       topic: selectedTopics,
     };
 
@@ -220,7 +167,6 @@ export function CreateTestContent() {
       const res = await startTest(payload).unwrap();
 
       if (!res.success || !res.data) {
-        
         if (res.message?.toLowerCase().includes('subscribe')) {
           setLimitMessage(res.message);
           setLimitModalOpen(true);
@@ -262,7 +208,20 @@ export function CreateTestContent() {
                 <SelectValue placeholder="Select number" />
               </SelectTrigger>
               <SelectContent>
-                {Array.from({ length: 50 }, (_, i) => i + 1).map(num => (
+                {Array.from(
+                  {
+                    length: Math.max(
+                      1,
+                      Math.min(
+                        50,
+                        totalAvailableQuestions > 0
+                          ? totalAvailableQuestions
+                          : 50,
+                      ),
+                    ),
+                  },
+                  (_, i) => i + 1,
+                ).map(num => (
                   <SelectItem key={num} value={String(num)}>
                     {num}
                   </SelectItem>
@@ -359,31 +318,42 @@ export function CreateTestContent() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {TOPICS.map(topic => {
-                const isSelected = selectedTopics.includes(topic.value);
+              {isQuestionCountUpdating && dynamicTopics.length === 0 ? (
+                <div className="col-span-full py-8 flex items-center justify-center gap-2 text-gray-500">
+                  <Loader2 className="w-5 h-5 animate-spin text-[#01503b]" />
+                  <span>Loading topics...</span>
+                </div>
+              ) : dynamicTopics.length === 0 ? (
+                <div className="col-span-full py-6 text-center text-gray-400 text-sm">
+                  No topics available for your speciality.
+                </div>
+              ) : (
+                dynamicTopics.map(topic => {
+                  const isSelected = selectedTopics.includes(topic.id);
 
-                return (
-                  <div
-                    key={topic.value}
-                    className={`flex items-center gap-2 p-3 rounded-md border cursor-pointer ${
-                      isSelected
-                        ? 'bg-[#f7f7f3] border-gray-400'
-                        : 'hover:bg-gray-50'
-                    }`}
-                    onClick={() => handleTopicToggle(topic.value, !isSelected)}
-                  >
-                    <CustomCheckbox checked={isSelected} />
-                    <Label className="flex gap-2 items-center">
-                      {topic.label}{' '}
-                      <span className="min-w-[20px] h-[22px] px-2 rounded-[6px] border border-[#00B977] text-[#00B977] text-xs font-medium flex items-center justify-center bg-white">
-                        {isQuestionCountUpdating
-                          ? '...'
-                          : getDynamicTopicCount(topic.value)}
-                      </span>
-                    </Label>{' '}
-                  </div>
-                );
-              })}
+                  return (
+                    <div
+                      key={topic.id}
+                      className={`flex items-center gap-2 p-3 rounded-md border cursor-pointer transition-colors ${
+                        isSelected
+                          ? 'bg-[#f7f7f3] border-gray-400'
+                          : 'hover:bg-gray-50'
+                      }`}
+                      onClick={() => handleTopicToggle(topic.id, !isSelected)}
+                    >
+                      <CustomCheckbox checked={isSelected} />
+                      <Label className="flex gap-2 items-center cursor-pointer flex-1 justify-between">
+                        <span className="font-medium text-[#444950]">
+                          {topic.name}
+                        </span>
+                        <span className="min-w-[24px] h-[22px] px-2 rounded-[6px] border border-[#00B977] text-[#00B977] text-xs font-medium flex items-center justify-center bg-white shrink-0">
+                          {isQuestionCountUpdating ? '...' : topic.count}
+                        </span>
+                      </Label>
+                    </div>
+                  );
+                })
+              )}
             </div>
           </div>
 

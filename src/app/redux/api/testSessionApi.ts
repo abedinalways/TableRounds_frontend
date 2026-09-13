@@ -2,27 +2,36 @@
 
 import { baseApi } from './baseApi';
 
-export interface TopicCount {
+export interface QuestionCountModeItem {
+  key: string;
+  count: number;
+}
+
+export interface QuestionCountDifficultyItem {
+  key: string;
+  count: number;
+}
+
+export interface QuestionCountTopicItem {
+  id: string;
   name: string;
   count: number;
-  ids: string[];
 }
 
-export interface DifficultyGroup {
-  difficulty: 'Intern' | 'Senior' | 'Board';
-  topic_wise_count: TopicCount[];
+export interface QuestionCountSpeciality {
+  id: string;
+  name: string;
 }
 
-interface QuestionCountData {
+export interface QuestionCountData {
+  speciality?: QuestionCountSpeciality;
   total_questions: number;
-  used_questions: DifficultyGroup[];
-  unused_questions: DifficultyGroup[];
-  correct_count: DifficultyGroup[];
-  incorrect_count: DifficultyGroup[];
-  mark_count: DifficultyGroup[];
+  modes: QuestionCountModeItem[];
+  difficulties: QuestionCountDifficultyItem[];
+  topics: QuestionCountTopicItem[];
 }
 
-interface QuestionCountResponse {
+export interface QuestionCountResponse {
   success: boolean;
   message: string;
   data: QuestionCountData;

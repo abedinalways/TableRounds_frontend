@@ -25,6 +25,7 @@ import { Country, State } from 'country-state-city';
 
 import { toast } from 'sonner';
 import { RegisterPayload } from '@/app/redux/api/registerApi';
+import { useGetPublicSpecialitiesQuery } from '@/app/redux/api/specialityApi';
 import FileUpload from '../reusable/FileUpload';
 
 export interface SignUpFormData {
@@ -79,7 +80,13 @@ export default function SignUpForm({
     facebookUrl: '',
     agreeToTerms: false,
   });
-  // const [registerUser, { isLoading }] = useRegisterNewUserMutation();
+
+  const { data: specialitiesData, isLoading: loadingSpecialities } =
+    useGetPublicSpecialitiesQuery();
+
+  const specialities = Array.isArray(specialitiesData?.data)
+    ? specialitiesData.data
+    : [];
 
   const [profilePhoto, setProfilePhoto] = useState<File | null>(null);
   const [verificationDoc, setVerificationDoc] = useState<File | null>(null);
@@ -162,6 +169,7 @@ export default function SignUpForm({
       current_practice: formData.currentPractice,
       bio: formData.bio,
       speciality: formData.speciality,
+      speciality_id: formData.speciality,
       instagram: formData.instagramUrl || undefined,
       linkedin: formData.linkedinUrl || undefined,
       twitter_x: formData.twitterUrl || undefined,
@@ -248,7 +256,6 @@ opacity-xl font-[manrope]"
                   <p className="text-red-300 text-xs mt-1">{errors.email}</p>
                 )}
               </div>
-
               <div>
                 <Label
                   htmlFor="createPassword"
@@ -390,9 +397,9 @@ opacity-xl font-[manrope]"
                   </SelectContent>
                 </Select>
 
-                {errors.speciality && (
+                {errors.yearInTraining && (
                   <p className="text-red-300 text-xs mt-1">
-                    {errors.speciality}
+                    {errors.yearInTraining}
                   </p>
                 )}
               </div>
@@ -403,7 +410,7 @@ opacity-xl font-[manrope]"
                   htmlFor="speciality"
                   className="text-white text-sm md:text-[18px] font-bold"
                 >
-                  speciality <span className="text-red-600">*</span>
+                  Speciality <span className="text-red-600">*</span>
                 </Label>
 
                 <Select
@@ -416,28 +423,39 @@ opacity-xl font-[manrope]"
                     size="xl"
                     className="mt-2 bg-[#1C765E] border-none md:p-4 rounded-[8px] cursor-pointer text-white text-[18px]! [&>span]:text-white [&_[data-placeholder]]:text-white [&_svg]:opacity-100 placeholder:text-[18px] rounded-[8px] w-full lg:w-[644px]"
                   >
-                    <SelectValue placeholder="Select a speciality" />
+                    <SelectValue
+                      placeholder={
+                        loadingSpecialities
+                          ? 'Loading specialities...'
+                          : 'Select a speciality'
+                      }
+                    />
                   </SelectTrigger>
 
-                  <SelectContent className="bg-[#1C765E] border-none text-white">
-                    <SelectItem
-                      className="text-white"
-                      value="Oral and Maxillofacial Surgery"
-                    >
-                      Oral and Maxillofacial Surgery
-                    </SelectItem>
-                    <SelectItem className="text-white" value="Plastic Surgery">
-                      Plastic Surgery
-                    </SelectItem>
-                    <SelectItem
-                      className="text-white"
-                      value="Otorhinolaryngology Surgery"
-                    >
-                      Otorhinolaryngology
-                    </SelectItem>
-                    <SelectItem className="text-white" value="Dentist">
-                      Dentistry
-                    </SelectItem>
+                  <SelectContent className="bg-[#1C765E] border-none text-white max-h-60">
+                    {loadingSpecialities ? (
+                      <SelectItem
+                        className="text-white"
+                        value="loading"
+                        disabled
+                      >
+                        Loading specialities...
+                      </SelectItem>
+                    ) : specialities.length === 0 ? (
+                      <SelectItem className="text-white" value="empty" disabled>
+                        No specialities available
+                      </SelectItem>
+                    ) : (
+                      specialities.map(spec => (
+                        <SelectItem
+                          key={spec.id}
+                          className="text-white cursor-pointer hover:bg-[#155a47] focus:bg-[#155a47]"
+                          value={spec.id}
+                        >
+                          {spec.name}
+                        </SelectItem>
+                      ))
+                    )}
                   </SelectContent>
                 </Select>
 

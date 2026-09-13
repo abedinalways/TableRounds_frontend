@@ -13,6 +13,7 @@ export interface RegisterPayload {
   current_practice: string;
   bio: string;
   speciality: string;
+  speciality_id?: string;
   instagram?: string;
   linkedin?: string;
   twitter_x?: string;
