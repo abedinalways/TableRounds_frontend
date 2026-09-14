@@ -1,6 +1,6 @@
 /**
  * Socket.IO Client Manager
- * 
+ *
  * Features:
  * - WebSocket-first with polling fallback
  * - JWT authentication via headers
@@ -90,7 +90,7 @@ const pendingRooms = new Set<string>();
 
 // Track reconnection attempts for server-initiated disconnects
 let reconnectAttempts = 0;
-const MAX_RECONNECT_ATTEMPTS = 10;
+const MAX_SERVER_DISCONNECT_RETRY = 3;
 
 // Timer to reset reconnection attempts only after a stable connection
 let reconnectResetTimer: ReturnType<typeof setTimeout> | null = null;
@@ -121,6 +121,9 @@ export function getSocket(token: string): Socket | null {
 
   // Return existing socket if created with same token (connecting or connected)
   if (socket && currentToken === token) {
+    if (!socket.connected) {
+      socket.connect();
+    }
     return socket;
   }
 
@@ -129,17 +132,31 @@ export function getSocket(token: string): Socket | null {
 
   // Create new connection
   currentToken = token;
-  const rawUrl = process.env.NEXT_PUBLIC_SOCKET_URL || process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_ENDPOINT || '';
+  const rawUrl =
+    process.env.NEXT_PUBLIC_SOCKET_URL ||
+    process.env.NEXT_PUBLIC_API_URL ||
+    process.env.NEXT_PUBLIC_API_ENDPOINT ||
+    '';
   // Ensure base URL has no trailing slashes or appended query params
   const baseUrl = rawUrl.replace(/\/+$/, '');
 
   socket = io(baseUrl, {
     transports: ['polling', 'websocket'],
-    upgrade:true,
-    // Send token as HTTP header (socket.handshake.headers)
+    upgrade: true,
+    // Socket.IO v4 official handshake auth (works across WebSocket and Polling)
+    auth: {
+      token: token,
+      authorization: `Bearer ${token}`,
+    },
+    // Query param fallback for gateways extracting token from query
+    query: {
+      token: token,
+    },
+    // HTTP headers for long-polling requests
     extraHeaders: {
       authorization: `Bearer ${token}`,
     },
+    withCredentials: true,
     reconnection: true,
     reconnectionAttempts: Infinity,
     reconnectionDelay: 1000,
@@ -149,7 +166,6 @@ export function getSocket(token: string): Socket | null {
 
   return socket;
 }
-
 
 export function joinRoom(conversationId: string): void {
   if (!conversationId) {
@@ -262,11 +278,11 @@ function setupEventHandlers(): void {
   });
 
   // Disconnection handler
-  socket.on('disconnect', (reason) => {
+  socket.on('disconnect', reason => {
     console.warn('[Socket] Disconnected:', reason);
 
     // Server-initiated disconnect - clear rooms and manually reconnect
-    // with exponential backoff
+    // with exponential backoff, but stop if server repeatedly disconnects
     if (reason === 'io server disconnect') {
       activeRooms.clear();
 
@@ -278,23 +294,21 @@ function setupEventHandlers(): void {
       }
 
       // Socket.IO does NOT auto-reconnect on server-initiated disconnect.
-      // Only attempt reconnection if we haven't exceeded the max attempts.
       reconnectAttempts++;
 
-      if (reconnectAttempts > MAX_RECONNECT_ATTEMPTS) {
+      if (reconnectAttempts > MAX_SERVER_DISCONNECT_RETRY) {
         console.error(
-          `[Socket] Max reconnection attempts (${MAX_RECONNECT_ATTEMPTS}) reached. ` +
-          'The server keeps disconnecting. Stopping reconnection attempts.'
+          `[Socket] Server forcefully disconnected ${reconnectAttempts} times. ` +
+            'Authentication token might be invalid or rejected by backend. Stopping reconnection.',
         );
+        notifySessionExpired();
+        cleanupSocket();
         return;
       }
 
-      // Exponential backoff: 2s, 4s, 8s, 16s, 30s, 30s, ...
-      const delay = Math.min(
-      2000 * Math.pow(2, reconnectAttempts - 1),
-      30000,
-     );
-     setTimeout(() => {
+      // Exponential backoff: 2s, 4s, 8s
+      const delay = Math.min(2000 * Math.pow(2, reconnectAttempts - 1), 10000);
+      setTimeout(() => {
         if (socket && currentToken && !socket.connected) {
           socket.connect();
         }
@@ -303,7 +317,7 @@ function setupEventHandlers(): void {
   });
 
   // Connection error handler
-  socket.on('connect_error', (error) => {
+  socket.on('connect_error', error => {
     console.error('[Socket] Connection error:', error.message);
 
     // Auth failure (expired/invalid token): stop socket.io's infinite
@@ -311,7 +325,7 @@ function setupEventHandlers(): void {
     // session-expiry flow (logout) instead of hammering the backend.
     if (isAuthError(error.message)) {
       console.error(
-        '[Socket] Authentication failed — stopping reconnection and triggering session expiry flow.'
+        '[Socket] Authentication failed — stopping reconnection and triggering session expiry flow.',
       );
       notifySessionExpired();
       socket?.disconnect();

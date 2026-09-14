@@ -36,6 +36,7 @@ export const WelcomeBanner = () => {
   };
 
   const { data: user, isLoading: userLoading } = useMeQuery();
+  //console.log(user, "ooeew===========")
 
   useEffect(() => {
     const els = wordRefs.current.filter(Boolean);
@@ -125,10 +126,10 @@ export const WelcomeBanner = () => {
               {/* ── speciality & Training ── */}
               {(user?.speciality || user?.training_practice) && (
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-sm md:text-base opacity-90">
-                  {user?.speciality && (
+                  {user?.specialty && (
                     <span className="flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded-full text-xs md:text-sm border border-white/5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse" />
-                      {user.speciality}
+                      <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse uppercase!" />
+                      {user?.specialty}
                     </span>
                   )}
                   {user?.training_practice && (

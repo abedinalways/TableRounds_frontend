@@ -13,6 +13,7 @@ export interface AuthUser {
   current_practice: string;
   training_practice: string;
   speciality: string;
+  specialty: string;
   followings: number;
   instagram: string;
   linkedin: string;
