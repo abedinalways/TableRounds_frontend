@@ -74,7 +74,7 @@ export default function Banner() {
           Where healthcare providers come
           <br />
           to learn and collaborate, in all <br />
-          fields of medicine and dentistry
+          fields of medicine and dentistri
         </h2>
 
         <p className="text-sm md:text-base text-white md:mt-[64px] mt-8 drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
