@@ -1,0 +1,30 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "abedin",
+    "amrounds_pwa",
+    "dev",
+    "main",
+    "origin",
+    "refactor/security_check",
+    "temp"
+  ],
+  "parent": {
+    "abedin": "main",
+    "amrounds_pwa": "main",
+    "dev": "main",
+    "main": null,
+    "origin": "main",
+    "refactor/security_check": "main",
+    "temp": "main"
+  },
+  "order": [
+    "main",
+    "abedin",
+    "amrounds_pwa",
+    "dev",
+    "origin",
+    "refactor/security_check",
+    "temp"
+  ]
+}
